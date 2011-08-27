@@ -1,0 +1,61 @@
+############################################################
+# +------------------------------------------------------+ #
+# |  Plugin configuration file for BukkitInventoryTools  | #
+# |                                                      | #
+# |                                                      | #
+# +------------------------------------------------------+ #
+############################################################
+Sort: 
+
+############################################################
+# +------------------------------------------------------+ #
+# |                        General                       | #
+# +------------------------------------------------------+ #
+############################################################
+Library:
+    # Set Language. Currently supported: EN
+    Language: EN
+
+    # Set the key to activate sort. 
+    # Deactivate the HOTKEY by setting SortKey: KEY_DEACTIVE
+    SortKey: KEY_S
+    MenuKey: KEY_M
+
+    # This is the sorting sequence
+    # Be VERY carefull when you enter new items, be sure you 
+    # use the right itemnames
+    #
+    # http://jd.bukkit.org/apidocs/org/bukkit/Material.html
+    #
+    SortSEQ: APPLE,ARROW,BED,BED_BLOCK,BEDROCK,BOAT,BONE,BOOK,BOOKSHELF,BOW,BOWL,BREAD,BRICK,BROWN_MUSHROOM,BUCKET,BURNING_FURNACE,CACTUS,CAKE,CAKE_BLOCK,CHAINMAIL_BOOTS,CHAINMAIL_CHESTPLATE,CHAINMAIL_HELMET,CHAINMAIL_LEGGINGS,CHEST,LOCKED_CHEST,CLAY,CLAY_BALL,CLAY_BRICK,COAL,COAL_ORE,COBBLESTONE,COBBLESTONE_STAIRS,COMPASS,COOKED_FISH,COOKIE,CROPS,DEAD_BUSH,DETECTOR_RAIL,DIAMOND,DIAMOND_AXE,DIAMOND_BLOCK,DIAMOND_BOOTS,DIAMOND_CHESTPLATE,DIAMOND_HELMET,DIAMOND_HOE,DIAMOND_LEGGINGS,DIAMOND_ORE,DIAMOND_PICKAXE,DIAMOND_SPADE,DIAMOND_SWORD,DIODE,DIODE_BLOCK_OFF,DIODE_BLOCK_ON,DIRT,DISPENSER,DOUBLE_STEP,EGG,FEATHER,FENCE,FIRE,FISHING_ROD,FLINT,FLINT_AND_STEEL,FURNACE,GLASS,GLOWING_REDSTONE_ORE,GLOWSTONE,GLOWSTONE_DUST,GOLD_AXE,GOLD_BLOCK,GOLD_BOOTS,GOLD_CHESTPLATE,GOLD_HELMET,GOLD_HOE,GOLD_INGOT,GOLD_LEGGINGS,GOLD_ORE,GOLD_PICKAXE,GOLD_RECORD,GOLD_SPADE,GOLD_SWORD,GOLDEN_APPLE,GRASS,GRAVEL,GREEN_RECORD,GRILLED_PORK,SULPHUR,ICE,INK_SACK,IRON_AXE,IRON_BLOCK,IRON_BOOTS,IRON_CHESTPLATE,IRON_DOOR,IRON_DOOR_BLOCK,IRON_HELMET,IRON_HOE,IRON_INGOT,IRON_LEGGINGS,IRON_ORE,IRON_PICKAXE,IRON_SPADE,IRON_SWORD,JACK_O_LANTERN,JUKEBOX,LADDER,LAPIS_BLOCK,LAPIS_ORE,LAVA,LAVA_BUCKET,LEATHER,LEATHER_BOOTS,LEATHER_CHESTPLATE,LEATHER_HELMET,LEATHER_LEGGINGS,LEAVES,LEVER,LOG,LONG_GRASS,MAP,MILK_BUCKET,MINECART,STORAGE_MINECART,POWERED_MINECART,MOB_SPAWNER,MOSSY_COBBLESTONE,MUSHROOM_SOUP,NETHERRACK,NOTE_BLOCK,OBSIDIAN,PAINTING,PAPER,PISTON_BASE,PISTON_EXTENSION,PISTON_MOVING_PIECE,PISTON_STICKY_BASE,PORK,PORTAL,POWERED_RAIL,PUMPKIN,RAILS,RAW_FISH,RED_MUSHROOM,RED_ROSE,YELLOW_FLOWER,REDSTONE,REDSTONE_ORE,REDSTONE_TORCH_OFF,REDSTONE_TORCH_ON,REDSTONE_WIRE,SADDLE,SAND,SANDSTONE,SAPLING,SEEDS,SHEARS,SIGN,SIGN_POST,SLIME_BALL,SNOW,SNOW_BALL,SNOW_BLOCK,SOIL,SOUL_SAND,SPONGE,STATIONARY_LAVA,STATIONARY_WATER,STEP,STICK,STONE,STONE_AXE,STONE_BUTTON,STONE_HOE,STONE_PICKAXE,STONE_PLATE,STONE_SPADE,STONE_SWORD,STRING,SUGAR,SUGAR_CANE,SUGAR_CANE_BLOCK,TNT,TORCH,TRAP_DOOR,WALL_SIGN,WATCH,WATER,WATER_BUCKET,WEB,WHEAT,WOOD,WOOD_AXE,WOOD_DOOR,WOOD_HOE,WOOD_PICKAXE,WOOD_PLATE,WOOD_SPADE,WOOD_STAIRS,WOOD_SWORD,WOODEN_DOOR,WOOL,WORKBENCH
+
+
+############################################################
+# +------------------------------------------------------+ #
+# |                  Properties for SQL                  | #
+# +------------------------------------------------------+ #
+############################################################
+Storage:
+    # Storage supports [MYSQL|SQLITE]
+    Type: SQLITE
+
+    # MySQL Settings - Will only be used if Storage: is set
+    # to MYSQL
+    # mysql: true
+    Host: localhost
+    Username: root
+    Password: Changethis
+    Database: SortInventory
+
+
+############################################################
+# +------------------------------------------------------+ #
+# |                  Properties for Debug                | #
+# +------------------------------------------------------+ #
+############################################################
+Debug:
+    Permissions: false
+    Inventory: false
+    OnEnable: false
+    Keyboard: false
+    SQL: false

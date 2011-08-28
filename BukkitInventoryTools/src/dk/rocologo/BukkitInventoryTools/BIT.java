@@ -6,6 +6,8 @@ import java.util.logging.Logger;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Event;
+import org.bukkit.event.Event.Priority;
+import org.bukkit.event.Event.Type;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.PluginDescriptionFile;
 import org.bukkit.plugin.PluginManager;
@@ -36,12 +38,12 @@ public class BIT extends JavaPlugin {
 	public static MyWolfPlugin myWolfPlugin;
 
 	// SQLITE-MYSQL settings
-		public static mysqlCore manageMySQL; // MySQL handler
-		public static sqlCore manageSQLite; // SQLite handler
-		public static Logger log = Logger.getLogger("Minecraft");
+	public static mysqlCore manageMySQL; // MySQL handler
+	public static sqlCore manageSQLite; // SQLite handler
+	public static Logger log = Logger.getLogger("Minecraft");
 
 	// GUI
-	//public Screen sortScreen = new GenericPopup();
+	// public Screen sortScreen = new GenericPopup();
 
 	@Override
 	public void onEnable() {
@@ -61,64 +63,6 @@ public class BIT extends JavaPlugin {
 		RLMessages.showInfo(pdfFile.getName() + " version "
 				+ pdfFile.getVersion() + " is enabled!");
 	}
-	
-	private void setupSQL() {
-
-		if (RLConfig.rLConfig.DEBUG_SQL) {
-			RLMessages.showInfo("Storagetype:" + RLConfig.rLConfig.STORAGE_TYPE);
-		}
-
-		if (RLConfig.rLConfig.STORAGE_TYPE.equals("MySQL")) {
-			// Declare MySQL Handler
-			manageMySQL = new mysqlCore(log, "["+RLPlugin.PLUGIN_NAME+"]", RLConfig.rLConfig.STORAGE_HOST,
-					RLConfig.rLConfig.STORAGE_DATABASE, RLConfig.rLConfig.STORAGE_USERNAME, RLConfig.rLConfig.STORAGE_PASSWORD);
-			RLMessages.showInfo("MySQL Initializing");
-			// Initialize MySQL Handler
-			manageMySQL.initialize();
-			try {
-				if (manageMySQL.checkConnection()) {
-					// Check if the Connection was successful
-					RLMessages.showInfo("MySQL connection successful");
-					if (!manageMySQL.checkTable("BukkitInventoryTools")) {
-						// Check if the table exists in the database if not
-						// create it
-						RLMessages
-								.showInfo("Creating table BukkitInventoryTools");
-						String query = "CREATE TABLE BukkitInventoryTools (id INT AUTO_INCREMENT PRIMARY_KEY, PINCODE VARCHAR(4), OWNER VARCHAR(255), CLOSETIMER INT, X INT, Y INT, Z INT);";
-						manageMySQL.createTable(query);
-						// Use mysqlCore.createTable(query) to create tables
-					}
-				} else {
-					RLMessages.showError("MySQL connection failed");
-					RLConfig.rLConfig.STORAGE_HOST = "SQLITE";
-				}
-			} catch (MalformedURLException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			} catch (InstantiationException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			} catch (IllegalAccessException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-		} else {
-			// SQLite
-			RLMessages.showInfo("SQLite Initializing");
-			// Declare SQLite handler
-			manageSQLite = new sqlCore(log, "["+RLPlugin.PLUGIN_NAME+"]", RLPlugin.PLUGIN_NAME,
-					RLPlugin.PLUGIN_FOLDER);
-			// Initialize SQLite handler
-			manageSQLite.initialize();
-			// Check if the table exists, if it doesn't create it
-			if (!manageSQLite.checkTable("BukkitInventoryTools")) {
-				RLMessages.showInfo("Creating table BukkitInventoryTools");
-				String query = "CREATE TABLE BukkitInventoryTools (id INT AUTO_INCREMENT PRIMARY_KEY, PINCODE VARCHAR(4), OWNER VARCHAR(255), CLOSETIMER INT, X INT, Y INT, Z INT);";
-				manageSQLite.createTable(query);
-				// Use sqlCore.createTable(query) to create tables
-			}
-		}
-	}
 
 	private void setupGUI() {
 		// TODO Auto-generated method stub
@@ -128,13 +72,16 @@ public class BIT extends JavaPlugin {
 	public void registerEvents() {
 		// Register our events
 		PluginManager pm = getServer().getPluginManager();
+		pm.registerEvent(Event.Type.BLOCK_BREAK, new BITBlockListener(),
+				Priority.Normal, this);
 		pm.registerEvent(Event.Type.CUSTOM_EVENT, new BITInputListener(),
 				Event.Priority.Normal, this);
-		pm.registerEvent(Event.Type.CUSTOM_EVENT, new BITSpoutListener(),
+		pm.registerEvent(Event.Type.CUSTOM_EVENT, new BITSpoutListener(this),
 				Event.Priority.Normal, this);
-		pm.registerEvent(Event.Type.CUSTOM_EVENT, new BITInventoryListener(this),
-				Event.Priority.Normal, this);
-
+		pm.registerEvent(Event.Type.CUSTOM_EVENT,
+				new BITInventoryListener(this), Event.Priority.Normal, this);
+		pm.registerEvent(Type.PLAYER_INTERACT, new BITPlayerListener(),
+				Priority.Normal, this);
 	}
 
 	@Override
@@ -158,6 +105,12 @@ public class BIT extends JavaPlugin {
 		} else {
 			RLMessages.showError("Safety is dependend on Spout!");
 		}
+	}
+
+	public static boolean isPlayer(CommandSender sender) {
+		if (sender instanceof Player)
+			return true;
+		return false;
 	}
 
 	private void setupSpoutBackpack() {
@@ -200,10 +153,66 @@ public class BIT extends JavaPlugin {
 		// CustomMCInventory inv = myWolfPlugin.getMyWolf(sPlayer).inv;
 	}
 
-	public static boolean isPlayer(CommandSender sender) {
-		if (sender instanceof Player)
-			return true;
-		return false;
+	private void setupSQL() {
+
+		if (RLConfig.rLConfig.DEBUG_SQL) {
+			RLMessages
+					.showInfo("Storagetype:" + RLConfig.rLConfig.STORAGE_TYPE);
+		}
+
+		if (RLConfig.rLConfig.STORAGE_TYPE.equals("MySQL")) {
+			// Declare MySQL Handler
+			manageMySQL = new mysqlCore(log, "[" + RLPlugin.PLUGIN_NAME + "]",
+					RLConfig.rLConfig.STORAGE_HOST,
+					RLConfig.rLConfig.STORAGE_DATABASE,
+					RLConfig.rLConfig.STORAGE_USERNAME,
+					RLConfig.rLConfig.STORAGE_PASSWORD);
+			RLMessages.showInfo("MySQL Initializing");
+			// Initialize MySQL Handler
+			manageMySQL.initialize();
+			try {
+				if (manageMySQL.checkConnection()) {
+					// Check if the Connection was successful
+					RLMessages.showInfo("MySQL connection successful");
+					if (!manageMySQL.checkTable("BukkitInventoryTools")) {
+						// Check if the table exists in the database if not
+						// create it
+						RLMessages
+								.showInfo("Creating table BukkitInventoryTools");
+						String query = "CREATE TABLE BukkitInventoryTools (id INT AUTO_INCREMENT PRIMARY_KEY, pincode VARCHAR(4), owner VARCHAR(255), closetimer INT, x INT, y INT, z INT);";
+						manageMySQL.createTable(query);
+						// Use mysqlCore.createTable(query) to create tables
+					}
+				} else {
+					RLMessages.showError("MySQL connection failed");
+					RLConfig.rLConfig.STORAGE_HOST = "SQLITE";
+				}
+			} catch (MalformedURLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (InstantiationException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (IllegalAccessException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		} else {
+			// SQLite
+			RLMessages.showInfo("SQLite Initializing");
+			// Declare SQLite handler
+			manageSQLite = new sqlCore(log, "[" + RLPlugin.PLUGIN_NAME + "]",
+					RLPlugin.PLUGIN_NAME, RLPlugin.PLUGIN_FOLDER);
+			// Initialize SQLite handler
+			manageSQLite.initialize();
+			// Check if the table exists, if it doesn't create it
+			if (!manageSQLite.checkTable("BukkitInventoryTools")) {
+				RLMessages.showInfo("Creating table BukkitInventoryTools");
+				String query = "CREATE TABLE BukkitInventoryTools (id INT AUTO_INCREMENT PRIMARY_KEY, pincode VARCHAR(4), owner VARCHAR(255), closetimer INT, x INT, y INT, z INT);";
+				manageSQLite.createTable(query);
+				// Use sqlCore.createTable(query) to create tables
+			}
+		}
 	}
 
 }

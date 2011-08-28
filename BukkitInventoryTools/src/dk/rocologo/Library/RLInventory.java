@@ -210,7 +210,7 @@ public class RLInventory {
 
 	// Contains the list of foods
 	protected static final int foods[] = { 260, 282, 297, 319, 320, 322, 349,
-			350, 354 };
+			350, 354, 357 };
 
 	// Check if it is food
 	public static boolean isFood(ItemStack item) {

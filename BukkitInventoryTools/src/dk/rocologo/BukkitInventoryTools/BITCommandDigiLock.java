@@ -1,6 +1,5 @@
 package dk.rocologo.BukkitInventoryTools;
 
-import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
@@ -17,13 +16,11 @@ public class BITCommandDigiLock implements CommandExecutor {
 	@Override
 	public boolean onCommand(CommandSender sender, Command command,
 			String label, String[] args) {
-
 		SpoutPlayer sPlayer = (SpoutPlayer) sender;
-		Block targetblock = sPlayer.getTargetBlock(null, 4);
+		Block block = sPlayer.getTargetBlock(null, 4);
 		String pincode = "0000";
 		String owner = sPlayer.getName();
 		Integer closetimer = 0; // never closes automatically
-
 		if (!BIT.isPlayer(sPlayer)) {
 			RLMessages.showError("You cant use this command in the console.");
 			return false;
@@ -43,31 +40,19 @@ public class BITCommandDigiLock implements CommandExecutor {
 			sPlayer.sendMessage("args.length: " + args.length);
 			String action = args[0];
 			if (action.equalsIgnoreCase("lock")) {
-				Material material = targetblock.getType();
-				if (BITDigiLock.isLockable(material)) {
+				if (BITDigiLock.isLockable(block)) {
 					sPlayer.sendMessage("You want to lock :"
-							+ targetblock.getType());
+							+ block.getType());
 					// if USEGUI then
 					if (sPlayer.isSpoutCraftEnabled()) {
-
-						// test if you pointed at a lockable block - DONE
-						// open window
-						// enter number one way or another
-						// set status locked on block
-						// close windows
-						// notification
-
-						// TODO: integrate to iConomy
 						pincode = "0000";
 						owner = sPlayer.getName();
 						closetimer = 0;
-						BITInventoryMenu.openMenu(sPlayer);
-						pincode = BITInventoryMenu.textfieldPincode.toString();
+						BITGui.openMenu(sPlayer,block);
+						pincode = BITGui.pincode.toString();
 						sPlayer.sendMessage("the code is:" + pincode);
-
-						BITDigiLock.SaveDigiLock(targetblock, pincode, owner,
+						BITDigiLock.SaveDigiLock(sPlayer, block, pincode, owner,
 								closetimer);
-
 					} else {
 						if (args[1] != null) {
 							pincode = args[1];
@@ -77,23 +62,23 @@ public class BITCommandDigiLock implements CommandExecutor {
 							owner = args[2];
 							sPlayer.sendMessage("Owner:" + owner);
 						}
-						BITDigiLock.SaveDigiLock(targetblock, pincode, owner,
+						BITDigiLock.SaveDigiLock(sPlayer, block, pincode, owner,
 								closetimer);
 						// syntax is /safetylock lock pincode owner
 						// example /safetylock lock 0000 Gabriel333
 					}
 				} else {
 					sPlayer.sendMessage("You can't lock a "
-							+ targetblock.getType() + " block.");
+							+ block.getType() + " block.");
 					return true;
 				}
 			} else if (action.equalsIgnoreCase("unlock")) {
 				sPlayer.sendMessage("You want to unlock :"
-						+ targetblock.getType());
+						+ block.getType());
 				BITDigiLock.unlockDigiLock();
 			} else if (action.equalsIgnoreCase("reset")) {
 				sPlayer.sendMessage("You want to reset lock at:"
-						+ targetblock.getType());
+						+ block.getType());
 				BITDigiLock.resetDigiLock();
 				sPlayer.sendMessage("The widget was closed");
 			} else {

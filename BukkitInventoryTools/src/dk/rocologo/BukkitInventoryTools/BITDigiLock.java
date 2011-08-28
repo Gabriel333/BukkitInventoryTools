@@ -4,9 +4,11 @@ import java.net.MalformedURLException;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
+import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.plugin.Plugin;
+import org.getspout.spoutapi.player.SpoutPlayer;
 
 import dk.rocologo.Library.RLConfig;
 import dk.rocologo.Library.RLMessages;
@@ -24,17 +26,9 @@ public class BITDigiLock {
 	protected String owner;
 	protected boolean locked = true;
 
-	// private String coOwners = ",";
-
 	/**
-	 * Constructs a new Safe
+	 * Constructs a new DigiLock
 	 * 
-	 * @param owner
-	 *            The name of the owner of the safe
-	 * @param safe
-	 *            The Block of the safe
-	 * @param coOwners
-	 *            The list of the coowners of the safe
 	 */
 	BITDigiLock(String owner, Block block, String coOwners) {
 		this.owner = owner;
@@ -42,19 +36,18 @@ public class BITDigiLock {
 		// this.coOwners = coOwners;
 	}
 
-	static void SaveDigiLock(Block block, String pincode, String owner,
-			Integer closetimer) {
+	static void SaveDigiLock(SpoutPlayer sPlayer, Block block, String pincode,
+			String owner, Integer closetimer) {
 		String query = null;
 		// insert/update targetblock, code, owner, closetime into safetylocks
 		// table
-		if (!checkForLock(block)) {
+		if (isLocked(block)) {
 			// TODO: Block exists - update data.
 			query = "UPDATE BukkitInventoryTools SET pincode='" + pincode
 					+ "', owner='" + owner + "', closetimer=" + closetimer
 					+ " WHERE x = " + block.getX() + " AND y = " + block.getY()
 					+ " AND z = " + block.getZ() + ";";
-
-			return;
+			sPlayer.sendMessage(ChatColor.YELLOW + "Updating lock");
 		} else {
 			query = "INSERT INTO BukkitInventoryTools (pincode, owner, closetimer, x, y, z) VALUES ('"
 					+ pincode
@@ -69,6 +62,7 @@ public class BITDigiLock {
 					+ ", "
 					+ block.getZ()
 					+ ");";
+			sPlayer.sendMessage(ChatColor.RED + "Creating lock");
 		}
 		if (RLConfig.rLConfig.DEBUG_SQL)
 			RLMessages.showInfo("SQL: " + query);
@@ -90,9 +84,11 @@ public class BITDigiLock {
 		} else {
 			BIT.manageSQLite.insertQuery(query);
 		}
+		sPlayer.sendMessage(ChatColor.GREEN + "Lock created.");
+
 	}
 
-	public static Boolean checkForLock(Block block) {
+	public static Boolean isLocked(Block block) {
 		String query = "SELECT * FROM BukkitInventoryTools WHERE x = "
 				+ block.getX() + " AND y = " + block.getY() + " AND z = "
 				+ block.getZ() + ";";
@@ -116,11 +112,13 @@ public class BITDigiLock {
 			result = BIT.manageSQLite.sqlQuery(query);
 		}
 
+		//RLMessages.showInfo("Result is:" + result.toString());
+
 		try {
 			if (result != null && result.next()) {
-				return false;
-			} else {
 				return true;
+			} else {
+				return false;
 			}
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
@@ -149,14 +147,95 @@ public class BITDigiLock {
 			Material.STORAGE_MINECART, Material.WALL_SIGN, Material.WOODEN_DOOR };
 
 	// check if material is a lockable block
-	static boolean isLockable(Material m) {
-		if (m == null)
-			return false;
+	static boolean isLockable(Block block) {
 		for (Material i : lockablematerials) {
-			if (i == m)
+			if (i == block.getType())
 				return true;
 		}
 		return false;
+	}
+
+	public static String getPincodeFromSQL(SpoutPlayer sPlayer, Block block) {
+		String query = "SELECT * FROM BukkitInventoryTools WHERE x = "
+				+ block.getX() + " AND y = " + block.getY() + " AND z = "
+				+ block.getZ() + ";";
+		// TODO: add and rownum<2 to select only one row
+		ResultSet result = null;
+
+		if (RLConfig.rLConfig.STORAGE_TYPE.equals("MySQL")) {
+			try {
+				result = BIT.manageMySQL.sqlQuery(query);
+			} catch (MalformedURLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (InstantiationException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (IllegalAccessException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		} else { // SQLLITE
+			result = BIT.manageSQLite.sqlQuery(query);
+		}
+
+		try {
+			if (result != null && result.next()) {
+				String pincode = result.getString("pincode");
+				sPlayer.sendMessage("Pincode stored in SQL is:" + pincode);
+				return pincode;
+			} else {
+				//sPlayer.sendMessage("This block is not owned - open inventory");
+				return "";
+			}
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return "ERR1";
+
+	}
+
+	public static String getOwnerFromSQL(SpoutPlayer sPlayer, Block block) {
+		String query = "SELECT * FROM BukkitInventoryTools WHERE x = "
+				+ block.getX() + " AND y = " + block.getY() + " AND z = "
+				+ block.getZ() + ";";
+		// TODO: add and rownum<2 to select only one row
+		ResultSet result = null;
+
+		if (RLConfig.rLConfig.STORAGE_TYPE.equals("MySQL")) {
+			try {
+				result = BIT.manageMySQL.sqlQuery(query);
+			} catch (MalformedURLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (InstantiationException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (IllegalAccessException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		} else { // SQLLITE
+			result = BIT.manageSQLite.sqlQuery(query);
+		}
+
+		try {
+			if (result != null && result.next()) {
+				String owner = result.getString("owner");
+				sPlayer.sendMessage("Owner stored in SQL is:" + ChatColor.RED
+						+ owner);
+				return owner;
+			} else {
+				// sPlayer.sendMessage("This block is not owned - open inventory");
+				return sPlayer.getName();
+			}
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return "ERR2";
+
 	}
 
 }

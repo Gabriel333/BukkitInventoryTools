@@ -10,26 +10,26 @@ commands:
         description: Rebuild all item stack in your inventory.
         usage: /sort
         aliases: /sortinventory 
-        permission: bit.sortinventory.use
+        permission: bukkitinventorytools.sortinventory.use
     digilock:
         description: Lock the item with a digital pincode.
         usage: /digilock [owner owner]|[pincode code]|[reset]|[remove]|[closetimer seconds]
         aliases: /dlock 
-        permission: bit.digilock.use
+        permission: bukkitinventorytools.digilock.use
 permissions:
-    bit.sortinventory.use:
+    bukkitinventorytools.sortinventory.use:
         default: true
-    bit.sortinventory.stack.tools:
+    bukkitinventorytools.sortinventory.stack.tools:
         default: op
-    bit.sortinventory.stack.armor:
+    bukkitinventorytools.sortinventory.stack.armor:
         default: op
-    bit.sortinventory.stack.weapons:
+    bukkitinventorytools.sortinventory.stack.weapons:
         default: op
-    bit.sortinventory.stack.food: 
+    bukkitinventorytools.sortinventory.stack.food: 
         default: op
-    bit.sortinventory.stack.vehicles:
+    bukkitinventorytools.sortinventory.stack.vehicles:
         default: op
-    bit.digilock.use:
+    bukkitinventorytools.digilock.use:
         default: true
-    bit.digilock.use:
+    bukkitinventorytools.digilock.use:
         default: OP

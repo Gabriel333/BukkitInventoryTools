@@ -18,6 +18,10 @@ public class BITInventoryListener extends InventoryListener {
 
 	public void onInventoryOpen(InventoryOpenEvent event) {
 		SpoutPlayer sPlayer = (SpoutPlayer) event.getPlayer();
+		// Block block = sPlayer.getTargetBlock(null, 4);
+		//if (BITDigiLock.checkForLock(targetblock)) {
+		//	BITInventoryMenu.getPincode(sPlayer);
+			
 		RLMessages.sendNotification(sPlayer,
 				RLConfig.rLConfig.LIBRARY_SORTKEY + ":Sort "
 						+ RLConfig.rLConfig.LIBRARY_MENUKEY + ":Menu");

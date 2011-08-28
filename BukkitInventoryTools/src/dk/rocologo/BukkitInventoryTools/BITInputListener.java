@@ -17,26 +17,21 @@ public class BITInputListener extends InputListener {
 	@Override
 	public void onKeyPressedEvent(KeyPressedEvent event) {
 		String keypressed = event.getKey().name();
-		if (keypressed == null) {
-			return;
-		}
 		SpoutPlayer sPlayer = event.getPlayer();
 		ScreenType screentype = event.getScreenType();
-
-		// sPlayer.sendMessage("EventName:" + event.getEventName() + " Type:"
-		// + event.getType() + " ScreenType:" + event.getScreenType());
-
 		if (screentype == ScreenType.CHEST_INVENTORY
 				|| screentype == ScreenType.PLAYER_INVENTORY) {
-
+			Block block = sPlayer.getTargetBlock(null, 4);
+			//sPlayer.sendMessage("1) Inputlistener: eventype:" + event.getType()
+				//	+ " screenType:" + event.getScreenType());
+	    	// KEY_S
 			if (keypressed.equals(RLConfig.rLConfig.LIBRARY_SORTKEY)) {
-				Block targetblock = sPlayer.getTargetBlock(null, 4);
+				
 				if (BIT.isPlayer(sPlayer)) {
 					if (RLPermissions.hasPerm(sPlayer, "sortinventory.use",
 							RLPermissions.NOT_QUIET)) {
-						if (targetblock.getType() == Material.CHEST) {
-							SpoutChest sChest = (SpoutChest) targetblock
-									.getState();
+						if (block.getType() == Material.CHEST) {
+							SpoutChest sChest = (SpoutChest) block.getState();
 							RLInventory.sortInventoryItems(sPlayer,
 									sChest.getLargestInventory());
 							RLMessages.sendNotification(sPlayer,
@@ -49,10 +44,16 @@ public class BITInputListener extends InputListener {
 						}
 					}
 				}
-			} else if (keypressed.equals(RLConfig.rLConfig.LIBRARY_MENUKEY)) {
-				BITInventoryMenu.openMenu(sPlayer);
+			} else
+			// KEY_M
+			if (keypressed.equals(RLConfig.rLConfig.LIBRARY_MENUKEY)) {
+				BITGui.openMenu(sPlayer,block);
 			}
+			
+		} else if (screentype==ScreenType.CUSTOM_SCREEN) {
+			//  if KEY_RETURN
 
+			// RLMessages.sendNotification(sPlayer, "Key:"+event.getKey());
 		}
 	}
 

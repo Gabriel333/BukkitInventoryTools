@@ -45,7 +45,7 @@ Storage:
     Host: localhost
     Username: root
     Password: Changethis
-    Database: SortInventory
+    Database: BukkitInventoryTools
 
 
 ############################################################

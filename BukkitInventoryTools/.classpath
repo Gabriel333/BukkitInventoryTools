@@ -7,7 +7,8 @@
 	<classpathentry kind="lib" path="/Imported Libraries/Newest/Permissions.jar"/>
 	<classpathentry kind="lib" path="/Imported Libraries/Newest/PermissionsEx.jar"/>
 	<classpathentry kind="lib" path="/Imported Libraries/Newest/PermissionsSql.jar"/>
-	<classpathentry kind="lib" path="/Imported Libraries/Newest/SpoutAPI.jar"/>
 	<classpathentry kind="lib" path="/Imported Libraries/Newest/SpoutBackpack.jar"/>
+	<classpathentry kind="lib" path="/Imported Libraries/Newest/SpoutAPI.jar"/>
+	<classpathentry kind="lib" path="/Imported Libraries/Newest/Spout.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

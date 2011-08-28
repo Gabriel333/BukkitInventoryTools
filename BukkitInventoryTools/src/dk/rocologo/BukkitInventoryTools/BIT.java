@@ -179,7 +179,7 @@ public class BIT extends JavaPlugin {
 						// create it
 						RLMessages
 								.showInfo("Creating table BukkitInventoryTools");
-						String query = "CREATE TABLE BukkitInventoryTools (id INT AUTO_INCREMENT PRIMARY_KEY, pincode VARCHAR(4), owner VARCHAR(255), closetimer INT, x INT, y INT, z INT);";
+						String query = "CREATE TABLE BukkitInventoryTools (id INT AUTO_INCREMENT PRIMARY_KEY, pincode VARCHAR(4), owner VARCHAR(255), closetimer INT, x INT, y INT, z INT, world VARCHAR(255), shared VARCHAR(255), coowners VARCHAR(255));";
 						manageMySQL.createTable(query);
 						// Use mysqlCore.createTable(query) to create tables
 					}
@@ -208,7 +208,7 @@ public class BIT extends JavaPlugin {
 			// Check if the table exists, if it doesn't create it
 			if (!manageSQLite.checkTable("BukkitInventoryTools")) {
 				RLMessages.showInfo("Creating table BukkitInventoryTools");
-				String query = "CREATE TABLE BukkitInventoryTools (id INT AUTO_INCREMENT PRIMARY_KEY, pincode VARCHAR(4), owner VARCHAR(255), closetimer INT, x INT, y INT, z INT);";
+				String query = "CREATE TABLE BukkitInventoryTools (id INT AUTO_INCREMENT PRIMARY_KEY, pincode VARCHAR(4), owner VARCHAR(255), closetimer INT, x INT, y INT, z INT, world VARCHAR(255), shared VARCHAR(255), coowners VARCHAR(255));";
 				manageSQLite.createTable(query);
 				// Use sqlCore.createTable(query) to create tables
 			}

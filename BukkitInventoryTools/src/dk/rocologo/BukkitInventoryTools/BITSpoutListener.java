@@ -26,25 +26,22 @@ public class BITSpoutListener extends SpoutListener {
 		BITGui.plugin = plugin;
 	}
 
-	public String unlockcode;
-
 	public void onCustomEvent(Event event) {
-
 		if (event instanceof ButtonClickEvent) {
-			// We are going to need some other way to differentiate button
-			// events
 			Button button = ((ButtonClickEvent) event).getButton();
 			UUID uuid = button.getId();
 			SpoutPlayer sPlayer = ((ButtonClickEvent) event).getPlayer();
 			Block block = sPlayer.getTargetBlock(null, 4);
+			BITDigiLock digilock = BITDigiLock.getDigiLock(sPlayer, block);
 
 			// ************************************
 			// Buttons in InventoryMenuWindow
 			// ************************************
 			if (BITGui.BITButtons.get(uuid) == "Sort") {
 				// sPlayer.sendMessage("Sort button");
-				if (block.getType() == Material.CHEST) {
-					SpoutChest sChest = (SpoutChest) block.getState();
+				if (digilock.getBlock().getType() == Material.CHEST) {
+					SpoutChest sChest = (SpoutChest) digilock.getBlock()
+							.getState();
 					RLInventory.sortInventoryItems(sPlayer,
 							sChest.getLargestInventory());
 					RLMessages.sendNotification(sPlayer, "Chest sorted.");
@@ -57,23 +54,26 @@ public class BITSpoutListener extends SpoutListener {
 				// sPlayer.sendMessage("Lock button: Owner:"
 				// + BITGui.owner.getText() + " pincode:"
 				// + BITGui.pincode.getText());
-				BITDigiLock.SaveDigiLock(sPlayer, block,
-						BITGui.pincode.getText(), BITGui.owner.getText(), 0);
+				BITDigiLock.SaveDigiLock(sPlayer, digilock.getBlock(),
+						BITGui.pincode.getText(), BITGui.owner.getText(), 0,
+						"", "");
 				RLMessages.sendNotification(sPlayer, "Inventory locked.");
 			} else if (BITGui.BITButtons.get(uuid) == "Owner") {
 				// sPlayer.sendMessage("Owner button: Owner:"
 				// + BITGui.owner.getText() + " pincode:"
 				// + BITGui.pincode.getText());
-				BITDigiLock.SaveDigiLock(sPlayer, block,
-						BITGui.pincode.getText(), BITGui.owner.getText(), 0);
+				BITDigiLock.SaveDigiLock(sPlayer, digilock.getBlock(),
+						BITGui.pincode.getText(), BITGui.owner.getText(), 0,
+						"", "");
 				RLMessages.sendNotification(sPlayer, "Owner changed.");
 			} else if (BITGui.BITButtons.get(uuid) == "Reset") {
 				// sPlayer.sendMessage("Reset button");
 				BITGui.pincode.setText("");
-				BITGui.owner.setText(sPlayer.getName());
-				BITDigiLock.SaveDigiLock(sPlayer, block,
-						BITGui.pincode.getText(), BITGui.owner.getText(), 0);
-				RLMessages.sendNotification(sPlayer, "Pincode removed.");
+				BITGui.owner.setText("");
+				BITDigiLock.SaveDigiLock(sPlayer, digilock.getBlock(),
+						BITGui.pincode.getText(), BITGui.owner.getText(), 0,
+						"", "");
+				RLMessages.sendNotification(sPlayer, "Pincode/owner removed.");
 				BITGui.pincode.setDirty(true);
 			} else if (BITGui.BITButtons.get(uuid) == "Close") {
 				sPlayer.sendMessage("Close button");
@@ -86,18 +86,28 @@ public class BITSpoutListener extends SpoutListener {
 			if (BITGui.BITButtons.get(uuid) == "Unlock") {
 				// sPlayer.sendMessage("Unlock button");
 				BITGui.popupGetPincode.close();
-				unlockcode = BITDigiLock.getPincodeFromSQL(sPlayer, block);
-				// sPlayer.sendMessage("You entered pincode:" + unlockcode);
-				//if (BITGui.pincode2.getText().equals(unlockcode)) {
-				//	RLMessages.sendNotification(sPlayer, "Inventory unlocked.");
-				//} else {
-				//	sPlayer.sendMessage("You entered a wrong pincode:"
-				//			+ unlockcode + " The code is:"
-				//			+ BITGui.pincode2.getText());
+				BITPlayerListener.enteredPincode = BITGui.pincode2.getText();
+				if (digilock.pincode.equals(BITPlayerListener.enteredPincode)) {
+					sPlayer.sendMessage("BITSpoutListener: Correct pincode.");
+					BITPlayerListener.pincodeIsEntered = true;
+					BITPlayerListener.digilock.locked = false;
+				} else {
+					sPlayer.sendMessage("BITSpoutListener: wrong pincode: "
+							+ BITPlayerListener.enteredPincode);
+					// BITPlayerListener.pincodeIsEntered=false;
+					BITPlayerListener.pincodeIsEntered = true;
+					BITPlayerListener.digilock.locked = true;
+					// BITPlayerListener.enteredPincode="";
+				}
 
-				//}
-
+				// ************************************
+				// This only happens if I have forgot to handle a button
+				// ************************************
+			} else {
+				sPlayer.sendMessage("BITSpoutListener: Unknow button:"
+						+ BITGui.BITButtons.get(uuid));
 			}
+
 		}
 	}
 }

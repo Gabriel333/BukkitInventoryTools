@@ -123,9 +123,7 @@ public class BITGui {
 		// button.setHoverColor(2); //When you hover over with a mouse this
 		// makes the text ????red.
 		ownerButton.setTooltip("Enter owners name");
-		popupInventoryMenu.attachWidget(plugin, ownerButton); // Attach the
-																// widget to the
-																// popup
+		popupInventoryMenu.attachWidget(plugin, ownerButton); 
 		owner = new GenericTextField();
 		owner.setText(own); // The default text
 		owner.setTooltip("Enter owners name and press owner.");

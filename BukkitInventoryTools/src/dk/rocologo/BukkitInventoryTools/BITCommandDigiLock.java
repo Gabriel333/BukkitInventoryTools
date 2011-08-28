@@ -19,6 +19,8 @@ public class BITCommandDigiLock implements CommandExecutor {
 		SpoutPlayer sPlayer = (SpoutPlayer) sender;
 		Block block = sPlayer.getTargetBlock(null, 4);
 		String pincode = "0000";
+		String coowners="";
+		String shared="";
 		String owner = sPlayer.getName();
 		Integer closetimer = 0; // never closes automatically
 		if (!BIT.isPlayer(sPlayer)) {
@@ -52,7 +54,7 @@ public class BITCommandDigiLock implements CommandExecutor {
 						pincode = BITGui.pincode.toString();
 						sPlayer.sendMessage("the code is:" + pincode);
 						BITDigiLock.SaveDigiLock(sPlayer, block, pincode, owner,
-								closetimer);
+								closetimer,coowners,shared);
 					} else {
 						if (args[1] != null) {
 							pincode = args[1];
@@ -63,7 +65,7 @@ public class BITCommandDigiLock implements CommandExecutor {
 							sPlayer.sendMessage("Owner:" + owner);
 						}
 						BITDigiLock.SaveDigiLock(sPlayer, block, pincode, owner,
-								closetimer);
+								closetimer,coowners,shared);
 						// syntax is /safetylock lock pincode owner
 						// example /safetylock lock 0000 Gabriel333
 					}

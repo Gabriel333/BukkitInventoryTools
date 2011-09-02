@@ -2,6 +2,7 @@ package dk.rocologo.BukkitInventoryTools;
 
 import org.bukkit.Material;
 import org.bukkit.block.Block;
+import org.bukkit.inventory.Inventory;
 import org.getspout.spoutapi.block.SpoutChest;
 import org.getspout.spoutapi.event.input.InputListener;
 import org.getspout.spoutapi.event.input.KeyPressedEvent;
@@ -48,6 +49,10 @@ public class BITInputListener extends InputListener {
 			// KEY_M
 			if (keypressed.equals(RLConfig.rLConfig.LIBRARY_MENUKEY)) {
 				BITGui.openMenu(sPlayer,block);
+				//InventoryOpenEvent(sPlayer,sPlayer.getInventory(),sPlayer.getInventory());
+				//sPlayer.openInventoryWindow((Inventory) inv);
+				
+				
 			}
 			
 		} else if (screentype==ScreenType.CUSTOM_SCREEN) {

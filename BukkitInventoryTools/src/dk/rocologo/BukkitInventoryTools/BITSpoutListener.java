@@ -5,6 +5,7 @@ import java.util.UUID;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.event.Event;
+import org.bukkit.inventory.Inventory;
 import org.getspout.spoutapi.block.SpoutChest;
 import org.getspout.spoutapi.event.screen.ButtonClickEvent;
 import org.getspout.spoutapi.event.spout.SpoutListener;
@@ -89,6 +90,13 @@ public class BITSpoutListener extends SpoutListener {
 				BITPlayerListener.enteredPincode = BITGui.pincode2.getText();
 				if (digilock.pincode.equals(BITPlayerListener.enteredPincode)) {
 					sPlayer.sendMessage("BITSpoutListener: Correct pincode.");
+					if (digilock.getBlock().getType() == Material.CHEST) {
+						SpoutChest sChest = (SpoutChest) digilock.getBlock()
+								.getState();
+						sPlayer.openInventoryWindow((Inventory) sChest);
+					}
+					
+					
 					BITPlayerListener.pincodeIsEntered = true;
 					BITPlayerListener.digilock.locked = false;
 				} else {
@@ -97,6 +105,11 @@ public class BITSpoutListener extends SpoutListener {
 					// BITPlayerListener.pincodeIsEntered=false;
 					BITPlayerListener.pincodeIsEntered = true;
 					BITPlayerListener.digilock.locked = true;
+				
+					
+		
+					
+					
 					// BITPlayerListener.enteredPincode="";
 				}
 

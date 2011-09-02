@@ -65,8 +65,9 @@ public class RLPermissions {
 							.showInfo("Permissions3/SuperpermBridge is detected. "
 									+ ((Permissions) permissions3Plugin)
 											.getDescription().getFullName());
+					numberOfPermissionSystems++;
 				}
-				numberOfPermissionSystems++;
+				
 			}
 			//PermissionEx
 			if (permissionsExPlugin == null) {
@@ -75,8 +76,9 @@ public class RLPermissions {
 				if (permissionsExPlugin != null) {
 					RLMessages.showInfo("PermissionsEx is detected.");
 					permissionsex = true;
+					numberOfPermissionSystems++;
 				}
-				numberOfPermissionSystems++;
+				
 			}
 			// No permission systems found
 			if (permissions3Plugin == null && permissionsBukkitPlugin == null
@@ -85,7 +87,7 @@ public class RLPermissions {
 						.showInfo("PermissionsBukkit/Permissions3/PermissionsEx system not detected, defaulting to permissions in plugin.yml");
 				return;
 			}
-			if (numberOfPermissionSystems > 1) {
+			if (numberOfPermissionSystems >1 ) {
 				RLMessages
 						.showInfo("OBS. More than one permission system detected. The test sequence is: PermissionsBukkit, Permissions/PermissionsBridges, PermissionsEx");
 			}

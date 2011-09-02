@@ -34,7 +34,7 @@ public class RLMessages {
     	//SpoutPlayer sPlayer = (SpoutPlayer) player;
     	if (sPlayer.isSpoutCraftEnabled()  && (sPlayer instanceof SpoutPlayer)) {
     	//if(Safety.spout && (sPlayer instanceof SpoutPlayer)) { 
-			sPlayer.sendNotification(sPlayer.getName(), string, Material.DIAMOND);
+			sPlayer.sendNotification(sPlayer.getName(), string, Material.CHEST);
 		} else {
 			sPlayer.sendMessage(string);
 		}

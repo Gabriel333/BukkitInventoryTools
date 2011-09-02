@@ -10,5 +10,6 @@
 	<classpathentry kind="lib" path="/Imported Libraries/Newest/SpoutBackpack.jar"/>
 	<classpathentry kind="lib" path="/Imported Libraries/Newest/SpoutAPI.jar"/>
 	<classpathentry kind="lib" path="/Imported Libraries/Newest/Spout.jar"/>
+	<classpathentry kind="lib" path="/Imported Libraries/Newest/craftbukkit-0.0.1-SNAPSHOT.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

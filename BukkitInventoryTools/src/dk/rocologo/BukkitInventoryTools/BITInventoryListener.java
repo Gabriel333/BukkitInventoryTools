@@ -6,12 +6,10 @@ import org.getspout.spoutapi.event.inventory.InventoryListener;
 import org.getspout.spoutapi.event.inventory.InventoryOpenEvent;
 import org.getspout.spoutapi.player.SpoutPlayer;
 
-import dk.rocologo.Library.RLConfig;
-import dk.rocologo.Library.RLMessages;
+
 
 //import dk.rocologo.Library.RLConfig;
 //import dk.rocologo.Library.RLMessages;
-
 
 public class BITInventoryListener extends InventoryListener {
 
@@ -24,32 +22,34 @@ public class BITInventoryListener extends InventoryListener {
 	public void onInventoryOpen(InventoryOpenEvent event) {
 		SpoutPlayer sPlayer = (SpoutPlayer) event.getPlayer();
 		Block block = sPlayer.getTargetBlock(null, 4);
-		RLMessages.sendNotification(sPlayer,
-				RLConfig.rLConfig.LIBRARY_SORTKEY + ":Sort "
-						+ RLConfig.rLConfig.LIBRARY_MENUKEY
-						+ ":Menu");
-		
+		//RLMessages.sendNotification(sPlayer, RLConfig.rLConfig.LIBRARY_SORTKEY
+			//	+ ":Sort " + RLConfig.rLConfig.LIBRARY_MENUKEY + ":Menu");
+
+		sPlayer.sendMessage("BITInventoryListener, pincodeIsEntered:"
+				+ BITPlayerListener.pincodeIsEntered);
+
 		if (BITDigiLock.isLocked(sPlayer, block)) {
-			//BITDigiLock digilock = BITDigiLock.getDigiLock(sPlayer, block);
-			
-		
-			
-			
-			//if (BITPlayerListener.pincodeIsEntered) {
-			//	if (BITPlayerListener.enteredPincode.equals(digilock.pincode)) {
-			//		RLMessages.sendNotification(sPlayer,
-			//				RLConfig.rLConfig.LIBRARY_SORTKEY + ":Sort "
-			//						+ RLConfig.rLConfig.LIBRARY_MENUKEY
-			//						+ ":Menu");
-			//	} else
-			//		sPlayer.sendMessage("BITInventoryListener - Wrong pincode");
-			//		event.setCancelled(true);
-			//}
-			
-			
-			
-			
-			
+			if (BITPlayerListener.pincodeIsEntered
+					&& BITPlayerListener.digilock.locked) {
+				sPlayer.sendMessage("BITInventoryListener: okay");
+			} else {
+				sPlayer.sendMessage("BITInventoryListener: NO");
+				
+			}
+			event.setCancelled(true);
+			// BITDigiLock digilock = BITDigiLock.getDigiLock(sPlayer, block);
+
+			// if (BITPlayerListener.pincodeIsEntered) {
+			// if (BITPlayerListener.enteredPincode.equals(digilock.pincode)) {
+			// RLMessages.sendNotification(sPlayer,
+			// RLConfig.rLConfig.LIBRARY_SORTKEY + ":Sort "
+			// + RLConfig.rLConfig.LIBRARY_MENUKEY
+			// + ":Menu");
+			// } else
+			// sPlayer.sendMessage("BITInventoryListener - Wrong pincode");
+			// event.setCancelled(true);
+			// }
+
 		}
 	}
 

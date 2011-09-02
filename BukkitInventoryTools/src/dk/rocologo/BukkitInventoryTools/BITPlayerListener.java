@@ -1,12 +1,11 @@
 package dk.rocologo.BukkitInventoryTools;
 
-//import org.bukkit.block.Block;
-
-//import org.bukkit.event.block.Action;
 import org.bukkit.block.Block;
+
 import org.bukkit.event.block.Action;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerListener;
+
 import org.getspout.spoutapi.player.SpoutPlayer;
 
 import dk.rocologo.Library.RLMessages;
@@ -18,7 +17,7 @@ public class BITPlayerListener extends PlayerListener {
 	static Boolean pincodeIsEntered = false;
 
 	public void onPlayerInteract(PlayerInteractEvent event) {
-		
+
 		SpoutPlayer sPlayer = (SpoutPlayer) event.getPlayer();
 		Block block = event.getClickedBlock();
 		if (!event.getAction().equals(Action.RIGHT_CLICK_BLOCK)) {
@@ -34,6 +33,7 @@ public class BITPlayerListener extends PlayerListener {
 				if (digilock.locked) {
 					if (!pincodeIsEntered) {
 						BITGui.openPincodeWindow(sPlayer);
+						event.setCancelled(true);
 					} else {
 						if (digilock.pincode.equals(enteredPincode)) {
 							sPlayer.sendMessage("Correct pincode!");
@@ -43,7 +43,10 @@ public class BITPlayerListener extends PlayerListener {
 							enteredPincode = "";
 							event.setCancelled(true);
 						}
+
 					}
+					event.setCancelled(true);
+
 				}
 			} else {
 				// there is no digilock on this block

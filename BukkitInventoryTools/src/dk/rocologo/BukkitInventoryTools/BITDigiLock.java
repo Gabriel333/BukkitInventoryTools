@@ -7,6 +7,7 @@ import java.sql.SQLException;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
+
 import org.bukkit.plugin.Plugin;
 import org.getspout.spoutapi.player.SpoutPlayer;
 
@@ -28,7 +29,7 @@ public class BITDigiLock {
 	protected int closetimer;
 	protected String coowners;
 	protected String shared;
-	protected boolean locked = true;
+	//protected boolean locked = true;
 
 	/**
 	 * Constructs a new BITDigiLock
@@ -191,6 +192,10 @@ public class BITDigiLock {
 		return false;
 	}
 
+	//public getInventory() {
+	//	return block.getState();
+	//}
+	
 	public String getPincode() {
 		return pincode;
 	}

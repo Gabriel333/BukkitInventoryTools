@@ -4,6 +4,7 @@ import java.util.UUID;
 
 import org.bukkit.Material;
 import org.bukkit.block.Block;
+
 import org.bukkit.event.Event;
 import org.bukkit.inventory.Inventory;
 import org.getspout.spoutapi.block.SpoutChest;
@@ -39,7 +40,6 @@ public class BITSpoutListener extends SpoutListener {
 			// Buttons in InventoryMenuWindow
 			// ************************************
 			if (BITGui.BITButtons.get(uuid) == "Sort") {
-				// sPlayer.sendMessage("Sort button");
 				if (digilock.getBlock().getType() == Material.CHEST) {
 					SpoutChest sChest = (SpoutChest) digilock.getBlock()
 							.getState();
@@ -47,28 +47,19 @@ public class BITSpoutListener extends SpoutListener {
 							sChest.getLargestInventory());
 					RLMessages.sendNotification(sPlayer, "Chest sorted.");
 				} else {
-					// SortPlayerInventory.sortinventory(sPlayer,
-					// event.getScreenType());
 					RLMessages.sendNotification(sPlayer, "Items sorted.");
 				}
 			} else if (BITGui.BITButtons.get(uuid) == "Lock") {
-				// sPlayer.sendMessage("Lock button: Owner:"
-				// + BITGui.owner.getText() + " pincode:"
-				// + BITGui.pincode.getText());
 				BITDigiLock.SaveDigiLock(sPlayer, digilock.getBlock(),
 						BITGui.pincode.getText(), BITGui.owner.getText(), 0,
 						"", "");
 				RLMessages.sendNotification(sPlayer, "Inventory locked.");
 			} else if (BITGui.BITButtons.get(uuid) == "Owner") {
-				// sPlayer.sendMessage("Owner button: Owner:"
-				// + BITGui.owner.getText() + " pincode:"
-				// + BITGui.pincode.getText());
 				BITDigiLock.SaveDigiLock(sPlayer, digilock.getBlock(),
 						BITGui.pincode.getText(), BITGui.owner.getText(), 0,
 						"", "");
 				RLMessages.sendNotification(sPlayer, "Owner changed.");
 			} else if (BITGui.BITButtons.get(uuid) == "Reset") {
-				// sPlayer.sendMessage("Reset button");
 				BITGui.pincode.setText("");
 				BITGui.owner.setText("");
 				BITDigiLock.SaveDigiLock(sPlayer, digilock.getBlock(),
@@ -85,33 +76,17 @@ public class BITSpoutListener extends SpoutListener {
 			// Buttons in getPincodeWindow
 			// ************************************
 			if (BITGui.BITButtons.get(uuid) == "Unlock") {
-				// sPlayer.sendMessage("Unlock button");
 				BITGui.popupGetPincode.close();
-				BITPlayerListener.enteredPincode = BITGui.pincode2.getText();
-				if (digilock.pincode.equals(BITPlayerListener.enteredPincode)) {
-					sPlayer.sendMessage("BITSpoutListener: Correct pincode.");
+				if (digilock.pincode.equals(BITGui.pincode2.getText())) {
 					if (digilock.getBlock().getType() == Material.CHEST) {
-						SpoutChest sChest = (SpoutChest) digilock.getBlock()
-								.getState();
-						sPlayer.openInventoryWindow((Inventory) sChest);
+						SpoutChest sChest = (SpoutChest) block.getState();
+						Inventory inv = sChest.getLargestInventory();
+						sPlayer.openInventoryWindow(inv);
 					}
-					
-					
-					BITPlayerListener.pincodeIsEntered = true;
-					BITPlayerListener.digilock.locked = false;
 				} else {
-					sPlayer.sendMessage("BITSpoutListener: wrong pincode: "
-							+ BITPlayerListener.enteredPincode);
-					// BITPlayerListener.pincodeIsEntered=false;
-					BITPlayerListener.pincodeIsEntered = true;
-					BITPlayerListener.digilock.locked = true;
-				
-					
-		
-					
-					
-					// BITPlayerListener.enteredPincode="";
-				}
+					sPlayer.sendMessage("Wrong pincode: "
+							+ BITGui.pincode2.getText());
+					}
 
 				// ************************************
 				// This only happens if I have forgot to handle a button

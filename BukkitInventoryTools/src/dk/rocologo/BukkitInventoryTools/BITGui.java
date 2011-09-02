@@ -12,6 +12,7 @@ import org.getspout.spoutapi.gui.GenericLabel;
 import org.getspout.spoutapi.gui.GenericPopup;
 import org.getspout.spoutapi.gui.GenericTextField;
 import org.getspout.spoutapi.gui.PopupScreen;
+import org.getspout.spoutapi.gui.ScreenType;
 import org.getspout.spoutapi.gui.WidgetAnchor;
 import org.getspout.spoutapi.player.SpoutPlayer;
 
@@ -26,26 +27,25 @@ public class BITGui {
 	public static ArrayList<GenericButton> menuButtons = new ArrayList<GenericButton>();
 	public static HashMap<UUID, String> BITButtons = new HashMap<UUID, String>();
 
-	public static PopupScreen popupInventoryMenu = new GenericPopup(); 
+	public static PopupScreen popupInventoryMenu = new GenericPopup();
 	public static PopupScreen popupGetPincode = new GenericPopup();
 
 	public static GenericTextField pincode;
 	public static GenericTextField pincode2 = new GenericTextField();
 	public static GenericTextField owner;
-	
 
-	public static void openMenu(SpoutPlayer sPlayer, Block block) {
-		
+	public static void openMenu(SpoutPlayer sPlayer, Block block,
+			ScreenType screentype) {
+
 		String pin;
 		String own;
-		pin=BITDigiLock.getPincodeFromSQL(sPlayer,block);
-		own=BITDigiLock.getOwnerFromSQL(sPlayer,block);
-		
+		pin = BITDigiLock.getPincodeFromSQL(sPlayer, block);
+		own = BITDigiLock.getOwnerFromSQL(sPlayer, block);
 
 		GenericItemWidget itemwidget = new GenericItemWidget(new ItemStack(95));
 		itemwidget.setX(370).setY(50);
-		itemwidget.setHeight(10).setWidth(10).setDepth(10); 
-		itemwidget.setTooltip("Locked Inventory"); 
+		itemwidget.setHeight(10).setWidth(10).setDepth(10);
+		itemwidget.setTooltip("Locked Inventory");
 		popupInventoryMenu.attachWidget(plugin, itemwidget);
 
 		int y = 30, height = 20, width = 50;
@@ -59,7 +59,7 @@ public class BITGui {
 		// label red.
 		// label.shiftYPos(20); //This moves the label down 20 in Y-Axis
 		// label.shiftXPos(20);
-		popupInventoryMenu.attachWidget(plugin, label); 
+		popupInventoryMenu.attachWidget(plugin, label);
 		// change label text later
 		// label.setText("Hello").setDirty(true);
 		y = y + height;
@@ -76,32 +76,42 @@ public class BITGui {
 																// popup
 		y = y + height;
 
-		GenericButton lockButton = new GenericButton("Lock");
-		lockButton.setAuto(false).setX(x1).setY(y).setHeight(height)
-				.setWidth(width);
-		// button.setHexColor(1); //This makes the button text ????yellow.
-		// button.setHoverColor(2); //When you hover over with a mouse this
-		// makes the text ????red.
-		lockButton.setTooltip("Enter 4 digits pincode and press lock.");
-		popupInventoryMenu.attachWidget(plugin, lockButton); // Attach the
-																// widget to the
-																// popup
-		pincode = new GenericTextField();
-		pincode.setText(pin); // The default text
-		pincode.setTooltip("Enter 4 digits pincode and press lock.");
-		// textfieldPincode.setFieldColor(hex);
-		// textfieldPincode.setAnchor(WidgetAnchor.CENTER_CENTER);
-		// textfieldPincode.setMaximumCharacters(4);
-		pincode.setCursorPosition(1); // Puts the cursor on the third spot
-		// textfieldPincode.setFieldColor(new Color(1.0F, 1.0F, 1.0F, 1.0F));
-		// //Makes the text-entry area white
-		// textfieldPincode.setBordorColor(new Color(0, 0, 0, 1.0F)); //Makes
-		// the border black
-		pincode.setMaximumCharacters(4); // Can max write 10 Characters
-		pincode.setX(x2).setY(y);
-		pincode.setHeight(height).setWidth(width); // This makes the textfield
-													// 20*200 in size.
-		popupInventoryMenu.attachWidget(plugin, pincode);
+		//if (screentype == ScreenType.CHEST_INVENTORY) {
+			GenericButton lockButton = new GenericButton("Lock");
+			lockButton.setAuto(false).setX(x1).setY(y).setHeight(height)
+					.setWidth(width);
+			// button.setHexColor(1); //This makes the button text ????yellow.
+			// button.setHoverColor(2); //When you hover over with a mouse this
+			// makes the text ????red.
+			lockButton.setTooltip("Enter 4 digits pincode and press lock.");
+			popupInventoryMenu.attachWidget(plugin, lockButton);
+
+			// widget to the
+			// popup
+			pincode = new GenericTextField();
+			pincode.setText(pin); // The default text
+			pincode.setTooltip("Enter 4 digits pincode and press lock.");
+			// textfieldPincode.setFieldColor(hex);
+			// textfieldPincode.setAnchor(WidgetAnchor.CENTER_CENTER);
+			// textfieldPincode.setMaximumCharacters(4);
+			pincode.setCursorPosition(1); // Puts the cursor on the third spot
+			// textfieldPincode.setFieldColor(new Color(1.0F, 1.0F, 1.0F,
+			// 1.0F));
+			// //Makes the text-entry area white
+			// textfieldPincode.setBordorColor(new Color(0, 0, 0, 1.0F));
+			// //Makes
+			// the border black
+			pincode.setMaximumCharacters(4); // Can max write 10 Characters
+			pincode.setX(x2).setY(y);
+			pincode.setHeight(height).setWidth(width); // This makes the
+														// textfield
+														// 20*200 in size.
+			popupInventoryMenu.attachWidget(plugin, pincode);
+			
+			menuButtons.add(lockButton);
+			BITButtons.put(lockButton.getId(), "Lock");
+
+		//}
 		y = y + height;
 
 		GenericButton resetButton = new GenericButton("Reset");
@@ -123,7 +133,7 @@ public class BITGui {
 		// button.setHoverColor(2); //When you hover over with a mouse this
 		// makes the text ????red.
 		ownerButton.setTooltip("Enter owners name");
-		popupInventoryMenu.attachWidget(plugin, ownerButton); 
+		popupInventoryMenu.attachWidget(plugin, ownerButton);
 		owner = new GenericTextField();
 		owner.setText(own); // The default text
 		owner.setTooltip("Enter owners name and press owner.");
@@ -169,9 +179,7 @@ public class BITGui {
 		menuButtons.add(sortButton);
 		BITButtons.put(sortButton.getId(), "Sort");
 
-		menuButtons.add(lockButton);
-		BITButtons.put(lockButton.getId(), "Lock");
-
+		
 		menuButtons.add(ownerButton);
 		BITButtons.put(ownerButton.getId(), "Owner");
 
@@ -182,38 +190,37 @@ public class BITGui {
 		BITButtons.put(closeButton.getId(), "Close");
 	}
 
-	
-	
 	public static void openPincodeWindow(SpoutPlayer sPlayer) {
 		int y = 50, height = 20, width = 100;
 		int x = 170;
 
 		GenericItemWidget itemwidget = new GenericItemWidget(new ItemStack(95));
-		itemwidget.setX(x*height).setY(y);
-		itemwidget.setHeight(height*2).setWidth(height*2).setDepth(height*2);
+		itemwidget.setX(x + 2 * height).setY(y);
+		itemwidget.setHeight(height * 2).setWidth(height * 2)
+				.setDepth(height * 2);
 		itemwidget.setTooltip("Locked inventory");
 		popupGetPincode.attachWidget(plugin, itemwidget);
-		y=y+3*height;
+		y = y + 3 * height;
 
 		pincode2.setText("");
 		pincode2.setTooltip("Enter 4 digits pincode and press unlock.");
-		//pincode2.setAnchor(WidgetAnchor.CENTER_CENTER);
-		//pincode2.setMaximumCharacters(5);
+		// pincode2.setAnchor(WidgetAnchor.CENTER_CENTER);
+		// pincode2.setMaximumCharacters(5);
 		pincode2.setCursorPosition(1);
 		pincode2.setX(x).setY(y);
 		pincode2.setHeight(height).setWidth(width);
 		// textfieldPincode.setFieldColor(hex);
 		// textfieldPincode.setFieldColor(new Color(1.0F, 1.0F, 1.0F, 1.0F));
-		// textfieldPincode.setBordorColor(new Color(0, 0, 0, 1.0F)); 
-		
+		// textfieldPincode.setBordorColor(new Color(0, 0, 0, 1.0F));
+
 		y = y + height;
 
 		GenericButton unlockButton = new GenericButton("Enter pincode");
 		unlockButton.setAuto(false).setX(x).setY(y).setHeight(height)
 				.setWidth(width);
 		unlockButton.setTooltip("Enter 4 digits pincode and press unlock.");
-		// button.setHexColor(1); 
-		// button.setHoverColor(2); 
+		// button.setHexColor(1);
+		// button.setHoverColor(2);
 		popupGetPincode.attachWidget(plugin, unlockButton);
 		popupGetPincode.attachWidget(plugin, pincode2);
 

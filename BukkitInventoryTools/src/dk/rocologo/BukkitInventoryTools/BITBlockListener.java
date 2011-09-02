@@ -28,14 +28,6 @@ public class BITBlockListener extends BlockListener {
 		Block block = event.getBlock();
 		SpoutPlayer sPlayer = (SpoutPlayer) event.getPlayer();
 		sPlayer.sendMessage("BlockBreakEvent:"+block);
-		//if (BITDigiLock.isLockable(block)) {
-		//	if (BITDigiLock.isLocked(block)) {
-		//		BITGui.openPincodeWindow(sPlayer);
-		//		sPlayer.sendMessage("Pincode:"+BITGui.pincode.getText()
-		//				+" Pincode2:"+BITGui.pincode2.getText());
-		//		event.setCancelled(true);
-		//	} 
-		//}
 	}
 
 }

@@ -5,6 +5,7 @@ import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 
+import org.getspout.spoutapi.gui.ScreenType;
 import org.getspout.spoutapi.player.SpoutPlayer;
 
 import dk.rocologo.Library.RLMessages;
@@ -50,7 +51,7 @@ public class BITCommandDigiLock implements CommandExecutor {
 						pincode = "0000";
 						owner = sPlayer.getName();
 						closetimer = 0;
-						BITGui.openMenu(sPlayer,block);
+						BITGui.openMenu(sPlayer,block, ScreenType.GAME_SCREEN);
 						pincode = BITGui.pincode.toString();
 						sPlayer.sendMessage("the code is:" + pincode);
 						BITDigiLock.SaveDigiLock(sPlayer, block, pincode, owner,

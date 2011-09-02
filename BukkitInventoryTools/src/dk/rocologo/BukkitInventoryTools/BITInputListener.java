@@ -2,7 +2,6 @@ package dk.rocologo.BukkitInventoryTools;
 
 import org.bukkit.Material;
 import org.bukkit.block.Block;
-import org.bukkit.inventory.Inventory;
 import org.getspout.spoutapi.block.SpoutChest;
 import org.getspout.spoutapi.event.input.InputListener;
 import org.getspout.spoutapi.event.input.KeyPressedEvent;
@@ -17,49 +16,49 @@ public class BITInputListener extends InputListener {
 
 	@Override
 	public void onKeyPressedEvent(KeyPressedEvent event) {
-		String keypressed = event.getKey().name();
 		SpoutPlayer sPlayer = event.getPlayer();
-		ScreenType screentype = event.getScreenType();
-		if (screentype == ScreenType.CHEST_INVENTORY
-				|| screentype == ScreenType.PLAYER_INVENTORY) {
-			Block block = sPlayer.getTargetBlock(null, 4);
-			//sPlayer.sendMessage("1) Inputlistener: eventype:" + event.getType()
-				//	+ " screenType:" + event.getScreenType());
-	    	// KEY_S
-			if (keypressed.equals(RLConfig.rLConfig.LIBRARY_SORTKEY)) {
-				
-				if (BIT.isPlayer(sPlayer)) {
-					if (RLPermissions.hasPerm(sPlayer, "sortinventory.use",
-							RLPermissions.NOT_QUIET)) {
-						if (block.getType() == Material.CHEST) {
-							SpoutChest sChest = (SpoutChest) block.getState();
-							RLInventory.sortInventoryItems(sPlayer,
-									sChest.getLargestInventory());
-							RLMessages.sendNotification(sPlayer,
-									"Chest sorted.");
-						} else {
-							BITPlayer.sortinventory(sPlayer,
-									event.getScreenType());
-							RLMessages.sendNotification(sPlayer,
-									"Items sorted.");
-						}
-					}
+		if (!BIT.isPlayer(sPlayer)) {
+			return;
+		} else if (!RLPermissions.hasPerm(sPlayer, "sortinventory.use",
+				RLPermissions.NOT_QUIET)) {
+			return;
+		} else {
+			String keypressed = event.getKey().name();
+			ScreenType screentype = event.getScreenType();
+			sPlayer.sendMessage("Inputlistener, screenType:" + event.getScreenType());
+			if (screentype == ScreenType.PLAYER_INVENTORY) {
+				if (keypressed.equals(RLConfig.rLConfig.LIBRARY_SORTKEY)) {
+					BITPlayer.sortinventory(sPlayer, event.getScreenType());
+					RLMessages.sendNotification(sPlayer, "Items sorted.");
 				}
-			} else
-			// KEY_M
-			if (keypressed.equals(RLConfig.rLConfig.LIBRARY_MENUKEY)) {
-				BITGui.openMenu(sPlayer,block);
-				//InventoryOpenEvent(sPlayer,sPlayer.getInventory(),sPlayer.getInventory());
-				//sPlayer.openInventoryWindow((Inventory) inv);
-				
-				
+			} else if (screentype == ScreenType.CHEST_INVENTORY) {
+				Block targetblock = sPlayer.getTargetBlock(null, 4);
+				SpoutChest sChest = (SpoutChest) targetblock.getState();
+				if (keypressed.equals(RLConfig.rLConfig.LIBRARY_SORTKEY)) {
+					if (targetblock.getType() == Material.CHEST) {
+						RLInventory.sortInventoryItems(sPlayer,
+								sChest.getLargestInventory());
+						RLMessages.sendNotification(sPlayer, "Chest sorted.");
+					}
+				} else
+				if (keypressed.equals(RLConfig.rLConfig.LIBRARY_MENUKEY)) {
+					sPlayer.sendMessage("Inputlistener: You pressed the menu key");
+					sPlayer.sendMessage("Inputlistener, screenType:" + event.getScreenType());
+	// // CLOSEWINDOW????
+					// virker ikke - sPlayer.closeActiveWindow();
+					BITGui.openMenu(sPlayer, targetblock, screentype);
+				}
+			} else if (screentype == ScreenType.CUSTOM_SCREEN) {
+				RLMessages.sendNotification(sPlayer,
+						"CUSTOMSCREEN Key:" + event.getKey());
+			} else {
+				sPlayer.sendMessage("Inputlistener, Unhandled screentype:"+screentype);
 			}
-			
-		} else if (screentype==ScreenType.CUSTOM_SCREEN) {
-			//  if KEY_RETURN
+				
 
-			// RLMessages.sendNotification(sPlayer, "Key:"+event.getKey());
 		}
+			
+		
 	}
 
 	@Override

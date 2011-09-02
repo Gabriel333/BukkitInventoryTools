@@ -12,46 +12,35 @@ import dk.rocologo.Library.RLMessages;
 
 public class BITPlayerListener extends PlayerListener {
 
-	static String enteredPincode = "";
-	static BITDigiLock digilock;
-	static Boolean pincodeIsEntered = false;
+	// static String enteredPincode = "";
+	// static BITDigiLock digilock;
+	// static Boolean pincodeIsEntered = false;
 
 	public void onPlayerInteract(PlayerInteractEvent event) {
 
 		SpoutPlayer sPlayer = (SpoutPlayer) event.getPlayer();
+		sPlayer.sendMessage("BITPlayerListener, Name:" + event.getEventName() + " type:"
+				+ event.getType());
 		Block block = event.getClickedBlock();
-		if (!event.getAction().equals(Action.RIGHT_CLICK_BLOCK)) {
+		
+		sPlayer.sendMessage("Action:"+event.getAction());
+		
+		if (block != null) {
 			if (BITDigiLock.isLocked(sPlayer, block)) {
-				RLMessages.sendNotification(sPlayer, "Locked with DigiLock");
-				event.setCancelled(true);
-			}
-			return;
-		} else {
-			// sPlayer right-clicked
-			if (BITDigiLock.isLocked(sPlayer, block)) {
-				digilock = BITDigiLock.getDigiLock(sPlayer, block);
-				if (digilock.locked) {
-					if (!pincodeIsEntered) {
-						BITGui.openPincodeWindow(sPlayer);
-						event.setCancelled(true);
-					} else {
-						if (digilock.pincode.equals(enteredPincode)) {
-							sPlayer.sendMessage("Correct pincode!");
-						} else {
-							sPlayer.sendMessage("Wrong pincode!");
-							pincodeIsEntered = false;
-							enteredPincode = "";
-							event.setCancelled(true);
-						}
-
-					}
-					event.setCancelled(true);
-
+				if (!event.getAction().equals(Action.RIGHT_CLICK_BLOCK)) {
+					RLMessages.sendNotification(sPlayer, "Locked with DigiLock");
+				} else {
+					BITGui.openPincodeWindow(sPlayer);
 				}
+				event.setCancelled(true);
 			} else {
 				// there is no digilock on this block
 				sPlayer.sendMessage("There is no digilock on this block");
 			}
+		} else {
+			sPlayer.sendMessage("Block was null");
 		}
+		
+		
 	}
 }

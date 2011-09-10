@@ -1,4 +1,4 @@
-package dk.rocologo.BukkitInventoryTools;
+package dk.gabriel333.BukkitInventoryTools;
 
 import org.bukkit.Material;
 import org.bukkit.block.Block;
@@ -11,7 +11,7 @@ import org.getspout.spoutapi.block.SpoutChest;
 import org.getspout.spoutapi.gui.ScreenType;
 import org.getspout.spoutapi.player.SpoutPlayer;
 
-import dk.rocologo.Library.*;
+import dk.gabriel333.Library.*;
 
 public class BITCommandSort implements CommandExecutor {
 	public BITCommandSort(BIT instance) {
@@ -23,23 +23,23 @@ public class BITCommandSort implements CommandExecutor {
 		SpoutPlayer sPlayer = (SpoutPlayer) sender;
 		Block targetblock = sPlayer.getTargetBlock(null, 4);
 		if (BIT.isPlayer(sender)) {
-			if (RLPermissions.hasPerm(sender, "sortinventory.use",
-					RLPermissions.NOT_QUIET)) {
+			if (G333Permissions.hasPerm(sender, "sortinventory.use",
+					G333Permissions.NOT_QUIET)) {
 				// G333Messages.showInfo("Target is:"+targetblock.getType());
 				if (targetblock.getType() == Material.CHEST) {
 					SpoutChest sChest = (SpoutChest) targetblock.getState();
-					RLInventory.sortInventoryItems(sPlayer,
+					G333Inventory.sortInventoryItems(sPlayer,
 							sChest.getLargestInventory());
-					RLMessages.sendNotification(sPlayer, "Chest sorted.");
+					G333Messages.sendNotification(sPlayer, "Chest sorted.");
 				} else {
 					BITPlayer.sortinventory(sPlayer,
 							ScreenType.CHAT_SCREEN);
-					RLMessages.sendNotification(sPlayer, "Items sorted.");
+					G333Messages.sendNotification(sPlayer, "Items sorted.");
 				}
 			}
 			return true;
 		} else {
-			RLMessages.showWarning("You can't use /sort in the console.");
+			G333Messages.showWarning("You can't use /sort in the console.");
 			return false;
 		}
 	}

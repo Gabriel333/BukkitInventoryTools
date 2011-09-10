@@ -1,4 +1,4 @@
-package dk.rocologo.Library;
+package dk.gabriel333.Library;
 
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -6,13 +6,13 @@ import java.util.logging.Logger;
 import org.bukkit.Material;
 import org.getspout.spoutapi.player.SpoutPlayer;
 
-import dk.rocologo.Library.RLPlugin;
+import dk.gabriel333.Library.G333Plugin;
 
-public class RLMessages {
+public class G333Messages {
 	
     public static final Logger l = Logger.getLogger("Minecraft");
     
-    private static String PLUGIN_NAME=RLPlugin.PLUGIN_NAME;
+    private static String PLUGIN_NAME=G333Plugin.PLUGIN_NAME;
       	   	
     public static void showInfo(String message) {
     	l.log(Level.INFO, "["+PLUGIN_NAME+"] " + message);

@@ -1,4 +1,4 @@
-package dk.rocologo.Library;
+package dk.gabriel333.Library;
 
 import org.bukkit.Material;
 
@@ -7,7 +7,7 @@ import org.bukkit.inventory.ItemStack;
 
 import org.getspout.spoutapi.player.SpoutPlayer;
 
-public class RLInventory {
+public class G333Inventory {
 
 	public static void sortInventoryItems(SpoutPlayer sPlayer, Inventory inventory) {
 		stackInventoryItems(sPlayer, inventory);
@@ -21,20 +21,20 @@ public class RLInventory {
 			ItemStack item1 = inventory.getItem(i);
 			if ((item1.getAmount() == 64)
 					|| (i < 9 && (item1.getAmount() == 0
-							|| RLInventory.isTool(item1)
-							|| RLInventory.isWeapon(item1)
-							|| RLInventory.isArmor(item1)
-							|| RLInventory.isFood(item1) ||
+							|| G333Inventory.isTool(item1)
+							|| G333Inventory.isWeapon(item1)
+							|| G333Inventory.isArmor(item1)
+							|| G333Inventory.isFood(item1) ||
 					// Food must be alone in slot 0-8 so you can eat it.
-					RLInventory.isVehicle(item1)))) {
+					G333Inventory.isVehicle(item1)))) {
 				continue;
 			} else {
 				for (j = i + 1; j < inventory.getSize(); j++) {
-					RLInventory.moveitemInventory(sPlayer, inventory, j, i);
+					G333Inventory.moveitemInventory(sPlayer, inventory, j, i);
 				}
 			}
 		}
-		RLInventory.orderInventoryItems(inventory, 9);
+		G333Inventory.orderInventoryItems(inventory, 9);
 	}
 	
 	private static void stackInventoryItems(SpoutPlayer sPlayer,
@@ -62,8 +62,8 @@ public class RLInventory {
 		} else if (to_amt == 0 && from_amt > 0) {
 			to_amt = total_amt;
 			from_amt = 0;
-			if (RLConfig.rLConfig.DEBUG_SORTINVENTORY) {
-				RLMessages.showInfo("1) (from,to)=(" + fromslot + ">"
+			if (G333Config.g333Config.DEBUG_SORTINVENTORY) {
+				G333Messages.showInfo("1) (from,to)=(" + fromslot + ">"
 						+ toslot + ") To_amt=" + to_amt + " from_amt="
 						+ from_amt + " total_amt=" + total_amt);
 			}
@@ -74,18 +74,18 @@ public class RLInventory {
 		} else {
 			// Here is to_amt > and from_amt>0 so move all what's possible if
 			// it is the same kind of item.
-			if (RLPermissions.hasPerm(p, "stack.*",RLPermissions.QUIET)) {
+			if (G333Permissions.hasPerm(p, "stack.*",G333Permissions.QUIET)) {
 				// okay...
-			} else if ((isTool(fromitem) && !RLPermissions.hasPerm(p,
-					"stack.tools",RLPermissions.QUIET))
-					|| (isWeapon(fromitem) && !RLPermissions.hasPerm(p,
-							"stack.weapons",RLPermissions.QUIET))
-					|| (isArmor(fromitem) && !RLPermissions.hasPerm(p,
-							"stack.armor",RLPermissions.QUIET))
-					|| (isFood(fromitem) && !RLPermissions.hasPerm(p,
-							"stack.food",RLPermissions.QUIET))
-					|| (isVehicle(fromitem) && !RLPermissions.hasPerm(p,
-							"stack.vehicles",RLPermissions.QUIET))) {
+			} else if ((isTool(fromitem) && !G333Permissions.hasPerm(p,
+					"stack.tools",G333Permissions.QUIET))
+					|| (isWeapon(fromitem) && !G333Permissions.hasPerm(p,
+							"stack.weapons",G333Permissions.QUIET))
+					|| (isArmor(fromitem) && !G333Permissions.hasPerm(p,
+							"stack.armor",G333Permissions.QUIET))
+					|| (isFood(fromitem) && !G333Permissions.hasPerm(p,
+							"stack.food",G333Permissions.QUIET))
+					|| (isVehicle(fromitem) && !G333Permissions.hasPerm(p,
+							"stack.vehicles",G333Permissions.QUIET))) {
 				return;
 			}
 			if (fromitem.getTypeId() == toitem.getTypeId()
@@ -99,8 +99,8 @@ public class RLInventory {
 				if (total_amt > 64) {
 					to_amt = 64;
 					from_amt = total_amt - 64;
-					if (RLConfig.rLConfig.DEBUG_SORTINVENTORY) {
-						RLMessages.showInfo("4) To_amt=" + to_amt
+					if (G333Config.g333Config.DEBUG_SORTINVENTORY) {
+						G333Messages.showInfo("4) To_amt=" + to_amt
 								+ " from_amt=" + from_amt + " total_amt="
 								+ total_amt);
 					}
@@ -109,8 +109,8 @@ public class RLInventory {
 					return;
 				} else {
 					// total_amt is <= 64 so everything goes to toslot
-					if (RLConfig.rLConfig.DEBUG_SORTINVENTORY) {
-						RLMessages.showInfo("5) To_amt=" + to_amt
+					if (G333Config.g333Config.DEBUG_SORTINVENTORY) {
+						G333Messages.showInfo("5) To_amt=" + to_amt
 								+ " from_amt=" + from_amt + " total_amt="
 								+ total_amt);
 					}
@@ -125,13 +125,13 @@ public class RLInventory {
 
 	public static void orderInventoryItems(Inventory inventory, int startslot) {
 		int n = startslot;
-		for (int m = 0; m < RLConfig.rLConfig.SORTSEQ.length; m++) {
+		for (int m = 0; m < G333Config.g333Config.SORTSEQ.length; m++) {
 			Material mat = Material
-					.matchMaterial(RLConfig.rLConfig.SORTSEQ[m]);
+					.matchMaterial(G333Config.g333Config.SORTSEQ[m]);
 			if (mat == null) {
-				RLMessages.showError("Configuration error i config.yml.");
-				RLMessages.showError(" Unknown material in SORTSEQ:"
-						+ RLConfig.rLConfig.SORTSEQ[m]);
+				G333Messages.showError("Configuration error i config.yml.");
+				G333Messages.showError(" Unknown material in SORTSEQ:"
+						+ G333Config.g333Config.SORTSEQ[m]);
 			} else if (inventory.contains(mat)) {
 				for (int i = n; i < inventory.getSize(); i++) {
 					if (inventory.getItem(i).getType() == mat) {
@@ -167,14 +167,14 @@ public class RLInventory {
 	// ********************************************************************
 
 	// Contains the list of tools
-	protected static final int tools[] = { 256, 257, 258, 269, 270, 271, 273,
-			274, 275, 277, 278, 279, 284, 285, 286, 290, 291, 292, 293, 294,
-			346 };
+//	protected static final int tools[] = { 256, 257, 258, 269, 270, 271, 273,
+//			274, 275, 277, 278, 279, 284, 285, 286, 290, 291, 292, 293, 294,
+//			346 };
 
 	// Check if it is a tool
 	public static boolean isTool(ItemStack item) {
-		for (int i : tools) {
-			if (item.getTypeId() == i) {
+		for (String i : G333Config.vehicles) {
+			if (item.getTypeId() == Integer.valueOf(i)) {
 				return true;
 			}
 		}
@@ -182,12 +182,12 @@ public class RLInventory {
 	}
 
 	// Contains the list of weapons
-	protected static final int weapons[] = { 267, 268, 272, 276, 283, 261 };
+//	protected static final int weapons[] = { 267, 268, 272, 276, 283, 261 };
 
 	// Check if it is a weapon
 	public static boolean isWeapon(ItemStack item) {
-		for (int i : weapons) {
-			if (item.getTypeId() == i) {
+		for (String i : G333Config.weapons) {
+			if (item.getTypeId() == Integer.valueOf(i)) {
 				return true;
 			}
 		}
@@ -195,13 +195,13 @@ public class RLInventory {
 	}
 
 	// Contains the list of armors
-	protected static final int armors[] = { 298, 299, 300, 301, 302, 303, 304,
-			305, 306, 307, 308, 309, 310, 311, 312, 313, 314, 315, 316, 317 };
+//	protected static final int armors[] = { 298, 299, 300, 301, 302, 303, 304,
+//			305, 306, 307, 308, 309, 310, 311, 312, 313, 314, 315, 316, 317 };
 
 	// Check if it is a armor
 	public static boolean isArmor(ItemStack item) {
-		for (int i : armors) {
-			if (item.getTypeId() == i) {
+		for (String i : G333Config.armors) {
+			if (item.getTypeId() == Integer.valueOf(i)) {
 				return true;
 			}
 		}
@@ -209,13 +209,13 @@ public class RLInventory {
 	}
 
 	// Contains the list of foods
-	protected static final int foods[] = { 260, 282, 297, 319, 320, 322, 349,
-			350, 354, 357 };
+//	protected static final int foods[] = { 260, 282, 297, 319, 320, 322, 349,
+//			350, 354, 357 };
 
 	// Check if it is food
 	public static boolean isFood(ItemStack item) {
-		for (int i : foods) {
-			if (item.getTypeId() == i) {
+		for (String i : G333Config.foods) {
+			if (item.getTypeId() == Integer.valueOf(i)) {
 				return true;
 			}
 		}
@@ -223,12 +223,12 @@ public class RLInventory {
 	}
 
 	// Contains the list of vehicles
-	protected static final int vehicles[] = { 328, 333, 342, 343 };
+//	protected static final int vehicles[] = { 328, 333, 342, 343 };
 
 	// Check if it is a vehicles
 	public static boolean isVehicle(ItemStack item) {
-		for (int i : vehicles) {
-			if (item.getTypeId() == i) {
+		for (String i : G333Config.vehicles) {
+			if (item.getTypeId() == Integer.valueOf(i)) {
 				return true;
 			}
 		}

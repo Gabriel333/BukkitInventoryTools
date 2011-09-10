@@ -1,4 +1,4 @@
-package dk.rocologo.BukkitInventoryTools;
+package dk.gabriel333.BukkitInventoryTools;
 
 
 
@@ -8,6 +8,8 @@ import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.block.BlockListener;
 import org.bukkit.event.block.BlockRedstoneEvent;
 import org.getspout.spoutapi.player.SpoutPlayer;
+
+import dk.gabriel333.Library.G333Config;
 
 public class BITBlockListener extends BlockListener {
 
@@ -27,7 +29,11 @@ public class BITBlockListener extends BlockListener {
 	public void onBlockBreak(BlockBreakEvent event) {
 		Block block = event.getBlock();
 		SpoutPlayer sPlayer = (SpoutPlayer) event.getPlayer();
-		sPlayer.sendMessage("BlockBreakEvent:"+block);
+		if (BITDigiLock.isLocked(sPlayer, block)) {
+			event.setCancelled(true);
+		} else {
+			if (G333Config.g333Config.DEBUG_GUI) sPlayer.sendMessage("BlockBreakEvent:"+block);
+		}
 	}
 
 }

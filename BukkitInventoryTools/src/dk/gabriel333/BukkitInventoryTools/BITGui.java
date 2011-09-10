@@ -1,4 +1,4 @@
-package dk.rocologo.BukkitInventoryTools;
+package dk.gabriel333.BukkitInventoryTools;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -12,9 +12,10 @@ import org.getspout.spoutapi.gui.GenericLabel;
 import org.getspout.spoutapi.gui.GenericPopup;
 import org.getspout.spoutapi.gui.GenericTextField;
 import org.getspout.spoutapi.gui.PopupScreen;
-import org.getspout.spoutapi.gui.ScreenType;
 import org.getspout.spoutapi.gui.WidgetAnchor;
 import org.getspout.spoutapi.player.SpoutPlayer;
+
+import dk.gabriel333.Library.G333Config;
 
 public class BITGui {
 
@@ -34,8 +35,7 @@ public class BITGui {
 	public static GenericTextField pincode2 = new GenericTextField();
 	public static GenericTextField owner;
 
-	public static void openMenu(SpoutPlayer sPlayer, Block block,
-			ScreenType screentype) {
+	public static void openMenu(SpoutPlayer sPlayer, Block block) {
 
 		String pin;
 		String own;
@@ -43,14 +43,14 @@ public class BITGui {
 		own = BITDigiLock.getOwnerFromSQL(sPlayer, block);
 
 		GenericItemWidget itemwidget = new GenericItemWidget(new ItemStack(95));
-		itemwidget.setX(370).setY(50);
-		itemwidget.setHeight(10).setWidth(10).setDepth(10);
+		itemwidget.setX(150).setY(100);
+		itemwidget.setHeight(60).setWidth(60).setDepth(60);
 		itemwidget.setTooltip("Locked Inventory");
 		popupInventoryMenu.attachWidget(plugin, itemwidget);
 
 		int y = 30, height = 20, width = 50;
-		int x1 = 300;
-		int x2 = 355;
+		int x1 = 250;
+		int x2 = 310;
 
 		GenericLabel label = new GenericLabel("Inventory Menu");
 		label.setAuto(false).setX(x1).setY(y).setHeight(height).setWidth(width);
@@ -76,62 +76,47 @@ public class BITGui {
 																// popup
 		y = y + height;
 
-		//if (screentype == ScreenType.CHEST_INVENTORY) {
-			GenericButton lockButton = new GenericButton("Lock");
-			lockButton.setAuto(false).setX(x1).setY(y).setHeight(height)
-					.setWidth(width);
-			// button.setHexColor(1); //This makes the button text ????yellow.
-			// button.setHoverColor(2); //When you hover over with a mouse this
-			// makes the text ????red.
-			lockButton.setTooltip("Enter 4 digits pincode and press lock.");
-			popupInventoryMenu.attachWidget(plugin, lockButton);
+		GenericButton lockButton = new GenericButton("Lock");
+		lockButton.setAuto(false).setX(x1).setY(y).setHeight(height)
+				.setWidth(width);
+		// button.setHexColor(1); 
+		// button.setHoverColor(2); 
+		lockButton.setTooltip("Enter 4 digits pincode and press lock.");
+		popupInventoryMenu.attachWidget(plugin, lockButton);
 
-			// widget to the
-			// popup
-			pincode = new GenericTextField();
-			pincode.setText(pin); // The default text
-			pincode.setTooltip("Enter 4 digits pincode and press lock.");
-			// textfieldPincode.setFieldColor(hex);
-			// textfieldPincode.setAnchor(WidgetAnchor.CENTER_CENTER);
-			// textfieldPincode.setMaximumCharacters(4);
-			pincode.setCursorPosition(1); // Puts the cursor on the third spot
-			// textfieldPincode.setFieldColor(new Color(1.0F, 1.0F, 1.0F,
-			// 1.0F));
-			// //Makes the text-entry area white
-			// textfieldPincode.setBordorColor(new Color(0, 0, 0, 1.0F));
-			// //Makes
-			// the border black
-			pincode.setMaximumCharacters(4); // Can max write 10 Characters
-			pincode.setX(x2).setY(y);
-			pincode.setHeight(height).setWidth(width); // This makes the
-														// textfield
-														// 20*200 in size.
-			popupInventoryMenu.attachWidget(plugin, pincode);
-			
-			menuButtons.add(lockButton);
-			BITButtons.put(lockButton.getId(), "Lock");
+		pincode = new GenericTextField();
+		pincode.setText(pin); // The default text
+		pincode.setTooltip("Enter 4 digits pincode and press lock.");
+		// textfieldPincode.setFieldColor(hex);
+		// textfieldPincode.setAnchor(WidgetAnchor.CENTER_CENTER);
+		// textfieldPincode.setMaximumCharacters(4);
+		pincode.setCursorPosition(1); // Puts the cursor on the third spot
+		// textfieldPincode.setFieldColor(new Color(1.0F, 1.0F, 1.0F, 1.0F));
+		// textfieldPincode.setBordorColor(new Color(0, 0, 0, 1.0F));
+		pincode.setMaximumCharacters(4); // Can max write 10 Characters
+		pincode.setX(x2).setY(y);
+		pincode.setHeight(height).setWidth(width);
+		popupInventoryMenu.attachWidget(plugin, pincode);
 
-		//}
+		menuButtons.add(lockButton);
+		BITButtons.put(lockButton.getId(), "Lock");
+
 		y = y + height;
 
 		GenericButton resetButton = new GenericButton("Reset");
 		resetButton.setAuto(false).setX(x1).setY(y).setHeight(height)
 				.setWidth(width);
-		// button.setHexColor(1); //This makes the button text ????yellow.
-		// button.setHoverColor(2); //When you hover over with a mouse this
-		// makes the text ????red.
+		// button.setHexColor(1);
+		// button.setHoverColor(2);
 		resetButton.setTooltip("Reset lock");
-		popupInventoryMenu.attachWidget(plugin, resetButton); // Attach the
-																// widget to the
-																// popup
+		popupInventoryMenu.attachWidget(plugin, resetButton);
 		y = y + height;
 
 		GenericButton ownerButton = new GenericButton("Owner");
 		ownerButton.setAuto(false).setX(x1).setY(y).setHeight(height)
 				.setWidth(width);
-		// button.setHexColor(1); //This makes the button text ????yellow.
-		// button.setHoverColor(2); //When you hover over with a mouse this
-		// makes the text ????red.
+		// button.setHexColor(1); 
+		// button.setHoverColor(2); 
 		ownerButton.setTooltip("Enter owners name");
 		popupInventoryMenu.attachWidget(plugin, ownerButton);
 		owner = new GenericTextField();
@@ -142,44 +127,39 @@ public class BITGui {
 		// textfieldPincode.setMaximumCharacters(4);
 		owner.setCursorPosition(1); // Puts the cursor on the third spot
 		// textfieldPincode.setFieldColor(new Color(1.0F, 1.0F, 1.0F, 1.0F));
-		// //Makes the text-entry area white
-		// textfieldPincode.setBordorColor(new Color(0, 0, 0, 1.0F)); //Makes
-		// the border black
-		owner.setMaximumCharacters(20); // Can max write 10 Characters
+		// textfieldPincode.setBordorColor(new Color(0, 0, 0, 1.0F));
+		owner.setMaximumCharacters(20); 
 		owner.setX(x2).setY(y);
-		owner.setHeight(height).setWidth(2 * width); // This makes the textfield
-														// 20*200 in size.
+		owner.setHeight(height).setWidth(2 * width);
 		popupInventoryMenu.attachWidget(plugin, owner);
 		y = y + height;
 
 		GenericButton closeButton = new GenericButton("Close");
 		closeButton.setAuto(false).setX(x1).setY(y).setHeight(height)
 				.setWidth(width);
-		// button.setHexColor(1); //This makes the button text ????yellow.
-		// button.setHoverColor(2); //When you hover over with a mouse this
-		// makes the text ????red.
+		// button.setHexColor(1); 
+		// button.setHoverColor(2); 
 		closeButton.setTooltip("Close the menu.");
-		popupInventoryMenu.attachWidget(plugin, closeButton); // Attach the
-																// widget to the
-																// popup
+		popupInventoryMenu.attachWidget(plugin, closeButton);
 		y = y + height;
 
 		// GenericTexture texture = new GenericTexture();
 		// texture.setUrl("http://dl.dropbox.com/u/36067670/Safety/Icons/dialog-information.png");
 		// //Have to be a png or jpg
 		// texture.setX(300).setY(220);
-		// texture.setWidth(32).setHeight(32); //Use the same size as the png
-		// here.
+		// texture.setWidth(32).setHeight(32); 
 		// popup.attachWidget(plugin, texture);
 
 		popupInventoryMenu.setTransparent(false);
 
+		if (G333Config.g333Config.DEBUG_GUI)
+			sPlayer.sendMessage("BITGui... was here");
+		// sPlayer.closeActiveWindow();
 		sPlayer.getMainScreen().attachPopupScreen(popupInventoryMenu);
 
 		menuButtons.add(sortButton);
 		BITButtons.put(sortButton.getId(), "Sort");
 
-		
 		menuButtons.add(ownerButton);
 		BITButtons.put(ownerButton.getId(), "Owner");
 
@@ -226,6 +206,7 @@ public class BITGui {
 
 		// Open Window
 		popupGetPincode.setTransparent(true);
+		// sPlayer.closeActiveWindow();
 		sPlayer.getMainScreen().attachPopupScreen(popupGetPincode);
 
 		// Save button

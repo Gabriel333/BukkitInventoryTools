@@ -1,4 +1,4 @@
-package dk.rocologo.BukkitInventoryTools;
+package dk.gabriel333.BukkitInventoryTools;
 
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
@@ -7,7 +7,7 @@ import org.getspout.spoutapi.gui.ScreenType;
 import org.getspout.spoutapi.player.SpoutPlayer;
 
 //import de.Keyle.MyWolf.MyWolfPlugin;
-import dk.rocologo.Library.RLInventory;
+import dk.gabriel333.Library.G333Inventory;
 
 //import dk.gabriel333.Library.G333Messages;
 
@@ -16,14 +16,14 @@ public abstract class BITPlayer implements Player {
 	public static void sortinventory(SpoutPlayer sPlayer, ScreenType screentype) {
 		// sort the ordinary player inventory
 		Inventory inventory = sPlayer.getInventory();
-		RLInventory.stackPlayerInventoryItems(sPlayer);
+		G333Inventory.stackPlayerInventoryItems(sPlayer);
 
 		// sort the SpoutBackpack if it exists and if it is opened.
 		if (BIT.spoutbackpack
 				&& screentype == ScreenType.CHEST_INVENTORY) {
 			inventory = BIT.spoutBackpackHandler
 					.getOpenedSpoutBackpack(sPlayer);
-			RLInventory.sortInventoryItems(sPlayer, inventory);
+			G333Inventory.sortInventoryItems(sPlayer, inventory);
 		}
 
 		// sort the players MyWolfInventory if exists and if is open.

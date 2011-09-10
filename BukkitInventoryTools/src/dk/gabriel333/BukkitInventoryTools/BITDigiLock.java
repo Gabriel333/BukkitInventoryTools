@@ -1,4 +1,4 @@
-package dk.rocologo.BukkitInventoryTools;
+package dk.gabriel333.BukkitInventoryTools;
 
 import java.net.MalformedURLException;
 import java.sql.ResultSet;
@@ -11,9 +11,9 @@ import org.bukkit.block.Block;
 import org.bukkit.plugin.Plugin;
 import org.getspout.spoutapi.player.SpoutPlayer;
 
-import dk.rocologo.Library.RLConfig;
-import dk.rocologo.Library.RLMessages;
-import dk.rocologo.BukkitInventoryTools.BIT;
+import dk.gabriel333.BukkitInventoryTools.BIT;
+import dk.gabriel333.Library.G333Config;
+import dk.gabriel333.Library.G333Messages;
 
 public class BITDigiLock {
 
@@ -82,9 +82,9 @@ public class BITDigiLock {
 					+ shared + "');";
 			sPlayer.sendMessage(ChatColor.RED + "Creating lock:" + query);
 		}
-		if (RLConfig.rLConfig.DEBUG_SQL)
-			RLMessages.showInfo("SQL: " + query);
-		if (RLConfig.rLConfig.STORAGE_TYPE.equals("MySQL")) {
+		if (G333Config.g333Config.DEBUG_SQL)
+			G333Messages.showInfo("SQL: " + query);
+		if (G333Config.g333Config.STORAGE_TYPE.equals("MySQL")) {
 			try {
 				BIT.manageMySQL.insertQuery(query);
 			} catch (MalformedURLException e) {
@@ -114,7 +114,7 @@ public class BITDigiLock {
 		// TODO: add and rownum<2 to select only one row
 		ResultSet result = null;
 
-		if (RLConfig.rLConfig.STORAGE_TYPE.equals("MySQL")) {
+		if (G333Config.g333Config.STORAGE_TYPE.equals("MySQL")) {
 			try {
 				result = BIT.manageMySQL.sqlQuery(query);
 			} catch (MalformedURLException e) {
@@ -262,7 +262,7 @@ public class BITDigiLock {
 		// TODO: add and rownum<2 to select only one row
 		ResultSet result = null;
 
-		if (RLConfig.rLConfig.STORAGE_TYPE.equals("MySQL")) {
+		if (G333Config.g333Config.STORAGE_TYPE.equals("MySQL")) {
 			try {
 				result = BIT.manageMySQL.sqlQuery(query);
 			} catch (MalformedURLException e) {
@@ -301,10 +301,9 @@ public class BITDigiLock {
 				+ block.getX() + " AND y = " + block.getY() + " AND z = "
 				+ block.getZ() + " AND world='" + block.getWorld().getName()
 				+ "';";
-		// TODO: add and rownum<2 to select only one row
 		ResultSet result = null;
 
-		if (RLConfig.rLConfig.STORAGE_TYPE.equals("MySQL")) {
+		if (G333Config.g333Config.STORAGE_TYPE.equals("MySQL")) {
 			try {
 				result = BIT.manageMySQL.sqlQuery(query);
 			} catch (MalformedURLException e) {
@@ -324,11 +323,8 @@ public class BITDigiLock {
 		try {
 			if (result != null && result.next()) {
 				String owner = result.getString("owner");
-				//sPlayer.sendMessage("Owner stored in SQL is:" + ChatColor.RED
-				//		+ owner);
 				return owner;
 			} else {
-				// sPlayer.sendMessage("This block is not owned - open inventory");
 				return sPlayer.getName();
 			}
 		} catch (SQLException e) {
@@ -346,7 +342,7 @@ public class BITDigiLock {
 				+ block.getZ() + " AND world='" + block.getWorld().getName()
 				+ "';";
 		ResultSet result = null;
-		if (RLConfig.rLConfig.STORAGE_TYPE.equals("MySQL")) {
+		if (G333Config.g333Config.STORAGE_TYPE.equals("MySQL")) {
 			try {
 				result = BIT.manageMySQL.sqlQuery(query);
 			} catch (MalformedURLException e) {
@@ -365,7 +361,6 @@ public class BITDigiLock {
 
 		try {
 			if (result != null && result.next()) {
-				// String block = result.getString("block");
 				String pincode = result.getString("pincode");
 				String owner = result.getString("owner");
 				int closetimer = result.getInt("closetimer");
@@ -373,11 +368,8 @@ public class BITDigiLock {
 				String shared = result.getString("shared");
 				BITDigiLock digilock = new BITDigiLock(block, pincode, owner,
 						closetimer, coowners, shared);
-				//sPlayer.sendMessage("Owner stored in SQL is:" + ChatColor.RED
-				//		+ owner);
 				return digilock;
 			} else {
-				// sPlayer.sendMessage("This block is not owned - open inventory");
 				return null;
 			}
 		} catch (SQLException e) {

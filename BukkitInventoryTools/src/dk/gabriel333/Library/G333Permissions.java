@@ -1,4 +1,4 @@
-package dk.rocologo.Library;
+package dk.gabriel333.Library;
 
 import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
@@ -13,7 +13,7 @@ import com.nijikokun.bukkit.Permissions.Permissions;
 import ru.tehkode.permissions.PermissionManager;
 import ru.tehkode.permissions.bukkit.PermissionsEx;
 
-public class RLPermissions {
+public class G333Permissions {
 
 	public static String PERMISSION_NODE;
 	public final static Boolean QUIET = true;
@@ -38,7 +38,7 @@ public class RLPermissions {
 	public static void setupPermissions(Plugin plugin) {
 		PERMISSION_NODE = plugin.getDescription().getName() + ".";
 		if (permissions3 || permissionsBukkit || permissionsex) {
-			RLMessages
+			G333Messages
 					.showWarning("Your permission system is allready detected!");
 			return;
 		} else {
@@ -49,7 +49,7 @@ public class RLPermissions {
 						.getPlugin("PermissionsBukkit");
 				if (permissionsBukkitPlugin != null) {
 					permissionsBukkit = true;
-					RLMessages.showInfo("PermissionsBukkit is detected.");
+					G333Messages.showInfo("PermissionsBukkit is detected.");
 				}
 				numberOfPermissionSystems++;
 			}
@@ -61,7 +61,7 @@ public class RLPermissions {
 					permission3Handler = ((Permissions) permissions3Plugin)
 							.getHandler();
 					permissions3 = true;
-					RLMessages
+					G333Messages
 							.showInfo("Permissions3/SuperpermBridge is detected. "
 									+ ((Permissions) permissions3Plugin)
 											.getDescription().getFullName());
@@ -74,7 +74,7 @@ public class RLPermissions {
 				permissionsExPlugin = plugin.getServer().getPluginManager()
 						.getPlugin("PermissionsEx");
 				if (permissionsExPlugin != null) {
-					RLMessages.showInfo("PermissionsEx is detected.");
+					G333Messages.showInfo("PermissionsEx is detected.");
 					permissionsex = true;
 					numberOfPermissionSystems++;
 				}
@@ -83,12 +83,12 @@ public class RLPermissions {
 			// No permission systems found
 			if (permissions3Plugin == null && permissionsBukkitPlugin == null
 					&& permissionsExPlugin == null) {
-				RLMessages
+				G333Messages
 						.showInfo("PermissionsBukkit/Permissions3/PermissionsEx system not detected, defaulting to permissions in plugin.yml");
 				return;
 			}
 			if (numberOfPermissionSystems >1 ) {
-				RLMessages
+				G333Messages
 						.showInfo("OBS. More than one permission system detected. The test sequence is: PermissionsBukkit, Permissions/PermissionsBridges, PermissionsEx");
 			}
 		}
@@ -150,7 +150,7 @@ public class RLPermissions {
 		} else if (NOT_QUIET) {
 			sPlayer.sendMessage(ChatColor.RED
 					+ "You to dont have permission to do this."
-					+ " (" + RLPlugin.PLUGIN_NAME.toLowerCase()
+					+ " (" + G333Plugin.PLUGIN_NAME.toLowerCase()
 					+ "."+label.toLowerCase()+")");
 		} 
 		return false;

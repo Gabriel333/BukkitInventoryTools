@@ -1,16 +1,14 @@
-package dk.rocologo.BukkitInventoryTools;
+package dk.gabriel333.BukkitInventoryTools;
 
 import org.bukkit.block.Block;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
-
-import org.getspout.spoutapi.gui.ScreenType;
 import org.getspout.spoutapi.player.SpoutPlayer;
 
-import dk.rocologo.Library.RLMessages;
-import dk.rocologo.Library.RLPermissions;
-import dk.rocologo.BukkitInventoryTools.BITDigiLock;
+import dk.gabriel333.BukkitInventoryTools.BITDigiLock;
+import dk.gabriel333.Library.G333Messages;
+import dk.gabriel333.Library.G333Permissions;
 
 public class BITCommandDigiLock implements CommandExecutor {
 
@@ -20,20 +18,20 @@ public class BITCommandDigiLock implements CommandExecutor {
 		SpoutPlayer sPlayer = (SpoutPlayer) sender;
 		Block block = sPlayer.getTargetBlock(null, 4);
 		String pincode = "0000";
-		String coowners="";
-		String shared="";
+		String coowners = "";
+		String shared = "";
 		String owner = sPlayer.getName();
 		Integer closetimer = 0; // never closes automatically
 		if (!BIT.isPlayer(sPlayer)) {
-			RLMessages.showError("You cant use this command in the console.");
+			G333Messages.showError("You cant use this command in the console.");
 			return false;
-		} else if (RLPermissions.hasPerm(sPlayer, "digilock.use",
-				RLPermissions.NOT_QUIET)
-				|| RLPermissions.hasPerm(sPlayer, "digilock.admin",
-						RLPermissions.NOT_QUIET)
-				|| RLPermissions.hasPerm(sPlayer, "digilock.*",
-						RLPermissions.NOT_QUIET)
-				|| RLPermissions.hasPerm(sPlayer, "*", RLPermissions.NOT_QUIET)) {
+		} else if (G333Permissions.hasPerm(sPlayer, "digilock.use",
+				G333Permissions.NOT_QUIET)
+				|| G333Permissions.hasPerm(sPlayer, "digilock.admin",
+						G333Permissions.NOT_QUIET)
+				|| G333Permissions.hasPerm(sPlayer, "digilock.*",
+						G333Permissions.NOT_QUIET)
+				|| G333Permissions.hasPerm(sPlayer, "*", G333Permissions.NOT_QUIET)) {
 			if (args.length == 0) {
 				BITDigiLock.showDigiLockStatus();
 				sPlayer.sendMessage("Usage: /digilock [lock,unlock,reset,help]");
@@ -44,18 +42,17 @@ public class BITCommandDigiLock implements CommandExecutor {
 			String action = args[0];
 			if (action.equalsIgnoreCase("lock")) {
 				if (BITDigiLock.isLockable(block)) {
-					sPlayer.sendMessage("You want to lock :"
-							+ block.getType());
+					sPlayer.sendMessage("You want to lock :" + block.getType());
 					// if USEGUI then
 					if (sPlayer.isSpoutCraftEnabled()) {
 						pincode = "0000";
 						owner = sPlayer.getName();
 						closetimer = 0;
-						BITGui.openMenu(sPlayer,block, ScreenType.GAME_SCREEN);
+						BITGui.openMenu(sPlayer, block);
 						pincode = BITGui.pincode.toString();
 						sPlayer.sendMessage("the code is:" + pincode);
-						BITDigiLock.SaveDigiLock(sPlayer, block, pincode, owner,
-								closetimer,coowners,shared);
+						BITDigiLock.SaveDigiLock(sPlayer, block, pincode,
+								owner, closetimer, coowners, shared);
 					} else {
 						if (args[1] != null) {
 							pincode = args[1];
@@ -65,19 +62,18 @@ public class BITCommandDigiLock implements CommandExecutor {
 							owner = args[2];
 							sPlayer.sendMessage("Owner:" + owner);
 						}
-						BITDigiLock.SaveDigiLock(sPlayer, block, pincode, owner,
-								closetimer,coowners,shared);
+						BITDigiLock.SaveDigiLock(sPlayer, block, pincode,
+								owner, closetimer, coowners, shared);
 						// syntax is /safetylock lock pincode owner
 						// example /safetylock lock 0000 Gabriel333
 					}
 				} else {
-					sPlayer.sendMessage("You can't lock a "
-							+ block.getType() + " block.");
+					sPlayer.sendMessage("You can't lock a " + block.getType()
+							+ " block.");
 					return true;
 				}
 			} else if (action.equalsIgnoreCase("unlock")) {
-				sPlayer.sendMessage("You want to unlock :"
-						+ block.getType());
+				sPlayer.sendMessage("You want to unlock :" + block.getType());
 				BITDigiLock.unlockDigiLock();
 			} else if (action.equalsIgnoreCase("reset")) {
 				sPlayer.sendMessage("You want to reset lock at:"
@@ -89,7 +85,7 @@ public class BITCommandDigiLock implements CommandExecutor {
 				sPlayer.sendMessage("Action: " + args[0] + " No. arguments is "
 						+ args.length);
 			}
-			
+
 		}
 		return true;
 	}

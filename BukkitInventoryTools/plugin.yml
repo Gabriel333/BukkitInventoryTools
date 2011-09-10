@@ -1,7 +1,7 @@
 name: BukkitInventoryTools
-main: dk.rocologo.BukkitInventoryTools.BIT
-version: 1.0
-author: Rocologo, Gabriel333
+main: dk.gabriel333.BukkitInventoryTools.BIT
+version: 2.0
+author: Gabriel333
 website: https://github.com/BukkitInventoryTools
 description: Use /sort to sort you personal inventory or the chest
 depend: [Spout]
@@ -32,4 +32,4 @@ permissions:
     bukkitinventorytools.digilock.use:
         default: true
     bukkitinventorytools.digilock.use:
-        default: OP
+        default: op

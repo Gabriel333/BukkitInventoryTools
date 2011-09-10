@@ -1,4 +1,4 @@
-package dk.rocologo.BukkitInventoryTools;
+package dk.gabriel333.BukkitInventoryTools;
 
 import java.net.MalformedURLException;
 import java.util.logging.Logger;
@@ -17,9 +17,9 @@ import com.alta189.sqlLibrary.MySQL.mysqlCore;
 import com.alta189.sqlLibrary.SQLite.sqlCore;
 
 import de.Keyle.MyWolf.MyWolfPlugin;
-import dk.rocologo.Library.RLConfig;
-import dk.rocologo.Library.RLMessages;
-import dk.rocologo.Library.RLPlugin;
+import dk.gabriel333.Library.G333Config;
+import dk.gabriel333.Library.G333Messages;
+import dk.gabriel333.Library.G333Plugin;
 
 import me.neatmonster.spoutbackpack.SBHandler;
 
@@ -49,8 +49,8 @@ public class BIT extends JavaPlugin {
 	public void onEnable() {
 		instance = this;
 
-		RLPlugin.setupPlugin(this);
-		RLConfig.setupConfig(this);
+		G333Plugin.setupPlugin(this);
+		G333Config.setupConfig(this);
 		setupSpout();
 		setupSQL();
 		setupSpoutBackpack();
@@ -60,7 +60,7 @@ public class BIT extends JavaPlugin {
 		addCommands();
 
 		PluginDescriptionFile pdfFile = this.getDescription();
-		RLMessages.showInfo(pdfFile.getName() + " version "
+		G333Messages.showInfo(pdfFile.getName() + " version "
 				+ pdfFile.getVersion() + " is enabled!");
 	}
 
@@ -87,7 +87,7 @@ public class BIT extends JavaPlugin {
 	@Override
 	public void onDisable() {
 		PluginDescriptionFile pdfFile = this.getDescription();
-		RLMessages.showInfo(pdfFile.getName() + " version "
+		G333Messages.showInfo(pdfFile.getName() + " version "
 				+ pdfFile.getVersion() + " is disabled!");
 	}
 
@@ -101,9 +101,9 @@ public class BIT extends JavaPlugin {
 				.getPlugin("Spout");
 		if (spoutPlugin != null) {
 			spout = true;
-			RLMessages.showInfo("Spout is detected.");
+			G333Messages.showInfo("Spout is detected.");
 		} else {
-			RLMessages.showError("Safety is dependend on Spout!");
+			G333Messages.showError("Safety is dependend on Spout!");
 		}
 	}
 
@@ -121,9 +121,9 @@ public class BIT extends JavaPlugin {
 				if (spout == true) {
 					spoutBackpackHandler = new SBHandler();
 					spoutbackpack = true;
-					RLMessages.showInfo("SpoutBackpack is detected.");
+					G333Messages.showInfo("SpoutBackpack is detected.");
 				} else {
-					RLMessages
+					G333Messages
 							.showWarning("SpoutBackpack is detected, but spout is not detected.");
 					spoutbackpack = false;
 				}
@@ -138,9 +138,9 @@ public class BIT extends JavaPlugin {
 			if (myWolfPlugin != null) {
 				if (spout == true) {
 					mywolf = true;
-					RLMessages.showInfo("MyWolf is detected.");
+					G333Messages.showInfo("MyWolf is detected.");
 				} else {
-					RLMessages
+					G333Messages
 							.showWarning("MyWolf is detected, but spout is not detected.");
 					mywolf = false;
 				}
@@ -155,37 +155,38 @@ public class BIT extends JavaPlugin {
 
 	private void setupSQL() {
 
-		if (RLConfig.rLConfig.DEBUG_SQL) {
-			RLMessages
-					.showInfo("Storagetype:" + RLConfig.rLConfig.STORAGE_TYPE);
+		if (G333Config.g333Config.DEBUG_SQL) {
+			G333Messages.showInfo("Storagetype:"
+					+ G333Config.g333Config.STORAGE_TYPE);
 		}
 
-		if (RLConfig.rLConfig.STORAGE_TYPE.equals("MySQL")) {
+		if (G333Config.g333Config.STORAGE_TYPE.equals("MySQL")) {
 			// Declare MySQL Handler
-			manageMySQL = new mysqlCore(log, "[" + RLPlugin.PLUGIN_NAME + "]",
-					RLConfig.rLConfig.STORAGE_HOST,
-					RLConfig.rLConfig.STORAGE_DATABASE,
-					RLConfig.rLConfig.STORAGE_USERNAME,
-					RLConfig.rLConfig.STORAGE_PASSWORD);
-			RLMessages.showInfo("MySQL Initializing");
+			manageMySQL = new mysqlCore(log,
+					"[" + G333Plugin.PLUGIN_NAME + "]",
+					G333Config.g333Config.STORAGE_HOST,
+					G333Config.g333Config.STORAGE_DATABASE,
+					G333Config.g333Config.STORAGE_USERNAME,
+					G333Config.g333Config.STORAGE_PASSWORD);
+			G333Messages.showInfo("MySQL Initializing");
 			// Initialize MySQL Handler
 			manageMySQL.initialize();
 			try {
 				if (manageMySQL.checkConnection()) {
 					// Check if the Connection was successful
-					RLMessages.showInfo("MySQL connection successful");
+					G333Messages.showInfo("MySQL connection successful");
 					if (!manageMySQL.checkTable("BukkitInventoryTools")) {
 						// Check if the table exists in the database if not
 						// create it
-						RLMessages
+						G333Messages
 								.showInfo("Creating table BukkitInventoryTools");
 						String query = "CREATE TABLE BukkitInventoryTools (id INT AUTO_INCREMENT PRIMARY_KEY, pincode VARCHAR(4), owner VARCHAR(255), closetimer INT, x INT, y INT, z INT, world VARCHAR(255), shared VARCHAR(255), coowners VARCHAR(255));";
 						manageMySQL.createTable(query);
 						// Use mysqlCore.createTable(query) to create tables
 					}
 				} else {
-					RLMessages.showError("MySQL connection failed");
-					RLConfig.rLConfig.STORAGE_HOST = "SQLITE";
+					G333Messages.showError("MySQL connection failed");
+					G333Config.g333Config.STORAGE_HOST = "SQLITE";
 				}
 			} catch (MalformedURLException e) {
 				// TODO Auto-generated catch block
@@ -199,15 +200,15 @@ public class BIT extends JavaPlugin {
 			}
 		} else {
 			// SQLite
-			RLMessages.showInfo("SQLite Initializing");
+			G333Messages.showInfo("SQLite Initializing");
 			// Declare SQLite handler
-			manageSQLite = new sqlCore(log, "[" + RLPlugin.PLUGIN_NAME + "]",
-					RLPlugin.PLUGIN_NAME, RLPlugin.PLUGIN_FOLDER);
+			manageSQLite = new sqlCore(log, "[" + G333Plugin.PLUGIN_NAME + "]",
+					G333Plugin.PLUGIN_NAME, G333Plugin.PLUGIN_FOLDER);
 			// Initialize SQLite handler
 			manageSQLite.initialize();
 			// Check if the table exists, if it doesn't create it
 			if (!manageSQLite.checkTable("BukkitInventoryTools")) {
-				RLMessages.showInfo("Creating table BukkitInventoryTools");
+				G333Messages.showInfo("Creating table BukkitInventoryTools");
 				String query = "CREATE TABLE BukkitInventoryTools (id INT AUTO_INCREMENT PRIMARY_KEY, pincode VARCHAR(4), owner VARCHAR(255), closetimer INT, x INT, y INT, z INT, world VARCHAR(255), shared VARCHAR(255), coowners VARCHAR(255));";
 				manageSQLite.createTable(query);
 				// Use sqlCore.createTable(query) to create tables

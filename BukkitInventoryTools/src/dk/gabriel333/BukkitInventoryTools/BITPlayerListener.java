@@ -1,12 +1,13 @@
 package dk.gabriel333.BukkitInventoryTools;
 
+
+
 import org.bukkit.block.Block;
 
 import org.bukkit.event.block.Action;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerItemHeldEvent;
 import org.bukkit.event.player.PlayerListener;
-
 import org.getspout.spoutapi.player.SpoutPlayer;
 
 import dk.gabriel333.Library.G333Config;
@@ -14,6 +15,8 @@ import dk.gabriel333.Library.G333Messages;
 import dk.gabriel333.Library.G333Permissions;
 
 public class BITPlayerListener extends PlayerListener {
+	
+	public static BIT plugin;
 
 	public void onPlayerInteract(PlayerInteractEvent event) {
 		SpoutPlayer sPlayer = (SpoutPlayer) event.getPlayer();
@@ -32,7 +35,7 @@ public class BITPlayerListener extends PlayerListener {
 									.hasPerm(sPlayer, "digilock.admin",
 											G333Permissions.NOT_QUIET)) {
 						sPlayer.sendMessage("Openpincodewindow");
-						BITGui.openPincodeWindow(sPlayer);
+						BITGui.getPincode(sPlayer);
 					}
 				}
 				event.setCancelled(true);
@@ -75,4 +78,6 @@ public class BITPlayerListener extends PlayerListener {
 		// player.getPlayer().updateInventory();
 		// }
 	}
+	
+	
 }

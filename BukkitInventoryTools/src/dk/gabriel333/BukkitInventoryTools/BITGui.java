@@ -10,32 +10,32 @@ import org.getspout.spoutapi.gui.GenericButton;
 import org.getspout.spoutapi.gui.GenericItemWidget;
 import org.getspout.spoutapi.gui.GenericLabel;
 import org.getspout.spoutapi.gui.GenericPopup;
-import org.getspout.spoutapi.gui.GenericTextField;
 import org.getspout.spoutapi.gui.PopupScreen;
+
+import org.getspout.spoutapi.gui.GenericTextField;
+
 import org.getspout.spoutapi.gui.WidgetAnchor;
 import org.getspout.spoutapi.player.SpoutPlayer;
 
 import dk.gabriel333.Library.G333Config;
+import dk.gabriel333.BukkitInventoryTools.BITDigiLock;
 
 public class BITGui {
-
-	public static BIT plugin;
-
-	public BITGui(BIT plugin) {
-		BITGui.plugin = plugin;
-	}
-
+	
+	private static BIT plugin;
+	
+	// GUI
 	public static ArrayList<GenericButton> menuButtons = new ArrayList<GenericButton>();
 	public static HashMap<UUID, String> BITButtons = new HashMap<UUID, String>();
 
-	public static PopupScreen popupInventoryMenu = new GenericPopup();
 	public static PopupScreen popupGetPincode = new GenericPopup();
-
-	public static GenericTextField pincode;
 	public static GenericTextField pincode2 = new GenericTextField();
-	public static GenericTextField owner;
-
-	public static void openMenu(SpoutPlayer sPlayer, Block block) {
+	
+	public static PopupScreen popupInventoryMenu = new GenericPopup();
+	public static GenericTextField pincode = new GenericTextField();
+	public static GenericTextField owner = new GenericTextField();
+	
+	  public static void openMenu(SpoutPlayer sPlayer, Block block) {
 
 		String pin;
 		String own;
@@ -46,7 +46,7 @@ public class BITGui {
 		itemwidget.setX(150).setY(100);
 		itemwidget.setHeight(60).setWidth(60).setDepth(60);
 		itemwidget.setTooltip("Locked Inventory");
-		popupInventoryMenu.attachWidget(plugin, itemwidget);
+		popupInventoryMenu.attachWidget(BIT.plugin, itemwidget);
 
 		int y = 30, height = 20, width = 50;
 		int x1 = 250;
@@ -59,7 +59,7 @@ public class BITGui {
 		// label red.
 		// label.shiftYPos(20); //This moves the label down 20 in Y-Axis
 		// label.shiftXPos(20);
-		popupInventoryMenu.attachWidget(plugin, label);
+		popupInventoryMenu.attachWidget(BIT.plugin, label);
 		// change label text later
 		// label.setText("Hello").setDirty(true);
 		y = y + height;
@@ -71,7 +71,7 @@ public class BITGui {
 		// button.setHoverColor(2); //When you hover over with a mouse this
 		// makes the text ????red.
 		sortButton.setTooltip("Sort your inventory.");
-		popupInventoryMenu.attachWidget(plugin, sortButton); // Attach the
+		popupInventoryMenu.attachWidget(BIT.plugin, sortButton); // Attach the
 																// widget to the
 																// popup
 		y = y + height;
@@ -82,7 +82,7 @@ public class BITGui {
 		// button.setHexColor(1); 
 		// button.setHoverColor(2); 
 		lockButton.setTooltip("Enter 4 digits pincode and press lock.");
-		popupInventoryMenu.attachWidget(plugin, lockButton);
+		popupInventoryMenu.attachWidget(BIT.plugin, lockButton);
 
 		pincode = new GenericTextField();
 		pincode.setText(pin); // The default text
@@ -96,7 +96,7 @@ public class BITGui {
 		pincode.setMaximumCharacters(4); // Can max write 10 Characters
 		pincode.setX(x2).setY(y);
 		pincode.setHeight(height).setWidth(width);
-		popupInventoryMenu.attachWidget(plugin, pincode);
+		popupInventoryMenu.attachWidget(BIT.plugin, pincode);
 
 		menuButtons.add(lockButton);
 		BITButtons.put(lockButton.getId(), "Lock");
@@ -109,7 +109,7 @@ public class BITGui {
 		// button.setHexColor(1);
 		// button.setHoverColor(2);
 		resetButton.setTooltip("Reset lock");
-		popupInventoryMenu.attachWidget(plugin, resetButton);
+		popupInventoryMenu.attachWidget(BIT.plugin, resetButton);
 		y = y + height;
 
 		GenericButton ownerButton = new GenericButton("Owner");
@@ -118,7 +118,7 @@ public class BITGui {
 		// button.setHexColor(1); 
 		// button.setHoverColor(2); 
 		ownerButton.setTooltip("Enter owners name");
-		popupInventoryMenu.attachWidget(plugin, ownerButton);
+		popupInventoryMenu.attachWidget(BIT.plugin, ownerButton);
 		owner = new GenericTextField();
 		owner.setText(own); // The default text
 		owner.setTooltip("Enter owners name and press owner.");
@@ -131,7 +131,7 @@ public class BITGui {
 		owner.setMaximumCharacters(20); 
 		owner.setX(x2).setY(y);
 		owner.setHeight(height).setWidth(2 * width);
-		popupInventoryMenu.attachWidget(plugin, owner);
+		popupInventoryMenu.attachWidget(BIT.plugin, owner);
 		y = y + height;
 
 		GenericButton closeButton = new GenericButton("Close");
@@ -140,7 +140,7 @@ public class BITGui {
 		// button.setHexColor(1); 
 		// button.setHoverColor(2); 
 		closeButton.setTooltip("Close the menu.");
-		popupInventoryMenu.attachWidget(plugin, closeButton);
+		popupInventoryMenu.attachWidget(BIT.plugin, closeButton);
 		y = y + height;
 
 		// GenericTexture texture = new GenericTexture();
@@ -170,7 +170,7 @@ public class BITGui {
 		BITButtons.put(closeButton.getId(), "Close");
 	}
 
-	public static void openPincodeWindow(SpoutPlayer sPlayer) {
+	public static void getPincode(SpoutPlayer sPlayer) {
 		int y = 50, height = 20, width = 100;
 		int x = 170;
 
@@ -179,39 +179,86 @@ public class BITGui {
 		itemwidget.setHeight(height * 2).setWidth(height * 2)
 				.setDepth(height * 2);
 		itemwidget.setTooltip("Locked inventory");
-		popupGetPincode.attachWidget(plugin, itemwidget);
+		popupGetPincode.attachWidget(BIT.plugin, itemwidget);
 		y = y + 3 * height;
 
 		pincode2.setText("");
 		pincode2.setTooltip("Enter 4 digits pincode and press unlock.");
-		// pincode2.setAnchor(WidgetAnchor.CENTER_CENTER);
-		// pincode2.setMaximumCharacters(5);
 		pincode2.setCursorPosition(1);
 		pincode2.setX(x).setY(y);
 		pincode2.setHeight(height).setWidth(width);
-		// textfieldPincode.setFieldColor(hex);
-		// textfieldPincode.setFieldColor(new Color(1.0F, 1.0F, 1.0F, 1.0F));
-		// textfieldPincode.setBordorColor(new Color(0, 0, 0, 1.0F));
-
+		popupGetPincode.attachWidget(plugin, pincode2);
 		y = y + height;
 
 		GenericButton unlockButton = new GenericButton("Enter pincode");
 		unlockButton.setAuto(false).setX(x).setY(y).setHeight(height)
 				.setWidth(width);
 		unlockButton.setTooltip("Enter 4 digits pincode and press unlock.");
-		// button.setHexColor(1);
-		// button.setHoverColor(2);
+		menuButtons.add(unlockButton);
+		BITButtons.put(unlockButton.getId(), "getPincodeUnlock");
 		popupGetPincode.attachWidget(plugin, unlockButton);
-		popupGetPincode.attachWidget(plugin, pincode2);
-
+		
+		GenericButton cancelButton = new GenericButton("Cancel");
+		cancelButton.setAuto(false).setX(x+width+10).setY(y).setHeight(height)
+				.setWidth(width);
+		popupSetPincode.attachWidget(plugin, cancelButton);
+		menuButtons.add(cancelButton);
+		BITButtons.put(cancelButton.getId(), "getPincodeCancel");
+		
 		// Open Window
 		popupGetPincode.setTransparent(true);
-		// sPlayer.closeActiveWindow();
 		sPlayer.getMainScreen().attachPopupScreen(popupGetPincode);
+		
+	}
+	
+	
+	public static PopupScreen popupSetPincode = new GenericPopup();
+	public static GenericTextField pincode3 = new GenericTextField();
+	
+	public static void setPincode(SpoutPlayer sPlayer, BITDigiLock digilock) {
+		int y = 50, height = 20, width = 100;
+		int x = 170;
 
-		// Save button
-		menuButtons.add(unlockButton);
-		BITButtons.put(unlockButton.getId(), "Unlock");
+		GenericItemWidget itemwidget = new GenericItemWidget(new ItemStack(95));
+		itemwidget.setX(x + 2 * height).setY(y);
+		itemwidget.setHeight(height * 2).setWidth(height * 2)
+				.setDepth(height * 2);
+		itemwidget.setTooltip("Unlocked inventory");
+		popupSetPincode.attachWidget(plugin, itemwidget);
+		y = y + 3 * height;
+
+		if (digilock==null) {
+			pincode3.setText("");
+		} else {
+			pincode3.setText(digilock.getPincode());
+		}
+		pincode3.setTooltip("Enter 4 digits pincode and press lock.");
+		pincode3.setCursorPosition(1);
+		pincode3.setX(x).setY(y);
+		pincode3.setHeight(height).setWidth(width);
+		popupSetPincode.attachWidget(plugin, pincode3);
+		y = y + height;
+
+		GenericButton lockButton = new GenericButton("Lock");
+		lockButton.setAuto(false).setX(x).setY(y).setHeight(height)
+				.setWidth(width);
+		lockButton.setTooltip("Enter 4 digits pincode and press lock.");
+		popupSetPincode.attachWidget(plugin, lockButton);
+		menuButtons.add(lockButton);
+		BITButtons.put(lockButton.getId(), "setPincodeLock");
+		
+		GenericButton cancelButton = new GenericButton("Cancel");
+		cancelButton.setAuto(false).setX(x+width+10).setY(y).setHeight(height)
+				.setWidth(width);
+		//cancelButton.setTooltip("");
+		popupSetPincode.attachWidget(plugin, cancelButton);
+		menuButtons.add(cancelButton);
+		BITButtons.put(cancelButton.getId(), "setPincodeCancel");
+	
+		// Open Window
+		popupSetPincode.setTransparent(true);
+		sPlayer.getMainScreen().attachPopupScreen(popupSetPincode);
+
 
 	}
 

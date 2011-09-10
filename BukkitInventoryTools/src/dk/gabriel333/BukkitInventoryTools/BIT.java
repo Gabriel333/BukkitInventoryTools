@@ -24,7 +24,8 @@ import dk.gabriel333.Library.G333Plugin;
 import me.neatmonster.spoutbackpack.SBHandler;
 
 public class BIT extends JavaPlugin {
-	public static BIT instance;
+	
+	public static BIT plugin;
 
 	public static Boolean spout = false;
 
@@ -42,13 +43,12 @@ public class BIT extends JavaPlugin {
 	public static sqlCore manageSQLite; // SQLite handler
 	public static Logger log = Logger.getLogger("Minecraft");
 
-	// GUI
-	// public Screen sortScreen = new GenericPopup();
 
+	
 	@Override
 	public void onEnable() {
-		instance = this;
-
+		plugin = this;
+		
 		G333Plugin.setupPlugin(this);
 		G333Config.setupConfig(this);
 		setupSpout();
@@ -76,7 +76,7 @@ public class BIT extends JavaPlugin {
 				Priority.Normal, this);
 		pm.registerEvent(Event.Type.CUSTOM_EVENT, new BITInputListener(),
 				Event.Priority.Normal, this);
-		pm.registerEvent(Event.Type.CUSTOM_EVENT, new BITSpoutListener(this),
+		pm.registerEvent(Event.Type.CUSTOM_EVENT, new BITSpoutListener(),
 				Event.Priority.Normal, this);
 		pm.registerEvent(Event.Type.CUSTOM_EVENT,
 				new BITInventoryListener(this), Event.Priority.Normal, this);

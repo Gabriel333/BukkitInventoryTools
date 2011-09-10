@@ -52,7 +52,6 @@ public class BITDigiLock {
 		// insert/update targetblock, code, owner, closetime into safetylocks
 		// table
 		if (isLocked(sPlayer, block)) {
-			// TODO: Block exists - update data.
 			query = "UPDATE BukkitInventoryTools SET pincode='" + pincode
 					+ "', owner='" + owner + "', closetimer=" + closetimer
 					+ " , coowners='" + coowners + "', shared='" + shared + "'"
@@ -81,6 +80,62 @@ public class BITDigiLock {
 					+ "', '"
 					+ shared + "');";
 			sPlayer.sendMessage(ChatColor.RED + "Creating lock:" + query);
+		}
+		if (G333Config.g333Config.DEBUG_SQL)
+			G333Messages.showInfo("SQL: " + query);
+		if (G333Config.g333Config.STORAGE_TYPE.equals("MySQL")) {
+			try {
+				BIT.manageMySQL.insertQuery(query);
+			} catch (MalformedURLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (InstantiationException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (IllegalAccessException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			// sPlayer.sendMessage(ChatColor.GREEN +
+			// "This block is now owned by alta189");
+		} else {
+			BIT.manageSQLite.insertQuery(query);
+		}
+		sPlayer.sendMessage(ChatColor.GREEN + "Lock created/updated.");
+
+	}
+	
+	void SaveDigiLock(SpoutPlayer sPlayer, BITDigiLock digilock) {
+		String query = null;
+		if (isLocked(sPlayer, digilock.getBlock())) {
+			query = "UPDATE BukkitInventoryTools SET pincode='" + digilock.getPincode()
+					+ "', owner='" + digilock.getOwner() + "', closetimer=" + digilock.getClosetimer()
+					+ " , coowners='" + digilock.getClosetimer() + "', shared='" + digilock.getShared() + "'"
+					+ " WHERE x = " + digilock.getBlock().getX() + " AND y = " + digilock.getBlock().getY()
+					+ " AND z = " + digilock.getBlock().getZ() + " AND world='"
+					+ digilock.getBlock().getWorld().getName() + "';";
+			G333Messages.sendNotification(sPlayer, "DigiLock updated.");
+		} else {
+			query = "INSERT INTO BukkitInventoryTools (pincode, owner, closetimer,"
+					+ " x, y, z, world, coowners, shared) VALUES ('"
+					+ digilock.getPincode()
+					+ "', '"
+					+ digilock.getOwner()
+					+ "', "
+					+ digilock.getClosetimer()
+					+ ", "
+					+ digilock.getBlock().getX()
+					+ ", "
+					+ digilock.getBlock().getY()
+					+ ", "
+					+ digilock.getBlock().getZ()
+					+ ", '"
+					+ digilock.getBlock().getWorld().getName()
+					+ "', '"
+					+ digilock.getCoowners()
+					+ "', '"
+					+ digilock.getShared() + "');";
+			G333Messages.sendNotification(sPlayer, "DigiLock created.");
 		}
 		if (G333Config.g333Config.DEBUG_SQL)
 			G333Messages.showInfo("SQL: " + query);
@@ -177,7 +232,7 @@ public class BITDigiLock {
 		return false;
 	}
 
-	public static final Material lockablematerials[] = { Material.CHEST,
+	private static final Material lockablematerials[] = { Material.CHEST,
 			Material.IRON_DOOR, Material.WOOD_DOOR, Material.FURNACE,
 			Material.IRON_DOOR_BLOCK, Material.LOCKED_CHEST, Material.LEVER,
 			Material.SIGN, Material.SIGN_POST, Material.STONE_BUTTON,
@@ -192,10 +247,6 @@ public class BITDigiLock {
 		return false;
 	}
 
-	//public getInventory() {
-	//	return block.getState();
-	//}
-	
 	public String getPincode() {
 		return pincode;
 	}
@@ -208,7 +259,7 @@ public class BITDigiLock {
 		return owner;
 	}
 
-	public int closetimer() {
+	public int getClosetimer() {
 		return closetimer;
 	}
 
@@ -219,7 +270,7 @@ public class BITDigiLock {
 	public Block getBlock() {
 		return block;
 	}
-
+	
 	public void setPincode(String pincode) {
 		this.pincode = pincode;
 	}
@@ -244,13 +295,13 @@ public class BITDigiLock {
 		this.shared = shared;
 	}
 
-	public void setLock(Block block, String pincode, String owner,
+	public void setDigiLock(Block block, String pincode, String owner,
 			int closetimer, String coowners, String shared) {
 		this.block = block;
 		this.pincode = pincode;
 		this.owner = owner;
 		this.closetimer = closetimer;
-		this.shared = shared;
+		this.coowners = coowners;
 		this.shared = shared;
 	}
 
@@ -335,7 +386,7 @@ public class BITDigiLock {
 
 	}
 
-	public static BITDigiLock getDigiLock(SpoutPlayer sPlayer, Block block) {
+	public static BITDigiLock loadDigiLock(SpoutPlayer sPlayer, Block block) {
 		// TODO Auto-generated method stub
 		String query = "SELECT * FROM BukkitInventoryTools WHERE x = "
 				+ block.getX() + " AND y = " + block.getY() + " AND z = "

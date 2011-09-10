@@ -19,16 +19,6 @@ import dk.gabriel333.Library.G333Messages;
 import dk.gabriel333.Library.G333Permissions;
 
 public class BITSpoutListener extends SpoutListener {
-	public static BIT plugin;
-
-	public BITSpoutListener(BIT bit) {
-		plugin = bit;
-		// TODO Auto-generated constructor stub
-	}
-
-	public void SortInventoryMenu(BIT plugin) {
-		BITGui.plugin = plugin;
-	}
 
 	public void onCustomEvent(Event event) {
 		if (event instanceof ButtonClickEvent) {
@@ -36,7 +26,7 @@ public class BITSpoutListener extends SpoutListener {
 			UUID uuid = button.getId();
 			SpoutPlayer sPlayer = ((ButtonClickEvent) event).getPlayer();
 			Block block = sPlayer.getTargetBlock(null, 4);
-			BITDigiLock digilock = BITDigiLock.getDigiLock(sPlayer, block);
+			BITDigiLock digilock = BITDigiLock.loadDigiLock(sPlayer, block);
 
 			// ************************************
 			// Buttons in InventoryMenuWindow
@@ -108,59 +98,52 @@ public class BITSpoutListener extends SpoutListener {
 							"No permission to reset lock.");
 				}
 			} else if (BITGui.BITButtons.get(uuid) == "Close") {
-				sPlayer.sendMessage("CloseMenuWindow");
 				BITGui.popupInventoryMenu.close();
-			} else
+			}
 
 			// ************************************
 			// Buttons in getPincodeWindow
 			// ************************************
-			if (BITGui.BITButtons.get(uuid) == "Unlock") {
-				sPlayer.sendMessage("ClosePincodeWindow");
+			else if (BITGui.BITButtons.get(uuid) == "getPincodeUnlock") {
 				BITGui.popupGetPincode.close();
 				if (digilock.pincode.equals(BITGui.pincode2.getText())) {
 					if (digilock.getBlock().getType() == Material.CHEST) {
 						SpoutChest sChest = (SpoutChest) block.getState();
 						Inventory inv = sChest.getLargestInventory();
-						sPlayer.sendMessage("OpenInventorywindow");
 						sPlayer.openInventoryWindow(inv);
 					}
 				} else {
-					sPlayer.sendMessage("CloseActiveWindows");
 					sPlayer.closeActiveWindow();
-					sPlayer.sendMessage("Wrong pincode: "
-							+ BITGui.pincode2.getText());
+					G333Messages.sendNotification(sPlayer,
+							"Wrong pincode!");
 				}
+			} else if (BITGui.BITButtons.get(uuid) == " getPincodeCancel") {
+				sPlayer.closeActiveWindow();
+			}
 
-				// ************************************
-				// Buttons in getPincodeMenuWindow
-				// ************************************
-			} else if (BITGui.BITButtons.get(uuid) == "Unlock2") {
+			// ************************************
+			// Buttons in BITGui.setPincode
+			// ************************************
+
+			else if (BITGui.BITButtons.get(uuid) == "setPincodeLock") {
 				sPlayer.sendMessage("ClosePincodeWindow");
-				BITGui.popupGetPincode.close();
-				if (digilock.pincode.equals(BITGui.pincode2.getText())) {
-					if (digilock.getBlock().getType() == Material.CHEST) {
-						SpoutChest sChest = (SpoutChest) block.getState();
-						Inventory inv = sChest.getLargestInventory();
-						sPlayer.sendMessage("OpenInventorywindow");
-						sPlayer.openInventoryWindow(inv);
-					}
-				} else {
-					sPlayer.sendMessage("CloseActiveWindows");
-					sPlayer.closeActiveWindow();
-					sPlayer.sendMessage("Wrong pincode: "
-							+ BITGui.pincode2.getText());
-				}
-
-				// ************************************
-				// This only happens if I have forgot to handle a button
-				// ************************************
-			} else {
+				BITGui.popupSetPincode.close();
+				BITDigiLock.SaveDigiLock(sPlayer, block,
+						BITGui.pincode3.getText(), sPlayer.getDisplayName(), 0,
+						"", "");
+			} else if ((BITGui.BITButtons.get(uuid) == "setPincodeCancel")) {
+				BITGui.popupSetPincode.close();
+			}
+			
+			// ************************************
+			// This only happens if I have forgot to handle a button
+			// ************************************
+			else {
 				if (G333Config.g333Config.DEBUG_GUI)
 					sPlayer.sendMessage("BITSpoutListener: Unknow button:"
 							+ BITGui.BITButtons.get(uuid));
 			}
-
 		}
 	}
+
 }

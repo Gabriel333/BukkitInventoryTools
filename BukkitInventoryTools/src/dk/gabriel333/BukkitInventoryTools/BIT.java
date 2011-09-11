@@ -48,30 +48,35 @@ public class BIT extends JavaPlugin {
 	@Override
 	public void onEnable() {
 		plugin = this;
-
-		G333Plugin.setupPlugin(this);
-		G333Config.setupConfig(this);
-		setupSpout();
-		setupSQL();
-		setupSpoutBackpack();
-		setupMyWolf();
-		setupGUI();
-		registerEvents();
-		addCommands();
-		testForSortInventory();
-
 		PluginDescriptionFile pdfFile = this.getDescription();
-		G333Messages.showInfo(pdfFile.getName() + " version "
-				+ pdfFile.getVersion() + " is enabled!");
+
+		if (!isSortInventoryInstalled()) {
+			G333Plugin.setupPlugin(this);
+			G333Config.setupConfig(this);
+			setupSpout();
+			setupSQL();
+			setupSpoutBackpack();
+			setupMyWolf();
+			setupGUI();
+			registerEvents();
+			addCommands();
+			G333Messages.showInfo(pdfFile.getName() + " version "
+					+ pdfFile.getVersion() + " is enabled!");
+		} else {
+			G333Messages.showError(pdfFile.getName() + " version "
+					+ pdfFile.getVersion() + " could not be installed!");
+		}
 	}
 
-	private void testForSortInventory() {
+	private Boolean isSortInventoryInstalled() {
 		Plugin sortInventoryPlugin = this.getServer().getPluginManager()
 				.getPlugin("SortInventory");
 		if (sortInventoryPlugin != null) {
 			G333Messages
-					.showError("SortInventory is outdates and conflicts with BukkitInventoryTools!");
+					.showError("SortInventory is outdated and conflicts with BukkitInventoryTools!");
+			return true;
 		}
+		return false;
 	}
 
 	private void setupGUI() {

@@ -176,15 +176,24 @@ public class BITDigiLock {
 	public static Boolean isLocked(SpoutPlayer sPlayer, Block block) {
 		if (block.getType() == Material.CHEST) {
 			SpoutChest sChest1 = (SpoutChest) block.getState();
-			SpoutChest sChest2 = sChest1.getOtherSide();
-			String query = "SELECT * FROM BukkitInventoryTools WHERE (x = "
-					+ block.getX() + " AND y = " + block.getY() + " AND z = "
-					+ block.getZ() + " AND world='"
-					+ block.getWorld().getName() + "') OR (x = "
-					+ sChest2.getBlock().getX() + " AND y = "
-					+ sChest2.getBlock().getY() + " AND z = "
-					+ sChest2.getBlock().getZ() + " AND world='"
-					+ sChest2.getBlock().getWorld().getName() + "');";
+			String query;
+			if (sChest1.isDoubleChest()) {
+				SpoutChest sChest2 = sChest1.getOtherSide();
+				query = "SELECT * FROM BukkitInventoryTools WHERE (x = "
+						+ block.getX() + " AND y = " + block.getY()
+						+ " AND z = " + block.getZ() + " AND world='"
+						+ block.getWorld().getName() + "') OR (x = "
+						+ sChest2.getBlock().getX() + " AND y = "
+						+ sChest2.getBlock().getY() + " AND z = "
+						+ sChest2.getBlock().getZ() + " AND world='"
+						+ sChest2.getBlock().getWorld().getName() + "');";
+			} else {
+				query = "SELECT * FROM BukkitInventoryTools WHERE (x = "
+						+ block.getX() + " AND y = " + block.getY()
+						+ " AND z = " + block.getZ() + " AND world='"
+						+ block.getWorld().getName() + "');";
+				
+			}
 			ResultSet result = null;
 			if (G333Config.g333Config.STORAGE_TYPE.equals("MySQL")) {
 				try {
@@ -390,14 +399,22 @@ public class BITDigiLock {
 
 	public static BITDigiLock loadDigiLock(SpoutPlayer sPlayer, Block block) {
 		SpoutChest sChest1 = (SpoutChest) block.getState();
+		String query;
+		if (sChest1.isDoubleChest()) {
 		SpoutChest sChest2 = sChest1.getOtherSide();
-		String query = "SELECT * FROM BukkitInventoryTools WHERE (x = "
+		query = "SELECT * FROM BukkitInventoryTools WHERE (x = "
 				+ block.getX() + " AND y = " + block.getY() + " AND z = "
 				+ block.getZ() + " AND world='" + block.getWorld().getName()
 				+ "') OR (x = " + sChest2.getBlock().getX() + " AND y = "
 				+ sChest2.getBlock().getY() + " AND z = "
 				+ sChest2.getBlock().getZ() + " AND world='"
 				+ sChest2.getBlock().getWorld().getName() + "');";
+		} else {
+			query = "SELECT * FROM BukkitInventoryTools WHERE (x = "
+					+ block.getX() + " AND y = " + block.getY() + " AND z = "
+					+ block.getZ() + " AND world='" + block.getWorld().getName()
+					+ "');";
+		}
 		ResultSet result = null;
 		if (G333Config.g333Config.STORAGE_TYPE.equals("MySQL")) {
 			try {
@@ -435,8 +452,10 @@ public class BITDigiLock {
 
 	public static void RemoveDigiLock(SpoutPlayer sPlayer, BITDigiLock digilock) {
 		SpoutChest sChest1 = (SpoutChest) digilock.getBlock().getState();
+		String query;
+		if (sChest1.isDoubleChest()) {
 		SpoutChest sChest2 = sChest1.getOtherSide();
-		String query = "DELETE FROM BukkitInventoryTools WHERE (x = "
+		query = "DELETE FROM BukkitInventoryTools WHERE (x = "
 				+ digilock.block.getX() + " AND y = " + digilock.block.getY()
 				+ " AND z = " + digilock.block.getZ() + " AND world='"
 				+ digilock.block.getWorld().getName() + "') OR (x = "
@@ -444,22 +463,25 @@ public class BITDigiLock {
 				+ sChest2.getBlock().getY() + " AND z = "
 				+ sChest2.getBlock().getZ() + " AND world='"
 				+ sChest2.getBlock().getWorld().getName() + "');";
+		} else {
+			query = "DELETE FROM BukkitInventoryTools WHERE (x = "
+					+ digilock.block.getX() + " AND y = " + digilock.block.getY()
+					+ " AND z = " + digilock.block.getZ() + " AND world='"
+					+ digilock.block.getWorld().getName() + "');";
+		}
+		G333Messages.sendNotification(sPlayer, "DigiLock removed.");
 		if (G333Config.g333Config.STORAGE_TYPE.equals("MySQL")) {
 			try {
 				BIT.manageMySQL.deleteQuery(query);
 			} catch (MalformedURLException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			} catch (InstantiationException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			} catch (IllegalAccessException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 		} else { // SQLLITE
 			BIT.manageSQLite.deleteQuery(query);
-
 		}
 
 	}

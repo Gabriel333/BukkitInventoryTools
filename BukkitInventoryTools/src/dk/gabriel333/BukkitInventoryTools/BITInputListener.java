@@ -37,62 +37,64 @@ public class BITInputListener extends InputListener {
 
 		// CHEST_INVENTORY
 		else if (screentype == ScreenType.CHEST_INVENTORY) {
-			SpoutChest sChest = (SpoutChest) targetblock.getState();
-			if (keypressed.equals(G333Config.g333Config.LIBRARY_SORTKEY)) {
-				if (targetblock.getType() == Material.CHEST) {
-					G333Inventory.sortInventoryItems(sPlayer,
-							sChest.getLargestInventory());
-					G333Messages.sendNotification(sPlayer, "Chest sorted.");
+			if (targetblock.getType() == Material.CHEST) {
+				SpoutChest sChest = (SpoutChest) targetblock.getState();
+				if (keypressed.equals(G333Config.g333Config.LIBRARY_SORTKEY)) {
+					if (targetblock.getType() == Material.CHEST) {
+						G333Inventory.sortInventoryItems(sPlayer,
+								sChest.getLargestInventory());
+						G333Messages.sendNotification(sPlayer, "Chest sorted.");
+					}
+					
+				} 
+				
+				// KEY M and L does not work yet :-(
+				/*else if (keypressed
+						.equals(G333Config.g333Config.LIBRARY_MENUKEY)) {
+					if (G333Config.g333Config.DEBUG_GUI)
+						G333Messages.sendNotification(sPlayer,
+								"LIBRARY_MENUKEY");
+					sPlayer.closeActiveWindow();
+					if (targetblock != null) {
+						sPlayer.sendMessage("openMenu: this does not work yet.");
+						BITGui.openMenu(sPlayer, targetblock);
+					}
+				}*/
+				
+				
+				else if (keypressed.equals("KEY_ESCAPE")) {
+					if (G333Config.g333Config.DEBUG_GUI)
+						sPlayer.sendMessage("CloseActiveWindow");
+					sPlayer.closeActiveWindow();
 				}
-				// KEY M does not work yet :-(
-			} else if (keypressed.equals(G333Config.g333Config.LIBRARY_MENUKEY)) {
-				if (G333Config.g333Config.DEBUG_GUI)
-					G333Messages.sendNotification(sPlayer, "LIBRARY_MENUKEY");
-				sPlayer.sendMessage("CloseActiveWindow");
-				sPlayer.closeActiveWindow();
-				if (targetblock != null) {
-					sPlayer.sendMessage("openMenu");
-					BITGui.openMenu(sPlayer, targetblock);
-				}
-			} else if (keypressed.equals("KEY_ESCAPE")) {
-				if (G333Config.g333Config.DEBUG_GUI)
-					sPlayer.sendMessage("CloseActiveWindow");
-				sPlayer.closeActiveWindow();
 			}
 		}
 
 		// GAME_SCREEN
 		else if (screentype == ScreenType.GAME_SCREEN) {
 			if (keypressed.equals(G333Config.g333Config.LIBRARY_LOCKKEY)) {
-				// if (targetblock != null) {
-				if (targetblock.getType() == Material.CHEST) {
-					BITDigiLock digilock = BITDigiLock.loadDigiLock(sPlayer,
-							targetblock);
+				if (BITDigiLock.isLockable(targetblock)) {
 					if (BITDigiLock.isLocked(sPlayer, targetblock)) {
+						BITDigiLock digilock = BITDigiLock.loadDigiLock(
+								sPlayer, targetblock);
 						if (sPlayer.getName().equals(digilock.getOwner())) {
 							G333Messages.sendNotification(sPlayer,
 									"You are the owner");
-							BITGui.setPincode(sPlayer, digilock);
+							BITGui.setPincode(sPlayer, targetblock);
 						} else {
 							G333Messages.sendNotification(sPlayer,
 									"Locked with Digilock");
 						}
 					} else {
-						BITGui.setPincode(sPlayer, digilock);
+						BITGui.setPincode(sPlayer, targetblock);
 					}
 				}
-				// }
 			}
 		}
 
 		// CUSTOM_SCREEN
 		else if (screentype == ScreenType.CUSTOM_SCREEN) {
-			//if (G333Config.g333Config.DEBUG_GUI)
-			//	G333Messages.sendNotification(sPlayer,
-			//			"CUSTOMSCR:" + event.getKey());
 			if (keypressed.equals("KEY_ESCAPE")) {
-				//if (G333Config.g333Config.DEBUG_GUI)
-				//	sPlayer.sendMessage("CloseActiveWindow");
 				sPlayer.closeActiveWindow();
 			}
 		} else {

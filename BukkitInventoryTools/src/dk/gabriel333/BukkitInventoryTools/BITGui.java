@@ -222,7 +222,7 @@ public class BITGui {
 	public static PopupScreen popupSetPincode = new GenericPopup();
 	public static GenericTextField pincode3 = new GenericTextField();
 
-	public static void setPincode(SpoutPlayer sPlayer, BITDigiLock digilock) {
+	public static void setPincode(SpoutPlayer sPlayer, Block block) {
 		int y = 50, height = 20, width = 100;
 		int x = 170;
 
@@ -230,7 +230,7 @@ public class BITGui {
 		itemwidget.setX(x + 2 * height).setY(y);
 		itemwidget.setHeight(height * 2).setWidth(height * 2)
 				.setDepth(height * 2);
-		if (digilock == null) {
+		if (!BITDigiLock.isLocked(sPlayer, block)) {
 			itemwidget.setTooltip("Unlocked inventory");
 		} else {
 			itemwidget.setTooltip("Locked inventory");
@@ -238,10 +238,12 @@ public class BITGui {
 		popupSetPincode.attachWidget(plugin, itemwidget);
 		y = y + 3 * height;
 
-		if (digilock == null) {
-			pincode3.setText("");
-		} else {
+		BITDigiLock digilock;
+		if (BITDigiLock.isLocked(sPlayer, block)) {
+			digilock=BITDigiLock.loadDigiLock(sPlayer, block);
 			pincode3.setText(digilock.getPincode());
+		} else {
+			pincode3.setText("");
 		}
 		pincode3.setTooltip("Enter/change the pincode...");
 		pincode3.setCursorPosition(1);
@@ -267,16 +269,20 @@ public class BITGui {
 		y = y + height;
 		
 		y = y + height;
-		//if (digilock != null) {
-		if (BITDigiLock.isLocked(sPlayer,digilock.getBlock())) {
-			GenericButton removeButton = new GenericButton("Remove");
+		GenericButton removeButton = new GenericButton("Remove");
+		if (BITDigiLock.isLocked(sPlayer,block)) {
 			removeButton.setAuto(false).setX(x).setY(y)
 					.setHeight(height).setWidth(width);
-			removeButton.setTooltip("Press Remove to delete the lock from the inventory");
-			popupSetPincode.attachWidget(plugin, removeButton);
+			removeButton.setTooltip("Press Remove to delete the lock.");
+			removeButton.setEnabled(true);
 			menuButtons.add(removeButton);
 			BITButtons.put(removeButton.getId(), "setPincodeRemove");
+		} else {
+			menuButtons.remove(removeButton);
+			BITButtons.remove("setPincodeRemove");
+			removeButton.setEnabled(false);
 		}
+		popupSetPincode.attachWidget(plugin, removeButton);
 		
 		// Open Window
 		popupSetPincode.setTransparent(true);

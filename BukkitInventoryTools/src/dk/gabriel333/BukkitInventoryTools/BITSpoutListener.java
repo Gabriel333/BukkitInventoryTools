@@ -114,8 +114,7 @@ public class BITSpoutListener extends SpoutListener {
 					}
 				} else {
 					BITGui.popupGetPincode.close();
-					G333Messages.sendNotification(sPlayer,
-							"Wrong pincode!");
+					G333Messages.sendNotification(sPlayer, "Wrong pincode!");
 				}
 			} else if (BITGui.BITButtons.get(uuid) == "getPincodeCancel") {
 				BITGui.popupGetPincode.close();
@@ -134,9 +133,11 @@ public class BITSpoutListener extends SpoutListener {
 				BITGui.popupSetPincode.close();
 			} else if ((BITGui.BITButtons.get(uuid) == "setPincodeRemove")) {
 				BITGui.popupSetPincode.close();
-				BITDigiLock.RemoveDigiLock(sPlayer,digilock);
+				if (BITDigiLock.isLocked(sPlayer, block)) {
+					BITDigiLock.RemoveDigiLock(sPlayer, digilock);
+				}
 			}
-			
+
 			// ************************************
 			// This only happens if I have forgot to handle a button
 			// ************************************

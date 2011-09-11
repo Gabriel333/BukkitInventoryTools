@@ -10,5 +10,6 @@
 	<classpathentry kind="lib" path="C:/Private/Dropbox/Libraries/Newest/Permissions.jar"/>
 	<classpathentry kind="lib" path="C:/Private/Dropbox/Libraries/Newest/PermissionsEx.jar"/>
 	<classpathentry kind="lib" path="C:/Private/Dropbox/Libraries/Newest/PermissionsSql.jar"/>
+	<classpathentry kind="lib" path="C:/Private/Dropbox/Libraries/Newest/SortInventory.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

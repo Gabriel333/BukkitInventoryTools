@@ -24,7 +24,7 @@ import dk.gabriel333.Library.G333Plugin;
 import me.neatmonster.spoutbackpack.SBHandler;
 
 public class BIT extends JavaPlugin {
-	
+
 	public static BIT plugin;
 
 	public static Boolean spout = false;
@@ -43,12 +43,12 @@ public class BIT extends JavaPlugin {
 	public static sqlCore manageSQLite; // SQLite handler
 	public static Logger log = Logger.getLogger("Minecraft");
 
+	// Test for SortInventory
 
-	
 	@Override
 	public void onEnable() {
 		plugin = this;
-		
+
 		G333Plugin.setupPlugin(this);
 		G333Config.setupConfig(this);
 		setupSpout();
@@ -58,10 +58,20 @@ public class BIT extends JavaPlugin {
 		setupGUI();
 		registerEvents();
 		addCommands();
+		testForSortInventory();
 
 		PluginDescriptionFile pdfFile = this.getDescription();
 		G333Messages.showInfo(pdfFile.getName() + " version "
 				+ pdfFile.getVersion() + " is enabled!");
+	}
+
+	private void testForSortInventory() {
+		Plugin sortInventoryPlugin = this.getServer().getPluginManager()
+				.getPlugin("SortInventory");
+		if (sortInventoryPlugin != null) {
+			G333Messages
+					.showError("SortInventory is outdates and conflicts with BukkitInventoryTools!");
+		}
 	}
 
 	private void setupGUI() {

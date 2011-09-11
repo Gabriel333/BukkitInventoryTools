@@ -37,6 +37,7 @@ public class BITInputListener extends InputListener {
 
 		// CHEST_INVENTORY
 		else if (screentype == ScreenType.CHEST_INVENTORY) {
+			// CHEST or DOUBLECHEST
 			if (targetblock.getType() == Material.CHEST) {
 				SpoutChest sChest = (SpoutChest) targetblock.getState();
 				if (keypressed.equals(G333Config.g333Config.LIBRARY_SORTKEY)) {
@@ -45,28 +46,29 @@ public class BITInputListener extends InputListener {
 								sChest.getLargestInventory());
 						G333Messages.sendNotification(sPlayer, "Chest sorted.");
 					}
-					
-				} 
-				
+
+				}
+
 				// KEY M and L does not work yet :-(
-				/*else if (keypressed
-						.equals(G333Config.g333Config.LIBRARY_MENUKEY)) {
-					if (G333Config.g333Config.DEBUG_GUI)
-						G333Messages.sendNotification(sPlayer,
-								"LIBRARY_MENUKEY");
-					sPlayer.closeActiveWindow();
-					if (targetblock != null) {
-						sPlayer.sendMessage("openMenu: this does not work yet.");
-						BITGui.openMenu(sPlayer, targetblock);
-					}
-				}*/
-				
-				
+				/*
+				 * else if (keypressed
+				 * .equals(G333Config.g333Config.LIBRARY_MENUKEY)) { if
+				 * (G333Config.g333Config.DEBUG_GUI)
+				 * G333Messages.sendNotification(sPlayer, "LIBRARY_MENUKEY");
+				 * sPlayer.closeActiveWindow(); if (targetblock != null) {
+				 * sPlayer.sendMessage("openMenu: this does not work yet.");
+				 * BITGui.openMenu(sPlayer, targetblock); } }
+				 */
+
 				else if (keypressed.equals("KEY_ESCAPE")) {
 					if (G333Config.g333Config.DEBUG_GUI)
 						sPlayer.sendMessage("CloseActiveWindow");
 					sPlayer.closeActiveWindow();
 				}
+			} else
+			// targetblock is NOT a chest, so it must be SpoutBackPack
+			{
+				BITPlayer.sortinventory(sPlayer, ScreenType.CHEST_INVENTORY);
 			}
 		}
 

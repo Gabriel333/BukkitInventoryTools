@@ -2,14 +2,11 @@ package dk.gabriel333.BukkitInventoryTools;
 
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
-//import org.bukkit.inventory.ItemStack;
 import org.getspout.spoutapi.gui.ScreenType;
 import org.getspout.spoutapi.player.SpoutPlayer;
 
 //import de.Keyle.MyWolf.MyWolfPlugin;
 import dk.gabriel333.Library.G333Inventory;
-
-//import dk.gabriel333.Library.G333Messages;
 
 public abstract class BITPlayer implements Player {
 
@@ -19,8 +16,7 @@ public abstract class BITPlayer implements Player {
 		G333Inventory.stackPlayerInventoryItems(sPlayer);
 
 		// sort the SpoutBackpack if it exists and if it is opened.
-		if (BIT.spoutbackpack
-				&& screentype == ScreenType.CHEST_INVENTORY) {
+		if (BIT.spoutbackpack && screentype == ScreenType.CHEST_INVENTORY) {
 			inventory = BIT.spoutBackpackHandler
 					.getOpenedSpoutBackpack(sPlayer);
 			G333Inventory.sortInventoryItems(sPlayer, inventory);

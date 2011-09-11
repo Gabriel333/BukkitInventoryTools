@@ -47,7 +47,7 @@ public class G333Inventory {
 		}
 	}
 
-	public static void moveitemInventory(SpoutPlayer p, Inventory inventory, int fromslot,
+	private static void moveitemInventory(SpoutPlayer p, Inventory inventory, int fromslot,
 			int toslot) {
 		int from_amt, to_amt, total_amt;
 		ItemStack fromitem, toitem;

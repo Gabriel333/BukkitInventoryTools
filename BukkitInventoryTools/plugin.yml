@@ -1,6 +1,6 @@
 name: BukkitInventoryTools
 main: dk.gabriel333.BukkitInventoryTools.BIT
-version: 2.0.1
+version: 2.0.2
 author: Gabriel333
 website: https://github.com/BukkitInventoryTools
 description: Use /sort to sort you personal inventory or the chest

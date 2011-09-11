@@ -9,6 +9,7 @@ import org.bukkit.Material;
 import org.bukkit.block.Block;
 
 import org.bukkit.plugin.Plugin;
+import org.getspout.spoutapi.block.SpoutChest;
 import org.getspout.spoutapi.player.SpoutPlayer;
 
 import dk.gabriel333.BukkitInventoryTools.BIT;
@@ -29,7 +30,8 @@ public class BITDigiLock {
 	protected int closetimer;
 	protected String coowners;
 	protected String shared;
-	//protected boolean locked = true;
+
+	// protected boolean locked = true;
 
 	/**
 	 * Constructs a new BITDigiLock
@@ -45,7 +47,7 @@ public class BITDigiLock {
 		this.shared = shared;
 
 	}
-	
+
 	static void resetDigiLock() {
 		// TODO Auto-generated method stub
 	}
@@ -92,7 +94,8 @@ public class BITDigiLock {
 					+ shared + "');";
 			G333Messages.sendNotification(sPlayer, "DigiLock created.");
 		}
-		if (G333Config.g333Config.DEBUG_SQL) sPlayer.sendMessage(ChatColor.YELLOW + "Updating lock: "+query);
+		if (G333Config.g333Config.DEBUG_SQL)
+			sPlayer.sendMessage(ChatColor.YELLOW + "Updating lock: " + query);
 		if (G333Config.g333Config.STORAGE_TYPE.equals("MySQL")) {
 			try {
 				BIT.manageMySQL.insertQuery(query);
@@ -110,15 +113,19 @@ public class BITDigiLock {
 			BIT.manageSQLite.insertQuery(query);
 		}
 	}
-	
+
 	void SaveDigiLock(SpoutPlayer sPlayer, BITDigiLock digilock) {
 		String query = null;
 		if (isLocked(sPlayer, digilock.getBlock())) {
-			query = "UPDATE BukkitInventoryTools SET pincode='" + digilock.getPincode()
-					+ "', owner='" + digilock.getOwner() + "', closetimer=" + digilock.getClosetimer()
-					+ " , coowners='" + digilock.getClosetimer() + "', shared='" + digilock.getShared() + "'"
-					+ " WHERE x = " + digilock.getBlock().getX() + " AND y = " + digilock.getBlock().getY()
-					+ " AND z = " + digilock.getBlock().getZ() + " AND world='"
+			query = "UPDATE BukkitInventoryTools SET pincode='"
+					+ digilock.getPincode() + "', owner='"
+					+ digilock.getOwner() + "', closetimer="
+					+ digilock.getClosetimer() + " , coowners='"
+					+ digilock.getClosetimer() + "', shared='"
+					+ digilock.getShared() + "'" + " WHERE x = "
+					+ digilock.getBlock().getX() + " AND y = "
+					+ digilock.getBlock().getY() + " AND z = "
+					+ digilock.getBlock().getZ() + " AND world='"
 					+ digilock.getBlock().getWorld().getName() + "';";
 			G333Messages.sendNotification(sPlayer, "DigiLock updated.");
 		} else {
@@ -140,7 +147,8 @@ public class BITDigiLock {
 					+ "', '"
 					+ digilock.getCoowners()
 					+ "', '"
-					+ digilock.getShared() + "');";
+					+ digilock.getShared()
+					+ "');";
 			G333Messages.sendNotification(sPlayer, "DigiLock created.");
 		}
 		if (G333Config.g333Config.DEBUG_SQL)
@@ -166,44 +174,47 @@ public class BITDigiLock {
 	}
 
 	public static Boolean isLocked(SpoutPlayer sPlayer, Block block) {
-		String query = "SELECT * FROM BukkitInventoryTools WHERE x = "
-				+ block.getX() + " AND y = " + block.getY() + " AND z = "
-				+ block.getZ() + " AND world='" + block.getWorld().getName()
-				+ "';";
-		ResultSet result = null;
-		if (G333Config.g333Config.STORAGE_TYPE.equals("MySQL")) {
-			try {
-				result = BIT.manageMySQL.sqlQuery(query);
-			} catch (MalformedURLException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			} catch (InstantiationException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			} catch (IllegalAccessException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
+		if (block.getType() == Material.CHEST) {
+			SpoutChest sChest1 = (SpoutChest) block.getState();
+			SpoutChest sChest2 = sChest1.getOtherSide();
+			String query = "SELECT * FROM BukkitInventoryTools WHERE (x = "
+					+ block.getX() + " AND y = " + block.getY() + " AND z = "
+					+ block.getZ() + " AND world='"
+					+ block.getWorld().getName() + "') OR (x = "
+					+ sChest2.getBlock().getX() + " AND y = "
+					+ sChest2.getBlock().getY() + " AND z = "
+					+ sChest2.getBlock().getZ() + " AND world='"
+					+ sChest2.getBlock().getWorld().getName() + "');";
+			ResultSet result = null;
+			if (G333Config.g333Config.STORAGE_TYPE.equals("MySQL")) {
+				try {
+					result = BIT.manageMySQL.sqlQuery(query);
+				} catch (MalformedURLException e) {
+					e.printStackTrace();
+				} catch (InstantiationException e) {
+					e.printStackTrace();
+				} catch (IllegalAccessException e) {
+					e.printStackTrace();
+				}
+			} else { // SQLLITE
+				result = BIT.manageSQLite.sqlQuery(query);
 			}
-		} else { // SQLLITE
-			result = BIT.manageSQLite.sqlQuery(query);
-		}
 
-		try {
-			if (result != null && result.next()) {
-				//sPlayer.sendMessage("This block is locked with a DigiLock!");
-				return true;
-			} else {
-				//sPlayer.sendMessage("This block is NOT locked with a DigiLock!");
-				return false;
+			try {
+				if (result != null && result.next()) {
+					// sPlayer.sendMessage("This block is locked with a DigiLock!");
+					return true;
+				} else {
+					// sPlayer.sendMessage("This block is NOT locked with a DigiLock!");
+					return false;
+				}
+			} catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
 			}
-		} catch (SQLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
 		}
 		return false;
 	}
-
-
 
 	public boolean isCoowner(SpoutPlayer sPlayer) {
 		if (coowners.contains(sPlayer.getName()))
@@ -261,7 +272,7 @@ public class BITDigiLock {
 	public Block getBlock() {
 		return block;
 	}
-	
+
 	public void setPincode(String pincode) {
 		this.pincode = pincode;
 	}
@@ -324,7 +335,7 @@ public class BITDigiLock {
 		try {
 			if (result != null && result.next()) {
 				String pincode = result.getString("pincode");
-				//sPlayer.sendMessage("Pincode stored in SQL is:" + pincode);
+				// sPlayer.sendMessage("Pincode stored in SQL is:" + pincode);
 				return pincode;
 			} else {
 				// sPlayer.sendMessage("This block is not owned - open inventory");
@@ -338,23 +349,25 @@ public class BITDigiLock {
 	}
 
 	public static String getOwnerFromSQL(SpoutPlayer sPlayer, Block block) {
-		String query = "SELECT * FROM BukkitInventoryTools WHERE x = "
+		SpoutChest sChest1 = (SpoutChest) block.getState();
+		SpoutChest sChest2 = sChest1.getOtherSide();
+		String query = "SELECT * FROM BukkitInventoryTools WHERE (x = "
 				+ block.getX() + " AND y = " + block.getY() + " AND z = "
 				+ block.getZ() + " AND world='" + block.getWorld().getName()
-				+ "';";
+				+ "') OR (x = " + sChest2.getBlock().getX() + " AND y = "
+				+ sChest2.getBlock().getY() + " AND z = "
+				+ sChest2.getBlock().getZ() + " AND world='"
+				+ sChest2.getBlock().getWorld().getName() + "');";
 		ResultSet result = null;
 
 		if (G333Config.g333Config.STORAGE_TYPE.equals("MySQL")) {
 			try {
 				result = BIT.manageMySQL.sqlQuery(query);
 			} catch (MalformedURLException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			} catch (InstantiationException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			} catch (IllegalAccessException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 		} else { // SQLLITE
@@ -369,7 +382,6 @@ public class BITDigiLock {
 				return sPlayer.getName();
 			}
 		} catch (SQLException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		return "ERR2";
@@ -377,23 +389,24 @@ public class BITDigiLock {
 	}
 
 	public static BITDigiLock loadDigiLock(SpoutPlayer sPlayer, Block block) {
-		// TODO Auto-generated method stub
-		String query = "SELECT * FROM BukkitInventoryTools WHERE x = "
+		SpoutChest sChest1 = (SpoutChest) block.getState();
+		SpoutChest sChest2 = sChest1.getOtherSide();
+		String query = "SELECT * FROM BukkitInventoryTools WHERE (x = "
 				+ block.getX() + " AND y = " + block.getY() + " AND z = "
 				+ block.getZ() + " AND world='" + block.getWorld().getName()
-				+ "';";
+				+ "') OR (x = " + sChest2.getBlock().getX() + " AND y = "
+				+ sChest2.getBlock().getY() + " AND z = "
+				+ sChest2.getBlock().getZ() + " AND world='"
+				+ sChest2.getBlock().getWorld().getName() + "');";
 		ResultSet result = null;
 		if (G333Config.g333Config.STORAGE_TYPE.equals("MySQL")) {
 			try {
 				result = BIT.manageMySQL.sqlQuery(query);
 			} catch (MalformedURLException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			} catch (InstantiationException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			} catch (IllegalAccessException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 		} else { // SQLLITE
@@ -414,10 +427,40 @@ public class BITDigiLock {
 				return null;
 			}
 		} catch (SQLException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		return null;
+
+	}
+
+	public static void RemoveDigiLock(SpoutPlayer sPlayer, BITDigiLock digilock) {
+		SpoutChest sChest1 = (SpoutChest) digilock.getBlock().getState();
+		SpoutChest sChest2 = sChest1.getOtherSide();
+		String query = "DELETE FROM BukkitInventoryTools WHERE (x = "
+				+ digilock.block.getX() + " AND y = " + digilock.block.getY()
+				+ " AND z = " + digilock.block.getZ() + " AND world='"
+				+ digilock.block.getWorld().getName() + "') OR (x = "
+				+ sChest2.getBlock().getX() + " AND y = "
+				+ sChest2.getBlock().getY() + " AND z = "
+				+ sChest2.getBlock().getZ() + " AND world='"
+				+ sChest2.getBlock().getWorld().getName() + "');";
+		if (G333Config.g333Config.STORAGE_TYPE.equals("MySQL")) {
+			try {
+				BIT.manageMySQL.deleteQuery(query);
+			} catch (MalformedURLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (InstantiationException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (IllegalAccessException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		} else { // SQLLITE
+			BIT.manageSQLite.deleteQuery(query);
+
+		}
 
 	}
 

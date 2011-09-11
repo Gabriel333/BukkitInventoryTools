@@ -126,13 +126,15 @@ public class BITSpoutListener extends SpoutListener {
 			// ************************************
 
 			else if (BITGui.BITButtons.get(uuid) == "setPincodeLock") {
-				sPlayer.sendMessage("ClosePincodeWindow");
 				BITGui.popupSetPincode.close();
 				BITDigiLock.SaveDigiLock(sPlayer, block,
 						BITGui.pincode3.getText(), sPlayer.getDisplayName(), 0,
 						"", "");
 			} else if ((BITGui.BITButtons.get(uuid) == "setPincodeCancel")) {
 				BITGui.popupSetPincode.close();
+			} else if ((BITGui.BITButtons.get(uuid) == "setPincodeRemove")) {
+				BITGui.popupSetPincode.close();
+				BITDigiLock.RemoveDigiLock(sPlayer,digilock);
 			}
 			
 			// ************************************

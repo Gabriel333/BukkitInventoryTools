@@ -45,12 +45,23 @@ public class BITDigiLock {
 		this.shared = shared;
 
 	}
+	
+	static void resetDigiLock() {
+		// TODO Auto-generated method stub
+	}
+
+	static void unlockDigiLock() {
+		// TODO Auto-generated method stub
+	}
+
+	static void showDigiLockStatus() {
+		// TODO Auto-generated method stub
+
+	}
 
 	static void SaveDigiLock(SpoutPlayer sPlayer, Block block, String pincode,
 			String owner, Integer closetimer, String coowners, String shared) {
 		String query = null;
-		// insert/update targetblock, code, owner, closetime into safetylocks
-		// table
 		if (isLocked(sPlayer, block)) {
 			query = "UPDATE BukkitInventoryTools SET pincode='" + pincode
 					+ "', owner='" + owner + "', closetimer=" + closetimer
@@ -58,7 +69,7 @@ public class BITDigiLock {
 					+ " WHERE x = " + block.getX() + " AND y = " + block.getY()
 					+ " AND z = " + block.getZ() + " AND world='"
 					+ block.getWorld().getName() + "';";
-			sPlayer.sendMessage(ChatColor.YELLOW + "Updating lock: "+query);
+			G333Messages.sendNotification(sPlayer, "DigiLock updated.");
 		} else {
 			query = "INSERT INTO BukkitInventoryTools (pincode, owner, closetimer,"
 					+ " x, y, z, world, coowners, shared) VALUES ('"
@@ -79,10 +90,9 @@ public class BITDigiLock {
 					+ coowners
 					+ "', '"
 					+ shared + "');";
-			sPlayer.sendMessage(ChatColor.RED + "Creating lock:" + query);
+			G333Messages.sendNotification(sPlayer, "DigiLock created.");
 		}
-		if (G333Config.g333Config.DEBUG_SQL)
-			G333Messages.showInfo("SQL: " + query);
+		if (G333Config.g333Config.DEBUG_SQL) sPlayer.sendMessage(ChatColor.YELLOW + "Updating lock: "+query);
 		if (G333Config.g333Config.STORAGE_TYPE.equals("MySQL")) {
 			try {
 				BIT.manageMySQL.insertQuery(query);
@@ -96,13 +106,9 @@ public class BITDigiLock {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
-			// sPlayer.sendMessage(ChatColor.GREEN +
-			// "This block is now owned by alta189");
 		} else {
 			BIT.manageSQLite.insertQuery(query);
 		}
-		sPlayer.sendMessage(ChatColor.GREEN + "Lock created/updated.");
-
 	}
 	
 	void SaveDigiLock(SpoutPlayer sPlayer, BITDigiLock digilock) {
@@ -157,8 +163,6 @@ public class BITDigiLock {
 		} else {
 			BIT.manageSQLite.insertQuery(query);
 		}
-		sPlayer.sendMessage(ChatColor.GREEN + "Lock created/updated.");
-
 	}
 
 	public static Boolean isLocked(SpoutPlayer sPlayer, Block block) {
@@ -166,9 +170,7 @@ public class BITDigiLock {
 				+ block.getX() + " AND y = " + block.getY() + " AND z = "
 				+ block.getZ() + " AND world='" + block.getWorld().getName()
 				+ "';";
-		// TODO: add and rownum<2 to select only one row
 		ResultSet result = null;
-
 		if (G333Config.g333Config.STORAGE_TYPE.equals("MySQL")) {
 			try {
 				result = BIT.manageMySQL.sqlQuery(query);
@@ -201,18 +203,7 @@ public class BITDigiLock {
 		return false;
 	}
 
-	static void resetDigiLock() {
-		// TODO Auto-generated method stub
-	}
 
-	static void unlockDigiLock() {
-		// TODO Auto-generated method stub
-	}
-
-	static void showDigiLockStatus() {
-		// TODO Auto-generated method stub
-
-	}
 
 	public boolean isCoowner(SpoutPlayer sPlayer) {
 		if (coowners.contains(sPlayer.getName()))
@@ -344,7 +335,6 @@ public class BITDigiLock {
 			e.printStackTrace();
 		}
 		return "ERR1";
-
 	}
 
 	public static String getOwnerFromSQL(SpoutPlayer sPlayer, Block block) {

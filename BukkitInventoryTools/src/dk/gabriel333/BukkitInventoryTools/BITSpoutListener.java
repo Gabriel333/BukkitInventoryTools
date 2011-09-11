@@ -113,12 +113,12 @@ public class BITSpoutListener extends SpoutListener {
 						sPlayer.openInventoryWindow(inv);
 					}
 				} else {
-					sPlayer.closeActiveWindow();
+					BITGui.popupGetPincode.close();
 					G333Messages.sendNotification(sPlayer,
 							"Wrong pincode!");
 				}
-			} else if (BITGui.BITButtons.get(uuid) == " getPincodeCancel") {
-				sPlayer.closeActiveWindow();
+			} else if (BITGui.BITButtons.get(uuid) == "getPincodeCancel") {
+				BITGui.popupGetPincode.close();
 			}
 
 			// ************************************

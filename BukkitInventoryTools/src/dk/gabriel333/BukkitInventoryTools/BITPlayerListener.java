@@ -21,7 +21,7 @@ public class BITPlayerListener extends PlayerListener {
 	public void onPlayerInteract(PlayerInteractEvent event) {
 		SpoutPlayer sPlayer = (SpoutPlayer) event.getPlayer();
 		Block block = event.getClickedBlock();
-		sPlayer.sendMessage("Event:" + event.getEventName() + " type:"
+		if (G333Config.g333Config.DEBUG_GUI) sPlayer.sendMessage("BITPlayerListener:Event:" + event.getEventName() + " type:"
 				+ event.getType() + " Block:"+event.getClickedBlock().getType());
 		if (block != null) {
 			if (BITDigiLock.isLocked(sPlayer, block)) {
@@ -34,7 +34,6 @@ public class BITPlayerListener extends PlayerListener {
 							|| G333Permissions
 									.hasPerm(sPlayer, "digilock.admin",
 											G333Permissions.NOT_QUIET)) {
-						sPlayer.sendMessage("Openpincodewindow");
 						BITGui.getPincode(sPlayer);
 					}
 				}
@@ -44,8 +43,7 @@ public class BITPlayerListener extends PlayerListener {
 					sPlayer.sendMessage("There is no digilock on this block");
 			}
 		} else {
-			// block is null or it is a wolf
-			sPlayer.sendMessage("Too far away or wolf.");
+			// block is null or it is a wolf???
 		}
 	}
 

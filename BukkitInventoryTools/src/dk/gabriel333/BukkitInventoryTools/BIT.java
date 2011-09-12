@@ -177,7 +177,7 @@ public class BIT extends JavaPlugin {
 					+ G333Config.g333Config.STORAGE_TYPE);
 		}
 
-		if (G333Config.g333Config.STORAGE_TYPE.equals("MySQL")) {
+		if (G333Config.g333Config.STORAGE_TYPE.equals("MYSQL")) {
 			// Declare MySQL Handler
 			manageMySQL = new mysqlCore(log,
 					"[" + G333Plugin.PLUGIN_NAME + "]",

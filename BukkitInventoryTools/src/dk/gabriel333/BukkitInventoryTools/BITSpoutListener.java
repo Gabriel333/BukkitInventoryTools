@@ -7,6 +7,7 @@ import org.bukkit.block.Block;
 
 import org.bukkit.event.Event;
 import org.bukkit.inventory.Inventory;
+import org.bukkit.material.Door;
 import org.getspout.spoutapi.block.SpoutChest;
 import org.getspout.spoutapi.event.screen.ButtonClickEvent;
 import org.getspout.spoutapi.event.spout.SpoutListener;
@@ -107,11 +108,15 @@ public class BITSpoutListener extends SpoutListener {
 			else if (BITGui.BITButtons.get(uuid) == "getPincodeUnlock") {
 				BITGui.popupGetPincode.close();
 				if (digilock.pincode.equals(BITGui.pincode2.getText())) {
-					if (digilock.getBlock().getType() == Material.CHEST) {
+					if (BITDigiLock.isChest(digilock.getBlock())) {
 						SpoutChest sChest = (SpoutChest) block.getState();
 						Inventory inv = sChest.getLargestInventory();
 						sPlayer.openInventoryWindow(inv);
-					}
+					} else if (BITDigiLock.isDoor(digilock.getBlock())) {
+						// TODO: open door the door
+						Door door = (Door) block.getState();
+						door.setOpen(true);
+					} 
 				} else {
 					BITGui.popupGetPincode.close();
 					G333Messages.sendNotification(sPlayer, "Wrong pincode!");

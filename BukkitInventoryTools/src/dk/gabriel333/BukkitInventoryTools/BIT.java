@@ -89,6 +89,8 @@ public class BIT extends JavaPlugin {
 		PluginManager pm = getServer().getPluginManager();
 		pm.registerEvent(Event.Type.BLOCK_BREAK, new BITBlockListener(),
 				Priority.Normal, this);
+		pm.registerEvent(Event.Type.BLOCK_DAMAGE, new BITBlockListener(),
+				Priority.Normal, this);
 		pm.registerEvent(Event.Type.CUSTOM_EVENT, new BITInputListener(),
 				Event.Priority.Normal, this);
 		pm.registerEvent(Event.Type.CUSTOM_EVENT, new BITSpoutListener(),

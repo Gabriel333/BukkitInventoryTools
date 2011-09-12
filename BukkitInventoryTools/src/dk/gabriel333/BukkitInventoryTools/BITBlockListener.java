@@ -5,11 +5,11 @@ package dk.gabriel333.BukkitInventoryTools;
 import org.bukkit.block.Block;
 
 import org.bukkit.event.block.BlockBreakEvent;
+import org.bukkit.event.block.BlockDamageEvent;
 import org.bukkit.event.block.BlockListener;
 import org.bukkit.event.block.BlockRedstoneEvent;
 import org.getspout.spoutapi.player.SpoutPlayer;
 
-import dk.gabriel333.Library.G333Config;
 
 public class BITBlockListener extends BlockListener {
 
@@ -27,12 +27,30 @@ public class BITBlockListener extends BlockListener {
 	}
 
 	public void onBlockBreak(BlockBreakEvent event) {
-		Block block = event.getBlock();
 		SpoutPlayer sPlayer = (SpoutPlayer) event.getPlayer();
+		Block block = event.getBlock();
+		sPlayer.sendMessage("BlockBreakEvent:"+block.getType());
+		if (event.isCancelled())
+			return;
 		if (BITDigiLock.isLocked(sPlayer, block)) {
+			// TODO: DAMAGE the user or spawn monster
 			event.setCancelled(true);
 		} else {
-			if (G333Config.g333Config.DEBUG_GUI) sPlayer.sendMessage("BlockBreakEvent:"+block);
+			
+		}
+	}
+	
+	public void onBlockDamage(BlockDamageEvent event) {
+		SpoutPlayer sPlayer = (SpoutPlayer) event.getPlayer();
+		Block block = event.getBlock();
+		sPlayer.sendMessage("BlockDamageEvent:"+block.getType());
+		if (event.isCancelled())
+			return;
+		if (BITDigiLock.isLocked(sPlayer, block)) {
+			// TODO: DAMAGE the user or spawn monster
+			event.setCancelled(true);
+		} else {
+			
 		}
 	}
 

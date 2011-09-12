@@ -33,7 +33,6 @@ public class BITCommandDigiLock implements CommandExecutor {
 						G333Permissions.NOT_QUIET)
 				|| G333Permissions.hasPerm(sPlayer, "*", G333Permissions.NOT_QUIET)) {
 			if (args.length == 0) {
-				BITDigiLock.showDigiLockStatus();
 				sPlayer.sendMessage("Usage: /digilock [lock,unlock,reset,help]");
 				return true;
 			}
@@ -42,13 +41,11 @@ public class BITCommandDigiLock implements CommandExecutor {
 			String action = args[0];
 			if (action.equalsIgnoreCase("lock")) {
 				if (BITDigiLock.isLockable(block)) {
-					sPlayer.sendMessage("You want to lock :" + block.getType());
-					// if USEGUI then
 					if (sPlayer.isSpoutCraftEnabled()) {
 						pincode = "0000";
 						owner = sPlayer.getName();
 						closetimer = 0;
-						BITGui.openMenu(sPlayer, block);
+						BITGui.setPincode(sPlayer, block);
 						pincode = BITGui.pincode.toString();
 						sPlayer.sendMessage("the code is:" + pincode);
 						BITDigiLock.SaveDigiLock(sPlayer, block, pincode,
@@ -74,11 +71,9 @@ public class BITCommandDigiLock implements CommandExecutor {
 				}
 			} else if (action.equalsIgnoreCase("unlock")) {
 				sPlayer.sendMessage("You want to unlock :" + block.getType());
-				BITDigiLock.unlockDigiLock();
 			} else if (action.equalsIgnoreCase("reset")) {
 				sPlayer.sendMessage("You want to reset lock at:"
 						+ block.getType());
-				BITDigiLock.resetDigiLock();
 				sPlayer.sendMessage("The widget was closed");
 			} else {
 				sPlayer.sendMessage("You did something wrong....");

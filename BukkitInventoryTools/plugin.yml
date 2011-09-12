@@ -29,6 +29,8 @@ permissions:
         default: op
     bukkitinventorytools.sortinventory.stack.vehicles:
         default: op
+    bukkitinventorytools.sortinventory.stack.buckets:
+        default: op
     bukkitinventorytools.digilock.use:
         default: true
     bukkitinventorytools.digilock.admin:

@@ -29,7 +29,7 @@ public class BITBlockListener extends BlockListener {
 	public void onBlockBreak(BlockBreakEvent event) {
 		SpoutPlayer sPlayer = (SpoutPlayer) event.getPlayer();
 		Block block = event.getBlock();
-		sPlayer.sendMessage("BlockBreakEvent:"+block.getType());
+		//sPlayer.sendMessage("BlockBreakEvent:"+block.getType());
 		if (event.isCancelled())
 			return;
 		if (BITDigiLock.isLocked(sPlayer, block)) {
@@ -43,7 +43,7 @@ public class BITBlockListener extends BlockListener {
 	public void onBlockDamage(BlockDamageEvent event) {
 		SpoutPlayer sPlayer = (SpoutPlayer) event.getPlayer();
 		Block block = event.getBlock();
-		sPlayer.sendMessage("BlockDamageEvent:"+block.getType());
+		//sPlayer.sendMessage("BlockDamageEvent:"+block.getType());
 		if (event.isCancelled())
 			return;
 		if (BITDigiLock.isLocked(sPlayer, block)) {

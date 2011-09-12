@@ -12,6 +12,7 @@ public class G333Config extends Configuration {
 	public String LIBRARY_SORTKEY;
 	public String LIBRARY_MENUKEY;
 	public String LIBRARY_LOCKKEY;
+	public Boolean SORT_DISPLAYSORTARCHIEVEMENT;
 	private String SORT_SORTSEQ;
 	public String[] SORTSEQ;
 	
@@ -25,6 +26,8 @@ public class G333Config extends Configuration {
 	public static String[] foods;
 	private String SORT_VEHICLES;
 	public static String[] vehicles;
+	private String SORT_BUCKETS;
+	public static String[] buckets;
 	
 	public String STORAGE_TYPE;
 	public String STORAGE_HOST;
@@ -55,6 +58,7 @@ public class G333Config extends Configuration {
 		STORAGE_PASSWORD=getStringParm("Storage.Password", "Changethis");
 		STORAGE_DATABASE=getStringParm("Storage.Database", "SortInventory");
 		//Sort
+		SORT_DISPLAYSORTARCHIEVEMENT = getBooleanParm("Sort.DisplaySortArchievement",true);
         SORT_SORTSEQ = getStringParm("Sort.SortSEQ", "STONE,COBBLESTONE,DIRT,WOOD");
 		SORTSEQ = SORT_SORTSEQ.split(",");
 		
@@ -68,6 +72,8 @@ public class G333Config extends Configuration {
 		foods = SORT_FOODS.split(",");
 		SORT_VEHICLES = getStringParm("Sort.Vehicles", "328,333,342,343");
 		vehicles = SORT_VEHICLES.split(",");
+		SORT_BUCKETS = getStringParm("Sort.Buckets","326,327,335");
+		buckets = SORT_BUCKETS.split(",");
 		
 		//Digilock
 		

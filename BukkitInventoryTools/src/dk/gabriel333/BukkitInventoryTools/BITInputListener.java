@@ -30,7 +30,8 @@ public class BITInputListener extends InputListener {
 				if (G333Permissions.hasPerm(sPlayer, "sortinventory.use",
 						G333Permissions.NOT_QUIET)) {
 					BITPlayer.sortinventory(sPlayer, event.getScreenType());
-					G333Messages.sendNotification(sPlayer, "Items sorted.");
+					if (G333Config.g333Config.SORT_DISPLAYSORTARCHIEVEMENT)
+						G333Messages.sendNotification(sPlayer, "Items sorted.");
 				}
 			}
 		}
@@ -38,13 +39,14 @@ public class BITInputListener extends InputListener {
 		// CHEST_INVENTORY
 		else if (screentype == ScreenType.CHEST_INVENTORY) {
 			// CHEST or DOUBLECHEST
-			if (targetblock.getType() == Material.CHEST) {
+			if (BITDigiLock.isChest(targetblock)) {
 				SpoutChest sChest = (SpoutChest) targetblock.getState();
 				if (keypressed.equals(G333Config.g333Config.LIBRARY_SORTKEY)) {
 					if (targetblock.getType() == Material.CHEST) {
 						G333Inventory.sortInventoryItems(sPlayer,
 								sChest.getLargestInventory());
-						G333Messages.sendNotification(sPlayer, "Chest sorted.");
+						if (G333Config.g333Config.SORT_DISPLAYSORTARCHIEVEMENT) 
+							G333Messages.sendNotification(sPlayer, "Chest sorted.");
 					}
 
 				}
@@ -88,7 +90,12 @@ public class BITInputListener extends InputListener {
 									"Locked with Digilock");
 						}
 					} else {
-						BITGui.setPincode(sPlayer, targetblock);
+						if (sPlayer.isSpoutCraftEnabled()) {
+							BITGui.setPincode(sPlayer, targetblock);
+						} else {
+							sPlayer.sendMessage("Install SpoutCraft or use command /dlock to create lock.");
+						}
+
 					}
 				}
 			}

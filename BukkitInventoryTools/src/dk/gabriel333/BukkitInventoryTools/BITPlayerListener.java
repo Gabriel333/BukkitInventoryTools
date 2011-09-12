@@ -36,13 +36,22 @@ public class BITPlayerListener extends PlayerListener {
 									.hasPerm(sPlayer, "digilock.admin",
 											G333Permissions.NOT_QUIET)) {
 						if (BITDigiLock.isChest(block)) {
-							BITGui.getPincode(sPlayer);
-						} else if (BITDigiLock.isDoor(block)) {
-							Door door = (Door) block.getState();
-							if (door.isOpen()) {
-								door.setOpen(false);
-							} else {
+							if (sPlayer.isSpoutCraftEnabled()) {
 								BITGui.getPincode(sPlayer);
+							} else {
+								sPlayer.sendMessage("Locked with Digilock.");
+							}
+
+						} else if (BITDigiLock.isDoor(block)) {
+							Door door = (Door) block.getState().getData();
+							if (door.isOpen()) {
+								//door.setOpen(false);
+							} else {
+								if (sPlayer.isSpoutCraftEnabled()) {
+									BITGui.getPincode(sPlayer);
+								} else {
+									sPlayer.sendMessage("Locked with Digilock.");
+								}
 							}
 						} // TODO: else if furnace, dispencer....
 

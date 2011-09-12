@@ -53,7 +53,8 @@ public class BITDigiLock {
 		String query = null;
 		if (isLocked(sPlayer, block)) {
 			if (isDoor(block)) {
-				Door door = (Door) block.getState();
+				Door door = (Door) block.getState().getData();
+				// Door door = (Door) block.getState();
 				if (door.isTopHalf()) {
 					query = "UPDATE BukkitInventoryTools SET pincode='"
 							+ pincode + "', owner='" + owner + "', closetimer="
@@ -82,7 +83,8 @@ public class BITDigiLock {
 			G333Messages.sendNotification(sPlayer, "DigiLock updated.");
 		} else {
 			if (isDoor(block)) {
-				Door door = (Door) block.getState();
+				Door door = (Door) block.getState().getData();
+				// Door door = (Door) block.getState();
 				if (door.isTopHalf()) {
 					query = "INSERT INTO BukkitInventoryTools (pincode, owner, closetimer,"
 							+ " x, y, z, world, coowners, shared) VALUES ('"
@@ -192,9 +194,9 @@ public class BITDigiLock {
 
 	public static Boolean isLocked(SpoutPlayer sPlayer, Block block) {
 		String query = "SELECT * FROM BukkitInventoryTools WHERE (x = "
-				+ block.getX() + " AND y = " + block.getY()
-				+ " AND z = " + block.getZ() + " AND world='"
-				+ block.getWorld().getName() + "');";
+				+ block.getX() + " AND y = " + block.getY() + " AND z = "
+				+ block.getZ() + " AND world='" + block.getWorld().getName()
+				+ "');";
 		if (isChest(block)) {
 			SpoutChest sChest1 = (SpoutChest) block.getState();
 			if (sChest1.isDoubleChest()) {
@@ -209,14 +211,15 @@ public class BITDigiLock {
 						+ sChest2.getBlock().getWorld().getName() + "');";
 			}
 		} else if (isDoor(block)) {
-			Door door = (Door) block.getState();
+			Door door = (Door) block.getState().getData();
+			// Door door = (Door) block.getState();
 			if (door.isTopHalf()) {
 				query = "SELECT * FROM BukkitInventoryTools WHERE (x = "
 						+ block.getX() + " AND y = " + (block.getY() - 1)
 						+ " AND z = " + block.getZ() + " AND world='"
 						+ block.getWorld().getName() + "');";
 			}
-		} 
+		}
 		if (query != "") {
 			ResultSet result = null;
 			if (G333Config.g333Config.STORAGE_TYPE.equals("MySQL")) {
@@ -269,11 +272,11 @@ public class BITDigiLock {
 
 	private static final Material lockablematerials[] = { Material.CHEST,
 			Material.LOCKED_CHEST, Material.IRON_DOOR,
-			Material.IRON_DOOR_BLOCK, Material.WOOD_DOOR, Material.FURNACE,
-			Material.DISPENSER, Material.LEVER, Material.STONE_BUTTON };
+			Material.IRON_DOOR_BLOCK, Material.WOODEN_DOOR, Material.WOOD_DOOR,
+			Material.FURNACE, Material.DISPENSER, Material.LEVER,
+			Material.STONE_BUTTON };
 
 	// Material.STORAGE_MINECART,
-	// Material.WOODEN_DOOR, WHAT IS THIS???
 	// Material.WALL_SIGN, Material.SIGN, Material.SIGN_POST,
 
 	// check if material is a lockable block
@@ -363,7 +366,8 @@ public class BITDigiLock {
 						+ sChest2.getBlock().getWorld().getName() + "');";
 			}
 		} else if (isDoor(block)) {
-			Door door = (Door) block.getState();
+			Door door = (Door) block.getState().getData();
+			// Door door = (Door) block.getState();
 			if (door.isTopHalf()) {
 				query = "SELECT * FROM BukkitInventoryTools WHERE x = "
 						+ block.getX() + " AND y = " + (block.getY() - 1)
@@ -421,7 +425,8 @@ public class BITDigiLock {
 						+ sChest2.getBlock().getWorld().getName() + "');";
 			}
 		} else if (isDoor(block)) {
-			Door door = (Door) block.getState();
+			Door door = (Door) block.getState().getData();
+			// Door door = (Door) block.getState();
 			if (door.isTopHalf()) {
 				query = "SELECT * FROM BukkitInventoryTools WHERE x = "
 						+ block.getX() + " AND y = " + (block.getY() - 1)
@@ -475,7 +480,8 @@ public class BITDigiLock {
 						+ sChest2.getBlock().getWorld().getName() + "');";
 			}
 		} else if (isDoor(block)) {
-			Door door = (Door) block.getState();
+			Door door = (Door) block.getState().getData();
+			// Door door = (Door) block.getState();
 			if (door.isTopHalf()) {
 				query = "SELECT * FROM BukkitInventoryTools WHERE (x = "
 						+ block.getX() + " AND y = " + (block.getY() - 1)

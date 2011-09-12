@@ -31,6 +31,7 @@ groups:
             bukkitinventorytools.sortinventory.stack.armor: true
             bukkitinventorytools.sortinventory.stack.food: true
             bukkitinventorytools.sortinventory.stack.vehicles: true
+            bukkitinventorytools.sortinventory.stack.buckets: true
             bukkitinventorytools.digilock.use
             bukkitinventorytools.digilock.admin
             worlds:

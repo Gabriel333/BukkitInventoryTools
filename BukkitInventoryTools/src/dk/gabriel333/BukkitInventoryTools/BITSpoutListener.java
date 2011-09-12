@@ -114,11 +114,14 @@ public class BITSpoutListener extends SpoutListener {
 						sPlayer.openInventoryWindow(inv);
 					} else if (BITDigiLock.isDoor(digilock.getBlock())) {
 						// TODO: open door the door
-						Door door = (Door) block.getState();
+						Door door = (Door) block.getState().getData();
+						//block.setData((byte)(block.getState().getData().getData()^4));
+						//naboblock.setData((byte)(block.getState().getData().getData()^4));
 						door.setOpen(true);
+						
 					} 
 				} else {
-					BITGui.popupGetPincode.close();
+					//BITGui.popupGetPincode.close();
 					G333Messages.sendNotification(sPlayer, "Wrong pincode!");
 				}
 			} else if (BITGui.BITButtons.get(uuid) == "getPincodeCancel") {

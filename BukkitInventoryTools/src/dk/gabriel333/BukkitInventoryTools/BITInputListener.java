@@ -39,7 +39,7 @@ public class BITInputListener extends InputListener {
 		// CHEST_INVENTORY
 		else if (screentype == ScreenType.CHEST_INVENTORY) {
 			// CHEST or DOUBLECHEST
-			if (BITDigiLock.isChest2(targetblock)) {
+			if (targetblock.isChest()) {
 				SpoutChest sChest = (SpoutChest) targetblock.getState();
 				if (keypressed.equals(G333Config.g333Config.LIBRARY_SORTKEY)) {
 					if (targetblock.getType() == Material.CHEST) {

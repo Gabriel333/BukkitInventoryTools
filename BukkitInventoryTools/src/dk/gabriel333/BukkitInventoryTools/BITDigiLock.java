@@ -49,7 +49,7 @@ public class BITDigiLock {
 		this.shared = shared;
 	}
 
-	static void SaveDigiLock(SpoutPlayer sPlayer, Block block, String pincode,
+	static void SaveDigiLock(SpoutPlayer sPlayer, BITBlock block, String pincode,
 			String owner, Integer closetimer, String coowners, String shared) {
 		String query = null;
 		if (isLocked(sPlayer, block)) {
@@ -66,7 +66,7 @@ public class BITDigiLock {
 							+ block.getWorld().getName() + "';";
 				}
 			}
-			if (isChest2(block)) {
+			if (block.isChest()) {
 				query = "UPDATE BukkitInventoryTools SET pincode='" + pincode
 						+ "', owner='" + owner + "', closetimer=" + closetimer
 						+ " , coowners='" + coowners + "', shared='" + shared
@@ -107,7 +107,7 @@ public class BITDigiLock {
 							+ "', '" + shared + "');";
 				}
 			}
-			if (isChest2(block)) {
+			if (block.isChest()) {
 				// TODO: place lock on LEFT side
 				query = "INSERT INTO BukkitInventoryTools (pincode, owner, closetimer,"
 						+ " x, y, z, world, coowners, shared) VALUES ('"
@@ -193,12 +193,12 @@ public class BITDigiLock {
 	 * BIT.manageSQLite.insertQuery(query); } }
 	 */
 
-	public static Boolean isLocked(SpoutPlayer sPlayer, Block block) {
+	public static Boolean isLocked(SpoutPlayer sPlayer, BITBlock block) {
 		String query = "SELECT * FROM BukkitInventoryTools WHERE (x = "
 				+ block.getX() + " AND y = " + block.getY() + " AND z = "
 				+ block.getZ() + " AND world='" + block.getWorld().getName()
 				+ "');";
-		if (isChest2(block)) {
+		if (block.isChest()) {
 			SpoutChest sChest1 = (SpoutChest) block.getState();
 			if (sChest1.isDoubleChest()) {
 				SpoutChest sChest2 = sChest1.getOtherSide();
@@ -347,13 +347,13 @@ public class BITDigiLock {
 		this.shared = shared;
 	}
 
-	public static String getPincodeFromSQL(SpoutPlayer sPlayer, Block block) {
+	public static String getPincodeFromSQL(SpoutPlayer sPlayer, BITBlock block) {
 		// TODO: REMOVE this Class
 		String query = "SELECT * FROM BukkitInventoryTools WHERE x = "
 				+ block.getX() + " AND y = " + block.getY() + " AND z = "
 				+ block.getZ() + " AND world='" + block.getWorld().getName()
 				+ "';";
-		if (isChest2(block)) {
+		if (block.isChest()) {
 			SpoutChest sChest1 = (SpoutChest) block.getState();
 			if (sChest1.isDoubleChest()) {
 				SpoutChest sChest2 = sChest1.getOtherSide();
@@ -590,13 +590,13 @@ public class BITDigiLock {
 		nextblock.setData((byte)(nextblock.getState().getData().getData()^4));
 	}
 
-	public boolean isChest() {
+	/*public boolean isChest() {
 		if (block.getType().equals(Material.CHEST))
 			return true;
 		else if (block.getType().equals(Material.LOCKED_CHEST))
 			return true;
 		return false;
-	}
+	}*/
 	
 
 

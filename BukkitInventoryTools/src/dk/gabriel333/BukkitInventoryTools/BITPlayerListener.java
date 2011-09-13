@@ -1,12 +1,11 @@
 package dk.gabriel333.BukkitInventoryTools;
 
-import org.bukkit.block.Block;
-
 import org.bukkit.event.block.Action;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerItemHeldEvent;
 import org.bukkit.event.player.PlayerListener;
 import org.bukkit.material.Door;
+import org.getspout.spoutapi.block.SpoutBlock;
 import org.getspout.spoutapi.player.SpoutPlayer;
 
 import dk.gabriel333.Library.G333Config;
@@ -19,13 +18,13 @@ public class BITPlayerListener extends PlayerListener {
 
 	public void onPlayerInteract(PlayerInteractEvent event) {
 		SpoutPlayer sPlayer = (SpoutPlayer) event.getPlayer();
-		Block block = event.getClickedBlock();
+		SpoutBlock block = (SpoutBlock) event.getClickedBlock();
 		if (G333Config.g333Config.DEBUG_GUI)
 			sPlayer.sendMessage("BITPlayerListener:Event:"
 					+ event.getEventName() + " type:" + event.getType()
 					+ " Block:" + event.getClickedBlock().getType());
 		if (block != null) {
-			if (BITDigiLock.isLocked(sPlayer, block)) {
+			if (BITDigiLock.isLocked(block)) {
 				if (!event.getAction().equals(Action.RIGHT_CLICK_BLOCK)) {
 					G333Messages.sendNotification(sPlayer,
 							"Locked with DigiLock");
@@ -42,7 +41,7 @@ public class BITPlayerListener extends PlayerListener {
 								sPlayer.sendMessage("Locked with Digilock.");
 							}
 
-						} else if (BITDigiLock.isDoor(block)) {
+						} else if ( BITDigiLock.isDoor(block)) {
 							Door door = (Door) block.getState().getData();
 							if (door.isOpen()) {
 								//door.setOpen(false);

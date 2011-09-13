@@ -1,7 +1,7 @@
 package dk.gabriel333.BukkitInventoryTools;
 
 import org.bukkit.Material;
-import org.bukkit.block.Block;
+import org.getspout.spoutapi.block.SpoutBlock;
 import org.getspout.spoutapi.block.SpoutChest;
 import org.getspout.spoutapi.event.input.InputListener;
 import org.getspout.spoutapi.event.input.KeyPressedEvent;
@@ -19,7 +19,7 @@ public class BITInputListener extends InputListener {
 		SpoutPlayer sPlayer = event.getPlayer();
 		ScreenType screentype = event.getScreenType();
 		String keypressed = event.getKey().name();
-		Block targetblock = sPlayer.getTargetBlock(null, 4);
+		SpoutBlock targetblock = (SpoutBlock) sPlayer.getTargetBlock(null, 4);
 		if (G333Config.g333Config.DEBUG_GUI)
 			sPlayer.sendMessage("Inputlistener, screenType:"
 					+ event.getScreenType() + " targetblock:"
@@ -63,8 +63,6 @@ public class BITInputListener extends InputListener {
 				 */
 
 				else if (keypressed.equals("KEY_ESCAPE")) {
-					if (G333Config.g333Config.DEBUG_GUI)
-						sPlayer.sendMessage("CloseActiveWindow");
 					sPlayer.closeActiveWindow();
 				}
 			} else
@@ -78,7 +76,7 @@ public class BITInputListener extends InputListener {
 		else if (screentype == ScreenType.GAME_SCREEN) {
 			if (keypressed.equals(G333Config.g333Config.LIBRARY_LOCKKEY)) {
 				if (BITDigiLock.isLockable(targetblock)) {
-					if (BITDigiLock.isLocked(sPlayer, targetblock)) {
+					if (BITDigiLock.isLocked(targetblock)) {
 						BITDigiLock digilock = BITDigiLock.loadDigiLock(
 								sPlayer, targetblock);
 						if (sPlayer.getName().equals(digilock.getOwner())) {

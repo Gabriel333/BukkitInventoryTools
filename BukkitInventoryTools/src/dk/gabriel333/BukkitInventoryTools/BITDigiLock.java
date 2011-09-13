@@ -10,6 +10,7 @@ import org.bukkit.block.Block;
 
 import org.bukkit.material.Door;
 import org.bukkit.plugin.Plugin;
+import org.getspout.spoutapi.block.SpoutBlock;
 import org.getspout.spoutapi.block.SpoutChest;
 import org.getspout.spoutapi.player.SpoutPlayer;
 
@@ -25,7 +26,7 @@ public class BITDigiLock {
 		plugin = this.plugin;
 	}
 
-	protected Block block;
+	protected SpoutBlock block;
 	protected String pincode;
 	protected String owner;
 	protected int closetimer;
@@ -38,7 +39,7 @@ public class BITDigiLock {
 	 * Constructs a new BITDigiLock
 	 * 
 	 */
-	BITDigiLock(Block block, String pincode, String owner, int closetimer,
+	BITDigiLock(SpoutBlock block, String pincode, String owner, int closetimer,
 			String coowners, String shared) {
 		this.block = block;
 		this.pincode = pincode;
@@ -48,13 +49,12 @@ public class BITDigiLock {
 		this.shared = shared;
 	}
 
-	static void SaveDigiLock(SpoutPlayer sPlayer, Block block, String pincode,
+	static void SaveDigiLock(SpoutPlayer sPlayer, SpoutBlock block, String pincode,
 			String owner, Integer closetimer, String coowners, String shared) {
 		String query = null;
-		if (isLocked(sPlayer, block)) {
+		if (isLocked(block)) {
 			if (isDoor(block)) {
 				Door door = (Door) block.getState().getData();
-				// Door door = (Door) block.getState();
 				if (door.isTopHalf()) {
 					query = "UPDATE BukkitInventoryTools SET pincode='"
 							+ pincode + "', owner='" + owner + "', closetimer="
@@ -84,7 +84,6 @@ public class BITDigiLock {
 		} else {
 			if (isDoor(block)) {
 				Door door = (Door) block.getState().getData();
-				// Door door = (Door) block.getState();
 				if (door.isTopHalf()) {
 					query = "INSERT INTO BukkitInventoryTools (pincode, owner, closetimer,"
 							+ " x, y, z, world, coowners, shared) VALUES ('"
@@ -146,7 +145,7 @@ public class BITDigiLock {
 		}
 		if (G333Config.g333Config.DEBUG_SQL)
 			sPlayer.sendMessage(ChatColor.YELLOW + "Updating lock: " + query);
-		if (G333Config.g333Config.STORAGE_TYPE.equals("MySQL")) {
+		if (G333Config.g333Config.STORAGE_TYPE.equals("MYSQL")) {
 			try {
 				BIT.manageMySQL.insertQuery(query);
 			} catch (MalformedURLException e) {
@@ -183,7 +182,7 @@ public class BITDigiLock {
 	 * G333Messages.sendNotification(sPlayer, "DigiLock created."); }
 	 * 
 	 * if (G333Config.g333Config.DEBUG_SQL) G333Messages.showInfo("SQL: " +
-	 * query); if (G333Config.g333Config.STORAGE_TYPE.equals("MySQL")) { try {
+	 * query); if (G333Config.g333Config.STORAGE_TYPE.equals("MYSQL")) { try {
 	 * BIT.manageMySQL.insertQuery(query); } catch (MalformedURLException e) {
 	 * e.printStackTrace(); } catch (InstantiationException e) {
 	 * e.printStackTrace(); } catch (IllegalAccessException e) {
@@ -192,7 +191,7 @@ public class BITDigiLock {
 	 * BIT.manageSQLite.insertQuery(query); } }
 	 */
 
-	public static Boolean isLocked(SpoutPlayer sPlayer, Block block) {
+	public static Boolean isLocked(SpoutBlock block) {
 		String query = "SELECT * FROM BukkitInventoryTools WHERE (x = "
 				+ block.getX() + " AND y = " + block.getY() + " AND z = "
 				+ block.getZ() + " AND world='" + block.getWorld().getName()
@@ -212,7 +211,6 @@ public class BITDigiLock {
 			}
 		} else if (isDoor(block)) {
 			Door door = (Door) block.getState().getData();
-			// Door door = (Door) block.getState();
 			if (door.isTopHalf()) {
 				query = "SELECT * FROM BukkitInventoryTools WHERE (x = "
 						+ block.getX() + " AND y = " + (block.getY() - 1)
@@ -222,7 +220,7 @@ public class BITDigiLock {
 		}
 		if (query != "") {
 			ResultSet result = null;
-			if (G333Config.g333Config.STORAGE_TYPE.equals("MySQL")) {
+			if (G333Config.g333Config.STORAGE_TYPE.equals("MYSQL")) {
 				try {
 					result = BIT.manageMySQL.sqlQuery(query);
 				} catch (MalformedURLException e) {
@@ -308,7 +306,7 @@ public class BITDigiLock {
 		return coowners;
 	}
 
-	public Block getBlock() {
+	public SpoutBlock getBlock() {
 		return block;
 	}
 
@@ -316,7 +314,7 @@ public class BITDigiLock {
 		this.pincode = pincode;
 	}
 
-	public void setBlock(Block block) {
+	public void setBlock(SpoutBlock block) {
 		this.block = block;
 	}
 
@@ -336,7 +334,7 @@ public class BITDigiLock {
 		this.shared = shared;
 	}
 
-	public void setDigiLock(Block block, String pincode, String owner,
+	public void setDigiLock(SpoutBlock block, String pincode, String owner,
 			int closetimer, String coowners, String shared) {
 		this.block = block;
 		this.pincode = pincode;
@@ -346,7 +344,7 @@ public class BITDigiLock {
 		this.shared = shared;
 	}
 
-	public static String getPincodeFromSQL(SpoutPlayer sPlayer, Block block) {
+	public static String getPincodeFromSQL(SpoutPlayer sPlayer, SpoutBlock block) {
 		// TODO: REMOVE this Class
 		String query = "SELECT * FROM BukkitInventoryTools WHERE x = "
 				+ block.getX() + " AND y = " + block.getY() + " AND z = "
@@ -367,7 +365,6 @@ public class BITDigiLock {
 			}
 		} else if (isDoor(block)) {
 			Door door = (Door) block.getState().getData();
-			// Door door = (Door) block.getState();
 			if (door.isTopHalf()) {
 				query = "SELECT * FROM BukkitInventoryTools WHERE x = "
 						+ block.getX() + " AND y = " + (block.getY() - 1)
@@ -378,7 +375,7 @@ public class BITDigiLock {
 
 		ResultSet result = null;
 
-		if (G333Config.g333Config.STORAGE_TYPE.equals("MySQL")) {
+		if (G333Config.g333Config.STORAGE_TYPE.equals("MYSQL")) {
 			try {
 				result = BIT.manageMySQL.sqlQuery(query);
 			} catch (MalformedURLException e) {
@@ -405,7 +402,7 @@ public class BITDigiLock {
 		return "ERR1";
 	}
 
-	public static String getOwnerFromSQL(SpoutPlayer sPlayer, Block block) {
+	public static String getOwnerFromSQL(SpoutPlayer sPlayer, SpoutBlock block) {
 		// TODO: REMOVE this Class
 		String query = "SELECT * FROM BukkitInventoryTools WHERE (x = "
 				+ block.getX() + " AND y = " + block.getY() + " AND z = "
@@ -426,7 +423,6 @@ public class BITDigiLock {
 			}
 		} else if (isDoor(block)) {
 			Door door = (Door) block.getState().getData();
-			// Door door = (Door) block.getState();
 			if (door.isTopHalf()) {
 				query = "SELECT * FROM BukkitInventoryTools WHERE x = "
 						+ block.getX() + " AND y = " + (block.getY() - 1)
@@ -435,7 +431,7 @@ public class BITDigiLock {
 			}
 		}
 		ResultSet result = null;
-		if (G333Config.g333Config.STORAGE_TYPE.equals("MySQL")) {
+		if (G333Config.g333Config.STORAGE_TYPE.equals("MYSQL")) {
 			try {
 				result = BIT.manageMySQL.sqlQuery(query);
 			} catch (MalformedURLException e) {
@@ -461,7 +457,7 @@ public class BITDigiLock {
 		return "ERR2";
 	}
 
-	public static BITDigiLock loadDigiLock(SpoutPlayer sPlayer, Block block) {
+	public static BITDigiLock loadDigiLock(SpoutPlayer sPlayer, SpoutBlock block) {
 		String query = "SELECT * FROM BukkitInventoryTools WHERE (x = "
 				+ block.getX() + " AND y = " + block.getY() + " AND z = "
 				+ block.getZ() + " AND world='" + block.getWorld().getName()
@@ -481,7 +477,6 @@ public class BITDigiLock {
 			}
 		} else if (isDoor(block)) {
 			Door door = (Door) block.getState().getData();
-			// Door door = (Door) block.getState();
 			if (door.isTopHalf()) {
 				query = "SELECT * FROM BukkitInventoryTools WHERE (x = "
 						+ block.getX() + " AND y = " + (block.getY() - 1)
@@ -490,7 +485,7 @@ public class BITDigiLock {
 			}
 		}
 		ResultSet result = null;
-		if (G333Config.g333Config.STORAGE_TYPE.equals("MySQL")) {
+		if (G333Config.g333Config.STORAGE_TYPE.equals("MYSQL")) {
 			try {
 				result = BIT.manageMySQL.sqlQuery(query);
 			} catch (MalformedURLException e) {
@@ -521,11 +516,10 @@ public class BITDigiLock {
 			e.printStackTrace();
 		}
 		return null;
-
 	}
 
 	public static void RemoveDigiLock(SpoutPlayer sPlayer, BITDigiLock digilock) {
-		if (isLocked(sPlayer, digilock.getBlock())) {
+		if (isLocked(digilock.getBlock())) {
 			String query = "DELETE FROM BukkitInventoryTools WHERE (x = "
 					+ digilock.block.getX() + " AND y = "
 					+ digilock.block.getY() + " AND z = "
@@ -549,7 +543,7 @@ public class BITDigiLock {
 				}
 			}
 			G333Messages.sendNotification(sPlayer, "DigiLock removed.");
-			if (G333Config.g333Config.STORAGE_TYPE.equals("MySQL")) {
+			if (G333Config.g333Config.STORAGE_TYPE.equals("MYSQL")) {
 				try {
 					BIT.manageMySQL.deleteQuery(query);
 				} catch (MalformedURLException e) {
@@ -565,7 +559,7 @@ public class BITDigiLock {
 		}
 	}
 
-	public static boolean isDoor(Block block) {
+	public static boolean isDoor(SpoutBlock block) {
 		if (block.getType().equals(Material.WOOD_DOOR))
 			return true;
 		else if (block.getType().equals(Material.WOODEN_DOOR))

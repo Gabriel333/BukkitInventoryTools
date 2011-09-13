@@ -3,11 +3,12 @@ package dk.gabriel333.BukkitInventoryTools;
 import java.util.UUID;
 
 import org.bukkit.Material;
-import org.bukkit.block.Block;
 
 import org.bukkit.event.Event;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.material.Door;
+
+import org.getspout.spoutapi.block.SpoutBlock;
 import org.getspout.spoutapi.block.SpoutChest;
 import org.getspout.spoutapi.event.screen.ButtonClickEvent;
 import org.getspout.spoutapi.event.spout.SpoutListener;
@@ -26,7 +27,7 @@ public class BITSpoutListener extends SpoutListener {
 			Button button = ((ButtonClickEvent) event).getButton();
 			UUID uuid = button.getId();
 			SpoutPlayer sPlayer = ((ButtonClickEvent) event).getPlayer();
-			Block block = sPlayer.getTargetBlock(null, 4);
+			SpoutBlock block = (SpoutBlock) sPlayer.getTargetBlock(null, 4);
 			BITDigiLock digilock = BITDigiLock.loadDigiLock(sPlayer, block);
 
 			// ************************************
@@ -141,7 +142,7 @@ public class BITSpoutListener extends SpoutListener {
 				BITGui.popupSetPincode.close();
 			} else if ((BITGui.BITButtons.get(uuid) == "setPincodeRemove")) {
 				BITGui.popupSetPincode.close();
-				if (BITDigiLock.isLocked(sPlayer, block)) {
+				if (BITDigiLock.isLocked(block)) {
 					BITDigiLock.RemoveDigiLock(sPlayer, digilock);
 				}
 			}

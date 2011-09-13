@@ -1,9 +1,9 @@
 package dk.gabriel333.BukkitInventoryTools;
 
-import org.bukkit.block.Block;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
+import org.getspout.spoutapi.block.SpoutBlock;
 import org.getspout.spoutapi.player.SpoutPlayer;
 
 import dk.gabriel333.BukkitInventoryTools.BITDigiLock;
@@ -16,7 +16,7 @@ public class BITCommandDigiLock implements CommandExecutor {
 	public boolean onCommand(CommandSender sender, Command command,
 			String label, String[] args) {
 		SpoutPlayer sPlayer = (SpoutPlayer) sender;
-		Block block = sPlayer.getTargetBlock(null, 4);
+		SpoutBlock block = (SpoutBlock) sPlayer.getTargetBlock(null, 4);
 		String pincode = "0000";
 		String coowners = "";
 		String shared = "";

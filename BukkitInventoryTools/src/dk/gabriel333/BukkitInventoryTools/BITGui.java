@@ -4,8 +4,8 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.UUID;
 
-import org.bukkit.block.Block;
 import org.bukkit.inventory.ItemStack;
+import org.getspout.spoutapi.block.SpoutBlock;
 import org.getspout.spoutapi.gui.GenericButton;
 import org.getspout.spoutapi.gui.GenericItemWidget;
 import org.getspout.spoutapi.gui.GenericLabel;
@@ -32,7 +32,7 @@ public class BITGui {
 	public static GenericTextField pincode = new GenericTextField();
 	public static GenericTextField owner = new GenericTextField();
 
-	public static void openMenu(SpoutPlayer sPlayer, Block block) {
+	public static void openMenu(SpoutPlayer sPlayer, SpoutBlock block) {
 
 		String pin;
 		String own;
@@ -222,7 +222,7 @@ public class BITGui {
 	public static PopupScreen popupSetPincode = new GenericPopup();
 	public static GenericTextField pincode3 = new GenericTextField();
 
-	public static void setPincode(SpoutPlayer sPlayer, Block block) {
+	public static void setPincode(SpoutPlayer sPlayer, SpoutBlock block) {
 		int y = 50, height = 20, width = 100;
 		int x = 170;
 
@@ -230,7 +230,7 @@ public class BITGui {
 		itemwidget.setX(x + 2 * height).setY(y);
 		itemwidget.setHeight(height * 2).setWidth(height * 2)
 				.setDepth(height * 2);
-		if (!BITDigiLock.isLocked(sPlayer, block)) {
+		if (!BITDigiLock.isLocked(block)) {
 			itemwidget.setTooltip("Unlocked inventory");
 		} else {
 			itemwidget.setTooltip("Locked inventory");
@@ -239,7 +239,7 @@ public class BITGui {
 		y = y + 3 * height;
 
 		BITDigiLock digilock;
-		if (BITDigiLock.isLocked(sPlayer, block)) {
+		if (BITDigiLock.isLocked(block)) {
 			digilock=BITDigiLock.loadDigiLock(sPlayer, block);
 			pincode3.setText(digilock.getPincode());
 		} else {
@@ -270,7 +270,7 @@ public class BITGui {
 		
 		y = y + height;
 		GenericButton removeButton = new GenericButton("Remove");
-		if (BITDigiLock.isLocked(sPlayer,block)) {
+		if (BITDigiLock.isLocked(block)) {
 			removeButton.setAuto(false).setX(x).setY(y)
 					.setHeight(height).setWidth(width);
 			removeButton.setTooltip("Press Remove to delete the lock.");

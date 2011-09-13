@@ -35,7 +35,7 @@ public class BITPlayerListener extends PlayerListener {
 							|| G333Permissions
 									.hasPerm(sPlayer, "digilock.admin",
 											G333Permissions.NOT_QUIET)) {
-						if (BITDigiLock.isChest(block)) {
+						if (BITDigiLock.isChest2(block)) {
 							if (sPlayer.isSpoutCraftEnabled()) {
 								BITGui.getPincode(sPlayer);
 							} else {

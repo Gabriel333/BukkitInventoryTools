@@ -7,6 +7,7 @@ import java.sql.SQLException;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
+import org.bukkit.block.BlockFace;
 
 import org.bukkit.material.Door;
 import org.bukkit.plugin.Plugin;
@@ -65,7 +66,7 @@ public class BITDigiLock {
 							+ block.getWorld().getName() + "';";
 				}
 			}
-			if (isChest(block)) {
+			if (isChest2(block)) {
 				query = "UPDATE BukkitInventoryTools SET pincode='" + pincode
 						+ "', owner='" + owner + "', closetimer=" + closetimer
 						+ " , coowners='" + coowners + "', shared='" + shared
@@ -106,7 +107,7 @@ public class BITDigiLock {
 							+ "', '" + shared + "');";
 				}
 			}
-			if (isChest(block)) {
+			if (isChest2(block)) {
 				// TODO: place lock on LEFT side
 				query = "INSERT INTO BukkitInventoryTools (pincode, owner, closetimer,"
 						+ " x, y, z, world, coowners, shared) VALUES ('"
@@ -197,7 +198,7 @@ public class BITDigiLock {
 				+ block.getX() + " AND y = " + block.getY() + " AND z = "
 				+ block.getZ() + " AND world='" + block.getWorld().getName()
 				+ "');";
-		if (isChest(block)) {
+		if (isChest2(block)) {
 			SpoutChest sChest1 = (SpoutChest) block.getState();
 			if (sChest1.isDoubleChest()) {
 				SpoutChest sChest2 = sChest1.getOtherSide();
@@ -352,7 +353,7 @@ public class BITDigiLock {
 				+ block.getX() + " AND y = " + block.getY() + " AND z = "
 				+ block.getZ() + " AND world='" + block.getWorld().getName()
 				+ "';";
-		if (isChest(block)) {
+		if (isChest2(block)) {
 			SpoutChest sChest1 = (SpoutChest) block.getState();
 			if (sChest1.isDoubleChest()) {
 				SpoutChest sChest2 = sChest1.getOtherSide();
@@ -405,13 +406,13 @@ public class BITDigiLock {
 		return "ERR1";
 	}
 
-	public static String getOwnerFromSQL(SpoutPlayer sPlayer, Block block) {
+	public static String getOwnerFromSQL(SpoutPlayer sPlayer, BITBlock block) {
 		// TODO: REMOVE this Class
 		String query = "SELECT * FROM BukkitInventoryTools WHERE (x = "
 				+ block.getX() + " AND y = " + block.getY() + " AND z = "
 				+ block.getZ() + " AND world='" + block.getWorld().getName()
 				+ "')";
-		if (isChest(block)) {
+		if (block.isChest()) {
 			SpoutChest sChest1 = (SpoutChest) block.getState();
 			if (sChest1.isDoubleChest()) {
 				SpoutChest sChest2 = sChest1.getOtherSide();
@@ -461,12 +462,12 @@ public class BITDigiLock {
 		return "ERR2";
 	}
 
-	public static BITDigiLock loadDigiLock(SpoutPlayer sPlayer, Block block) {
+	public static BITDigiLock loadDigiLock(SpoutPlayer sPlayer, BITBlock block) {
 		String query = "SELECT * FROM BukkitInventoryTools WHERE (x = "
 				+ block.getX() + " AND y = " + block.getY() + " AND z = "
 				+ block.getZ() + " AND world='" + block.getWorld().getName()
 				+ "');";
-		if (isChest(block)) {
+		if (block.isChest()) {
 			SpoutChest sChest1 = (SpoutChest) block.getState();
 			if (sChest1.isDoubleChest()) {
 				SpoutChest sChest2 = sChest1.getOtherSide();
@@ -531,7 +532,7 @@ public class BITDigiLock {
 					+ digilock.block.getY() + " AND z = "
 					+ digilock.block.getZ() + " AND world='"
 					+ digilock.block.getWorld().getName() + "');";
-			if (isChest(digilock.getBlock())) {
+			if (digilock.isChest()) {
 				SpoutChest sChest1 = (SpoutChest) digilock.getBlock()
 						.getState();
 				if (sChest1.isDoubleChest()) {
@@ -576,13 +577,27 @@ public class BITDigiLock {
 			return true;
 		return false;
 	}
+	
+	public void toggleOpenDoor() {
+		Door door = (Door) block.getState().getData();
+		block.setData((byte)(block.getState().getData().getData()^4));
+		Block nextblock;
+		if (door.isTopHalf()) {
+			nextblock = block.getRelative(BlockFace.DOWN);
+		} else {
+			nextblock = block.getRelative(BlockFace.UP);
+		}
+		nextblock.setData((byte)(nextblock.getState().getData().getData()^4));
+	}
 
-	public static boolean isChest(Block block) {
+	public boolean isChest() {
 		if (block.getType().equals(Material.CHEST))
 			return true;
 		else if (block.getType().equals(Material.LOCKED_CHEST))
 			return true;
 		return false;
 	}
+	
+
 
 }

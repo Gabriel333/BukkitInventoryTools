@@ -4,6 +4,7 @@ import java.util.UUID;
 
 import org.bukkit.Material;
 import org.bukkit.block.Block;
+import org.bukkit.block.BlockFace;
 
 import org.bukkit.event.Event;
 import org.bukkit.inventory.Inventory;
@@ -108,17 +109,14 @@ public class BITSpoutListener extends SpoutListener {
 			else if (BITGui.BITButtons.get(uuid) == "getPincodeUnlock") {
 				BITGui.popupGetPincode.close();
 				if (digilock.pincode.equals(BITGui.pincode2.getText())) {
-					if (BITDigiLock.isChest(digilock.getBlock())) {
+					if (digilock.isChest()) {
 						SpoutChest sChest = (SpoutChest) block.getState();
 						Inventory inv = sChest.getLargestInventory();
 						sPlayer.openInventoryWindow(inv);
 					} else if (BITDigiLock.isDoor(digilock.getBlock())) {
 						// TODO: open door the door
-						Door door = (Door) block.getState().getData();
-						//block.setData((byte)(block.getState().getData().getData()^4));
-						//naboblock.setData((byte)(block.getState().getData().getData()^4));
-						door.setOpen(true);
-						
+						digilock.toggleOpenDoor();
+						// door.setOpen(true);
 					} 
 				} else {
 					//BITGui.popupGetPincode.close();

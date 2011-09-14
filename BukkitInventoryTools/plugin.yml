@@ -3,7 +3,8 @@ main: dk.gabriel333.BukkitInventoryTools.BIT
 version: 2.0.7
 author: Gabriel333
 website: https://github.com/BukkitInventoryTools
-description: Use /sort to sort you personal inventory or the chest
+dev-url: http://dev.bukkit.org/server-mods/bukkitinventorytools/
+description: Digital lock, sort and stack inventories
 depend: [Spout]
 commands:
     sort:

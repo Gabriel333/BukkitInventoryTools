@@ -174,7 +174,7 @@ public class BITGui {
 	public static PopupScreen popupGetPincode = new GenericPopup();
 	public static GenericTextField pincode2 = new GenericTextField();
 
-	public static void getPincode(SpoutPlayer sPlayer) {
+	public static void getPincode(SpoutPlayer sPlayer, SpoutBlock block) {
 		int y = 50, height = 20, width = 100;
 		int x = 170;
 

@@ -9,7 +9,6 @@ import org.getspout.spoutapi.block.SpoutBlock;
 import org.getspout.spoutapi.player.SpoutPlayer;
 
 import dk.gabriel333.Library.G333Config;
-import dk.gabriel333.Library.G333Messages;
 import dk.gabriel333.Library.G333Permissions;
 
 public class BITPlayerListener extends PlayerListener {
@@ -19,39 +18,39 @@ public class BITPlayerListener extends PlayerListener {
 	public void onPlayerInteract(PlayerInteractEvent event) {
 		SpoutPlayer sPlayer = (SpoutPlayer) event.getPlayer();
 		SpoutBlock block = (SpoutBlock) event.getClickedBlock();
-		if (G333Config.g333Config.DEBUG_GUI)
-			sPlayer.sendMessage("BITPlayerListener:Event:"
-					+ event.getEventName() + " type:" + event.getType()
-					+ " Block:" + event.getClickedBlock().getType());
-		if (block != null) {
+
+		if (event.getAction().equals(Action.RIGHT_CLICK_BLOCK)
+				|| event.getAction().equals(Action.LEFT_CLICK_BLOCK)) {
+			if (G333Config.g333Config.DEBUG_GUI)
+				sPlayer.sendMessage("BITPlayerListener:Event:"
+						+ event.getEventName() + " action:" + event.getAction()
+						+ " Block:" + event.getClickedBlock());
+
 			if (BITDigiLock.isLocked(block)) {
-				if (!event.getAction().equals(Action.RIGHT_CLICK_BLOCK)) {
-					G333Messages.sendNotification(sPlayer,
-							"Locked with DigiLock");
-				} else {
-					if (G333Permissions.hasPerm(sPlayer, "digilock.use",
-							G333Permissions.NOT_QUIET)
-							|| G333Permissions
-									.hasPerm(sPlayer, "digilock.admin",
-											G333Permissions.NOT_QUIET)) {
-						if (BITDigiLock.isChest(block)) {
+				if (G333Permissions.hasPerm(sPlayer, "digilock.use",
+						G333Permissions.NOT_QUIET)
+						|| G333Permissions.hasPerm(sPlayer, "digilock.admin",
+								G333Permissions.NOT_QUIET)) {
+					if (BITDigiLock.isChest(block)
+							&& event.getAction().equals(
+									Action.RIGHT_CLICK_BLOCK)) {
+						if (sPlayer.isSpoutCraftEnabled()) {
+							BITGui.getPincode(sPlayer, block);
+						} else {
+							sPlayer.sendMessage("Locked with Digilock.");
+						}
+
+					} else if (BITDigiLock.isDoor(block)) {
+						Door door = (Door) block.getState().getData();
+						if (door.isOpen()) {
+							BITDigiLock.closeDoor(block);
+						} else {
 							if (sPlayer.isSpoutCraftEnabled()) {
-								BITGui.getPincode(sPlayer);
+								BITGui.getPincode(sPlayer, block);
 							} else {
 								sPlayer.sendMessage("Locked with Digilock.");
 							}
 
-						} else if ( BITDigiLock.isDoor(block)) {
-							Door door = (Door) block.getState().getData();
-							if (door.isOpen()) {
-								//door.setOpen(false);
-							} else {
-								if (sPlayer.isSpoutCraftEnabled()) {
-									BITGui.getPincode(sPlayer);
-								} else {
-									sPlayer.sendMessage("Locked with Digilock.");
-								}
-							}
 						} // TODO: else if furnace, dispencer....
 
 					}
@@ -61,8 +60,6 @@ public class BITPlayerListener extends PlayerListener {
 				if (G333Config.g333Config.DEBUG_GUI)
 					sPlayer.sendMessage("There is no digilock on this block");
 			}
-		} else {
-			// block is null or it is a wolf???
 		}
 	}
 

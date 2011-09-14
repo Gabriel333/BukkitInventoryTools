@@ -57,7 +57,7 @@ public class G333Config extends Configuration {
 		STORAGE_USERNAME=getStringParm("Storage.Username", "Admin");
 		STORAGE_PASSWORD=getStringParm("Storage.Password", "Changethis");
 		STORAGE_DATABASE=getStringParm("Storage.Database", "SortInventory");
-		//Sort
+		//Sort                                              
 		SORT_DISPLAYSORTARCHIEVEMENT = getBooleanParm("Sort.DisplaySortArchievement",true);
         SORT_SORTSEQ = getStringParm("Sort.SortSEQ", "STONE,COBBLESTONE,DIRT,WOOD");
 		SORTSEQ = SORT_SORTSEQ.split(",");

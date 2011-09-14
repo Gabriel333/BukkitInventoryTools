@@ -52,7 +52,9 @@ Sort:
     Armors: 298,299,300,301,302,303,304,305,306,307,308,309,310,311,312,313,314,315,316,317
     Foods: 260,282,297,319,320,322,349,350,354,357
     Vehicles: 328,333,342,343
-    Buckets: 326,327,335 
+    Buckets: 326,327,335
+
+    DisplaySortArchievement: true 
 
     # This is the sorting sequence
     # Be VERY carefull when you enter new items, be sure you 

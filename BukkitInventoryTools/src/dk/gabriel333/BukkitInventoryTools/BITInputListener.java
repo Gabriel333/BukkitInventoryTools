@@ -20,10 +20,10 @@ public class BITInputListener extends InputListener {
 		ScreenType screentype = event.getScreenType();
 		String keypressed = event.getKey().name();
 		SpoutBlock targetblock = (SpoutBlock) sPlayer.getTargetBlock(null, 4);
-		if (G333Config.g333Config.DEBUG_GUI)
-			sPlayer.sendMessage("Inputlistener, screenType:"
-					+ event.getScreenType() + " targetblock:"
-					+ targetblock.getType());
+		//if (G333Config.g333Config.DEBUG_GUI)
+		//	sPlayer.sendMessage("Inputlistener, screenType:"
+		//			+ event.getScreenType() + " targetblock:"
+		//			+ targetblock.getType());
 		// PLAYER_INVENTORY
 		if (screentype == ScreenType.PLAYER_INVENTORY) {
 			if (keypressed.equals(G333Config.g333Config.LIBRARY_SORTKEY)) {

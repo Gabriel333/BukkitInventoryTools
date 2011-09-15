@@ -18,7 +18,6 @@ public class BITPlayerListener extends PlayerListener {
 	public void onPlayerInteract(PlayerInteractEvent event) {
 		SpoutPlayer sPlayer = (SpoutPlayer) event.getPlayer();
 		SpoutBlock block = (SpoutBlock) event.getClickedBlock();
-
 		if (event.getAction().equals(Action.RIGHT_CLICK_BLOCK)
 				|| event.getAction().equals(Action.LEFT_CLICK_BLOCK)) {
 			if (G333Config.g333Config.DEBUG_GUI)
@@ -27,6 +26,7 @@ public class BITPlayerListener extends PlayerListener {
 						+ " Block:" + event.getClickedBlock());
 
 			if (BITDigiLock.isLocked(block)) {
+				BITDigiLock digilock = BITDigiLock.loadDigiLock(sPlayer, block);
 				if (G333Permissions.hasPerm(sPlayer, "digilock.use",
 						G333Permissions.NOT_QUIET)
 						|| G333Permissions.hasPerm(sPlayer, "digilock.admin",
@@ -43,7 +43,7 @@ public class BITPlayerListener extends PlayerListener {
 					} else if (BITDigiLock.isDoor(block)) {
 						Door door = (Door) block.getState().getData();
 						if (door.isOpen()) {
-							BITDigiLock.closeDoor(block);
+							digilock.closeDoor();
 						} else {
 							if (sPlayer.isSpoutCraftEnabled()) {
 								BITGui.getPincode(sPlayer, block);

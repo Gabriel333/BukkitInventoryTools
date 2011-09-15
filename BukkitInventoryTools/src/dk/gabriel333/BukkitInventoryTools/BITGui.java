@@ -221,11 +221,27 @@ public class BITGui {
 	// ***************************************************************
 	public static PopupScreen popupSetPincode = new GenericPopup();
 	public static GenericTextField pincode3 = new GenericTextField();
+	public static GenericTextField owner1 = new GenericTextField();
+	public static GenericTextField listOfCoOwners = new GenericTextField();
 
 	public static void setPincode(SpoutPlayer sPlayer, SpoutBlock block) {
-		int y = 50, height = 20, width = 100;
-		int x = 170;
+		int height = 20;
+		int x,y,w1,w2;
 
+		BITDigiLock digilock;
+		if (BITDigiLock.isLocked(block)) {
+			digilock = BITDigiLock.loadDigiLock(sPlayer, block);
+			pincode3.setText(digilock.getPincode());
+			owner1.setText(digilock.getOwner());
+			listOfCoOwners.setText(digilock.getCoOwners());
+		} else {
+			pincode3.setText("");
+			owner1.setText("");
+			listOfCoOwners.setText("");
+		}
+
+		// GIF
+		x = 170;y=50;
 		GenericItemWidget itemwidget = new GenericItemWidget(new ItemStack(95));
 		itemwidget.setX(x + 2 * height).setY(y);
 		itemwidget.setHeight(height * 2).setWidth(height * 2)
@@ -238,41 +254,72 @@ public class BITGui {
 		popupSetPincode.attachWidget(plugin, itemwidget);
 		y = y + 3 * height;
 
-		BITDigiLock digilock;
-		if (BITDigiLock.isLocked(block)) {
-			digilock=BITDigiLock.loadDigiLock(sPlayer, block);
-			pincode3.setText(digilock.getPincode());
-		} else {
-			pincode3.setText("");
-		}
+		// first row -------- x=20-170-------------------------------------
+		x=10;w1=60;w2=80;y=170;
+		// ownerButton
+		GenericButton ownerButton = new GenericButton("Owner");
+		ownerButton.setAuto(false).setX(x).setY(y).setHeight(height)
+				.setWidth(w1);
+		ownerButton.setTooltip("Set Owner");
+		popupSetPincode.attachWidget(plugin, ownerButton);
+		menuButtons.add(ownerButton);
+		BITButtons.put(ownerButton.getId(), "OwnerButton");
+		// owner1
+		owner1.setTooltip("Owner of the DigiLock");
+		owner1.setCursorPosition(1);
+		owner1.setX(x+w1+1).setY(y);
+		owner1.setHeight(height).setWidth(w2);
+		popupSetPincode.attachWidget(plugin, owner1);
+		y = y + height;
+
+		// setCoOwnerButton
+		GenericButton CoOwnerButton = new GenericButton("CoOwners");
+		CoOwnerButton.setAuto(false).setX(x).setY(y).setHeight(height)
+				.setWidth(w1);
+		CoOwnerButton.setTooltip("CoOwners must be seperated by a comma.");
+		popupSetPincode.attachWidget(plugin, CoOwnerButton);
+		menuButtons.add(CoOwnerButton);
+		BITButtons.put(CoOwnerButton.getId(), "CoOwnerButton");
+		// listOfCoOwners
+		listOfCoOwners.setX(x+w1+1).setY(y).setWidth(340).setHeight(height);
+		listOfCoOwners.setMaximumCharacters(200);
+		listOfCoOwners.setText(listOfCoOwners.getText());
+		popupSetPincode.attachWidget(plugin, listOfCoOwners);
+		y = y + height;
+
+		// Second row ------------X=170-270-370------------------------------
+		y = 110; 
+		x = 180;w1=80;w2=80;
+		// pincode3
 		pincode3.setTooltip("Enter/change the pincode...");
 		pincode3.setCursorPosition(1);
 		pincode3.setX(x).setY(y);
-		pincode3.setHeight(height).setWidth(width);
+		pincode3.setHeight(height).setWidth(w1);
 		popupSetPincode.attachWidget(plugin, pincode3);
 		y = y + height;
 
+		// lockButton
 		GenericButton lockButton = new GenericButton("Lock");
 		lockButton.setAuto(false).setX(x).setY(y).setHeight(height)
-				.setWidth(width);
+				.setWidth(w1);
 		lockButton.setTooltip("Enter/change the pincode and press lock.");
 		popupSetPincode.attachWidget(plugin, lockButton);
 		menuButtons.add(lockButton);
 		BITButtons.put(lockButton.getId(), "setPincodeLock");
 
+		// cancelButton
 		GenericButton cancelButton2 = new GenericButton("Cancel");
-		cancelButton2.setAuto(false).setX(x + width + 10).setY(y)
-				.setHeight(height).setWidth(width);
+		cancelButton2.setAuto(false).setX(x + w1 + 10).setY(y)
+				.setHeight(height).setWidth(w1);
 		popupSetPincode.attachWidget(plugin, cancelButton2);
 		menuButtons.add(cancelButton2);
 		BITButtons.put(cancelButton2.getId(), "setPincodeCancel");
-		y = y + height;
-		
-		y = y + height;
+
+		// removeButton
 		GenericButton removeButton = new GenericButton("Remove");
 		if (BITDigiLock.isLocked(block)) {
-			removeButton.setAuto(false).setX(x).setY(y)
-					.setHeight(height).setWidth(width);
+			removeButton.setAuto(false).setX(x-w1-10).setY(y).setHeight(height)
+					.setWidth(w1);
 			removeButton.setTooltip("Press Remove to delete the lock.");
 			removeButton.setEnabled(true);
 			menuButtons.add(removeButton);
@@ -280,10 +327,10 @@ public class BITGui {
 		} else {
 			menuButtons.remove(removeButton);
 			BITButtons.remove("setPincodeRemove");
-			removeButton.setEnabled(false);
+			removeButton.setEnabled(false).setDirty(true);
 		}
 		popupSetPincode.attachWidget(plugin, removeButton);
-		
+
 		// Open Window
 		popupSetPincode.setTransparent(true);
 		sPlayer.getMainScreen().attachPopupScreen(popupSetPincode);

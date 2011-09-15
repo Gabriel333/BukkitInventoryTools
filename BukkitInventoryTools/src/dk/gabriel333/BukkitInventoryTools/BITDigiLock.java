@@ -31,7 +31,7 @@ public class BITDigiLock {
 	protected String pincode;
 	protected String owner;
 	protected int closetimer;
-	protected String coowners;
+	protected String coOwners;
 	protected String shared;
 
 	// protected boolean locked = true;
@@ -46,11 +46,11 @@ public class BITDigiLock {
 		this.pincode = pincode;
 		this.owner = owner;
 		this.closetimer = closetimer;
-		this.coowners = coowners;
+		this.coOwners = coowners;
 		this.shared = shared;
 	}
 
-	static void SaveDigiLock(SpoutPlayer sPlayer, SpoutBlock block,
+	public static void SaveDigiLock(SpoutPlayer sPlayer, SpoutBlock block,
 			String pincode, String owner, Integer closetimer, String coowners,
 			String shared) {
 		String query = null;
@@ -228,18 +228,18 @@ public class BITDigiLock {
 	}
 
 	public boolean isCoowner(SpoutPlayer sPlayer) {
-		if (coowners.contains(sPlayer.getName()))
+		if (coOwners.contains(sPlayer.getName()))
 			return true;
 		return false;
 	}
 
 	public void addCoowner(SpoutPlayer sPlayer) {
-		coowners = coowners.concat("," + sPlayer.getName());
+		coOwners = coOwners.concat("," + sPlayer.getName());
 	}
 
 	public boolean removeCoowner(SpoutPlayer sPlayer) {
-		if (coowners.contains(sPlayer.getName())) {
-			coowners = coowners.replace("," + sPlayer.getName(), "");
+		if (coOwners.contains(sPlayer.getName())) {
+			coOwners = coOwners.replace("," + sPlayer.getName(), "");
 			return true;
 		}
 		return false;
@@ -279,8 +279,8 @@ public class BITDigiLock {
 		return closetimer;
 	}
 
-	public String getCoowners() {
-		return coowners;
+	public String getCoOwners() {
+		return coOwners;
 	}
 
 	public SpoutBlock getBlock() {
@@ -304,7 +304,7 @@ public class BITDigiLock {
 	}
 
 	public void setCoowners(String coowners) {
-		this.coowners = coowners;
+		this.coOwners = coowners;
 	}
 
 	public void setShared(String shared) {
@@ -317,7 +317,7 @@ public class BITDigiLock {
 		this.pincode = pincode;
 		this.owner = owner;
 		this.closetimer = closetimer;
-		this.coowners = coowners;
+		this.coOwners = coowners;
 		this.shared = shared;
 	}
 
@@ -556,7 +556,7 @@ public class BITDigiLock {
 		return false;
 	}
 
-	public static void openDoor(SpoutBlock block) {
+	public void openDoor() {
 		Door door = (Door) block.getState().getData();
 		if (!door.isOpen()) {
 			// door.setOpen(true);
@@ -577,7 +577,7 @@ public class BITDigiLock {
 		}
 	}
 
-	public static void closeDoor(SpoutBlock block) {
+	public void closeDoor() {
 		Door door = (Door) block.getState().getData();
 		if (door.isOpen()) {
 			// door.setOpen(false);

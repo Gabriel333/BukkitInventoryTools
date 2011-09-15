@@ -113,13 +113,12 @@ public class BITSpoutListener extends SpoutListener {
 						Inventory inv = sChest.getLargestInventory();
 						sPlayer.openInventoryWindow(inv);
 					} else if (BITDigiLock.isDoor(digilock.getBlock())) {
-						// TODO: open door the door
-						
-						BITDigiLock.openDoor(digilock.getBlock());
+						digilock.openDoor();
 					}
 				} else {
-					// BITGui.popupGetPincode.close();
 					G333Messages.sendNotification(sPlayer, "Wrong pincode!");
+					if (BITDigiLock.isDoor(digilock.getBlock())) digilock.closeDoor();
+					// TODO: damage player
 				}
 			} else if (BITGui.BITButtons.get(uuid) == "getPincodeCancel") {
 				BITGui.popupGetPincode.close();
@@ -132,8 +131,8 @@ public class BITSpoutListener extends SpoutListener {
 			else if (BITGui.BITButtons.get(uuid) == "setPincodeLock") {
 				BITGui.popupSetPincode.close();
 				BITDigiLock.SaveDigiLock(sPlayer, block,
-						BITGui.pincode3.getText(), sPlayer.getDisplayName(), 0,
-						"", "");
+						BITGui.pincode3.getText(), BITGui.owner1.getText(), 0,
+						BITGui.listOfCoOwners.getText(), "");
 			} else if ((BITGui.BITButtons.get(uuid) == "setPincodeCancel")) {
 				BITGui.popupSetPincode.close();
 			} else if ((BITGui.BITButtons.get(uuid) == "setPincodeRemove")) {
@@ -141,6 +140,10 @@ public class BITSpoutListener extends SpoutListener {
 				if (BITDigiLock.isLocked(block)) {
 					BITDigiLock.RemoveDigiLock(sPlayer, digilock);
 				}
+			} else if ((BITGui.BITButtons.get(uuid) == "OwnerButton")) {
+				
+			} else if ((BITGui.BITButtons.get(uuid) == "CoOwnerButton")) {
+				
 			}
 
 			// ************************************

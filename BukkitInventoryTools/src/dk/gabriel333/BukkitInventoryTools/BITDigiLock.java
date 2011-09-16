@@ -558,6 +558,20 @@ public class BITDigiLock {
 			return true;
 		return false;
 	}
+	
+	public static boolean isDoubleDoor(SpoutBlock block) {
+		if (isDoor(block)) {
+			if (isDoor(block.getFace(BlockFace.EAST))||
+					isDoor(block.getFace(BlockFace.NORTH))||
+					isDoor(block.getFace(BlockFace.SOUTH))||
+					isDoor(block.getFace(BlockFace.WEST))
+					) {
+				return true;
+			} 
+		}
+		return false;
+	}
+	
 
 	public static boolean isChest(Block block) {
 		if (block.getType().equals(Material.CHEST))
@@ -584,7 +598,6 @@ public class BITDigiLock {
 				nextBlock.setData((byte) (nextBlock.getState().getData()
 						.getData() ^ 4));
 			}
-
 		}
 	}
 

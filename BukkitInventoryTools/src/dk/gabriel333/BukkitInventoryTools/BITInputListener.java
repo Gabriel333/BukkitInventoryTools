@@ -97,16 +97,23 @@ public class BITInputListener extends InputListener {
 									"Locked with Digilock");
 						}
 					} else {
-						if (sPlayer.isSpoutCraftEnabled()) {
-							if (G333Permissions.hasPerm(sPlayer,
-									"digilock.use", G333Permissions.NOT_QUIET)
-									|| G333Permissions.hasPerm(sPlayer,
-											"digilock.admin",
-											G333Permissions.NOT_QUIET)) {
-								BITGui.setPincode(sPlayer, targetblock);
+						if (!BITDigiLock.isDoubleDoor(targetblock)) {
+							if (sPlayer.isSpoutCraftEnabled()) {
+								if (G333Permissions.hasPerm(sPlayer,
+										"digilock.use",
+										G333Permissions.NOT_QUIET)
+										|| G333Permissions.hasPerm(sPlayer,
+												"digilock.admin",
+												G333Permissions.NOT_QUIET)) {
+									BITGui.setPincode(sPlayer, targetblock);
+								}
+							} else {
+								sPlayer.sendMessage("Install SpoutCraft or use command /dlock to create lock.");
 							}
+						
 						} else {
-							sPlayer.sendMessage("Install SpoutCraft or use command /dlock to create lock.");
+							G333Messages.sendNotification(sPlayer,
+									"You cant lock doubledoors");
 						}
 
 					}

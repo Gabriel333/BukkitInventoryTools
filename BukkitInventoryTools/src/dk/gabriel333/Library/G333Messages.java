@@ -34,7 +34,11 @@ public class G333Messages {
     	//SpoutPlayer sPlayer = (SpoutPlayer) player;
     	if (sPlayer.isSpoutCraftEnabled()  && (sPlayer instanceof SpoutPlayer)) {
     	//if(Safety.spout && (sPlayer instanceof SpoutPlayer)) { 
-			sPlayer.sendNotification(sPlayer.getName(), string, Material.CHEST);
+			if (string.length()<25) {
+				sPlayer.sendNotification(sPlayer.getName(), string, Material.CHEST);
+			} else {
+				sPlayer.sendNotification(sPlayer.getName(), string.substring(0, 25), Material.CHEST);
+			}
 		} else {
 			sPlayer.sendMessage(string);
 		}

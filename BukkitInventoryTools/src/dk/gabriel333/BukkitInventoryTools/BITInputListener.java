@@ -20,10 +20,10 @@ public class BITInputListener extends InputListener {
 		ScreenType screentype = event.getScreenType();
 		String keypressed = event.getKey().name();
 		SpoutBlock targetblock = (SpoutBlock) sPlayer.getTargetBlock(null, 4);
-		//if (G333Config.g333Config.DEBUG_GUI)
-		//	sPlayer.sendMessage("Inputlistener, screenType:"
-		//			+ event.getScreenType() + " targetblock:"
-		//			+ targetblock.getType());
+		// if (G333Config.g333Config.DEBUG_GUI)
+		// sPlayer.sendMessage("Inputlistener, screenType:"
+		// + event.getScreenType() + " targetblock:"
+		// + targetblock.getType());
 		// PLAYER_INVENTORY
 		if (screentype == ScreenType.PLAYER_INVENTORY) {
 			if (keypressed.equals(G333Config.g333Config.LIBRARY_SORTKEY)) {
@@ -43,10 +43,14 @@ public class BITInputListener extends InputListener {
 				SpoutChest sChest = (SpoutChest) targetblock.getState();
 				if (keypressed.equals(G333Config.g333Config.LIBRARY_SORTKEY)) {
 					if (targetblock.getType() == Material.CHEST) {
-						G333Inventory.sortInventoryItems(sPlayer,
-								sChest.getLargestInventory());
-						if (G333Config.g333Config.SORT_DISPLAYSORTARCHIEVEMENT) 
-							G333Messages.sendNotification(sPlayer, "Chest sorted.");
+						if (G333Permissions.hasPerm(sPlayer,
+								"sortinventory.use", G333Permissions.NOT_QUIET)) {
+							G333Inventory.sortInventoryItems(sPlayer,
+									sChest.getLargestInventory());
+						}
+						if (G333Config.g333Config.SORT_DISPLAYSORTARCHIEVEMENT)
+							G333Messages.sendNotification(sPlayer,
+									"Chest sorted.");
 					}
 
 				}
@@ -79,7 +83,12 @@ public class BITInputListener extends InputListener {
 					if (BITDigiLock.isLocked(targetblock)) {
 						BITDigiLock digilock = BITDigiLock.loadDigiLock(
 								sPlayer, targetblock);
-						if (sPlayer.getName().equals(digilock.getOwner())) {
+						if ((sPlayer.getName().equals(digilock.getOwner()) && G333Permissions
+								.hasPerm(sPlayer, "digilock.use",
+										G333Permissions.NOT_QUIET))
+								|| G333Permissions.hasPerm(sPlayer,
+										"digilock.admin",
+										G333Permissions.NOT_QUIET)) {
 							G333Messages.sendNotification(sPlayer,
 									"You are the owner");
 							BITGui.setPincode(sPlayer, targetblock);
@@ -89,7 +98,13 @@ public class BITInputListener extends InputListener {
 						}
 					} else {
 						if (sPlayer.isSpoutCraftEnabled()) {
-							BITGui.setPincode(sPlayer, targetblock);
+							if (G333Permissions.hasPerm(sPlayer,
+									"digilock.use", G333Permissions.NOT_QUIET)
+									|| G333Permissions.hasPerm(sPlayer,
+											"digilock.admin",
+											G333Permissions.NOT_QUIET)) {
+								BITGui.setPincode(sPlayer, targetblock);
+							}
 						} else {
 							sPlayer.sendMessage("Install SpoutCraft or use command /dlock to create lock.");
 						}

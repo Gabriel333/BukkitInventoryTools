@@ -518,8 +518,17 @@ public class BITDigiLock {
 							+ " AND world='"
 							+ sChest2.getBlock().getWorld().getName() + "');";
 				}
-			}
-			G333Messages.sendNotification(sPlayer, "DigiLock removed.");
+			} else if (isDoor(digilock.getBlock())) {
+				Door door = (Door) digilock.getBlock().getState().getData();
+				if (door.isTopHalf()) {
+					query = "DELETE FROM BukkitInventoryTools WHERE (x = "
+							+ digilock.block.getX() + " AND y = "
+							+ (digilock.block.getY()-1) + " AND z = "
+							+ digilock.block.getZ() + " AND world='"
+							+ digilock.block.getWorld().getName() + "');";
+				}}
+			if (G333Config.g333Config.DEBUG_SQL)
+				sPlayer.sendMessage(ChatColor.YELLOW + "Removeing lock: " + query);
 			if (G333Config.g333Config.STORAGE_TYPE.equals("MYSQL")) {
 				try {
 					BIT.manageMySQL.deleteQuery(query);
@@ -532,7 +541,9 @@ public class BITDigiLock {
 				}
 			} else { // SQLLITE
 				BIT.manageSQLite.deleteQuery(query);
+				
 			}
+			G333Messages.sendNotification(sPlayer, "DigiLock removed.");
 		}
 	}
 
@@ -556,7 +567,7 @@ public class BITDigiLock {
 		return false;
 	}
 
-	public void openDoor() {
+	public void openDoor(SpoutPlayer sPlayer) {
 		Door door = (Door) block.getState().getData();
 		if (!door.isOpen()) {
 			// door.setOpen(true);
@@ -577,11 +588,10 @@ public class BITDigiLock {
 		}
 	}
 
-	public void closeDoor() {
+	public void closeDoor(SpoutPlayer sPlayer) {
 		Door door = (Door) block.getState().getData();
 		if (door.isOpen()) {
 			// door.setOpen(false);
-
 			SpoutBlock nextBlock;
 			block.setData((byte) (block.getState().getData().getData() ^ 4));
 			if (door.isTopHalf()) {
@@ -593,7 +603,6 @@ public class BITDigiLock {
 				nextBlock.setData((byte) (nextBlock.getState().getData()
 						.getData() ^ 4));
 			}
-
 		}
 	}
 

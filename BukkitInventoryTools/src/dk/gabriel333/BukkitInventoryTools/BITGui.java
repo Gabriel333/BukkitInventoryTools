@@ -236,7 +236,7 @@ public class BITGui {
 			listOfCoOwners.setText(digilock.getCoOwners());
 		} else {
 			pincode3.setText("");
-			owner1.setText("");
+			owner1.setText(sPlayer.getName());
 			listOfCoOwners.setText("");
 		}
 

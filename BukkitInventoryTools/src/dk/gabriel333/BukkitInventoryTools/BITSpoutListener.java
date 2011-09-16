@@ -107,17 +107,24 @@ public class BITSpoutListener extends SpoutListener {
 			// ************************************
 			else if (BITGui.BITButtons.get(uuid) == "getPincodeUnlock") {
 				BITGui.popupGetPincode.close();
-				if (digilock.pincode.equals(BITGui.pincode2.getText())) {
+				if (digilock.pincode.equals(BITGui.pincode2.getText())||
+						G333Permissions.hasPerm(sPlayer, "digilock.admin",
+						G333Permissions.QUIET)) {
+					
+					
+					// Test if user is Owner and pincode ="" then open the digilock
+	
+					
 					if (BITDigiLock.isChest(digilock.getBlock())) {
 						SpoutChest sChest = (SpoutChest) block.getState();
 						Inventory inv = sChest.getLargestInventory();
 						sPlayer.openInventoryWindow(inv);
 					} else if (BITDigiLock.isDoor(digilock.getBlock())) {
-						digilock.openDoor();
+						digilock.openDoor(sPlayer);
 					}
 				} else {
 					G333Messages.sendNotification(sPlayer, "Wrong pincode!");
-					if (BITDigiLock.isDoor(digilock.getBlock())) digilock.closeDoor();
+					if (BITDigiLock.isDoor(digilock.getBlock())) digilock.closeDoor(sPlayer);
 					// TODO: damage player
 				}
 			} else if (BITGui.BITButtons.get(uuid) == "getPincodeCancel") {

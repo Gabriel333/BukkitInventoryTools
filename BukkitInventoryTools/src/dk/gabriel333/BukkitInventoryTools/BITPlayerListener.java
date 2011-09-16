@@ -24,38 +24,42 @@ public class BITPlayerListener extends PlayerListener {
 				sPlayer.sendMessage("BITPlayerListener:Event:"
 						+ event.getEventName() + " action:" + event.getAction()
 						+ " Block:" + event.getClickedBlock());
-
 			if (BITDigiLock.isLocked(block)) {
-				BITDigiLock digilock = BITDigiLock.loadDigiLock(sPlayer, block);
-				if (G333Permissions.hasPerm(sPlayer, "digilock.use",
-						G333Permissions.NOT_QUIET)
-						|| G333Permissions.hasPerm(sPlayer, "digilock.admin",
-								G333Permissions.NOT_QUIET)) {
-					if (BITDigiLock.isChest(block)
-							&& event.getAction().equals(
-									Action.RIGHT_CLICK_BLOCK)) {
-						if (sPlayer.isSpoutCraftEnabled()) {
-							BITGui.getPincode(sPlayer, block);
-						} else {
-							sPlayer.sendMessage("Locked with Digilock.");
-						}
-
-					} else if (BITDigiLock.isDoor(block)) {
-						Door door = (Door) block.getState().getData();
-						if (door.isOpen()) {
-							digilock.closeDoor();
-						} else {
+				if (G333Permissions.hasPerm(sPlayer, "digilock.admin",
+						G333Permissions.NOT_QUIET)) {
+				} else {
+					if (G333Permissions.hasPerm(sPlayer, "digilock.use",
+					G333Permissions.NOT_QUIET)) {
+						BITDigiLock digilock = BITDigiLock.loadDigiLock(
+								sPlayer, block);
+						if (BITDigiLock.isChest(block)
+								&& event.getAction().equals(
+										Action.RIGHT_CLICK_BLOCK)) {
 							if (sPlayer.isSpoutCraftEnabled()) {
 								BITGui.getPincode(sPlayer, block);
 							} else {
 								sPlayer.sendMessage("Locked with Digilock.");
 							}
 
-						} // TODO: else if furnace, dispencer....
+						} else if (BITDigiLock.isDoor(block)) {
+							Door door = (Door) block.getState().getData();
+							if (door.isOpen()) {
+								sPlayer.sendMessage("The door is open, i close it....");
+								digilock.closeDoor(sPlayer);
+							} else {
+								if (sPlayer.isSpoutCraftEnabled()) {
+									BITGui.getPincode(sPlayer, block);
+								} else {
+									sPlayer.sendMessage("Locked with Digilock.");
+								}
+							} // TODO: else if furnace, dispencer....
+						}
+					} else if (G333Permissions.hasPerm(sPlayer,
+							"digilock.admin", G333Permissions.NOT_QUIET)) {
 
 					}
+					event.setCancelled(true);
 				}
-				event.setCancelled(true);
 			} else {
 				if (G333Config.g333Config.DEBUG_GUI)
 					sPlayer.sendMessage("There is no digilock on this block");

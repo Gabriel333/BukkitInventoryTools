@@ -44,7 +44,7 @@ public class BITCommandDigiLock implements CommandExecutor {
 			if (!BITDigiLock.isLocked(block)) {
 				if (args.length == 0) {
 					sPlayer.sendMessage("Usage: /digilock [pincode]|[unlock pincode]"
-							+ "|[lock pincode]|[owner owner]|[closetimer seconds]|[remove]");
+							+ "|[lock pincode]|[owner playername]|[closetimer seconds]|[remove]");
 					return true;
 				} else {
 					String action;
@@ -78,13 +78,7 @@ public class BITCommandDigiLock implements CommandExecutor {
 
 				// UNLOCK *************************************************
 				if (action.equalsIgnoreCase("unlock") && args.length == 2) {
-					//sPlayer.sendMessage("open pincode:" + digilock.getPincode()
-					//		+ " owner:" + digilock.getOwner() + " closetimer:"
-					//		+ digilock.getClosetimer() + " coowners:"
-					//		+ digilock.getCoOwners() + " shared:"
-					//		+ digilock.getShared());
 					if (digilock.getPincode().equalsIgnoreCase(args[1])) {
-						// pincode = args[1];
 						if (BITDigiLock.isChest(digilock.getBlock())) {
 							SpoutChest sChest = (SpoutChest) block.getState();
 							Inventory inv = sChest.getLargestInventory();
@@ -92,6 +86,10 @@ public class BITCommandDigiLock implements CommandExecutor {
 						} else if (BITDigiLock.isDoor(digilock.getBlock())) {
 							digilock.openDoor(sPlayer);
 						}
+					} else {
+						sPlayer.sendMessage("wrong pincode!");
+						sPlayer.damage(10);
+						// TODO: damage player
 					}
 				} else if (action.equalsIgnoreCase("remove")
 						&& digilock.getOwner().equalsIgnoreCase(
@@ -106,9 +104,10 @@ public class BITCommandDigiLock implements CommandExecutor {
 						digilock.openDoor(sPlayer);
 					}
 				} else {
-					sPlayer.sendMessage("You did something wrong....");
+					if (args.length==1) sPlayer.damage(5);
+					sPlayer.sendMessage("Wrong pincode!");
 					sPlayer.sendMessage("Usage: /digilock [pincode]|[unlock pincode]"
-							+ "|[lock pincode]|[owner owner]|[closetimer seconds]|[remove]");
+							+ "|[lock pincode]|[owner playername]|[closetimer seconds]|[remove]");
 				}
 			}
 			return true;

@@ -125,6 +125,7 @@ public class BITSpoutListener extends SpoutListener {
 				} else {
 					G333Messages.sendNotification(sPlayer, "Wrong pincode!");
 					if (BITDigiLock.isDoor(digilock.getBlock())) digilock.closeDoor(sPlayer);
+					sPlayer.damage(10);
 					// TODO: damage player
 				}
 			} else if (BITGui.BITButtons.get(uuid) == "getPincodeCancel") {

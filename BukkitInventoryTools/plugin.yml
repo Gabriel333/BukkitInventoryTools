@@ -1,6 +1,6 @@
 name: BukkitInventoryTools
 main: dk.gabriel333.BukkitInventoryTools.BIT
-version: 2.1.2
+version: 2.1.3
 author: Gabriel333
 website: https://github.com/BukkitInventoryTools
 dev-url: http://dev.bukkit.org/server-mods/bukkitinventorytools/
@@ -14,7 +14,7 @@ commands:
         permission: bukkitinventorytools.sortinventory.use
     digilock:
         description: Lock the item with a digital pincode.
-        usage: /digilock [pincode]|[unlock pincode]|[lock pincode]|[owner owner]|[remove]|[closetimer seconds]
+        usage: /digilock [pincode]|[unlock pincode]|[lock pincode]|[owner playername]|[closetimer seconds]|[remove]
         aliases: /dlock
         permission: bukkitinventorytools.digilock.use
 permissions:

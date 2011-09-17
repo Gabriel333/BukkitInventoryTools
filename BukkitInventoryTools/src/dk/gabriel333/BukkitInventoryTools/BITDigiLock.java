@@ -354,7 +354,7 @@ public class BITDigiLock {
 		return "ERR1";
 	}
 
-	public static String getOwnerFromSQL(SpoutPlayer sPlayer, SpoutBlock block) {
+	public static String getOwnerFromSQL2(SpoutPlayer sPlayer, SpoutBlock block) {
 		// TODO: REMOVE this Class
 		String query = "SELECT * FROM BukkitInventoryTools WHERE (x = "
 				+ block.getX() + " AND y = " + block.getY() + " AND z = "

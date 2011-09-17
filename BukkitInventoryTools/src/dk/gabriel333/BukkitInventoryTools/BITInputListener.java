@@ -20,10 +20,6 @@ public class BITInputListener extends InputListener {
 		ScreenType screentype = event.getScreenType();
 		String keypressed = event.getKey().name();
 		SpoutBlock targetblock = (SpoutBlock) sPlayer.getTargetBlock(null, 4);
-		// if (G333Config.g333Config.DEBUG_GUI)
-		// sPlayer.sendMessage("Inputlistener, screenType:"
-		// + event.getScreenType() + " targetblock:"
-		// + targetblock.getType());
 		// PLAYER_INVENTORY
 		if (screentype == ScreenType.PLAYER_INVENTORY) {
 			if (keypressed.equals(G333Config.g333Config.LIBRARY_SORTKEY)) {
@@ -54,18 +50,6 @@ public class BITInputListener extends InputListener {
 					}
 
 				}
-
-				// KEY M and L does not work yet :-(
-				/*
-				 * else if (keypressed
-				 * .equals(G333Config.g333Config.LIBRARY_MENUKEY)) { if
-				 * (G333Config.g333Config.DEBUG_GUI)
-				 * G333Messages.sendNotification(sPlayer, "LIBRARY_MENUKEY");
-				 * sPlayer.closeActiveWindow(); if (targetblock != null) {
-				 * sPlayer.sendMessage("openMenu: this does not work yet.");
-				 * BITGui.openMenu(sPlayer, targetblock); } }
-				 */
-
 				else if (keypressed.equals("KEY_ESCAPE")) {
 					sPlayer.closeActiveWindow();
 				}

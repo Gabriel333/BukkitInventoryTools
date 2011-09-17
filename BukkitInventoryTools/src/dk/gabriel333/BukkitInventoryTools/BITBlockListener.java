@@ -1,11 +1,11 @@
 package dk.gabriel333.BukkitInventoryTools;
 
 import org.bukkit.event.block.BlockBreakEvent;
-import org.bukkit.event.block.BlockDamageEvent;
 import org.bukkit.event.block.BlockListener;
 import org.bukkit.event.block.BlockRedstoneEvent;
 import org.bukkit.material.Door;
 import org.getspout.spoutapi.block.SpoutBlock;
+import org.getspout.spoutapi.player.SpoutPlayer;
 
 public class BITBlockListener extends BlockListener {
 
@@ -14,7 +14,6 @@ public class BITBlockListener extends BlockListener {
 		if (BITDigiLock.isDoor(block)) {
 			Door door = (Door) block.getState().getData();
 			if (BITDigiLock.isLocked(block)) {
-				// TODO: DAMAGE the user or spawn monster
 				if (!door.isOpen()) {
 					event.setNewCurrent(event.getOldCurrent());
 				}
@@ -24,27 +23,25 @@ public class BITBlockListener extends BlockListener {
 	}
 
 	public void onBlockBreak(BlockBreakEvent event) {
-		SpoutBlock block = (SpoutBlock) event.getBlock();
 		if (event.isCancelled())
 			return;
+		SpoutBlock block = (SpoutBlock) event.getBlock();
+		SpoutPlayer sPlayer = (SpoutPlayer) event.getPlayer();
 		if (BITDigiLock.isLocked(block)) {
-			// TODO: DAMAGE the user or spawn monster
+			sPlayer.damage(10);
 			event.setCancelled(true);
-		} else {
-
-		}
+		} 
 	}
 
-	public void onBlockDamage(BlockDamageEvent event) {
-		SpoutBlock block = (SpoutBlock) event.getBlock();
+	/*public void onBlockDamage(BlockDamageEvent event) {
 		if (event.isCancelled())
 			return;
+		SpoutBlock block = (SpoutBlock) event.getBlock();
+		SpoutPlayer sPlayer = (SpoutPlayer) event.getPlayer();
 		if (BITDigiLock.isLocked(block)) {
-			// TODO: DAMAGE the user or spawn monster
+			sPlayer.damage(1);
 			event.setCancelled(true);
-		} else {
-
-		}
-	}
+		} 
+	}*/
 
 }

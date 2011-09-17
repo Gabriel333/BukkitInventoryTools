@@ -39,8 +39,8 @@ public class BITCommandDigiLock implements CommandExecutor {
 						G333Permissions.NOT_QUIET)
 				|| G333Permissions.hasPerm(sPlayer, "*",
 						G333Permissions.NOT_QUIET)) {
-			//sPlayer.sendMessage("args: " + args[0].toString());
-			//sPlayer.sendMessage("args.length: " + args.length);
+			// sPlayer.sendMessage("args: " + args[0].toString());
+			// sPlayer.sendMessage("args.length: " + args.length);
 			if (!BITDigiLock.isLocked(block)) {
 				if (args.length == 0) {
 					sPlayer.sendMessage("Usage: /digilock [pincode]|[unlock pincode]"
@@ -65,9 +65,9 @@ public class BITCommandDigiLock implements CommandExecutor {
 
 						}
 					}
-					//sPlayer.sendMessage("save pincode:" + pincode + " owner:"
-					//		+ owner + " closetimer:" + closetimer
-					//		+ " coowners:" + coowners + " shared:" + shared);
+					// sPlayer.sendMessage("save pincode:" + pincode + " owner:"
+					// + owner + " closetimer:" + closetimer
+					// + " coowners:" + coowners + " shared:" + shared);
 					BITDigiLock.SaveDigiLock(sPlayer, block, pincode, owner,
 							closetimer, coowners, shared);
 					return true;
@@ -92,10 +92,13 @@ public class BITCommandDigiLock implements CommandExecutor {
 						// TODO: damage player
 					}
 				} else if (action.equalsIgnoreCase("remove")
-						&& digilock.getOwner().equalsIgnoreCase(
-								sPlayer.getName()) && args.length == 1) {
+						&& (digilock.getOwner().equalsIgnoreCase(
+								sPlayer.getName()) || G333Permissions.hasPerm(
+								sPlayer, "digilock.admin",
+								G333Permissions.NOT_QUIET)) && args.length == 1) {
 					digilock.RemoveDigiLock(sPlayer);
-				} else if (digilock.getPincode().equalsIgnoreCase(args[0]) && args.length==1) {
+				} else if (digilock.getPincode().equalsIgnoreCase(args[0])
+						&& args.length == 1) {
 					if (BITDigiLock.isChest(digilock.getBlock())) {
 						SpoutChest sChest = (SpoutChest) block.getState();
 						Inventory inv = sChest.getLargestInventory();
@@ -104,7 +107,8 @@ public class BITCommandDigiLock implements CommandExecutor {
 						digilock.openDoor(sPlayer);
 					}
 				} else {
-					if (args.length==1) sPlayer.damage(5);
+					if (args.length == 1)
+						sPlayer.damage(5);
 					sPlayer.sendMessage("Wrong pincode!");
 					sPlayer.sendMessage("Usage: /digilock [pincode]|[unlock pincode]"
 							+ "|[lock pincode]|[owner playername]|[closetimer seconds]|[remove]");

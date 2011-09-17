@@ -97,10 +97,7 @@ public class BIT extends JavaPlugin {
 		pm.registerEvent(Event.Type.CUSTOM_EVENT,
 				new BITInventoryListener(this), Event.Priority.Normal, this);
 		pm.registerEvent(Event.Type.PLAYER_INTERACT, new BITPlayerListener(),
-				Priority.Normal, this);
-    	//pm.registerEvent(Event.Type.INVENTORY_CHANGE, new BITInventoryChangeListener(),
-		//		Priority.Normal, this);
-				
+				Priority.Normal, this);				
 	}
 
 	@Override

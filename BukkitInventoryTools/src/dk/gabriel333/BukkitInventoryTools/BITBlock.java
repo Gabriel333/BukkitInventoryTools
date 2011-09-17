@@ -5,7 +5,7 @@ import org.getspout.spoutapi.block.SpoutBlock;
 
 public abstract class BITBlock implements SpoutBlock{
 
-	SpoutBlock block;
+	BITBlock block;
 	
 	public boolean isDoor() {
 		if (block.getType().equals(Material.WOOD_DOOR))

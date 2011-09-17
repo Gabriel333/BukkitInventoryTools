@@ -15,7 +15,6 @@ import dk.gabriel333.Library.G333Permissions;
 public class BITCommandDigiLock implements CommandExecutor {
 
 	public BITCommandDigiLock(BIT plugin) {
-		// TODO Auto-generated constructor stub
 	}
 
 	@Override
@@ -89,7 +88,6 @@ public class BITCommandDigiLock implements CommandExecutor {
 					} else {
 						sPlayer.sendMessage("wrong pincode!");
 						sPlayer.damage(10);
-						// TODO: damage player
 					}
 				} else if (action.equalsIgnoreCase("remove")
 						&& (digilock.getOwner().equalsIgnoreCase(

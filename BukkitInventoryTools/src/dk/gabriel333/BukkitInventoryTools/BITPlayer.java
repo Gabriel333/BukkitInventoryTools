@@ -19,8 +19,9 @@ public abstract class BITPlayer implements Player {
 		if (BIT.spoutbackpack && screentype == ScreenType.CHEST_INVENTORY) {
 			inventory = BIT.spoutBackpackHandler
 					.getOpenedSpoutBackpack(sPlayer);
-			
-			G333Inventory.sortInventoryItems(sPlayer, inventory);
+			if (inventory != null) {
+				G333Inventory.sortInventoryItems(sPlayer, inventory);
+			}
 
 		}
 
@@ -29,7 +30,7 @@ public abstract class BITPlayer implements Player {
 			// && screentype == ScreenType.CHEST_INVENTORY) {
 
 			// if the wolf inventory is open then
-			//myWolfInventory = MyWolfPlugin.getMyWolf(sPlayer).inv;
+			// myWolfInventory = MyWolfPlugin.getMyWolf(sPlayer).inv;
 			// if (myWolfInventory != null) {
 
 			// test if myWolfInventory is opened

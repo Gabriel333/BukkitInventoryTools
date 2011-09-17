@@ -1,6 +1,9 @@
 package dk.gabriel333.BukkitInventoryTools;
 
+import org.bukkit.event.Event;
+import org.getspout.spoutapi.event.inventory.InventoryClickEvent;
 import org.getspout.spoutapi.event.inventory.InventoryCloseEvent;
+import org.getspout.spoutapi.event.inventory.InventoryCraftEvent;
 import org.getspout.spoutapi.event.inventory.InventoryListener;
 import org.getspout.spoutapi.event.inventory.InventoryOpenEvent;
 import org.getspout.spoutapi.player.SpoutPlayer;
@@ -18,13 +21,26 @@ public class BITInventoryListener extends InventoryListener {
 
 	public void onInventoryOpen(InventoryOpenEvent event) {
 		SpoutPlayer sPlayer = (SpoutPlayer) event.getPlayer();
-		G333Messages.sendNotification(sPlayer, "Sort:"
-				+ G333Config.g333Config.LIBRARY_SORTKEY);
-		// + G333Config.g333Config.LIBRARY_MENUKEY + ":Menu"
+		if (sPlayer.isSpoutCraftEnabled()) {
+			G333Messages.sendNotification(sPlayer, "Sort:"
+					+ G333Config.g333Config.LIBRARY_SORTKEY);
+		}
 
 	}
 
 	public void onInventoryClose(InventoryCloseEvent event) {
+
+	}
+
+	public void onInventoryClick(InventoryClickEvent event) {
+
+	}
+
+	public void onInventoryCraft(InventoryCraftEvent event) {
+
+	}
+
+	public void onCustumEvent(Event event) {
 
 	}
 

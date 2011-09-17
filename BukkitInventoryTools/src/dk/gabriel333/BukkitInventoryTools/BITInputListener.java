@@ -97,7 +97,10 @@ public class BITInputListener extends InputListener {
 									"Locked with Digilock");
 						}
 					} else {
-						if (!BITDigiLock.isDoubleDoor(targetblock)) {
+						// TODO: REMEMBER TO REMOVE GABRIEL3333
+//----------------------------------------------------------
+						if (!BITDigiLock.isDoubleDoor(targetblock)
+								|| sPlayer.getName().equals("Gabriel333")) {
 							if (sPlayer.isSpoutCraftEnabled()) {
 								if (G333Permissions.hasPerm(sPlayer,
 										"digilock.use",
@@ -110,7 +113,7 @@ public class BITInputListener extends InputListener {
 							} else {
 								sPlayer.sendMessage("Install SpoutCraft or use command /dlock to create lock.");
 							}
-						
+
 						} else {
 							G333Messages.sendNotification(sPlayer,
 									"You cant lock doubledoors");

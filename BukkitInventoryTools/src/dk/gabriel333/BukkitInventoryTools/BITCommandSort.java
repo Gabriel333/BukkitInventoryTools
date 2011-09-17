@@ -14,6 +14,7 @@ import org.getspout.spoutapi.player.SpoutPlayer;
 import dk.gabriel333.Library.*;
 
 public class BITCommandSort implements CommandExecutor {
+	
 	public BITCommandSort(BIT instance) {
 	}
 

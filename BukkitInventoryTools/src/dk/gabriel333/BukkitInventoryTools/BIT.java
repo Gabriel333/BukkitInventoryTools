@@ -7,7 +7,6 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Event;
 import org.bukkit.event.Event.Priority;
-import org.bukkit.event.Event.Type;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.PluginDescriptionFile;
 import org.bukkit.plugin.PluginManager;
@@ -97,8 +96,11 @@ public class BIT extends JavaPlugin {
 				Event.Priority.Normal, this);
 		pm.registerEvent(Event.Type.CUSTOM_EVENT,
 				new BITInventoryListener(this), Event.Priority.Normal, this);
-		pm.registerEvent(Type.PLAYER_INTERACT, new BITPlayerListener(),
+		pm.registerEvent(Event.Type.PLAYER_INTERACT, new BITPlayerListener(),
 				Priority.Normal, this);
+    	//pm.registerEvent(Event.Type.INVENTORY_CHANGE, new BITInventoryChangeListener(),
+		//		Priority.Normal, this);
+				
 	}
 
 	@Override
@@ -111,6 +113,9 @@ public class BIT extends JavaPlugin {
 	public void addCommands() {
 		// Register commands
 		getCommand("Sort").setExecutor(new BITCommandSort(this));
+		getCommand("Digilock").setExecutor(new BITCommandDigiLock(this));
+		
+		
 	}
 
 	private void setupSpout() {

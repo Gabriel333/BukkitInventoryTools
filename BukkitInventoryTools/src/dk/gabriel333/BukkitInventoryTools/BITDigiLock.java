@@ -137,37 +137,6 @@ public class BITDigiLock {
 		}
 	}
 
-	// TODO: CLASS must be removed or opdated with isDoor and isChest
-	/*
-	 * void SaveDigiLock(SpoutPlayer sPlayer, BITDigiLock digilock) { String
-	 * query = null; if (isLocked(sPlayer, digilock.getBlock())) { query =
-	 * "UPDATE BukkitInventoryTools SET pincode='" + digilock.getPincode() +
-	 * "', owner='" + digilock.getOwner() + "', closetimer=" +
-	 * digilock.getClosetimer() + " , coowners='" + digilock.getClosetimer() +
-	 * "', shared='" + digilock.getShared() + "'" + " WHERE x = " +
-	 * digilock.getBlock().getX() + " AND y = " + digilock.getBlock().getY() +
-	 * " AND z = " + digilock.getBlock().getZ() + " AND world='" +
-	 * digilock.getBlock().getWorld().getName() + "';";
-	 * G333Messages.sendNotification(sPlayer, "DigiLock updated."); } else {
-	 * query = "INSERT INTO BukkitInventoryTools (pincode, owner, closetimer," +
-	 * " x, y, z, world, coowners, shared) VALUES ('" + digilock.getPincode() +
-	 * "', '" + digilock.getOwner() + "', " + digilock.getClosetimer() + ", " +
-	 * digilock.getBlock().getX() + ", " + digilock.getBlock().getY() + ", " +
-	 * digilock.getBlock().getZ() + ", '" +
-	 * digilock.getBlock().getWorld().getName() + "', '" +
-	 * digilock.getCoowners() + "', '" + digilock.getShared() + "');";
-	 * G333Messages.sendNotification(sPlayer, "DigiLock created."); }
-	 * 
-	 * if (G333Config.g333Config.DEBUG_SQL) G333Messages.showInfo("SQL: " +
-	 * query); if (G333Config.g333Config.STORAGE_TYPE.equals("MYSQL")) { try {
-	 * BIT.manageMySQL.insertQuery(query); } catch (MalformedURLException e) {
-	 * e.printStackTrace(); } catch (InstantiationException e) {
-	 * e.printStackTrace(); } catch (IllegalAccessException e) {
-	 * e.printStackTrace(); } // sPlayer.sendMessage(ChatColor.GREEN + //
-	 * "This block is now owned by alta189"); } else {
-	 * BIT.manageSQLite.insertQuery(query); } }
-	 */
-
 	public static Boolean isLocked(SpoutBlock block) {
 		String query = "SELECT * FROM BukkitInventoryTools WHERE (x = "
 				+ block.getX() + " AND y = " + block.getY() + " AND z = "
@@ -229,6 +198,12 @@ public class BITDigiLock {
 
 	public boolean isCoowner(SpoutPlayer sPlayer) {
 		if (coOwners.contains(sPlayer.getName()))
+			return true;
+		return false;
+	}
+
+	public boolean isOwner(SpoutPlayer sPlayer) {
+		if (owner.equals(sPlayer.getName()))
 			return true;
 		return false;
 	}
@@ -496,55 +471,99 @@ public class BITDigiLock {
 	}
 
 	public static void RemoveDigiLock(SpoutPlayer sPlayer, BITDigiLock digilock) {
-		if (isLocked(digilock.getBlock())) {
-			String query = "DELETE FROM BukkitInventoryTools WHERE (x = "
-					+ digilock.block.getX() + " AND y = "
-					+ digilock.block.getY() + " AND z = "
-					+ digilock.block.getZ() + " AND world='"
-					+ digilock.block.getWorld().getName() + "');";
-			if (isChest(digilock.getBlock())) {
-				SpoutChest sChest1 = (SpoutChest) digilock.getBlock()
-						.getState();
-				if (sChest1.isDoubleChest()) {
-					SpoutChest sChest2 = sChest1.getOtherSide();
-					query = "DELETE FROM BukkitInventoryTools WHERE (x = "
-							+ digilock.block.getX() + " AND y = "
-							+ digilock.block.getY() + " AND z = "
-							+ digilock.block.getZ() + " AND world='"
-							+ digilock.block.getWorld().getName()
-							+ "') OR (x = " + sChest2.getBlock().getX()
-							+ " AND y = " + sChest2.getBlock().getY()
-							+ " AND z = " + sChest2.getBlock().getZ()
-							+ " AND world='"
-							+ sChest2.getBlock().getWorld().getName() + "');";
-				}
-			} else if (isDoor(digilock.getBlock())) {
-				Door door = (Door) digilock.getBlock().getState().getData();
-				if (door.isTopHalf()) {
-					query = "DELETE FROM BukkitInventoryTools WHERE (x = "
-							+ digilock.block.getX() + " AND y = "
-							+ (digilock.block.getY()-1) + " AND z = "
-							+ digilock.block.getZ() + " AND world='"
-							+ digilock.block.getWorld().getName() + "');";
-				}}
-			if (G333Config.g333Config.DEBUG_SQL)
-				sPlayer.sendMessage(ChatColor.YELLOW + "Removeing lock: " + query);
-			if (G333Config.g333Config.STORAGE_TYPE.equals("MYSQL")) {
-				try {
-					BIT.manageMySQL.deleteQuery(query);
-				} catch (MalformedURLException e) {
-					e.printStackTrace();
-				} catch (InstantiationException e) {
-					e.printStackTrace();
-				} catch (IllegalAccessException e) {
-					e.printStackTrace();
-				}
-			} else { // SQLLITE
-				BIT.manageSQLite.deleteQuery(query);
-				
+		// if (isLocked(digilock.getBlock())) {
+		String query = "DELETE FROM BukkitInventoryTools WHERE (x = "
+				+ digilock.block.getX() + " AND y = " + digilock.block.getY()
+				+ " AND z = " + digilock.block.getZ() + " AND world='"
+				+ digilock.block.getWorld().getName() + "');";
+		if (isChest(digilock.getBlock())) {
+			SpoutChest sChest1 = (SpoutChest) digilock.getBlock().getState();
+			if (sChest1.isDoubleChest()) {
+				SpoutChest sChest2 = sChest1.getOtherSide();
+				query = "DELETE FROM BukkitInventoryTools WHERE (x = "
+						+ digilock.block.getX() + " AND y = "
+						+ digilock.block.getY() + " AND z = "
+						+ digilock.block.getZ() + " AND world='"
+						+ digilock.block.getWorld().getName() + "') OR (x = "
+						+ sChest2.getBlock().getX() + " AND y = "
+						+ sChest2.getBlock().getY() + " AND z = "
+						+ sChest2.getBlock().getZ() + " AND world='"
+						+ sChest2.getBlock().getWorld().getName() + "');";
 			}
-			G333Messages.sendNotification(sPlayer, "DigiLock removed.");
+		} else if (isDoor(digilock.getBlock())) {
+			Door door = (Door) digilock.getBlock().getState().getData();
+			if (door.isTopHalf()) {
+				query = "DELETE FROM BukkitInventoryTools WHERE (x = "
+						+ digilock.block.getX() + " AND y = "
+						+ (digilock.block.getY() - 1) + " AND z = "
+						+ digilock.block.getZ() + " AND world='"
+						+ digilock.block.getWorld().getName() + "');";
+			}
 		}
+		if (G333Config.g333Config.DEBUG_SQL)
+			sPlayer.sendMessage(ChatColor.YELLOW + "Removeing lock: " + query);
+		if (G333Config.g333Config.STORAGE_TYPE.equals("MYSQL")) {
+			try {
+				BIT.manageMySQL.deleteQuery(query);
+			} catch (MalformedURLException e) {
+				e.printStackTrace();
+			} catch (InstantiationException e) {
+				e.printStackTrace();
+			} catch (IllegalAccessException e) {
+				e.printStackTrace();
+			}
+		} else { // SQLLITE
+			BIT.manageSQLite.deleteQuery(query);
+
+		}
+		G333Messages.sendNotification(sPlayer, "DigiLock removed.");
+		// }
+	}
+
+	public void RemoveDigiLock(SpoutPlayer sPlayer) {
+		String query = "DELETE FROM BukkitInventoryTools WHERE (x = "
+				+ block.getX() + " AND y = " + block.getY() + " AND z = "
+				+ block.getZ() + " AND world='" + block.getWorld().getName()
+				+ "');";
+		if (isChest(getBlock())) {
+			SpoutChest sChest1 = (SpoutChest) getBlock().getState();
+			if (sChest1.isDoubleChest()) {
+				SpoutChest sChest2 = sChest1.getOtherSide();
+				query = "DELETE FROM BukkitInventoryTools WHERE (x = "
+						+ block.getX() + " AND y = " + block.getY()
+						+ " AND z = " + block.getZ() + " AND world='"
+						+ block.getWorld().getName() + "') OR (x = "
+						+ sChest2.getBlock().getX() + " AND y = "
+						+ sChest2.getBlock().getY() + " AND z = "
+						+ sChest2.getBlock().getZ() + " AND world='"
+						+ sChest2.getBlock().getWorld().getName() + "');";
+			}
+		} else if (isDoor(getBlock())) {
+			Door door = (Door) getBlock().getState().getData();
+			if (door.isTopHalf()) {
+				query = "DELETE FROM BukkitInventoryTools WHERE (x = "
+						+ block.getX() + " AND y = " + (block.getY() - 1)
+						+ " AND z = " + block.getZ() + " AND world='"
+						+ block.getWorld().getName() + "');";
+			}
+		}
+		if (G333Config.g333Config.DEBUG_SQL)
+			sPlayer.sendMessage(ChatColor.YELLOW + "Removeing lock: " + query);
+		if (G333Config.g333Config.STORAGE_TYPE.equals("MYSQL")) {
+			try {
+				BIT.manageMySQL.deleteQuery(query);
+			} catch (MalformedURLException e) {
+				e.printStackTrace();
+			} catch (InstantiationException e) {
+				e.printStackTrace();
+			} catch (IllegalAccessException e) {
+				e.printStackTrace();
+			}
+		} else { // SQLLITE
+			BIT.manageSQLite.deleteQuery(query);
+
+		}
+		G333Messages.sendNotification(sPlayer, "DigiLock removed.");
 	}
 
 	public static boolean isDoor(SpoutBlock block) {
@@ -558,20 +577,18 @@ public class BITDigiLock {
 			return true;
 		return false;
 	}
-	
+
 	public static boolean isDoubleDoor(SpoutBlock block) {
 		if (isDoor(block)) {
-			if (isDoor(block.getFace(BlockFace.EAST))||
-					isDoor(block.getFace(BlockFace.NORTH))||
-					isDoor(block.getFace(BlockFace.SOUTH))||
-					isDoor(block.getFace(BlockFace.WEST))
-					) {
+			if (isDoor(block.getFace(BlockFace.EAST))
+					|| isDoor(block.getFace(BlockFace.NORTH))
+					|| isDoor(block.getFace(BlockFace.SOUTH))
+					|| isDoor(block.getFace(BlockFace.WEST))) {
 				return true;
-			} 
+			}
 		}
 		return false;
 	}
-	
 
 	public static boolean isChest(Block block) {
 		if (block.getType().equals(Material.CHEST))

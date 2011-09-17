@@ -3,7 +3,9 @@ package dk.gabriel333.BukkitInventoryTools;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
+import org.bukkit.inventory.Inventory;
 import org.getspout.spoutapi.block.SpoutBlock;
+import org.getspout.spoutapi.block.SpoutChest;
 import org.getspout.spoutapi.player.SpoutPlayer;
 
 import dk.gabriel333.BukkitInventoryTools.BITDigiLock;
@@ -11,6 +13,10 @@ import dk.gabriel333.Library.G333Messages;
 import dk.gabriel333.Library.G333Permissions;
 
 public class BITCommandDigiLock implements CommandExecutor {
+
+	public BITCommandDigiLock(BIT plugin) {
+		// TODO Auto-generated constructor stub
+	}
 
 	@Override
 	public boolean onCommand(CommandSender sender, Command command,
@@ -31,57 +37,84 @@ public class BITCommandDigiLock implements CommandExecutor {
 						G333Permissions.NOT_QUIET)
 				|| G333Permissions.hasPerm(sPlayer, "digilock.*",
 						G333Permissions.NOT_QUIET)
-				|| G333Permissions.hasPerm(sPlayer, "*", G333Permissions.NOT_QUIET)) {
-			if (args.length == 0) {
-				sPlayer.sendMessage("Usage: /digilock [lock,unlock,reset,help]");
-				return true;
-			}
+				|| G333Permissions.hasPerm(sPlayer, "*",
+						G333Permissions.NOT_QUIET)) {
 			sPlayer.sendMessage("args: " + args[0].toString());
 			sPlayer.sendMessage("args.length: " + args.length);
-			String action = args[0];
-			if (action.equalsIgnoreCase("lock")) {
-				if (BITDigiLock.isLockable(block)) {
-					if (sPlayer.isSpoutCraftEnabled()) {
-						pincode = "0000";
-						owner = sPlayer.getName();
-						closetimer = 0;
-						BITGui.setPincode(sPlayer, block);
-						pincode = BITGui.pincode.toString();
-						sPlayer.sendMessage("the code is:" + pincode);
-						BITDigiLock.SaveDigiLock(sPlayer, block, pincode,
-								owner, closetimer, coowners, shared);
-					} else {
-						if (args[1] != null) {
-							pincode = args[1];
-							sPlayer.sendMessage("the code is:" + pincode);
-						}
-						if (args[2] != null) {
-							owner = args[2];
-							sPlayer.sendMessage("Owner:" + owner);
-						}
-						BITDigiLock.SaveDigiLock(sPlayer, block, pincode,
-								owner, closetimer, coowners, shared);
-						// syntax is /safetylock lock pincode owner
-						// example /safetylock lock 0000 Gabriel333
-					}
+			if (!BITDigiLock.isLocked(block)) {
+				if (args.length == 0) {
+					sPlayer.sendMessage("Usage: /digilock [pincode]|[unlock pincode]"
+							+ "|[lock pincode]|[owner owner]|[closetimer seconds]|[remove]");
+					return true;
 				} else {
-					sPlayer.sendMessage("You can't lock a " + block.getType()
-							+ " block.");
+					String action;
+					// LOCK
+					// ***********************************************************
+					for (int n = 0; n < args.length; n++) {
+						action = args[n];
+						if (action.equalsIgnoreCase("lock")) {
+							pincode = args[n + 1];
+							n++;
+						} else if (action.equalsIgnoreCase("owner")) {
+							owner = args[n + 1];
+							n++;
+						} else if (action.equalsIgnoreCase("closetimer")) {
+							closetimer = Integer.getInteger(args[n + 1]);
+							n++;
+						} else if (action.equalsIgnoreCase("remove")) {
+
+						}
+					}
+					sPlayer.sendMessage("save pincode:" + pincode + " owner:"
+							+ owner + " closetimer:" + closetimer
+							+ " coowners:" + coowners + " shared:" + shared);
+					BITDigiLock.SaveDigiLock(sPlayer, block, pincode, owner,
+							closetimer, coowners, shared);
 					return true;
 				}
-			} else if (action.equalsIgnoreCase("unlock")) {
-				sPlayer.sendMessage("You want to unlock :" + block.getType());
-			} else if (action.equalsIgnoreCase("reset")) {
-				sPlayer.sendMessage("You want to reset lock at:"
-						+ block.getType());
-				sPlayer.sendMessage("The widget was closed");
-			} else {
-				sPlayer.sendMessage("You did something wrong....");
-				sPlayer.sendMessage("Action: " + args[0] + " No. arguments is "
-						+ args.length);
-			}
+			} else { // digilock is locked
+				BITDigiLock digilock = BITDigiLock.loadDigiLock(sPlayer, block);
+				String action = args[0];
 
+				// UNLOCK *************************************************
+				if (action.equalsIgnoreCase("unlock") && args.length == 2) {
+					sPlayer.sendMessage("open pincode:" + digilock.getPincode()
+							+ " owner:" + digilock.getOwner() + " closetimer:"
+							+ digilock.getClosetimer() + " coowners:"
+							+ digilock.getCoOwners() + " shared:"
+							+ digilock.getShared());
+					if (digilock.getPincode().equalsIgnoreCase(args[1])) {
+						// pincode = args[1];
+						if (BITDigiLock.isChest(digilock.getBlock())) {
+							SpoutChest sChest = (SpoutChest) block.getState();
+							Inventory inv = sChest.getLargestInventory();
+							sPlayer.openInventoryWindow(inv);
+						} else if (BITDigiLock.isDoor(digilock.getBlock())) {
+							digilock.openDoor(sPlayer);
+						}
+					}
+				} else if (action.equalsIgnoreCase("remove")
+						&& digilock.getOwner().equalsIgnoreCase(
+								sPlayer.getName()) && args.length == 1) {
+					digilock.RemoveDigiLock(sPlayer);
+					G333Messages.sendNotification(sPlayer,
+							"You removed the digilock");
+				} else if (digilock.getPincode().equalsIgnoreCase(args[0]) && args.length==1) {
+					if (BITDigiLock.isChest(digilock.getBlock())) {
+						SpoutChest sChest = (SpoutChest) block.getState();
+						Inventory inv = sChest.getLargestInventory();
+						sPlayer.openInventoryWindow(inv);
+					} else if (BITDigiLock.isDoor(digilock.getBlock())) {
+						digilock.openDoor(sPlayer);
+					}
+				} else {
+					sPlayer.sendMessage("You did something wrong....");
+					sPlayer.sendMessage("Usage: /digilock [pincode]|[unlock pincode]"
+							+ "|[lock pincode]|[owner owner]|[closetimer seconds]|[remove]");
+				}
+			}
+			return true;
 		}
-		return true;
+		return false;
 	}
 }

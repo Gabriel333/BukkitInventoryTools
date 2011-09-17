@@ -39,8 +39,8 @@ public class BITCommandDigiLock implements CommandExecutor {
 						G333Permissions.NOT_QUIET)
 				|| G333Permissions.hasPerm(sPlayer, "*",
 						G333Permissions.NOT_QUIET)) {
-			sPlayer.sendMessage("args: " + args[0].toString());
-			sPlayer.sendMessage("args.length: " + args.length);
+			//sPlayer.sendMessage("args: " + args[0].toString());
+			//sPlayer.sendMessage("args.length: " + args.length);
 			if (!BITDigiLock.isLocked(block)) {
 				if (args.length == 0) {
 					sPlayer.sendMessage("Usage: /digilock [pincode]|[unlock pincode]"
@@ -65,9 +65,9 @@ public class BITCommandDigiLock implements CommandExecutor {
 
 						}
 					}
-					sPlayer.sendMessage("save pincode:" + pincode + " owner:"
-							+ owner + " closetimer:" + closetimer
-							+ " coowners:" + coowners + " shared:" + shared);
+					//sPlayer.sendMessage("save pincode:" + pincode + " owner:"
+					//		+ owner + " closetimer:" + closetimer
+					//		+ " coowners:" + coowners + " shared:" + shared);
 					BITDigiLock.SaveDigiLock(sPlayer, block, pincode, owner,
 							closetimer, coowners, shared);
 					return true;
@@ -78,11 +78,11 @@ public class BITCommandDigiLock implements CommandExecutor {
 
 				// UNLOCK *************************************************
 				if (action.equalsIgnoreCase("unlock") && args.length == 2) {
-					sPlayer.sendMessage("open pincode:" + digilock.getPincode()
-							+ " owner:" + digilock.getOwner() + " closetimer:"
-							+ digilock.getClosetimer() + " coowners:"
-							+ digilock.getCoOwners() + " shared:"
-							+ digilock.getShared());
+					//sPlayer.sendMessage("open pincode:" + digilock.getPincode()
+					//		+ " owner:" + digilock.getOwner() + " closetimer:"
+					//		+ digilock.getClosetimer() + " coowners:"
+					//		+ digilock.getCoOwners() + " shared:"
+					//		+ digilock.getShared());
 					if (digilock.getPincode().equalsIgnoreCase(args[1])) {
 						// pincode = args[1];
 						if (BITDigiLock.isChest(digilock.getBlock())) {
@@ -97,8 +97,6 @@ public class BITCommandDigiLock implements CommandExecutor {
 						&& digilock.getOwner().equalsIgnoreCase(
 								sPlayer.getName()) && args.length == 1) {
 					digilock.RemoveDigiLock(sPlayer);
-					G333Messages.sendNotification(sPlayer,
-							"You removed the digilock");
 				} else if (digilock.getPincode().equalsIgnoreCase(args[0]) && args.length==1) {
 					if (BITDigiLock.isChest(digilock.getBlock())) {
 						SpoutChest sChest = (SpoutChest) block.getState();

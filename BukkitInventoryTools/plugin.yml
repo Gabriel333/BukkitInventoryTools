@@ -15,7 +15,7 @@ commands:
     digilock:
         description: Lock the item with a digital pincode.
         usage: /digilock [pincode]|[unlock pincode]|[lock pincode]|[owner owner]|[remove]|[closetimer seconds]
-        aliases: /dl,/dlock
+        aliases: /dlock
         permission: bukkitinventorytools.digilock.use
 permissions:
     bukkitinventorytools.sortinventory.use:

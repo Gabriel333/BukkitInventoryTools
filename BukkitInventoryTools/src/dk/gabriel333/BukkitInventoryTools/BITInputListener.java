@@ -56,7 +56,9 @@ public class BITInputListener extends InputListener {
 			} else
 			// targetblock is NOT a chest, so it must be SpoutBackPack
 			{
-				BITPlayer.sortinventory(sPlayer, ScreenType.CHEST_INVENTORY);
+				if (keypressed.equals(G333Config.g333Config.LIBRARY_SORTKEY)) {
+					BITPlayer.sortinventory(sPlayer, ScreenType.CHEST_INVENTORY);
+				}
 			}
 		}
 

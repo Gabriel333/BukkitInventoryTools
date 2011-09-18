@@ -1,5 +1,6 @@
 package dk.gabriel333.BukkitInventoryTools;
 
+import org.bukkit.block.BlockFace;
 import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.block.BlockListener;
 import org.bukkit.event.block.BlockRedstoneEvent;
@@ -27,7 +28,8 @@ public class BITBlockListener extends BlockListener {
 			return;
 		SpoutBlock block = (SpoutBlock) event.getBlock();
 		SpoutPlayer sPlayer = (SpoutPlayer) event.getPlayer();
-		if (BITDigiLock.isLocked(block)) {
+		SpoutBlock blockOnTop = block.getRelative(BlockFace.UP);
+		if (BITDigiLock.isLocked(block) ||  BITDigiLock.isLocked(blockOnTop)) {
 			sPlayer.damage(10);
 			event.setCancelled(true);
 		} 

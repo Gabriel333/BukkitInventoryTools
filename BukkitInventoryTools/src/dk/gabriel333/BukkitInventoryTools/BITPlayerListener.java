@@ -17,6 +17,7 @@ public class BITPlayerListener extends PlayerListener {
 	public static BIT plugin;
 
 	public void onPlayerInteract(PlayerInteractEvent event) {
+		if (event.isCancelled()) return;
 		SpoutPlayer sPlayer = (SpoutPlayer) event.getPlayer();
 		SpoutBlock block = (SpoutBlock) event.getClickedBlock();
 		if (event.getAction().equals(Action.RIGHT_CLICK_BLOCK)

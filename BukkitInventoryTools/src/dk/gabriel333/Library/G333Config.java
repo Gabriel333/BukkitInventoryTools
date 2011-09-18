@@ -58,7 +58,7 @@ public class G333Config extends Configuration {
 		STORAGE_PASSWORD=getStringParm("Storage.Password", "Changethis");
 		STORAGE_DATABASE=getStringParm("Storage.Database", "SortInventory");
 		//Sort                                              
-		SORT_DISPLAYSORTARCHIEVEMENT = getBooleanParm("Sort.DisplaySortArchievement",true);
+		SORT_DISPLAYSORTARCHIEVEMENT = getBooleanParm("Sort.DisplaySortArchievement", true);
         SORT_SORTSEQ = getStringParm("Sort.SortSEQ", "STONE,COBBLESTONE,DIRT,WOOD");
 		SORTSEQ = SORT_SORTSEQ.split(",");
 		
@@ -130,6 +130,7 @@ public class G333Config extends Configuration {
 			dosave = true;
 			G333Messages.showWarning("Missing parameter:" +string);
 		} 
+		G333Messages.showInfo("parm:"+string+" : "+getBoolean(string,def));
 		return getBoolean(string,def);
 	}
 

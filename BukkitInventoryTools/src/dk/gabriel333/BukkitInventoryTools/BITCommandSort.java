@@ -14,7 +14,7 @@ import org.getspout.spoutapi.player.SpoutPlayer;
 import dk.gabriel333.Library.*;
 
 public class BITCommandSort implements CommandExecutor {
-	
+
 	public BITCommandSort(BIT instance) {
 	}
 
@@ -31,11 +31,14 @@ public class BITCommandSort implements CommandExecutor {
 					SpoutChest sChest = (SpoutChest) targetblock.getState();
 					G333Inventory.sortInventoryItems(sPlayer,
 							sChest.getLargestInventory());
-					G333Messages.sendNotification(sPlayer, "Chest sorted.");
+					//if (G333Config.g333Config.SORT_DISPLAYSORTARCHIEVEMENT) 
+						G333Messages.sendNotification(sPlayer, "Chest sorted.");
+					
 				} else {
-					BITPlayer.sortinventory(sPlayer,
-							ScreenType.CHAT_SCREEN);
-					G333Messages.sendNotification(sPlayer, "Items sorted.");
+					BITPlayer.sortinventory(sPlayer, ScreenType.CHAT_SCREEN);
+					//if (G333Config.g333Config.SORT_DISPLAYSORTARCHIEVEMENT) 
+						G333Messages.sendNotification(sPlayer, "Items sorted.");
+					
 				}
 			}
 			return true;

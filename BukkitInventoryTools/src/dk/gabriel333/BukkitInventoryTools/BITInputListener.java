@@ -27,8 +27,8 @@ public class BITInputListener extends InputListener {
 				if (G333Permissions.hasPerm(sPlayer, "sortinventory.use",
 						G333Permissions.NOT_QUIET)) {
 					BITPlayer.sortinventory(sPlayer, event.getScreenType());
-					if (G333Config.g333Config.SORT_DISPLAYSORTARCHIEVEMENT)
-						G333Messages.sendNotification(sPlayer, "Items sorted.");
+					// if (G333Config.g333Config.SORT_DISPLAYSORTARCHIEVEMENT)
+					G333Messages.sendNotification(sPlayer, "Items sorted.");
 				}
 			}
 		}
@@ -45,9 +45,8 @@ public class BITInputListener extends InputListener {
 							G333Inventory.sortInventoryItems(sPlayer,
 									sChest.getLargestInventory());
 						}
-						if (G333Config.g333Config.SORT_DISPLAYSORTARCHIEVEMENT)
-							G333Messages.sendNotification(sPlayer,
-									"Chest sorted.");
+						// if (G333Config.g333Config.SORT_DISPLAYSORTARCHIEVEMENT)
+						G333Messages.sendNotification(sPlayer, "Chest sorted.");
 					}
 
 				} else if (keypressed.equals("KEY_ESCAPE")) {
@@ -57,7 +56,9 @@ public class BITInputListener extends InputListener {
 			// targetblock is NOT a chest, so it must be SpoutBackPack
 			{
 				if (keypressed.equals(G333Config.g333Config.LIBRARY_SORTKEY)) {
-					BITPlayer.sortinventory(sPlayer, ScreenType.CHEST_INVENTORY);
+					G333Messages.sendNotification(sPlayer, "Items sorted.");
+					BITPlayer
+							.sortinventory(sPlayer, ScreenType.CHEST_INVENTORY);
 				}
 			}
 		}

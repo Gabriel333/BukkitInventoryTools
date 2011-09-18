@@ -22,8 +22,10 @@ public class BITInventoryListener extends InventoryListener {
 	public void onInventoryOpen(InventoryOpenEvent event) {
 		SpoutPlayer sPlayer = (SpoutPlayer) event.getPlayer();
 		if (sPlayer.isSpoutCraftEnabled()) {
-			G333Messages.sendNotification(sPlayer, "Sort:"
-					+ G333Config.g333Config.LIBRARY_SORTKEY);
+			if (G333Config.g333Config.SORT_DISPLAYSORTARCHIEVEMENT) {
+				G333Messages.sendNotification(sPlayer, "Sort:"
+						+ G333Config.g333Config.LIBRARY_SORTKEY);
+			}
 		}
 
 	}

@@ -18,7 +18,6 @@ public class G333Permissions {
 	public static String PERMISSION_NODE;
 	public final static Boolean QUIET = true;
 	public final static Boolean NOT_QUIET = false;
-	
 
 	// Hook into Permissions 3.xxx
 	private static Plugin permissions3Plugin;
@@ -50,8 +49,9 @@ public class G333Permissions {
 				if (permissionsBukkitPlugin != null) {
 					permissionsBukkit = true;
 					G333Messages.showInfo("PermissionsBukkit is detected.");
+					numberOfPermissionSystems++;
 				}
-				numberOfPermissionSystems++;
+				
 			}
 			// Permission3
 			if (permissions3Plugin == null) {
@@ -67,9 +67,9 @@ public class G333Permissions {
 											.getDescription().getFullName());
 					numberOfPermissionSystems++;
 				}
-				
+
 			}
-			//PermissionEx
+			// PermissionEx
 			if (permissionsExPlugin == null) {
 				permissionsExPlugin = plugin.getServer().getPluginManager()
 						.getPlugin("PermissionsEx");
@@ -78,7 +78,7 @@ public class G333Permissions {
 					permissionsex = true;
 					numberOfPermissionSystems++;
 				}
-				
+
 			}
 			// No permission systems found
 			if (permissions3Plugin == null && permissionsBukkitPlugin == null
@@ -87,7 +87,7 @@ public class G333Permissions {
 						.showInfo("PermissionsBukkit/Permissions3/PermissionsEx system not detected, defaulting to permissions in plugin.yml");
 				return;
 			}
-			if (numberOfPermissionSystems >1 ) {
+			if (numberOfPermissionSystems > 1) {
 				G333Messages
 						.showInfo("OBS. More than one permission system detected. The test sequence is: PermissionsBukkit, Permissions/PermissionsBridges, PermissionsEx");
 			}
@@ -95,7 +95,8 @@ public class G333Permissions {
 	}
 
 	// Test if the player has permissions to do the action
-	public static boolean hasPerm(CommandSender sender, String label, Boolean quiet) {
+	public static boolean hasPerm(CommandSender sender, String label,
+			Boolean quiet) {
 
 		// How to hook into PermissionsBukkit
 		// Basic Permission Check
@@ -113,28 +114,28 @@ public class G333Permissions {
 		// plugin,
 		// for example... iConomy would look like:
 		// if (!(MyPlugin).permissionHandler.has(player, "a.custom.node")) {
-		//    return;
+		// return;
 		// }
 		// Checking if a user belongs to a group
 		// if (!(MyPlugin).permissionHandler.inGroup(world, name, groupName)) {
-		//    return;
+		// return;
 		// }
 
 		// Permission check
 		// if(permissions.has(player, "yourplugin.permission")){
-		//    yay!
+		// yay!
 		// } else {
-		//    houston, we have a problems :)
+		// houston, we have a problems :)
 		// }
 		SpoutPlayer sPlayer = (SpoutPlayer) sender;
 		Boolean hasPermission = false;
-		
+
 		// Fallback builtin Permission system / PermissionsBukkit system
 		if (sPlayer.hasPermission((PERMISSION_NODE + label).toLowerCase())) {
-			hasPermission=true;
+			hasPermission = true;
 		} else if (permissions3) {
 			// Permissions3 or SuperpermBridge
-			hasPermission=permission3Handler.has(sPlayer,
+			hasPermission = permission3Handler.has(sPlayer,
 					(PERMISSION_NODE + label).toLowerCase());
 		} else if (permissionsex) {
 			// PermissionsEx
@@ -143,16 +144,24 @@ public class G333Permissions {
 			hasPermission = permissionsexManager.has(sPlayer,
 					(PERMISSION_NODE + label).toLowerCase());
 		}
-		
-		// return permission 
+
+		// return permission
 		if (hasPermission) {
+			if (G333Config.g333Config.DEBUG_PERMISSIONS)
+				sPlayer.sendMessage(ChatColor.GREEN
+						+ "G333Permissions: You have permission to: "
+						+ (PERMISSION_NODE + label).toLowerCase());
 			return true;
 		} else if (NOT_QUIET) {
+			if (G333Config.g333Config.DEBUG_PERMISSIONS)
+				sPlayer.sendMessage(ChatColor.RED
+						+ "G333Permissions: You DONT have permission to: "
+						+ (PERMISSION_NODE + label).toLowerCase());
 			sPlayer.sendMessage(ChatColor.RED
-					+ "You to dont have permission to do this."
-					+ " (" + G333Plugin.PLUGIN_NAME.toLowerCase()
-					+ "."+label.toLowerCase()+")");
-		} 
+					+ "You to dont have permission to do this." + " ("
+					+ (G333Plugin.PLUGIN_NAME + "." + label).toLowerCase()
+					+ ")");
+		}
 		return false;
 	}
 }

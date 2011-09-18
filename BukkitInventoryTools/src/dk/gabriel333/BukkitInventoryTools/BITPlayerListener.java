@@ -20,8 +20,8 @@ public class BITPlayerListener extends PlayerListener {
 	public static BIT plugin;
 
 	public void onPlayerInteract(PlayerInteractEvent event) {
-		if (event.isCancelled())
-			return;
+		// if (event.isCancelled())
+		// return;
 		if (event.getAction().equals(Action.RIGHT_CLICK_BLOCK)
 				|| event.getAction().equals(Action.LEFT_CLICK_BLOCK)) {
 			SpoutPlayer sPlayer = (SpoutPlayer) event.getPlayer();
@@ -32,10 +32,9 @@ public class BITPlayerListener extends PlayerListener {
 						+ " Block:" + event.getClickedBlock());
 			// HANDLING THAT PLAYER CLICK ON A BLOCK WITH A DIGILOCK
 			if (BITDigiLock.isLocked(block)) {
+				BITDigiLock digilock = BITDigiLock.loadDigiLock(sPlayer, block);
 				if (G333Permissions.hasPerm(sPlayer, "digilock.use",
 						G333Permissions.NOT_QUIET)) {
-					BITDigiLock digilock = BITDigiLock.loadDigiLock(sPlayer,
-							block);
 					if (BITDigiLock.isChest(block)
 							&& event.getAction().equals(
 									Action.RIGHT_CLICK_BLOCK)) {
@@ -48,7 +47,8 @@ public class BITPlayerListener extends PlayerListener {
 											.getState();
 									Inventory inv = sChest
 											.getLargestInventory();
-									G333Messages.sendNotification(sPlayer, "Opened by fingerprint");
+									G333Messages.sendNotification(sPlayer,
+											"Opened by fingerprint");
 									sPlayer.openInventoryWindow(inv);
 								} else {
 									sPlayer.sendMessage("Your fingerprint does not match the DigiLock");
@@ -69,7 +69,8 @@ public class BITPlayerListener extends PlayerListener {
 									// OPEN DOOR BY FINGERPRINT / NAME
 									if (digilock.isOwner(sPlayer)
 											|| digilock.isCoowner(sPlayer)) {
-										G333Messages.sendNotification(sPlayer, "Opened by fingerprint");
+										G333Messages.sendNotification(sPlayer,
+												"Opened by fingerprint");
 										digilock.openDoor(sPlayer);
 									} else {
 										sPlayer.sendMessage("Your fingerprint does not match the DigiLock");
@@ -80,19 +81,28 @@ public class BITPlayerListener extends PlayerListener {
 							} else {
 								sPlayer.sendMessage("Locked with Digilock.");
 							}
-						} // TODO: else if furnace, dispencer....
+						} // TODO: else if furnace, dispencer, lever, button....
 					}
+				} else {
+					// the player has not digilock.use permission.
+					if (BITDigiLock.isDoor(block)) {
+						Door door = (Door) block.getState().getData();
+						if (door.isOpen()) {
+							digilock.closeDoor(sPlayer);
+							
+						}
+					}
+					G333Messages.sendNotification(sPlayer,
+							"Locked with Digilock.");
+					event.setCancelled(true);
 				}
-				event.setCancelled(true);
 				// ELSE - IT WAS NOT A LOCKED BLOCK
 			} else {
-
 				if (G333Config.g333Config.DEBUG_GUI) {
 					sPlayer.sendMessage("There is no digilock on this block");
 					if (event.getMaterial().equals(Material.APPLE)) {
 						sPlayer.sendMessage("Item used:"
 								+ event.getItem().getType());
-
 					}
 				}
 

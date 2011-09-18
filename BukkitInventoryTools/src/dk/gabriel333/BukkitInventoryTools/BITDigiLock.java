@@ -296,7 +296,7 @@ public class BITDigiLock {
 		this.shared = shared;
 	}
 
-	public static String getPincodeFromSQL(SpoutPlayer sPlayer, SpoutBlock block) {
+/*	public static String getPincodeFromSQL222(SpoutPlayer sPlayer, SpoutBlock block) {
 		// TODO: REMOVE this Class
 		String query = "SELECT * FROM BukkitInventoryTools WHERE x = "
 				+ block.getX() + " AND y = " + block.getY() + " AND z = "
@@ -353,8 +353,8 @@ public class BITDigiLock {
 		}
 		return "ERR1";
 	}
-
-	public static String getOwnerFromSQL2(SpoutPlayer sPlayer, SpoutBlock block) {
+*/
+	/*public static String getOwnerFromSQL2222(SpoutPlayer sPlayer, SpoutBlock block) {
 		// TODO: REMOVE this Class
 		String query = "SELECT * FROM BukkitInventoryTools WHERE (x = "
 				+ block.getX() + " AND y = " + block.getY() + " AND z = "
@@ -408,7 +408,7 @@ public class BITDigiLock {
 		}
 		return "ERR2";
 	}
-
+*/
 	public static BITDigiLock loadDigiLock(SpoutPlayer sPlayer, SpoutBlock block) {
 		String query = "SELECT * FROM BukkitInventoryTools WHERE (x = "
 				+ block.getX() + " AND y = " + block.getY() + " AND z = "

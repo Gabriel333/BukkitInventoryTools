@@ -33,6 +33,8 @@ public class BITDigiLock {
 	protected int closetimer;
 	protected String coOwners;
 	protected String shared;
+	protected int typeId;
+	protected String connectedTo;
 
 	// protected boolean locked = true;
 
@@ -41,42 +43,52 @@ public class BITDigiLock {
 	 * 
 	 */
 	BITDigiLock(SpoutBlock block, String pincode, String owner, int closetimer,
-			String coowners, String shared) {
+			String coowners, String shared, 
+			int typeId, String connectedTo) {
 		this.block = block;
 		this.pincode = pincode;
 		this.owner = owner;
 		this.closetimer = closetimer;
 		this.coOwners = coowners;
 		this.shared = shared;
+		this.typeId = typeId;
+		this.connectedTo = connectedTo;
 	}
 
 	public static void SaveDigiLock(SpoutPlayer sPlayer, SpoutBlock block,
 			String pincode, String owner, Integer closetimer, String coowners,
-			String shared) {
+			String shared, int typeId,
+			String connectedTo) {
 		String query = null;
 		if (isLocked(block)) {
-			query = "UPDATE BukkitInventoryTools SET pincode='" + pincode
+			query = "UPDATE "+BIT.digilockTable+" SET pincode='" + pincode
 					+ "', owner='" + owner + "', closetimer=" + closetimer
-					+ " , coowners='" + coowners + "', shared='" + shared + "'"
+					+ " , coowners='" + coowners + "', shared='" + shared
+					+ "', typeid=" + typeId + ", connectedto='" + connectedTo
+					+ "'"
+
 					+ " WHERE x = " + block.getX() + " AND y = " + block.getY()
 					+ " AND z = " + block.getZ() + " AND world='"
 					+ block.getWorld().getName() + "';";
 			if (isDoor(block)) {
 				Door door = (Door) block.getState().getData();
 				if (door.isTopHalf()) {
-					query = "UPDATE BukkitInventoryTools SET pincode='"
+					query = "UPDATE "+BIT.digilockTable+" SET pincode='"
 							+ pincode + "', owner='" + owner + "', closetimer="
 							+ closetimer + " , coowners='" + coowners
-							+ "', shared='" + shared + "'" + " WHERE x = "
-							+ block.getX() + " AND y = " + (block.getY() - 1)
-							+ " AND z = " + block.getZ() + " AND world='"
-							+ block.getWorld().getName() + "';";
+							+ "', shared='" + shared + "', typeid="
+							+ typeId + ", connectedto='" + connectedTo + "'"
+							+ " WHERE x = " + block.getX() + " AND y = "
+							+ (block.getY() - 1) + " AND z = " + block.getZ()
+							+ " AND world='" + block.getWorld().getName()
+							+ "';";
 				}
 			}
 			G333Messages.sendNotification(sPlayer, "DigiLock updated.");
 		} else {
-			query = "INSERT INTO BukkitInventoryTools (pincode, owner, closetimer,"
-					+ " x, y, z, world, coowners, shared) VALUES ('"
+			query = "INSERT INTO "+BIT.digilockTable+" (pincode, owner, closetimer, "
+					+ "x, y, z, world, coowners, shared, "
+					+ "typeid, connectedto) VALUES ('"
 					+ pincode
 					+ "', '"
 					+ owner
@@ -93,13 +105,14 @@ public class BITDigiLock {
 					+ "', '"
 					+ coowners
 					+ "', '"
-					+ shared + "');";
+					+ shared
+					+ "', " + block.getTypeId() + ", '" + connectedTo + "');";
 
 			if (isDoor(block)) {
 				Door door = (Door) block.getState().getData();
 				if (door.isTopHalf()) {
-					query = "INSERT INTO BukkitInventoryTools (pincode, owner, closetimer,"
-							+ " x, y, z, world, coowners, shared) VALUES ('"
+					query = "INSERT INTO "+BIT.digilockTable+" (pincode, owner, closetimer,"
+							+ " x, y, z, world, coowners, shared, typeid, connectedto) VALUES ('"
 							+ pincode
 							+ "', '"
 							+ owner
@@ -115,7 +128,12 @@ public class BITDigiLock {
 							+ block.getWorld().getName()
 							+ "', '"
 							+ coowners
-							+ "', '" + shared + "');";
+							+ "', '"
+							+ shared
+							+ "', "
+							+ block.getTypeId()
+							+ ", '"
+							+ connectedTo + "');";
 				}
 			}
 			G333Messages.sendNotification(sPlayer, "DigiLock created.");
@@ -138,7 +156,7 @@ public class BITDigiLock {
 	}
 
 	public static Boolean isLocked(SpoutBlock block) {
-		String query = "SELECT * FROM BukkitInventoryTools WHERE (x = "
+		String query = "SELECT * FROM "+BIT.digilockTable+" WHERE (x = "
 				+ block.getX() + " AND y = " + block.getY() + " AND z = "
 				+ block.getZ() + " AND world='" + block.getWorld().getName()
 				+ "');";
@@ -146,7 +164,7 @@ public class BITDigiLock {
 			SpoutChest sChest1 = (SpoutChest) block.getState();
 			if (sChest1.isDoubleChest()) {
 				SpoutChest sChest2 = sChest1.getOtherSide();
-				query = "SELECT * FROM BukkitInventoryTools WHERE (x = "
+				query = "SELECT * FROM "+BIT.digilockTable+" WHERE (x = "
 						+ block.getX() + " AND y = " + block.getY()
 						+ " AND z = " + block.getZ() + " AND world='"
 						+ block.getWorld().getName() + "') OR (x = "
@@ -158,7 +176,7 @@ public class BITDigiLock {
 		} else if (isDoor(block)) {
 			Door door = (Door) block.getState().getData();
 			if (door.isTopHalf()) {
-				query = "SELECT * FROM BukkitInventoryTools WHERE (x = "
+				query = "SELECT * FROM "+BIT.digilockTable+" WHERE (x = "
 						+ block.getX() + " AND y = " + (block.getY() - 1)
 						+ " AND z = " + block.getZ() + " AND world='"
 						+ block.getWorld().getName() + "');";
@@ -224,7 +242,7 @@ public class BITDigiLock {
 			Material.LOCKED_CHEST, Material.IRON_DOOR,
 			Material.IRON_DOOR_BLOCK, Material.WOODEN_DOOR, Material.WOOD_DOOR,
 			Material.FURNACE, Material.DISPENSER, Material.LEVER,
-			Material.STONE_BUTTON };
+			Material.STONE_BUTTON, Material.BOOKSHELF };
 
 	// Material.STORAGE_MINECART,
 	// Material.WALL_SIGN, Material.SIGN, Material.SIGN_POST,
@@ -287,130 +305,19 @@ public class BITDigiLock {
 	}
 
 	public void setDigiLock(SpoutBlock block, String pincode, String owner,
-			int closetimer, String coowners, String shared) {
+			int closetimer, String coowners, String shared, String connectedTo) {
 		this.block = block;
 		this.pincode = pincode;
 		this.owner = owner;
 		this.closetimer = closetimer;
 		this.coOwners = coowners;
 		this.shared = shared;
+		this.typeId = block.getTypeId();
+		this.connectedTo = connectedTo;
 	}
 
-/*	public static String getPincodeFromSQL222(SpoutPlayer sPlayer, SpoutBlock block) {
-		// TODO: REMOVE this Class
-		String query = "SELECT * FROM BukkitInventoryTools WHERE x = "
-				+ block.getX() + " AND y = " + block.getY() + " AND z = "
-				+ block.getZ() + " AND world='" + block.getWorld().getName()
-				+ "';";
-		if (isChest(block)) {
-			SpoutChest sChest1 = (SpoutChest) block.getState();
-			if (sChest1.isDoubleChest()) {
-				SpoutChest sChest2 = sChest1.getOtherSide();
-				query = "SELECT * FROM BukkitInventoryTools WHERE (x = "
-						+ block.getX() + " AND y = " + block.getY()
-						+ " AND z = " + block.getZ() + " AND world='"
-						+ block.getWorld().getName() + "') OR (x = "
-						+ sChest2.getBlock().getX() + " AND y = "
-						+ sChest2.getBlock().getY() + " AND z = "
-						+ sChest2.getBlock().getZ() + " AND world='"
-						+ sChest2.getBlock().getWorld().getName() + "');";
-			}
-		} else if (isDoor(block)) {
-			Door door = (Door) block.getState().getData();
-			if (door.isTopHalf()) {
-				query = "SELECT * FROM BukkitInventoryTools WHERE x = "
-						+ block.getX() + " AND y = " + (block.getY() - 1)
-						+ " AND z = " + block.getZ() + " AND world='"
-						+ block.getWorld().getName() + "';";
-			}
-		}
-
-		ResultSet result = null;
-
-		if (G333Config.g333Config.STORAGE_TYPE.equals("MYSQL")) {
-			try {
-				result = BIT.manageMySQL.sqlQuery(query);
-			} catch (MalformedURLException e) {
-				e.printStackTrace();
-			} catch (InstantiationException e) {
-				e.printStackTrace();
-			} catch (IllegalAccessException e) {
-				e.printStackTrace();
-			}
-		} else { // SQLLITE
-			result = BIT.manageSQLite.sqlQuery(query);
-		}
-
-		try {
-			if (result != null && result.next()) {
-				String pincode = result.getString("pincode");
-				return pincode;
-			} else {
-				return "";
-			}
-		} catch (SQLException e) {
-			e.printStackTrace();
-		}
-		return "ERR1";
-	}
-*/
-	/*public static String getOwnerFromSQL2222(SpoutPlayer sPlayer, SpoutBlock block) {
-		// TODO: REMOVE this Class
-		String query = "SELECT * FROM BukkitInventoryTools WHERE (x = "
-				+ block.getX() + " AND y = " + block.getY() + " AND z = "
-				+ block.getZ() + " AND world='" + block.getWorld().getName()
-				+ "')";
-		if (isChest(block)) {
-			SpoutChest sChest1 = (SpoutChest) block.getState();
-			if (sChest1.isDoubleChest()) {
-				SpoutChest sChest2 = sChest1.getOtherSide();
-				query = "SELECT * FROM BukkitInventoryTools WHERE (x = "
-						+ block.getX() + " AND y = " + block.getY()
-						+ " AND z = " + block.getZ() + " AND world='"
-						+ block.getWorld().getName() + "') OR (x = "
-						+ sChest2.getBlock().getX() + " AND y = "
-						+ sChest2.getBlock().getY() + " AND z = "
-						+ sChest2.getBlock().getZ() + " AND world='"
-						+ sChest2.getBlock().getWorld().getName() + "');";
-			}
-		} else if (isDoor(block)) {
-			Door door = (Door) block.getState().getData();
-			if (door.isTopHalf()) {
-				query = "SELECT * FROM BukkitInventoryTools WHERE x = "
-						+ block.getX() + " AND y = " + (block.getY() - 1)
-						+ " AND z = " + block.getZ() + " AND world='"
-						+ block.getWorld().getName() + "';";
-			}
-		}
-		ResultSet result = null;
-		if (G333Config.g333Config.STORAGE_TYPE.equals("MYSQL")) {
-			try {
-				result = BIT.manageMySQL.sqlQuery(query);
-			} catch (MalformedURLException e) {
-				e.printStackTrace();
-			} catch (InstantiationException e) {
-				e.printStackTrace();
-			} catch (IllegalAccessException e) {
-				e.printStackTrace();
-			}
-		} else { // SQLLITE
-			result = BIT.manageSQLite.sqlQuery(query);
-		}
-		try {
-			if (result != null && result.next()) {
-				String owner = result.getString("owner");
-				return owner;
-			} else {
-				return sPlayer.getName();
-			}
-		} catch (SQLException e) {
-			e.printStackTrace();
-		}
-		return "ERR2";
-	}
-*/
 	public static BITDigiLock loadDigiLock(SpoutPlayer sPlayer, SpoutBlock block) {
-		String query = "SELECT * FROM BukkitInventoryTools WHERE (x = "
+		String query = "SELECT * FROM "+BIT.digilockTable+" WHERE (x = "
 				+ block.getX() + " AND y = " + block.getY() + " AND z = "
 				+ block.getZ() + " AND world='" + block.getWorld().getName()
 				+ "');";
@@ -418,7 +325,7 @@ public class BITDigiLock {
 			SpoutChest sChest1 = (SpoutChest) block.getState();
 			if (sChest1.isDoubleChest()) {
 				SpoutChest sChest2 = sChest1.getOtherSide();
-				query = "SELECT * FROM BukkitInventoryTools WHERE (x = "
+				query = "SELECT * FROM "+BIT.digilockTable+" WHERE (x = "
 						+ block.getX() + " AND y = " + block.getY()
 						+ " AND z = " + block.getZ() + " AND world='"
 						+ block.getWorld().getName() + "') OR (x = "
@@ -430,7 +337,7 @@ public class BITDigiLock {
 		} else if (isDoor(block)) {
 			Door door = (Door) block.getState().getData();
 			if (door.isTopHalf()) {
-				query = "SELECT * FROM BukkitInventoryTools WHERE (x = "
+				query = "SELECT * FROM "+BIT.digilockTable+" WHERE (x = "
 						+ block.getX() + " AND y = " + (block.getY() - 1)
 						+ " AND z = " + block.getZ() + " AND world='"
 						+ block.getWorld().getName() + "');";
@@ -458,8 +365,11 @@ public class BITDigiLock {
 				int closetimer = result.getInt("closetimer");
 				String coowners = result.getString("coowners");
 				String shared = result.getString("shared");
+				int typeId = result.getInt("typeId");
+				String connectedTo = result.getString("connectedto");
 				BITDigiLock digilock = new BITDigiLock(block, pincode, owner,
-						closetimer, coowners, shared);
+						closetimer, coowners, shared, 
+						typeId, connectedTo);
 				return digilock;
 			} else {
 				return null;
@@ -470,58 +380,8 @@ public class BITDigiLock {
 		return null;
 	}
 
-	public static void RemoveDigiLock(SpoutPlayer sPlayer, BITDigiLock digilock) {
-		// if (isLocked(digilock.getBlock())) {
-		String query = "DELETE FROM BukkitInventoryTools WHERE (x = "
-				+ digilock.block.getX() + " AND y = " + digilock.block.getY()
-				+ " AND z = " + digilock.block.getZ() + " AND world='"
-				+ digilock.block.getWorld().getName() + "');";
-		if (isChest(digilock.getBlock())) {
-			SpoutChest sChest1 = (SpoutChest) digilock.getBlock().getState();
-			if (sChest1.isDoubleChest()) {
-				SpoutChest sChest2 = sChest1.getOtherSide();
-				query = "DELETE FROM BukkitInventoryTools WHERE (x = "
-						+ digilock.block.getX() + " AND y = "
-						+ digilock.block.getY() + " AND z = "
-						+ digilock.block.getZ() + " AND world='"
-						+ digilock.block.getWorld().getName() + "') OR (x = "
-						+ sChest2.getBlock().getX() + " AND y = "
-						+ sChest2.getBlock().getY() + " AND z = "
-						+ sChest2.getBlock().getZ() + " AND world='"
-						+ sChest2.getBlock().getWorld().getName() + "');";
-			}
-		} else if (isDoor(digilock.getBlock())) {
-			Door door = (Door) digilock.getBlock().getState().getData();
-			if (door.isTopHalf()) {
-				query = "DELETE FROM BukkitInventoryTools WHERE (x = "
-						+ digilock.block.getX() + " AND y = "
-						+ (digilock.block.getY() - 1) + " AND z = "
-						+ digilock.block.getZ() + " AND world='"
-						+ digilock.block.getWorld().getName() + "');";
-			}
-		}
-		if (G333Config.g333Config.DEBUG_SQL)
-			sPlayer.sendMessage(ChatColor.YELLOW + "Removeing lock: " + query);
-		if (G333Config.g333Config.STORAGE_TYPE.equals("MYSQL")) {
-			try {
-				BIT.manageMySQL.deleteQuery(query);
-			} catch (MalformedURLException e) {
-				e.printStackTrace();
-			} catch (InstantiationException e) {
-				e.printStackTrace();
-			} catch (IllegalAccessException e) {
-				e.printStackTrace();
-			}
-		} else { // SQLLITE
-			BIT.manageSQLite.deleteQuery(query);
-
-		}
-		G333Messages.sendNotification(sPlayer, "DigiLock removed.");
-		// }
-	}
-
 	public void RemoveDigiLock(SpoutPlayer sPlayer) {
-		String query = "DELETE FROM BukkitInventoryTools WHERE (x = "
+		String query = "DELETE FROM "+BIT.digilockTable+" WHERE (x = "
 				+ block.getX() + " AND y = " + block.getY() + " AND z = "
 				+ block.getZ() + " AND world='" + block.getWorld().getName()
 				+ "');";
@@ -529,7 +389,7 @@ public class BITDigiLock {
 			SpoutChest sChest1 = (SpoutChest) getBlock().getState();
 			if (sChest1.isDoubleChest()) {
 				SpoutChest sChest2 = sChest1.getOtherSide();
-				query = "DELETE FROM BukkitInventoryTools WHERE (x = "
+				query = "DELETE FROM "+BIT.digilockTable+" WHERE (x = "
 						+ block.getX() + " AND y = " + block.getY()
 						+ " AND z = " + block.getZ() + " AND world='"
 						+ block.getWorld().getName() + "') OR (x = "
@@ -541,7 +401,7 @@ public class BITDigiLock {
 		} else if (isDoor(getBlock())) {
 			Door door = (Door) getBlock().getState().getData();
 			if (door.isTopHalf()) {
-				query = "DELETE FROM BukkitInventoryTools WHERE (x = "
+				query = "DELETE FROM "+BIT.digilockTable+" WHERE (x = "
 						+ block.getX() + " AND y = " + (block.getY() - 1)
 						+ " AND z = " + block.getZ() + " AND world='"
 						+ block.getWorld().getName() + "');";
@@ -566,7 +426,7 @@ public class BITDigiLock {
 		G333Messages.sendNotification(sPlayer, "DigiLock removed.");
 	}
 
-	public static boolean isDoor(SpoutBlock block) {
+	public static boolean isDoor(Block block) {
 		if (block.getType().equals(Material.WOOD_DOOR))
 			return true;
 		else if (block.getType().equals(Material.WOODEN_DOOR))
@@ -598,41 +458,60 @@ public class BITDigiLock {
 		return false;
 	}
 
-	public void openDoor(SpoutPlayer sPlayer) {
-		Door door = (Door) block.getState().getData();
-		if (!door.isOpen()) {
-			// door.setOpen(true);
-
-			SpoutBlock nextBlock;
-			block.setData((byte) (block.getState().getData().getData() ^ 4));
-			if (door.isTopHalf()) {
-				nextBlock = block.getRelative(BlockFace.DOWN);
-				nextBlock.setData((byte) (nextBlock.getState().getData()
-						.getData() ^ 4));
-
-			} else {
-				nextBlock = block.getRelative(BlockFace.UP);
-				nextBlock.setData((byte) (nextBlock.getState().getData()
-						.getData() ^ 4));
-			}
+	public static boolean isDoorOpen(SpoutPlayer sPlayer, SpoutBlock block) {
+		if ((block.getState().getData().getData() & 4) == 4) {
+			return true;
+		} else {
+			return false;
 		}
 	}
 
-	public void closeDoor(SpoutPlayer sPlayer) {
+	public static void openDoor(SpoutPlayer sPlayer, SpoutBlock block) {
 		Door door = (Door) block.getState().getData();
-		if (door.isOpen()) {
-			// door.setOpen(false);
-			SpoutBlock nextBlock;
-			block.setData((byte) (block.getState().getData().getData() ^ 4));
-			if (door.isTopHalf()) {
-				nextBlock = block.getRelative(BlockFace.DOWN);
-				nextBlock.setData((byte) (nextBlock.getState().getData()
-						.getData() ^ 4));
-			} else {
-				nextBlock = block.getRelative(BlockFace.UP);
-				nextBlock.setData((byte) (nextBlock.getState().getData()
-						.getData() ^ 4));
-			}
+		SpoutBlock nextBlock;
+		if (G333Config.g333Config.DEBUG_DOOR)
+			sPlayer.sendMessage("The door is closed. OpenDoor");
+		block.setData((byte) (block.getState().getData().getData() | 4));
+		if (door.isTopHalf()) {
+			nextBlock = block.getRelative(BlockFace.DOWN);
+			nextBlock
+					.setData((byte) (nextBlock.getState().getData().getData() | 4));
+		} else {
+			nextBlock = block.getRelative(BlockFace.UP);
+			nextBlock
+					.setData((byte) (nextBlock.getState().getData().getData() | 4));
+		}
+	}
+
+	public static void closeDoor(SpoutPlayer sPlayer, SpoutBlock block) {
+		Door door = (Door) block.getState().getData();
+		SpoutBlock nextBlock;
+		block.setData((byte) ((block.getState().getData().getData() | 4) ^ 4));
+		if (door.isTopHalf()) {
+			nextBlock = block.getRelative(BlockFace.DOWN);
+			nextBlock
+					.setData((byte) ((nextBlock.getState().getData().getData() | 4) ^ 4));
+		} else {
+			nextBlock = block.getRelative(BlockFace.UP);
+			nextBlock
+					.setData((byte) ((nextBlock.getState().getData().getData() | 4) ^ 4));
+		}
+		if (G333Config.g333Config.DEBUG_DOOR)
+			sPlayer.sendMessage("Close the door.");
+	}
+
+	public static void toggleDoor(SpoutPlayer sPlayer, SpoutBlock block) {
+		Door door = (Door) block.getState().getData();
+		SpoutBlock nextBlock;
+		block.setData((byte) (block.getState().getData().getData() ^ 4));
+		if (door.isTopHalf()) {
+			nextBlock = block.getRelative(BlockFace.DOWN);
+			nextBlock
+					.setData((byte) (nextBlock.getState().getData().getData() ^ 4));
+		} else {
+			nextBlock = block.getRelative(BlockFace.UP);
+			nextBlock
+					.setData((byte) (nextBlock.getState().getData().getData() ^ 4));
 		}
 	}
 

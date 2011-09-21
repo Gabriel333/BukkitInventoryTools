@@ -41,6 +41,7 @@ public class BIT extends JavaPlugin {
 	public static mysqlCore manageMySQL; // MySQL handler
 	public static sqlCore manageSQLite; // SQLite handler
 	public static Logger log = Logger.getLogger("Minecraft");
+	public static String digilockTable = "BukkitInventoryTools2";
 
 	// Test for SortInventory
 
@@ -97,7 +98,7 @@ public class BIT extends JavaPlugin {
 		pm.registerEvent(Event.Type.CUSTOM_EVENT,
 				new BITInventoryListener(this), Event.Priority.Normal, this);
 		pm.registerEvent(Event.Type.PLAYER_INTERACT, new BITPlayerListener(),
-				Priority.Normal, this);				
+				Priority.Normal, this);
 	}
 
 	@Override
@@ -111,8 +112,7 @@ public class BIT extends JavaPlugin {
 		// Register commands
 		getCommand("Sort").setExecutor(new BITCommandSort(this));
 		getCommand("Digilock").setExecutor(new BITCommandDigiLock(this));
-		
-		
+
 	}
 
 	private void setupSpout() {
@@ -163,22 +163,13 @@ public class BIT extends JavaPlugin {
 							.showWarning("MyWolf is detected, but spout is not detected.");
 					mywolf = false;
 				}
-
 			}
-
 		}
-
 		// you get access to MyWolf inventory with:
 		// CustomMCInventory inv = myWolfPlugin.getMyWolf(sPlayer).inv;
 	}
 
 	private void setupSQL() {
-
-		if (G333Config.g333Config.DEBUG_SQL) {
-			G333Messages.showInfo("Storagetype:"
-					+ G333Config.g333Config.STORAGE_TYPE);
-		}
-
 		if (G333Config.g333Config.STORAGE_TYPE.equals("MYSQL")) {
 			// Declare MySQL Handler
 			manageMySQL = new mysqlCore(log,
@@ -193,28 +184,44 @@ public class BIT extends JavaPlugin {
 			try {
 				if (manageMySQL.checkConnection()) {
 					// Check if the Connection was successful
+					String query;
 					G333Messages.showInfo("MySQL connection successful");
-					if (!manageMySQL.checkTable("BukkitInventoryTools")) {
-						// Check if the table exists in the database if not
-						// create it
-						G333Messages
-								.showInfo("Creating table BukkitInventoryTools");
-						String query = "CREATE TABLE BukkitInventoryTools (id INT PRIMARY KEY AUTO_INCREMENT, pincode VARCHAR(4), owner VARCHAR(255), closetimer INT, x INT, y INT, z INT, world VARCHAR(255), shared VARCHAR(255), coowners VARCHAR(255));";
-						manageMySQL.createTable(query);
+					if (!manageMySQL.checkTable(BIT.digilockTable)) {
+						if (manageMySQL.checkTable("BukkitInventoryTools")) {
+							// DB Version1 String query =
+							// "CREATE TABLE BukkitInventoryTools (id INT PRIMARY KEY AUTO_INCREMENT, pincode VARCHAR(4), owner VARCHAR(255), closetimer INT, x INT, y INT, z INT, world VARCHAR(255), shared VARCHAR(255), coowners VARCHAR(255));";
+							query = "CREATE TABLE "
+									+ BIT.digilockTable
+									+ " (id INT PRIMARY KEY AUTO_INCREMENT, pincode VARCHAR(4),"
+									+ "owner VARCHAR(255), closetimer INT,x INT,y INT,z INT,"
+									+ "world VARCHAR(255),shared VARCHAR(255),coowners VARCHAR(255),"
+									+ "typeid INT,connectedto VARCHAR(20)) AS SELECT pincode, "
+									+ "owner,closetimer,x,y,z,world,shared,"
+									+ "typeid,connectedto FROM BukkitInventoryTools;";
+							G333Messages
+									.showInfo("Upgrade BukkitInventoryTools to BukkitInventoryTools2");
+						} else {
+							query = "CREATE TABLE "
+									+ BIT.digilockTable
+									+ " (id INT PRIMARY KEY AUTO_INCREMENT, pincode VARCHAR(4), "
+									+ "owner VARCHAR(255), closetimer INT, x INT, y INT, z INT, "
+									+ "world VARCHAR(255), shared VARCHAR(255), coowners VARCHAR(255), "
+									+ "typeid INT, connectedto VARCHAR(20));";
+							G333Messages.showInfo("Creating table "
+									+ BIT.digilockTable);
+						}
 						// Use mysqlCore.createTable(query) to create tables
+						manageMySQL.createTable(query);
 					}
 				} else {
 					G333Messages.showError("MySQL connection failed");
 					G333Config.g333Config.STORAGE_HOST = "SQLITE";
 				}
 			} catch (MalformedURLException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			} catch (InstantiationException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			} catch (IllegalAccessException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 		} else {
@@ -226,13 +233,32 @@ public class BIT extends JavaPlugin {
 			// Initialize SQLite handler
 			manageSQLite.initialize();
 			// Check if the table exists, if it doesn't create it
-			if (!manageSQLite.checkTable("BukkitInventoryTools")) {
-				G333Messages.showInfo("Creating table BukkitInventoryTools");
-				String query = "CREATE TABLE BukkitInventoryTools (id INT AUTO_INCREMENT PRIMARY_KEY, pincode VARCHAR(4), owner VARCHAR(255), closetimer INT, x INT, y INT, z INT, world VARCHAR(255), shared VARCHAR(255), coowners VARCHAR(255));";
+			String query = "";
+			if (!manageSQLite.checkTable(BIT.digilockTable)) {
+				if (manageSQLite.checkTable("BukkitInventoryTools")) {
+					G333Messages
+							.showInfo("Upgrade table BukkitInventoryTools to BukkitInventoryTools2");
+					query = "CREATE TABLE "
+							+ BIT.digilockTable
+							+ " (id INT AUTO_INCREMENT PRIMARY_KEY, "
+							+ "pincode VARCHAR(4), owner VARCHAR(255), closetimer INT, x INT, "
+							+ "y INT, z INT, world VARCHAR(255), shared VARCHAR(255), "
+							+ "coowners VARCHAR(255), typeid INT, connectedto VARCHAR(20))"
+							+ "AS SELECT pincode, owner, closetimer, x, y, z, world, shared, "
+							+ "typeid, connectedto FROM BukkitInventoryTools;";
+
+				}
+
+				G333Messages.showInfo("Creating table " + BIT.digilockTable);
+				query = "CREATE TABLE "
+						+ BIT.digilockTable
+						+ " (id INT AUTO_INCREMENT PRIMARY_KEY, pincode VARCHAR(4), "
+						+ "owner VARCHAR(255), closetimer INT, x INT, y INT, z INT, "
+						+ "world VARCHAR(255), shared VARCHAR(255), coowners VARCHAR(255), "
+						+ "typeid INT, connectedto VARCHAR(20));";
 				manageSQLite.createTable(query);
 				// Use sqlCore.createTable(query) to create tables
 			}
 		}
 	}
-
 }

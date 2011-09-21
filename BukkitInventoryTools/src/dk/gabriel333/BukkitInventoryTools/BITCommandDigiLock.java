@@ -43,7 +43,7 @@ public class BITCommandDigiLock implements CommandExecutor {
 			if (!BITDigiLock.isLocked(block)) {
 				if (args.length == 0) {
 					sPlayer.sendMessage("Usage: /digilock [pincode]|[unlock pincode]"
-							+ "|[lock pincode]|[owner playername]|[closetimer seconds]|[remove]");
+							+ "|[lock pincode]|[owner playername]|[closetimer seconds]|[remove]|[info]");
 					return true;
 				} else {
 					String action;
@@ -64,11 +64,9 @@ public class BITCommandDigiLock implements CommandExecutor {
 
 						}
 					}
-					// sPlayer.sendMessage("save pincode:" + pincode + " owner:"
-					// + owner + " closetimer:" + closetimer
-					// + " coowners:" + coowners + " shared:" + shared);
 					BITDigiLock.SaveDigiLock(sPlayer, block, pincode, owner,
-							closetimer, coowners, shared);
+							closetimer, coowners, shared, 
+							block.getTypeId(),"");
 					return true;
 				}
 			} else { // digilock is locked
@@ -83,33 +81,38 @@ public class BITCommandDigiLock implements CommandExecutor {
 							Inventory inv = sChest.getLargestInventory();
 							sPlayer.openInventoryWindow(inv);
 						} else if (BITDigiLock.isDoor(digilock.getBlock())) {
-							digilock.openDoor(sPlayer);
+							BITDigiLock.openDoor(sPlayer,block);
 						}
 					} else {
 						sPlayer.sendMessage("wrong pincode!");
 						sPlayer.damage(10);
 					}
+					// REMOVE ***************************************
 				} else if (action.equalsIgnoreCase("remove")
 						&& (digilock.getOwner().equalsIgnoreCase(
 								sPlayer.getName()) || G333Permissions.hasPerm(
 								sPlayer, "digilock.admin",
 								G333Permissions.NOT_QUIET)) && args.length == 1) {
 					digilock.RemoveDigiLock(sPlayer);
+					// INFO ***************************************
+					} else if (action.equalsIgnoreCase("info")) {
+					sPlayer.sendMessage("The owner of this lock is:"
+							+ digilock.getOwner());
 				} else if (digilock.getPincode().equalsIgnoreCase(args[0])
-						&& args.length == 1) {
+				&& args.length == 1) {
 					if (BITDigiLock.isChest(digilock.getBlock())) {
 						SpoutChest sChest = (SpoutChest) block.getState();
 						Inventory inv = sChest.getLargestInventory();
 						sPlayer.openInventoryWindow(inv);
 					} else if (BITDigiLock.isDoor(digilock.getBlock())) {
-						digilock.openDoor(sPlayer);
+						BITDigiLock.openDoor(sPlayer,block);
 					}
 				} else {
 					if (args.length == 1)
 						sPlayer.damage(5);
 					sPlayer.sendMessage("Wrong pincode!");
 					sPlayer.sendMessage("Usage: /digilock [pincode]|[unlock pincode]"
-							+ "|[lock pincode]|[owner playername]|[closetimer seconds]|[remove]");
+							+ "|[lock pincode]|[owner playername]|[closetimer seconds]|[remove]|[info]");
 				}
 			}
 			return true;

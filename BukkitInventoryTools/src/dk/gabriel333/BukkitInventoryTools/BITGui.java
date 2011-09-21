@@ -83,6 +83,7 @@ public class BITGui {
 	public static GenericTextField pincode3 = new GenericTextField();
 	public static GenericTextField owner1 = new GenericTextField();
 	public static GenericTextField listOfCoOwners = new GenericTextField();
+	public static GenericTextField connectedTo = new GenericTextField();
 
 	public static void setPincode(SpoutPlayer sPlayer, SpoutBlock block) {
 		int height = 20;

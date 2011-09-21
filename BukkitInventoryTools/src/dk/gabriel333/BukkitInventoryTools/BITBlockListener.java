@@ -15,6 +15,7 @@ public class BITBlockListener extends BlockListener {
 		if (BITDigiLock.isDoor(block)) {
 			Door door = (Door) block.getState().getData();
 			if (BITDigiLock.isLocked(block)) {
+				//BITDigiLock digilock = digilock.loadDigiLock(sPlayer, block);
 				if (!door.isOpen()) {
 					event.setNewCurrent(event.getOldCurrent());
 				}

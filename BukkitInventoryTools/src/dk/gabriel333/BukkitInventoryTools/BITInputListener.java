@@ -83,6 +83,9 @@ public class BITInputListener extends InputListener {
 					if (BITDigiLock.isLocked(targetblock)) {
 						BITDigiLock digilock = BITDigiLock.loadDigiLock(
 								sPlayer, targetblock);
+						if (BITDigiLock.isDoor(targetblock)) {
+							BITDigiLock.closeDoor(sPlayer,targetblock);
+						}
 						if ((sPlayer.getName().equals(digilock.getOwner()) && G333Permissions
 								.hasPerm(sPlayer, "digilock.use",
 										G333Permissions.NOT_QUIET))

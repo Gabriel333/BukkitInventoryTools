@@ -77,6 +77,7 @@ DigiLock:
 Debug:
     Permissions: false
     Inventory: false
+    Door: false
     OnEnable: false
     Keyboard: false
     SQL: false

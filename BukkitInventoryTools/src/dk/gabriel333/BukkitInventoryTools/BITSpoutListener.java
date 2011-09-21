@@ -3,6 +3,7 @@ package dk.gabriel333.BukkitInventoryTools;
 import java.util.UUID;
 
 
+import org.bukkit.Material;
 import org.bukkit.event.Event;
 import org.bukkit.inventory.Inventory;
 
@@ -41,6 +42,18 @@ public class BITSpoutListener extends SpoutListener {
 						sPlayer.openInventoryWindow(inv);
 					} else if (BITDigiLock.isDoor(digilock.getBlock())) {
 						BITDigiLock.openDoor(sPlayer,digilock.getBlock());					
+					} else if (digilock.getBlock().getType()==Material.LEVER){
+						//Lever lever = (Lever) block.getState().getData();
+						//sPlayer.sendMessage("Turn lever on");
+						//BITDigiLock.leverOn(sPlayer, block);
+					} else if (digilock.getBlock().getType()==Material.STONE_BUTTON){
+						
+					} else if (digilock.getBlock().getType()==Material.DISPENSER){
+						
+					} else if (digilock.getBlock().getType()==Material.FURNACE){
+						
+					} else if (digilock.getBlock().getType()==Material.BOOKSHELF){
+						
 					}
 				} else {
 					G333Messages.sendNotification(sPlayer, "Wrong pincode!");

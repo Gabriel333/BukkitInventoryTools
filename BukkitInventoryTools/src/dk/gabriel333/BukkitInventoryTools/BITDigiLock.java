@@ -514,5 +514,13 @@ public class BITDigiLock {
 					.setData((byte) (nextBlock.getState().getData().getData() ^ 4));
 		}
 	}
+	
+	public static void leverOn(SpoutPlayer sPlayer, SpoutBlock block) {
+		block.setData((byte) (block.getState().getData().getData() | 8));
+	}
 
+	public static void leverOff(SpoutPlayer sPlayer, SpoutBlock block) {
+		block.setData((byte) ((block.getState().getData().getData() | 8) ^ 8));
+	}
+	
 }

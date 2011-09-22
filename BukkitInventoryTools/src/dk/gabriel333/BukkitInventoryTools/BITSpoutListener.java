@@ -4,6 +4,8 @@ import java.util.UUID;
 
 
 import org.bukkit.Material;
+import org.bukkit.block.Dispenser;
+import org.bukkit.block.Furnace;
 import org.bukkit.event.Event;
 import org.bukkit.inventory.Inventory;
 
@@ -52,8 +54,14 @@ public class BITSpoutListener extends SpoutListener {
 					} else if (digilock.getBlock().getType()==Material.STONE_BUTTON){
 						
 					} else if (digilock.getBlock().getType()==Material.DISPENSER){
+						Dispenser dispenser = (Dispenser) block.getState();
+						Inventory inv = dispenser.getInventory();
+						sPlayer.openInventoryWindow(inv);
 						
 					} else if (digilock.getBlock().getType()==Material.FURNACE){
+						Furnace furnace = (Furnace) block.getState();
+						Inventory inv = furnace.getInventory();
+						sPlayer.openInventoryWindow(inv);
 						
 					} else if (digilock.getBlock().getType()==Material.BOOKSHELF){
 						

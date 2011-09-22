@@ -39,6 +39,8 @@ public class BITGui {
 		int x = 170;
 
 		GenericItemWidget itemwidget = new GenericItemWidget(new ItemStack(95));
+		//GenericItemWidget itemwidget = new GenericItemWidget(new ItemStack(
+		//		getPincodeBlock(block)));
 		itemwidget.setX(x + 2 * height).setY(y);
 		itemwidget.setHeight(height * 2).setWidth(height * 2)
 				.setDepth(height * 2);
@@ -74,6 +76,37 @@ public class BITGui {
 		popupGetPincode.setTransparent(true);
 		sPlayer.getMainScreen().attachPopupScreen(popupGetPincode);
 	}
+	
+	public static void closeGetPincode(){
+		
+	}
+
+	@SuppressWarnings("unused")
+	private static int getPincodeBlock(SpoutBlock block) {
+		switch (block.getTypeId()) {
+		case 23:
+			return 23; // Dispenser
+		case 47:
+			return 47; // Bookshelf
+		case 54:
+			return 54; // Chest
+		case 61:
+			return 61; // Furnace
+		case 62:
+			return 62; // Burning Furnace
+		case 64:
+			return 324; // Wooden door
+		case 69:
+			return 69; // Lever
+		case 71:
+			return 330; // Iron door
+		case 77:
+			return 77; // Stone button
+		case 96:
+			return 69; // Trap_door
+		}
+		return 95;
+	}
 
 	// ***************************************************************
 	// setPincode: Open GenericPopup and enter a pincode to lock the
@@ -87,7 +120,7 @@ public class BITGui {
 
 	public static void setPincode(SpoutPlayer sPlayer, SpoutBlock block) {
 		int height = 20;
-		int x,y,w1,w2;
+		int x, y, w1, w2;
 
 		BITDigiLock digilock;
 		if (BITDigiLock.isLocked(block)) {
@@ -102,8 +135,11 @@ public class BITGui {
 		}
 
 		// GIF
-		x = 170;y=50;
+		x = 170;
+		y = 50;
 		GenericItemWidget itemwidget = new GenericItemWidget(new ItemStack(95));
+		//GenericItemWidget itemwidget = new GenericItemWidget(new ItemStack(
+		//		getPincodeBlock(block)));
 		itemwidget.setX(x + 2 * height).setY(y);
 		itemwidget.setHeight(height * 2).setWidth(height * 2)
 				.setDepth(height * 2);
@@ -116,7 +152,10 @@ public class BITGui {
 		y = y + 3 * height;
 
 		// first row -------- x=20-170-------------------------------------
-		x=10;w1=60;w2=80;y=170;
+		x = 10;
+		w1 = 60;
+		w2 = 80;
+		y = 170;
 		// ownerButton
 		GenericButton ownerButton = new GenericButton("Owner");
 		ownerButton.setAuto(false).setX(x).setY(y).setHeight(height)
@@ -128,7 +167,7 @@ public class BITGui {
 		// owner1
 		owner1.setTooltip("Owner of the DigiLock");
 		owner1.setCursorPosition(1);
-		owner1.setX(x+w1+1).setY(y);
+		owner1.setX(x + w1 + 1).setY(y);
 		owner1.setHeight(height).setWidth(w2);
 		popupSetPincode.attachWidget(plugin, owner1);
 		y = y + height;
@@ -142,15 +181,17 @@ public class BITGui {
 		menuButtons.add(CoOwnerButton);
 		BITButtons.put(CoOwnerButton.getId(), "CoOwnerButton");
 		// listOfCoOwners
-		listOfCoOwners.setX(x+w1+1).setY(y).setWidth(340).setHeight(height);
+		listOfCoOwners.setX(x + w1 + 1).setY(y).setWidth(340).setHeight(height);
 		listOfCoOwners.setMaximumCharacters(200);
 		listOfCoOwners.setText(listOfCoOwners.getText());
 		popupSetPincode.attachWidget(plugin, listOfCoOwners);
 		y = y + height;
 
 		// Second row ------------X=170-270-370------------------------------
-		y = 110; 
-		x = 180;w1=80;w2=80;
+		y = 110;
+		x = 180;
+		w1 = 80;
+		w2 = 80;
 		// pincode3
 		pincode3.setTooltip("Enter/change the pincode...");
 		pincode3.setCursorPosition(1);
@@ -179,8 +220,8 @@ public class BITGui {
 		// removeButton
 		GenericButton removeButton = new GenericButton("Remove");
 		if (BITDigiLock.isLocked(block)) {
-			removeButton.setAuto(false).setX(x-w1-10).setY(y).setHeight(height)
-					.setWidth(w1);
+			removeButton.setAuto(false).setX(x - w1 - 10).setY(y)
+					.setHeight(height).setWidth(w1);
 			removeButton.setTooltip("Press Remove to delete the lock.");
 			removeButton.setEnabled(true);
 			menuButtons.add(removeButton);

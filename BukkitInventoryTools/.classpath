@@ -2,8 +2,6 @@
 <classpath>
 	<classpathentry kind="src" path="src"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-1.6"/>
-	<classpathentry kind="lib" path="C:/Private/Dropbox/Libraries/Newest/bukkit-0.0.1-SNAPSHOT.jar"/>
-	<classpathentry kind="lib" path="C:/Private/Dropbox/Libraries/Newest/craftbukkit-0.0.1-SNAPSHOT.jar"/>
 	<classpathentry kind="lib" path="C:/Private/Dropbox/Libraries/Newest/Permissions.jar"/>
 	<classpathentry kind="lib" path="C:/Private/Dropbox/Libraries/Newest/PermissionsEx.jar"/>
 	<classpathentry kind="lib" path="C:/Private/Dropbox/Libraries/Newest/PermissionsSql.jar"/>
@@ -13,5 +11,7 @@
 	<classpathentry kind="lib" path="C:/Private/Dropbox/Libraries/Newest/SpoutBackpack.jar"/>
 	<classpathentry kind="lib" path="C:/Private/Dropbox/Libraries/Newest/Spout.jar"/>
 	<classpathentry kind="lib" path="C:/Private/Dropbox/Libraries/Newest/iConomy.jar"/>
+	<classpathentry kind="lib" path="C:/Private/Dropbox/Libraries/Newest/craftbukkit-0.0.1-SNAPSHOT.jar"/>
+	<classpathentry kind="lib" path="C:/Private/Dropbox/Libraries/Newest/bukkit-0.0.1-SNAPSHOT.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

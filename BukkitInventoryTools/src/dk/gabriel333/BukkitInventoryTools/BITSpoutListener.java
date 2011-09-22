@@ -19,6 +19,8 @@ import dk.gabriel333.Library.G333Messages;
 import dk.gabriel333.Library.G333Permissions;
 
 public class BITSpoutListener extends SpoutListener {
+	
+	private BIT plugin;
 
 	public void onCustomEvent(Event event) {
 		if (event instanceof ButtonClickEvent) {
@@ -33,6 +35,7 @@ public class BITSpoutListener extends SpoutListener {
 			// ************************************
 			if (BITGui.BITButtons.get(uuid) == "getPincodeUnlock") {
 				BITGui.popupGetPincode.close();
+				BITGui.popupGetPincode.removeWidgets(plugin);
 				if (digilock.pincode.equals(BITGui.pincode2.getText())||
 						G333Permissions.hasPerm(sPlayer, "digilock.admin",
 						G333Permissions.QUIET)) {
@@ -54,6 +57,10 @@ public class BITSpoutListener extends SpoutListener {
 						
 					} else if (digilock.getBlock().getType()==Material.BOOKSHELF){
 						
+					} else if (digilock.getBlock().getType()==Material.TRAP_DOOR){
+						BITDigiLock.openTrapdoor(sPlayer,digilock.getBlock());
+					} else if (BITDigiLock.isSign(block)) {
+						
 					}
 				} else {
 					G333Messages.sendNotification(sPlayer, "Wrong pincode!");
@@ -64,6 +71,7 @@ public class BITSpoutListener extends SpoutListener {
 				}
 			} else if (BITGui.BITButtons.get(uuid) == "getPincodeCancel") {
 				BITGui.popupGetPincode.close();
+				BITGui.popupGetPincode.removeWidgets(plugin);
 			}
 
 			// ************************************
@@ -72,13 +80,16 @@ public class BITSpoutListener extends SpoutListener {
 
 			else if (BITGui.BITButtons.get(uuid) == "setPincodeLock") {
 				BITGui.popupSetPincode.close();
+				BITGui.popupSetPincode.removeWidgets(plugin);
 				BITDigiLock.SaveDigiLock(sPlayer, block,
 						BITGui.pincode3.getText(), BITGui.owner1.getText(), 0,
 						BITGui.listOfCoOwners.getText(), "", block.getTypeId(),"");
 			} else if ((BITGui.BITButtons.get(uuid) == "setPincodeCancel")) {
 				BITGui.popupSetPincode.close();
+				BITGui.popupSetPincode.removeWidgets(plugin);
 			} else if ((BITGui.BITButtons.get(uuid) == "setPincodeRemove")) {
 				BITGui.popupSetPincode.close();
+				BITGui.popupSetPincode.removeWidgets(plugin);
 				if (BITDigiLock.isLocked(block)) {
 					digilock.RemoveDigiLock(sPlayer);
 				}

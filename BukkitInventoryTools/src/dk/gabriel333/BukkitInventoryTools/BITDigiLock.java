@@ -242,7 +242,8 @@ public class BITDigiLock {
 			Material.LOCKED_CHEST, Material.IRON_DOOR,
 			Material.IRON_DOOR_BLOCK, Material.WOODEN_DOOR, Material.WOOD_DOOR,
 			Material.FURNACE, Material.DISPENSER, Material.LEVER,
-			Material.STONE_BUTTON, Material.BOOKSHELF };
+			Material.STONE_BUTTON, Material.BOOKSHELF, Material.TRAP_DOOR, 
+			Material.SIGN, Material.SIGN_POST };
 
 	// Material.STORAGE_MINECART,
 	// Material.WALL_SIGN, Material.SIGN, Material.SIGN_POST,
@@ -458,6 +459,13 @@ public class BITDigiLock {
 		return false;
 	}
 
+	public static boolean isSign(Block block) {
+		if (block.getType().equals(Material.SIGN))
+			return true;
+		else if (block.getType().equals(Material.SIGN_POST))
+			return true;
+		return false;
+	}
 	public static boolean isDoorOpen(SpoutPlayer sPlayer, SpoutBlock block) {
 		if ((block.getState().getData().getData() & 4) == 4) {
 			return true;
@@ -521,6 +529,30 @@ public class BITDigiLock {
 
 	public static void leverOff(SpoutPlayer sPlayer, SpoutBlock block) {
 		block.setData((byte) ((block.getState().getData().getData() | 8) ^ 8));
+	}
+	
+	public static boolean isTrapdoorOpen(SpoutPlayer sPlayer, SpoutBlock block) {
+		if ((block.getState().getData().getData() & 4) == 4) {
+			return true;
+		} else {
+			return false;
+		}
+	}
+
+	public static void openTrapdoor(SpoutPlayer sPlayer, SpoutBlock block) {
+		if (G333Config.g333Config.DEBUG_DOOR)
+			sPlayer.sendMessage("The trapdoor is closed. OpenDoor");
+		block.setData((byte) (block.getState().getData().getData() | 4));
+	}
+
+	public static void closeTrapdoor(SpoutPlayer sPlayer, SpoutBlock block) {
+		block.setData((byte) ((block.getState().getData().getData() | 4) ^ 4));
+		if (G333Config.g333Config.DEBUG_DOOR)
+			sPlayer.sendMessage("Close the door.");
+	}
+
+	public static void toggleTrapdoor(SpoutPlayer sPlayer, SpoutBlock block) {
+		block.setData((byte) (block.getState().getData().getData() ^ 4));
 	}
 	
 }

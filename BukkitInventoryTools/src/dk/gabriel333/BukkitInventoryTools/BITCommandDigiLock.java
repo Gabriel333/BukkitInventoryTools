@@ -38,8 +38,8 @@ public class BITCommandDigiLock implements CommandExecutor {
 						G333Permissions.NOT_QUIET)
 				|| G333Permissions.hasPerm(sPlayer, "*",
 						G333Permissions.NOT_QUIET)) {
-			// sPlayer.sendMessage("args: " + args[0].toString());
-			// sPlayer.sendMessage("args.length: " + args.length);
+			//sPlayer.sendMessage("args[0]: " + args[0].toString());
+			//sPlayer.sendMessage("args.length: " + args.length);
 			if (!BITDigiLock.isLocked(block)) {
 				if (args.length == 0) {
 					sPlayer.sendMessage("Usage: /digilock [pincode]|[unlock pincode]"
@@ -52,21 +52,26 @@ public class BITCommandDigiLock implements CommandExecutor {
 					for (int n = 0; n < args.length; n++) {
 						action = args[n];
 						if (action.equalsIgnoreCase("lock")) {
-							pincode = args[n + 1];
+							if (n + 1 <= args.length) {
+								pincode = args[n + 1];	
+							}
 							n++;
 						} else if (action.equalsIgnoreCase("owner")) {
-							owner = args[n + 1];
+							if (n + 1 <= args.length) {
+								owner = args[n + 1];}
 							n++;
 						} else if (action.equalsIgnoreCase("closetimer")) {
-							closetimer = Integer.getInteger(args[n + 1]);
+							if (n + 1 <= args.length)
+								closetimer = Integer.getInteger(args[n + 1]);
 							n++;
 						} else if (action.equalsIgnoreCase("remove")) {
 
 						}
 					}
-					BITDigiLock.SaveDigiLock(sPlayer, block, pincode, owner,
-							closetimer, coowners, shared, 
-							block.getTypeId(),"");
+					BITDigiLock
+							.SaveDigiLock(sPlayer, block, pincode, owner,
+									closetimer, coowners, shared,
+									block.getTypeId(), "");
 					return true;
 				}
 			} else { // digilock is locked
@@ -81,7 +86,7 @@ public class BITCommandDigiLock implements CommandExecutor {
 							Inventory inv = sChest.getLargestInventory();
 							sPlayer.openInventoryWindow(inv);
 						} else if (BITDigiLock.isDoor(digilock.getBlock())) {
-							BITDigiLock.openDoor(sPlayer,block);
+							BITDigiLock.openDoor(sPlayer, block);
 						}
 					} else {
 						sPlayer.sendMessage("wrong pincode!");
@@ -95,17 +100,17 @@ public class BITCommandDigiLock implements CommandExecutor {
 								G333Permissions.NOT_QUIET)) && args.length == 1) {
 					digilock.RemoveDigiLock(sPlayer);
 					// INFO ***************************************
-					} else if (action.equalsIgnoreCase("info")) {
+				} else if (action.equalsIgnoreCase("info")) {
 					sPlayer.sendMessage("The owner of this lock is:"
 							+ digilock.getOwner());
 				} else if (digilock.getPincode().equalsIgnoreCase(args[0])
-				&& args.length == 1) {
+						&& args.length == 1) {
 					if (BITDigiLock.isChest(digilock.getBlock())) {
 						SpoutChest sChest = (SpoutChest) block.getState();
 						Inventory inv = sChest.getLargestInventory();
 						sPlayer.openInventoryWindow(inv);
 					} else if (BITDigiLock.isDoor(digilock.getBlock())) {
-						BITDigiLock.openDoor(sPlayer,block);
+						BITDigiLock.openDoor(sPlayer, block);
 					}
 				} else {
 					if (args.length == 1)

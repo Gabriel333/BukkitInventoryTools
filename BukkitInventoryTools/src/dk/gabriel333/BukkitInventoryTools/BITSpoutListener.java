@@ -37,7 +37,6 @@ public class BITSpoutListener extends SpoutListener {
 			// ************************************
 			if (BITGui.BITButtons.get(uuid) == "getPincodeUnlock") {
 				BITGui.popupGetPincode.close();
-				BITGui.popupGetPincode.removeWidgets(plugin);
 				if (digilock.pincode.equals(BITGui.pincode2.getText())||
 						G333Permissions.hasPerm(sPlayer, "digilock.admin",
 						G333Permissions.QUIET)) {
@@ -77,6 +76,7 @@ public class BITSpoutListener extends SpoutListener {
 					}
 					sPlayer.damage(5);
 				}
+				BITGui.popupGetPincode.removeWidgets(plugin);
 			} else if (BITGui.BITButtons.get(uuid) == "getPincodeCancel") {
 				BITGui.popupGetPincode.close();
 				BITGui.popupGetPincode.removeWidgets(plugin);
@@ -85,7 +85,6 @@ public class BITSpoutListener extends SpoutListener {
 			// ************************************
 			// Buttons in BITGui.setPincode
 			// ************************************
-
 			else if (BITGui.BITButtons.get(uuid) == "setPincodeLock") {
 				BITGui.popupSetPincode.close();
 				BITGui.popupSetPincode.removeWidgets(plugin);

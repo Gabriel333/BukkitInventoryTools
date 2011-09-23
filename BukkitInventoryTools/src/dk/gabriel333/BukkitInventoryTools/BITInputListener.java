@@ -45,7 +45,8 @@ public class BITInputListener extends InputListener {
 							G333Inventory.sortInventoryItems(sPlayer,
 									sChest.getLargestInventory());
 						}
-						// if (G333Config.g333Config.SORT_DISPLAYSORTARCHIEVEMENT)
+						// if
+						// (G333Config.g333Config.SORT_DISPLAYSORTARCHIEVEMENT)
 						G333Messages.sendNotification(sPlayer, "Chest sorted.");
 					}
 
@@ -66,17 +67,18 @@ public class BITInputListener extends InputListener {
 		// GAME_SCREEN
 		else if (screentype == ScreenType.GAME_SCREEN) {
 			if (keypressed.equals(G333Config.g333Config.LIBRARY_LOCKKEY)) {
-				if (G333Permissions.hasPerm(sPlayer, "digilock.use",
-						G333Permissions.NOT_QUIET)) {
+				if (G333Permissions.hasPerm(sPlayer, "digilock.create",
+						G333Permissions.NOT_QUIET)
+						|| G333Permissions.hasPerm(sPlayer, "digilock.admin",
+								G333Permissions.QUIET)) {
 					if (G333Config.g333Config.DEBUG_PERMISSIONS) {
 						sPlayer.sendMessage(ChatColor.GREEN
-								+ "0a) BITInputlistener: You have permission digilock.use");
+								+ "0a) BITInputlistener: You have permission digilock.create");
 					}
-
 				} else {
 					if (G333Config.g333Config.DEBUG_PERMISSIONS) {
 						sPlayer.sendMessage(ChatColor.GREEN
-								+ "0b) BITInputlistener: You DONT have permission digilock.use");
+								+ "0b) BITInputlistener: You DONT have permission digilock.create");
 					}
 				}
 				if (BITDigiLock.isLockable(targetblock)) {
@@ -84,10 +86,10 @@ public class BITInputListener extends InputListener {
 						BITDigiLock digilock = BITDigiLock.loadDigiLock(
 								sPlayer, targetblock);
 						if (BITDigiLock.isDoor(targetblock)) {
-							BITDigiLock.closeDoor(sPlayer,targetblock);
+							BITDigiLock.closeDoor(sPlayer, targetblock);
 						}
 						if ((sPlayer.getName().equals(digilock.getOwner()) && G333Permissions
-								.hasPerm(sPlayer, "digilock.use",
+								.hasPerm(sPlayer, "digilock.create",
 										G333Permissions.NOT_QUIET))
 								|| G333Permissions.hasPerm(sPlayer,
 										"digilock.admin",

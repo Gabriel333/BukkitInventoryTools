@@ -30,16 +30,18 @@ public class BITCommandDigiLock implements CommandExecutor {
 		if (!BIT.isPlayer(sPlayer)) {
 			G333Messages.showError("You cant use this command in the console.");
 			return false;
-		} else if (G333Permissions.hasPerm(sPlayer, "digilock.use",
+		} else if (G333Permissions.hasPerm(sPlayer, "digilock.create",
 				G333Permissions.NOT_QUIET)
+				|| G333Permissions.hasPerm(sPlayer, "digilock.use",
+						G333Permissions.NOT_QUIET)
 				|| G333Permissions.hasPerm(sPlayer, "digilock.admin",
 						G333Permissions.NOT_QUIET)
 				|| G333Permissions.hasPerm(sPlayer, "digilock.*",
 						G333Permissions.NOT_QUIET)
 				|| G333Permissions.hasPerm(sPlayer, "*",
 						G333Permissions.NOT_QUIET)) {
-			//sPlayer.sendMessage("args[0]: " + args[0].toString());
-			//sPlayer.sendMessage("args.length: " + args.length);
+			// sPlayer.sendMessage("args[0]: " + args[0].toString());
+			// sPlayer.sendMessage("args.length: " + args.length);
 			if (!BITDigiLock.isLocked(block)) {
 				if (args.length == 0) {
 					sPlayer.sendMessage("Usage: /digilock [pincode]|[unlock pincode]"
@@ -53,12 +55,13 @@ public class BITCommandDigiLock implements CommandExecutor {
 						action = args[n];
 						if (action.equalsIgnoreCase("lock")) {
 							if (n + 1 <= args.length) {
-								pincode = args[n + 1];	
+								pincode = args[n + 1];
 							}
 							n++;
 						} else if (action.equalsIgnoreCase("owner")) {
 							if (n + 1 <= args.length) {
-								owner = args[n + 1];}
+								owner = args[n + 1];
+							}
 							n++;
 						} else if (action.equalsIgnoreCase("closetimer")) {
 							if (n + 1 <= args.length)
@@ -68,11 +71,14 @@ public class BITCommandDigiLock implements CommandExecutor {
 
 						}
 					}
-					BITDigiLock
-							.SaveDigiLock(sPlayer, block, pincode, owner,
-									closetimer, coowners, shared,
-									block.getTypeId(), "");
-					return true;
+					if (G333Permissions.hasPerm(sPlayer, "digilock.create",
+							G333Permissions.NOT_QUIET)) {
+						BITDigiLock.SaveDigiLock(sPlayer, block, pincode,
+								owner, closetimer, coowners, shared,
+								block.getTypeId(), "");
+						return true;
+					}
+
 				}
 			} else { // digilock is locked
 				BITDigiLock digilock = BITDigiLock.loadDigiLock(sPlayer, block);

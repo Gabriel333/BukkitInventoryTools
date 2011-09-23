@@ -2,7 +2,6 @@ package dk.gabriel333.BukkitInventoryTools;
 
 import java.util.UUID;
 
-
 import org.bukkit.Material;
 import org.bukkit.block.Dispenser;
 import org.bukkit.block.Furnace;
@@ -21,7 +20,7 @@ import dk.gabriel333.Library.G333Messages;
 import dk.gabriel333.Library.G333Permissions;
 
 public class BITSpoutListener extends SpoutListener {
-	
+
 	private BIT plugin;
 
 	public void onCustomEvent(Event event) {
@@ -37,42 +36,43 @@ public class BITSpoutListener extends SpoutListener {
 			// ************************************
 			if (BITGui.BITButtons.get(uuid) == "getPincodeUnlock") {
 				BITGui.popupGetPincode.close();
-				if (digilock.pincode.equals(BITGui.pincode2.getText())||
-						G333Permissions.hasPerm(sPlayer, "digilock.admin",
-						G333Permissions.QUIET)) {
+				if ((digilock.pincode.equals(BITGui.pincode2.getText()) && G333Permissions
+						.hasPerm(sPlayer, "digilock.use", G333Permissions.QUIET))
+						|| G333Permissions.hasPerm(sPlayer, "digilock.admin",
+								G333Permissions.QUIET)) {
 					if (BITDigiLock.isChest(digilock.getBlock())) {
 						SpoutChest sChest = (SpoutChest) block.getState();
 						Inventory inv = sChest.getLargestInventory();
 						sPlayer.openInventoryWindow(inv);
 					} else if (BITDigiLock.isDoor(digilock.getBlock())) {
-						BITDigiLock.openDoor(sPlayer,digilock.getBlock());					
-					} else if (digilock.getBlock().getType()==Material.LEVER){
-						//Lever lever = (Lever) block.getState().getData();
-						//sPlayer.sendMessage("Turn lever on");
-						//BITDigiLock.leverOn(sPlayer, block);
-					} else if (digilock.getBlock().getType()==Material.STONE_BUTTON){
-						
-					} else if (digilock.getBlock().getType()==Material.DISPENSER){
+						BITDigiLock.openDoor(sPlayer, digilock.getBlock());
+					} else if (digilock.getBlock().getType() == Material.LEVER) {
+						// Lever lever = (Lever) block.getState().getData();
+						// sPlayer.sendMessage("Turn lever on");
+						// BITDigiLock.leverOn(sPlayer, block);
+					} else if (digilock.getBlock().getType() == Material.STONE_BUTTON) {
+
+					} else if (digilock.getBlock().getType() == Material.DISPENSER) {
 						Dispenser dispenser = (Dispenser) block.getState();
 						Inventory inv = dispenser.getInventory();
 						sPlayer.openInventoryWindow(inv);
-						
-					} else if (digilock.getBlock().getType()==Material.FURNACE){
+
+					} else if (digilock.getBlock().getType() == Material.FURNACE) {
 						Furnace furnace = (Furnace) block.getState();
 						Inventory inv = furnace.getInventory();
 						sPlayer.openInventoryWindow(inv);
-						
-					} else if (digilock.getBlock().getType()==Material.BOOKSHELF){
-						
-					} else if (digilock.getBlock().getType()==Material.TRAP_DOOR){
-						BITDigiLock.openTrapdoor(sPlayer,digilock.getBlock());
+
+					} else if (digilock.getBlock().getType() == Material.BOOKSHELF) {
+
+					} else if (digilock.getBlock().getType() == Material.TRAP_DOOR) {
+						BITDigiLock.openTrapdoor(sPlayer, digilock.getBlock());
 					} else if (BITDigiLock.isSign(block)) {
-						
+
 					}
 				} else {
 					G333Messages.sendNotification(sPlayer, "Wrong pincode!");
 					if (BITDigiLock.isDoor(digilock.getBlock())) {
-						BITDigiLock.closeDoor(sPlayer,digilock.getBlock());
+						BITDigiLock.closeDoor(sPlayer, digilock.getBlock());
 					}
 					sPlayer.damage(5);
 				}
@@ -85,12 +85,15 @@ public class BITSpoutListener extends SpoutListener {
 			// ************************************
 			// Buttons in BITGui.setPincode
 			// ************************************
-			else if (BITGui.BITButtons.get(uuid) == "setPincodeLock") {
+			else if (BITGui.BITButtons.get(uuid) == "setPincodeLock"
+					&& G333Permissions.hasPerm(sPlayer, "digilock.create",
+							G333Permissions.QUIET)) {
 				BITGui.popupSetPincode.close();
 				BITGui.popupSetPincode.removeWidgets(plugin);
 				BITDigiLock.SaveDigiLock(sPlayer, block,
 						BITGui.pincode3.getText(), BITGui.owner1.getText(), 0,
-						BITGui.listOfCoOwners.getText(), "", block.getTypeId(),"");
+						BITGui.listOfCoOwners.getText(), "", block.getTypeId(),
+						"");
 			} else if ((BITGui.BITButtons.get(uuid) == "setPincodeCancel")) {
 				BITGui.popupSetPincode.close();
 				BITGui.popupSetPincode.removeWidgets(plugin);
@@ -101,9 +104,9 @@ public class BITSpoutListener extends SpoutListener {
 					digilock.RemoveDigiLock(sPlayer);
 				}
 			} else if ((BITGui.BITButtons.get(uuid) == "OwnerButton")) {
-				
+
 			} else if ((BITGui.BITButtons.get(uuid) == "CoOwnerButton")) {
-				
+
 			}
 
 			// ************************************
@@ -116,5 +119,4 @@ public class BITSpoutListener extends SpoutListener {
 			}
 		}
 	}
-
 }

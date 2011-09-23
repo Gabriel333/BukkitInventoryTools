@@ -76,20 +76,20 @@ public class G333Inventory {
 		} else {
 			// Here is to_amt > and from_amt>0 so move all what's possible if
 			// it is the same kind of item.
-			if (G333Permissions.hasPerm(p, "stack.*", G333Permissions.QUIET)) {
+			if (G333Permissions.hasPerm(p, "sortinventory.stack.*", G333Permissions.QUIET)) {
 				// okay...
 			} else if ((isTool(fromitem) && !G333Permissions.hasPerm(p,
-					"stack.tools", G333Permissions.QUIET))
+					"sortinventory.stack.tools", G333Permissions.QUIET))
 					|| (isWeapon(fromitem) && !G333Permissions.hasPerm(p,
-							"stack.weapons", G333Permissions.QUIET))
+							"sortinventory.stack.weapons", G333Permissions.QUIET))
 					|| (isBucket(fromitem) && !G333Permissions.hasPerm(p,
-							"stack.buckets", G333Permissions.QUIET))
+							"sortinventory.stack.buckets", G333Permissions.QUIET))
 					|| (isArmor(fromitem) && !G333Permissions.hasPerm(p,
-							"stack.armor", G333Permissions.QUIET))
+							"sortinventory.stack.armor", G333Permissions.QUIET))
 					|| (isFood(fromitem) && !G333Permissions.hasPerm(p,
-							"stack.food", G333Permissions.QUIET))
+							"sortinventory.stack.food", G333Permissions.QUIET))
 					|| (isVehicle(fromitem) && !G333Permissions.hasPerm(p,
-							"stack.vehicles", G333Permissions.QUIET))) {
+							"sortinventory.stack.vehicles", G333Permissions.QUIET))) {
 				return;
 			}
 			if (fromitem.getTypeId() == toitem.getTypeId()
@@ -97,6 +97,7 @@ public class G333Inventory {
 				if (fromitem.getData() != null && toitem.getData() != null) {
 					if (!fromitem.getData().equals(toitem.getData())) {
 						// DONT MOVE ANYTHING
+						G333Messages.showInfo("DONT do anything");
 						return;
 					}
 				}

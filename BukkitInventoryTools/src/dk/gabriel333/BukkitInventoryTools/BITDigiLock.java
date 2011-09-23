@@ -11,6 +11,7 @@ import org.bukkit.block.BlockFace;
 
 import org.bukkit.material.Door;
 import org.bukkit.plugin.Plugin;
+import org.getspout.spoutapi.SpoutManager;
 import org.getspout.spoutapi.block.SpoutBlock;
 import org.getspout.spoutapi.block.SpoutChest;
 import org.getspout.spoutapi.player.SpoutPlayer;
@@ -21,7 +22,7 @@ import dk.gabriel333.Library.G333Messages;
 
 public class BITDigiLock {
 
-	private Plugin plugin;
+	private BIT plugin;
 
 	public BITDigiLock(Plugin plugin) {
 		plugin = this.plugin;
@@ -475,6 +476,7 @@ public class BITDigiLock {
 	}
 
 	public static void openDoor(SpoutPlayer sPlayer, SpoutBlock block) {
+		openDigiLockSound(block);
 		Door door = (Door) block.getState().getData();
 		SpoutBlock nextBlock;
 		if (G333Config.g333Config.DEBUG_DOOR)
@@ -524,6 +526,7 @@ public class BITDigiLock {
 	}
 	
 	public static void leverOn(SpoutPlayer sPlayer, SpoutBlock block) {
+		openDigiLockSound(block);
 		block.setData((byte) (block.getState().getData().getData() | 8));
 	}
 
@@ -540,6 +543,7 @@ public class BITDigiLock {
 	}
 
 	public static void openTrapdoor(SpoutPlayer sPlayer, SpoutBlock block) {
+		openDigiLockSound(block);
 		if (G333Config.g333Config.DEBUG_DOOR)
 			sPlayer.sendMessage("The trapdoor is closed. OpenDoor");
 		block.setData((byte) (block.getState().getData().getData() | 4));
@@ -554,5 +558,15 @@ public class BITDigiLock {
 	public static void toggleTrapdoor(SpoutPlayer sPlayer, SpoutBlock block) {
 		block.setData((byte) (block.getState().getData().getData() ^ 4));
 	}
+	
+	public static void openDigiLockSound(SpoutBlock block){
+		SpoutManager
+		.getSoundManager()
+		.playGlobalCustomSoundEffect(
+				BIT.plugin,
+				"http://dl.dropbox.com/u/36067670/BukkitInventoryTools/Sounds/Digilock.wav",
+				true, block.getLocation(),5);
+	}
+	
 	
 }

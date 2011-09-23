@@ -7,9 +7,11 @@ import org.bukkit.event.player.PlayerItemHeldEvent;
 import org.bukkit.event.player.PlayerListener;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.material.Lever;
+//import org.getspout.spoutapi.SpoutManager;
 import org.getspout.spoutapi.block.SpoutBlock;
 import org.getspout.spoutapi.block.SpoutChest;
 import org.getspout.spoutapi.player.SpoutPlayer;
+//import org.getspout.spoutapi.sound.SoundManager;
 
 import dk.gabriel333.Library.G333Config;
 import dk.gabriel333.Library.G333Messages;
@@ -17,7 +19,7 @@ import dk.gabriel333.Library.G333Permissions;
 
 public class BITPlayerListener extends PlayerListener {
 
-	public static BIT plugin;
+	//private static BIT plugin;
 
 	public void onPlayerInteract(PlayerInteractEvent event) {
 		if (event.isCancelled())
@@ -48,6 +50,7 @@ public class BITPlayerListener extends PlayerListener {
 								Inventory inv = sChest.getLargestInventory();
 								G333Messages.sendNotification(sPlayer,
 										"Opened by fingerprint");
+								
 								sPlayer.openInventoryWindow(inv);
 							} else {
 								sPlayer.sendMessage("Your fingerprint does not match the DigiLock");
@@ -67,6 +70,7 @@ public class BITPlayerListener extends PlayerListener {
 							// TOGGLE DOOR BY FINGERPRINT / NAME
 							if (digilock.isOwner(sPlayer)
 									|| digilock.isCoowner(sPlayer)) {
+								BITDigiLock.openDigiLockSound(block);
 								G333Messages.sendNotification(sPlayer,
 										"Used with fingerprint");
 							} else {
@@ -98,6 +102,7 @@ public class BITPlayerListener extends PlayerListener {
 							// TOGGLE DOOR BY FINGERPRINT / NAME
 							if (digilock.isOwner(sPlayer)
 									|| digilock.isCoowner(sPlayer)) {
+								BITDigiLock.openDigiLockSound(block);
 								G333Messages.sendNotification(sPlayer,
 										"Used with fingerprint");
 							} else {

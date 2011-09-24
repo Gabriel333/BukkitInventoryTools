@@ -15,7 +15,7 @@ public class G333Inventory {
 		orderInventoryItems(inventory, 0);
 	}
 
-	public static void stackPlayerInventoryItems(SpoutPlayer sPlayer) {
+	public static void sortPlayerInventoryItems(SpoutPlayer sPlayer) {
 		Inventory inventory = sPlayer.getInventory();
 		int i, j;
 		for (i = 0; i < inventory.getSize(); i++) {

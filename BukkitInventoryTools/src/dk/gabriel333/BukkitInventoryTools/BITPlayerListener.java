@@ -37,29 +37,37 @@ public class BITPlayerListener extends PlayerListener {
 				if (G333Permissions.hasPerm(sPlayer, "digilock.use",
 						G333Permissions.NOT_QUIET)) {
 					if (BITDigiLock.isChest(block)) {
-						if (event.getAction().equals(Action.RIGHT_CLICK_BLOCK)) {
-							if (digilock.getPincode().equals("")
-									|| digilock.getPincode().equals(
-											"fingerprint")) {
-								// OPEN CHEST BY FINGERPRINT / NAME
-								if (digilock.isOwner(sPlayer)
-										|| digilock.isCoowner(sPlayer)) {
-									SpoutChest sChest = (SpoutChest) block
-											.getState();
-									Inventory inv = sChest
-											.getLargestInventory();
-									G333Messages.sendNotification(sPlayer,
-											"Opened by fingerprint");
+
+						if (digilock.getPincode().equals("")
+								|| digilock.getPincode().equals("fingerprint")) {
+							// OPEN CHEST BY FINGERPRINT / NAME
+							if (digilock.isOwner(sPlayer)
+									|| digilock.isCoowner(sPlayer)) {
+								SpoutChest sChest = (SpoutChest) block
+										.getState();
+								Inventory inv = sChest.getLargestInventory();
+								G333Messages.sendNotification(sPlayer,
+										"Opened by fingerprint");
+								sPlayer.openInventoryWindow(inv);
+							} else {
+								sPlayer.sendMessage("Your fingerprint does not match the DigiLock");
+								event.setCancelled(true);
+							}
+						} else {
+							if (sPlayer.isSpoutCraftEnabled()) {
+								BITGui.getPincode(sPlayer, block);
+								SpoutChest sChest = (SpoutChest) block
+										.getState();
+								Inventory inv = sChest.getLargestInventory();
+								if (digilock.getPincode().equals(
+										BITGui.pincode2.getText())) {
 									sPlayer.openInventoryWindow(inv);
 								} else {
-									sPlayer.sendMessage("Your fingerprint does not match the DigiLock");
+									// sPlayer.closeActiveWindow();
+									event.setCancelled(true);
 								}
 							} else {
-								if (sPlayer.isSpoutCraftEnabled()) {
-									BITGui.getPincode(sPlayer, block);
-								} else {
-									sPlayer.sendMessage("Locked with Digilock.");
-								}
+								sPlayer.sendMessage("Locked with Digilock.");
 							}
 						}
 

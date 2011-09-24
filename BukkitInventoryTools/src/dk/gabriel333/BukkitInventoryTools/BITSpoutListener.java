@@ -73,6 +73,10 @@ public class BITSpoutListener extends SpoutListener {
 					G333Messages.sendNotification(sPlayer, "Wrong pincode!");
 					if (BITDigiLock.isDoor(digilock.getBlock())) {
 						BITDigiLock.closeDoor(sPlayer, digilock.getBlock());
+					} else if (BITDigiLock.isChest(digilock.getBlock())
+							|| digilock.getBlock().getType() == Material.DISPENSER
+							|| digilock.getBlock().getType() == Material.FURNACE) {
+						sPlayer.closeActiveWindow();
 					}
 					sPlayer.damage(5);
 				}

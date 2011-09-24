@@ -2,6 +2,8 @@ package dk.gabriel333.BukkitInventoryTools;
 
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
+import org.bukkit.block.Dispenser;
+import org.bukkit.inventory.Inventory;
 import org.getspout.spoutapi.block.SpoutBlock;
 import org.getspout.spoutapi.block.SpoutChest;
 import org.getspout.spoutapi.event.input.InputListener;
@@ -49,9 +51,9 @@ public class BITInputListener extends InputListener {
 						// (G333Config.g333Config.SORT_DISPLAYSORTARCHIEVEMENT)
 						G333Messages.sendNotification(sPlayer, "Chest sorted.");
 					}
-
 				} else if (keypressed.equals("KEY_ESCAPE")) {
-					sPlayer.closeActiveWindow();
+
+					// sPlayer.closeActiveWindow();
 				}
 			} else
 			// targetblock is NOT a chest, so it must be SpoutBackPack
@@ -145,12 +147,49 @@ public class BITInputListener extends InputListener {
 			}
 		}
 
+		// FURNACE_INVENTORY SCREEN
+		else if (screentype == ScreenType.FURNACE_INVENTORY) {
+			//Furnace furnace = (Furnace) targetblock.getState();
+			//Inventory inventory = furnace.getInventory();
+			if (keypressed.equals(G333Config.g333Config.LIBRARY_SORTKEY)) {
+				//if (targetblock.getType() == Material.FURNACE) {
+					if (G333Permissions.hasPerm(sPlayer, "sortinventory.use",
+							G333Permissions.NOT_QUIET)) {
+						//G333Inventory.sortInventoryItems(sPlayer, inventory);
+						G333Inventory.sortPlayerInventoryItems(sPlayer);
+					}
+					G333Messages.sendNotification(sPlayer, "Inventory sorted.");
+				//}
+			} else if (keypressed.equals("KEY_ESCAPE")) {
+				// sPlayer.closeActiveWindow();
+			}
+		}
+		// DISPENCER_INVENTORY SCREEN
+		else if (screentype == ScreenType.DISPENSER_INVENTORY) {
+			Dispenser dispenser = (Dispenser) targetblock.getState();
+			Inventory inventory = dispenser.getInventory();
+			if (keypressed.equals(G333Config.g333Config.LIBRARY_SORTKEY)) {
+				//if (targetblock.getType() == Material.DISPENSER) {
+					if (G333Permissions.hasPerm(sPlayer, "sortinventory.use",
+							G333Permissions.NOT_QUIET)) {
+						G333Inventory.sortInventoryItems(sPlayer, inventory);
+						G333Inventory.sortPlayerInventoryItems(sPlayer);
+					}
+					G333Messages.sendNotification(sPlayer, "Inventory sorted.");
+				//}
+			} else if (keypressed.equals("KEY_ESCAPE")) {
+				// sPlayer.closeActiveWindow();
+			}
+		}
+
 		// CUSTOM_SCREEN
 		else if (screentype == ScreenType.CUSTOM_SCREEN) {
 			if (keypressed.equals("KEY_ESCAPE")) {
 				sPlayer.closeActiveWindow();
 			}
-		} else {
+		}
+
+		else {
 			// sPlayer.sendMessage("Inputlistener, Unhandled screentype:"
 			// + screentype);
 		}

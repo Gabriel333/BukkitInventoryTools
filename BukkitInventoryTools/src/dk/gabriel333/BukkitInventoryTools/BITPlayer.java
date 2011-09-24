@@ -16,7 +16,7 @@ public abstract class BITPlayer implements Player {
 	public static void sortinventory(SpoutPlayer sPlayer, ScreenType screentype) {
 		// sort the ordinary player inventory
 		Inventory inventory = sPlayer.getInventory();
-		G333Inventory.stackPlayerInventoryItems(sPlayer);
+		G333Inventory.sortPlayerInventoryItems(sPlayer);
 
 		// sort the SpoutBackpack if it exists and if it is opened.
 		if (BIT.spoutbackpack && BIT.spoutBackpackHandler.isOpenSpoutBackpack(sPlayer)) {

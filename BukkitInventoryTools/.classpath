@@ -6,12 +6,12 @@
 	<classpathentry kind="lib" path="C:/Private/Dropbox/Libraries/Newest/PermissionsEx.jar"/>
 	<classpathentry kind="lib" path="C:/Private/Dropbox/Libraries/Newest/PermissionsSql.jar"/>
 	<classpathentry kind="lib" path="C:/Private/Dropbox/Libraries/Newest/SortInventory.jar"/>
-	<classpathentry kind="lib" path="C:/Private/Dropbox/Libraries/Newest/SpoutAPI.jar"/>
 	<classpathentry kind="lib" path="C:/Private/Dropbox/Libraries/Newest/MyWolf.jar"/>
 	<classpathentry kind="lib" path="C:/Private/Dropbox/Libraries/Newest/SpoutBackpack.jar"/>
-	<classpathentry kind="lib" path="C:/Private/Dropbox/Libraries/Newest/Spout.jar"/>
 	<classpathentry kind="lib" path="C:/Private/Dropbox/Libraries/Newest/iConomy.jar"/>
 	<classpathentry kind="lib" path="C:/Private/Dropbox/Libraries/Newest/craftbukkit-0.0.1-SNAPSHOT.jar"/>
 	<classpathentry kind="lib" path="C:/Private/Dropbox/Libraries/Newest/bukkit-0.0.1-SNAPSHOT.jar"/>
+	<classpathentry kind="lib" path="C:/Private/Dropbox/Libraries/Newest/SpoutAPI.jar"/>
+	<classpathentry kind="lib" path="C:/Private/Dropbox/Libraries/Newest/Spout.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

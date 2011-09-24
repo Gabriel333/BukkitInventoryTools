@@ -37,7 +37,7 @@ public class G333Messages {
 			if (string.length()<25) {
 				sPlayer.sendNotification(sPlayer.getName(), string, Material.CHEST);
 			} else {
-				sPlayer.sendNotification(sPlayer.getName(), string.substring(0, 25), Material.CHEST);
+				sPlayer.sendNotification(sPlayer.getName(), string.substring(0, 25), Material.LOCKED_CHEST);
 			}
 		} else {
 			sPlayer.sendMessage(string);

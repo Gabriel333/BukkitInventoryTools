@@ -51,7 +51,7 @@ public class G333Permissions {
 					G333Messages.showInfo("PermissionsBukkit is detected.");
 					numberOfPermissionSystems++;
 				}
-				
+
 			}
 			// Permission3
 			if (permissions3Plugin == null) {
@@ -131,7 +131,8 @@ public class G333Permissions {
 		Boolean hasPermission = false;
 
 		// Fallback builtin Permission system / PermissionsBukkit system
-		if (sPlayer.hasPermission((PERMISSION_NODE + label).toLowerCase())) {
+		if (sPlayer.hasPermission((PERMISSION_NODE + label).toLowerCase())
+				|| sPlayer.hasPermission((PERMISSION_NODE + "*").toLowerCase())) {
 			hasPermission = true;
 		} else if (permissions3) {
 			// Permissions3 or SuperpermBridge

@@ -7,11 +7,11 @@ import org.bukkit.event.player.PlayerItemHeldEvent;
 import org.bukkit.event.player.PlayerListener;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.material.Lever;
-//import org.getspout.spoutapi.SpoutManager;
+
 import org.getspout.spoutapi.block.SpoutBlock;
 import org.getspout.spoutapi.block.SpoutChest;
 import org.getspout.spoutapi.player.SpoutPlayer;
-//import org.getspout.spoutapi.sound.SoundManager;
+
 
 import dk.gabriel333.Library.G333Config;
 import dk.gabriel333.Library.G333Messages;

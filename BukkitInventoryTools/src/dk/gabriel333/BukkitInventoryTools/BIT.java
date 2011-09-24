@@ -14,6 +14,8 @@ import org.bukkit.plugin.java.JavaPlugin;
 
 import com.alta189.sqlLibrary.MySQL.mysqlCore;
 import com.alta189.sqlLibrary.SQLite.sqlCore;
+//import com.nijikokun.register.payment.Method;
+//import com.nijikokun.register.payment.Methods;
 
 import de.Keyle.MyWolf.MyWolfPlugin;
 import dk.gabriel333.Library.G333Config;
@@ -27,6 +29,8 @@ public class BIT extends JavaPlugin {
 	public static BIT plugin;
 
 	public static Boolean spout = false;
+
+	public static Boolean useRegister = false;
 
 	// Hook into SpoutBackpack
 	public static SBHandler spoutBackpackHandler; // The Backpack
@@ -55,9 +59,9 @@ public class BIT extends JavaPlugin {
 			G333Config.setupConfig(this);
 			setupSpout();
 			setupSQL();
+			setupEconomy();
 			setupSpoutBackpack();
 			setupMyWolf();
-			setupGUI();
 			registerEvents();
 			addCommands();
 			G333Messages.showInfo(pdfFile.getName() + " version "
@@ -77,11 +81,6 @@ public class BIT extends JavaPlugin {
 			return true;
 		}
 		return false;
-	}
-
-	private void setupGUI() {
-		// TODO Auto-generated method stub
-		// sortScreen=sPlayer.getMainScreen();
 	}
 
 	public void registerEvents() {
@@ -124,6 +123,10 @@ public class BIT extends JavaPlugin {
 		} else {
 			G333Messages.showError("Safety is dependend on Spout!");
 		}
+	}
+
+	private void setupEconomy() {
+
 	}
 
 	public static boolean isPlayer(CommandSender sender) {
@@ -261,4 +264,7 @@ public class BIT extends JavaPlugin {
 			}
 		}
 	}
+
+
+
 }

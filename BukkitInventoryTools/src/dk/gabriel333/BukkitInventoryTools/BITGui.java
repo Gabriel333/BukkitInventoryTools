@@ -115,6 +115,7 @@ public class BITGui {
 	public static PopupScreen popupSetPincode = new GenericPopup();
 	public static GenericTextField pincode3 = new GenericTextField();
 	public static GenericTextField owner1 = new GenericTextField();
+	public static GenericTextField closetimer1 = new GenericTextField();
 	public static GenericTextField listOfCoOwners = new GenericTextField();
 	public static GenericTextField connectedTo = new GenericTextField();
 
@@ -128,10 +129,12 @@ public class BITGui {
 			pincode3.setText(digilock.getPincode());
 			owner1.setText(digilock.getOwner());
 			listOfCoOwners.setText(digilock.getCoOwners());
+			closetimer1.setText(Integer.toString(digilock.getClosetimer()));
 		} else {
 			pincode3.setText("");
 			owner1.setText(sPlayer.getName());
 			listOfCoOwners.setText("");
+			closetimer1.setText("0");
 		}
 
 		// GIF
@@ -170,6 +173,22 @@ public class BITGui {
 		owner1.setX(x + w1 + 1).setY(y);
 		owner1.setHeight(height).setWidth(w2);
 		popupSetPincode.attachWidget(plugin, owner1);
+		
+		// closetimerButton
+		GenericButton closetimerButton = new GenericButton("Closetimer");
+		closetimerButton.setAuto(false).setX(x+170).setY(y).setHeight(height)
+				.setWidth(w1);
+		closetimerButton.setTooltip("Set closetimer");
+		popupSetPincode.attachWidget(plugin, closetimerButton);
+		menuButtons.add(closetimerButton);
+		BITButtons.put(closetimerButton.getId(), "ClosetimerButton");
+		// closetimer1
+		closetimer1.setTooltip("Autoclosing time in sec.");
+		closetimer1.setCursorPosition(1);
+		closetimer1.setX(x +170 + w1 + 1).setY(y);
+		closetimer1.setHeight(height).setWidth(w2);
+		popupSetPincode.attachWidget(plugin, closetimer1);
+		
 		y = y + height;
 
 		// setCoOwnerButton

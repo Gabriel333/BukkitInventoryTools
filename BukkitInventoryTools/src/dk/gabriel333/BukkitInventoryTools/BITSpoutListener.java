@@ -44,12 +44,12 @@ public class BITSpoutListener extends SpoutListener {
 						SpoutChest sChest = (SpoutChest) block.getState();
 						Inventory inv = sChest.getLargestInventory();
 						sPlayer.openInventoryWindow(inv);
+						
 					} else if (BITDigiLock.isDoor(digilock.getBlock())) {
 						BITDigiLock.openDoor(sPlayer, digilock.getBlock());
+						
 					} else if (digilock.getBlock().getType() == Material.LEVER) {
-						// Lever lever = (Lever) block.getState().getData();
-						// sPlayer.sendMessage("Turn lever on");
-						// BITDigiLock.leverOn(sPlayer, block);
+
 					} else if (digilock.getBlock().getType() == Material.STONE_BUTTON) {
 
 					} else if (digilock.getBlock().getType() == Material.DISPENSER) {
@@ -66,6 +66,7 @@ public class BITSpoutListener extends SpoutListener {
 
 					} else if (digilock.getBlock().getType() == Material.TRAP_DOOR) {
 						BITDigiLock.openTrapdoor(sPlayer, digilock.getBlock());
+						
 					} else if (BITDigiLock.isSign(block)) {
 
 					}
@@ -94,19 +95,26 @@ public class BITSpoutListener extends SpoutListener {
 							G333Permissions.QUIET)) {
 				BITGui.popupSetPincode.close();
 				BITGui.popupSetPincode.removeWidgets(plugin);
+				if (BITGui.closetimer1.getText()==""){
+					BITGui.closetimer1.setText("0");
+				}
 				BITDigiLock.SaveDigiLock(sPlayer, block,
-						BITGui.pincode3.getText(), BITGui.owner1.getText(), 0,
+						BITGui.pincode3.getText(), BITGui.owner1.getText(),
+						Integer.valueOf(BITGui.closetimer1.getText()),
 						BITGui.listOfCoOwners.getText(), "", block.getTypeId(),
 						"");
+				
 			} else if ((BITGui.BITButtons.get(uuid) == "setPincodeCancel")) {
 				BITGui.popupSetPincode.close();
 				BITGui.popupSetPincode.removeWidgets(plugin);
+				
 			} else if ((BITGui.BITButtons.get(uuid) == "setPincodeRemove")) {
 				BITGui.popupSetPincode.close();
 				BITGui.popupSetPincode.removeWidgets(plugin);
 				if (BITDigiLock.isLocked(block)) {
 					digilock.RemoveDigiLock(sPlayer);
 				}
+				
 			} else if ((BITGui.BITButtons.get(uuid) == "OwnerButton")) {
 
 			} else if ((BITGui.BITButtons.get(uuid) == "CoOwnerButton")) {

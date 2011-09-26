@@ -29,8 +29,9 @@ public class BITInputListener extends InputListener {
 				if (G333Permissions.hasPerm(sPlayer, "sortinventory.use",
 						G333Permissions.NOT_QUIET)) {
 					BITPlayer.sortinventory(sPlayer, event.getScreenType());
-					// if (G333Config.g333Config.SORT_DISPLAYSORTARCHIEVEMENT)
-					G333Messages.sendNotification(sPlayer, "Items sorted.");
+					if (G333Config.g333Config.SORT_DISPLAYSORTARCHIEVEMENT) {
+						G333Messages.sendNotification(sPlayer, "Items sorted.");
+					}
 				}
 			}
 		}
@@ -48,9 +49,9 @@ public class BITInputListener extends InputListener {
 									sChest.getLargestInventory());
 							G333Inventory.sortPlayerInventoryItems(sPlayer);
 						}
-						// if
-						// (G333Config.g333Config.SORT_DISPLAYSORTARCHIEVEMENT)
-						G333Messages.sendNotification(sPlayer, "Chest sorted.");
+						if (G333Config.g333Config.SORT_DISPLAYSORTARCHIEVEMENT) {
+							G333Messages.sendNotification(sPlayer, "Chest sorted.");
+						}
 					}
 				} else if (keypressed.equals("KEY_ESCAPE")) {
 
@@ -60,7 +61,9 @@ public class BITInputListener extends InputListener {
 			// targetblock is NOT a chest, so it must be SpoutBackPack
 			{
 				if (keypressed.equals(G333Config.g333Config.LIBRARY_SORTKEY)) {
-					G333Messages.sendNotification(sPlayer, "Items sorted.");
+					if (G333Config.g333Config.SORT_DISPLAYSORTARCHIEVEMENT) {
+						G333Messages.sendNotification(sPlayer, "Items sorted.");
+					}
 					BITPlayer
 							.sortinventory(sPlayer, ScreenType.CHEST_INVENTORY);
 				}
@@ -70,9 +73,10 @@ public class BITInputListener extends InputListener {
 		// GAME_SCREEN
 		else if (screentype == ScreenType.GAME_SCREEN) {
 			if (keypressed.equals(G333Config.g333Config.LIBRARY_LOCKKEY)) {
-				if (BITDigiLock.isLocked(targetblock) && !BITDigiLock.isLockable(targetblock)) {
-					BITDigiLock digilock = BITDigiLock.loadDigiLock(
-							sPlayer, targetblock);
+				if (BITDigiLock.isLocked(targetblock)
+						&& !BITDigiLock.isLockable(targetblock)) {
+					BITDigiLock digilock = BITDigiLock.loadDigiLock(sPlayer,
+							targetblock);
 					digilock.RemoveDigiLock(sPlayer);
 					sPlayer.sendMessage("Warning: You had an DigiLock on a illegal block. The DigiLock has been removed.");
 					sPlayer.sendMessage("Make a ticket and tell the developer how it happened on:");
@@ -142,11 +146,13 @@ public class BITInputListener extends InputListener {
 		// FURNACE_INVENTORY SCREEN
 		else if (screentype == ScreenType.FURNACE_INVENTORY) {
 			if (keypressed.equals(G333Config.g333Config.LIBRARY_SORTKEY)) {
-					if (G333Permissions.hasPerm(sPlayer, "sortinventory.use",
-							G333Permissions.NOT_QUIET)) {
-						G333Inventory.sortPlayerInventoryItems(sPlayer);
-					}
+				if (G333Permissions.hasPerm(sPlayer, "sortinventory.use",
+						G333Permissions.NOT_QUIET)) {
+					G333Inventory.sortPlayerInventoryItems(sPlayer);
+				}
+				if (G333Config.g333Config.SORT_DISPLAYSORTARCHIEVEMENT) {
 					G333Messages.sendNotification(sPlayer, "Inventory sorted.");
+				}
 			} else if (keypressed.equals("KEY_ESCAPE")) {
 				// sPlayer.closeActiveWindow();
 			}
@@ -156,14 +162,14 @@ public class BITInputListener extends InputListener {
 			Dispenser dispenser = (Dispenser) targetblock.getState();
 			Inventory inventory = dispenser.getInventory();
 			if (keypressed.equals(G333Config.g333Config.LIBRARY_SORTKEY)) {
-				//if (targetblock.getType() == Material.DISPENSER) {
-					if (G333Permissions.hasPerm(sPlayer, "sortinventory.use",
-							G333Permissions.NOT_QUIET)) {
-						G333Inventory.sortInventoryItems(sPlayer, inventory);
-						G333Inventory.sortPlayerInventoryItems(sPlayer);
-					}
+				if (G333Permissions.hasPerm(sPlayer, "sortinventory.use",
+						G333Permissions.NOT_QUIET)) {
+					G333Inventory.sortInventoryItems(sPlayer, inventory);
+					G333Inventory.sortPlayerInventoryItems(sPlayer);
+				}
+				if (G333Config.g333Config.SORT_DISPLAYSORTARCHIEVEMENT) {
 					G333Messages.sendNotification(sPlayer, "Inventory sorted.");
-				//}
+				}
 			} else if (keypressed.equals("KEY_ESCAPE")) {
 				// sPlayer.closeActiveWindow();
 			}

@@ -14,5 +14,11 @@
 	<classpathentry kind="lib" path="C:/Private/Dropbox/Libraries/Newest/SpoutAPI.jar"/>
 	<classpathentry kind="lib" path="C:/Private/Dropbox/Libraries/Newest/Spout.jar"/>
 	<classpathentry kind="lib" path="C:/Private/Dropbox/Libraries/Newest/Register.jar"/>
+	<classpathentry kind="lib" path="C:/Private/Dropbox/lib/BOSEconomy7.jar"/>
+	<classpathentry kind="lib" path="C:/Private/Dropbox/lib/Essentials.jar"/>
+	<classpathentry kind="lib" path="C:/Private/Dropbox/lib/iCo4.jar"/>
+	<classpathentry kind="lib" path="C:/Private/Dropbox/lib/iCo5.jar"/>
+	<classpathentry kind="lib" path="C:/Private/Dropbox/lib/iCo6.jar"/>
+	<classpathentry kind="lib" path="C:/Private/Dropbox/lib/MultiCurrency.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

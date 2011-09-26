@@ -36,7 +36,7 @@ public class BITSpoutListener extends SpoutListener {
 			// ************************************
 			if (BITGui.BITButtons.get(uuid) == "getPincodeUnlock") {
 				BITGui.popupGetPincode.close();
-				if ((digilock.pincode.equals(BITGui.pincode2.getText()) && G333Permissions
+				if ((digilock.getPincode().equals(BITGui.pincode2.getText()) && G333Permissions
 						.hasPerm(sPlayer, "digilock.use", G333Permissions.QUIET))
 						|| G333Permissions.hasPerm(sPlayer, "digilock.admin",
 								G333Permissions.QUIET)) {

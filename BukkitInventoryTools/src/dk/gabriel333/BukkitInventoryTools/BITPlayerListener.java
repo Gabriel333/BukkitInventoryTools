@@ -37,7 +37,6 @@ public class BITPlayerListener extends PlayerListener {
 				if (G333Permissions.hasPerm(sPlayer, "digilock.use",
 						G333Permissions.NOT_QUIET)) {
 					if (BITDigiLock.isChest(block)) {
-
 						if (digilock.getPincode().equals("")
 								|| digilock.getPincode().equals("fingerprint")) {
 							// OPEN CHEST BY FINGERPRINT / NAME
@@ -54,6 +53,7 @@ public class BITPlayerListener extends PlayerListener {
 								event.setCancelled(true);
 							}
 						} else {
+							event.setCancelled(true);
 							if (sPlayer.isSpoutCraftEnabled()) {
 								BITGui.getPincode(sPlayer, block);
 								SpoutChest sChest = (SpoutChest) block
@@ -62,15 +62,14 @@ public class BITPlayerListener extends PlayerListener {
 								if (digilock.getPincode().equals(
 										BITGui.pincode2.getText())) {
 									sPlayer.openInventoryWindow(inv);
-								} else {
-									// sPlayer.closeActiveWindow();
-									event.setCancelled(true);
-								}
+								} //else {
+									//event.setCancelled(true);
+							//	}
 							} else {
+								//event.setCancelled(true);
 								sPlayer.sendMessage("Locked with Digilock.");
 							}
 						}
-
 					}
 					// HANDLING THE DOOR
 					else if (BITDigiLock.isDoor(block)) {
@@ -158,7 +157,7 @@ public class BITPlayerListener extends PlayerListener {
 					}
 					// HANDLING FURNACE
 					else if (block.getType().equals(Material.FURNACE)) {
-						if (sPlayer.isSpoutCraftEnabled()) {
+						//if (sPlayer.isSpoutCraftEnabled()) {
 							if (digilock.getPincode().equals("")
 									|| digilock.getPincode().equals(
 											"fingerprint")) {
@@ -180,11 +179,11 @@ public class BITPlayerListener extends PlayerListener {
 											+ sPlayer.getName());
 								}
 							}
-						} else {
-							sPlayer.sendMessage("Digilock'ed by "
-									+ sPlayer.getName());
-							event.setCancelled(true);
-						}
+						//} else {
+						//	sPlayer.sendMessage("Digilock'ed by "
+						//			+ sPlayer.getName());
+						//	event.setCancelled(true);
+						//}
 					}
 					// HANDLING LEVER
 					else if (block.getType().equals(Material.LEVER)) {

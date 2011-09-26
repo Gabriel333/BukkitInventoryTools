@@ -2,10 +2,12 @@ package dk.gabriel333.BukkitInventoryTools;
 
 import org.bukkit.Material;
 import org.bukkit.block.Block;
+import org.bukkit.block.Dispenser;
 
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
+import org.bukkit.inventory.Inventory;
 
 import org.getspout.spoutapi.block.SpoutChest;
 import org.getspout.spoutapi.gui.ScreenType;
@@ -26,19 +28,28 @@ public class BITCommandSort implements CommandExecutor {
 		if (BIT.isPlayer(sender)) {
 			if (G333Permissions.hasPerm(sender, "sortinventory.use",
 					G333Permissions.NOT_QUIET)) {
-				// G333Messages.showInfo("Target is:"+targetblock.getType());
+				
 				if (targetblock.getType() == Material.CHEST) {
 					SpoutChest sChest = (SpoutChest) targetblock.getState();
 					G333Inventory.sortInventoryItems(sPlayer,
 							sChest.getLargestInventory());
-					//if (G333Config.g333Config.SORT_DISPLAYSORTARCHIEVEMENT) 
-						G333Messages.sendNotification(sPlayer, "Chest sorted.");
-					
+					G333Messages.sendNotification(sPlayer, "Chest sorted.");
+
+				} else if (targetblock.getType() == Material.DISPENSER) {
+					Dispenser dispenser = (Dispenser) targetblock.getState();
+					Inventory inventory = dispenser.getInventory();
+					G333Inventory.sortInventoryItems(sPlayer, inventory);
+					G333Inventory.sortPlayerInventoryItems(sPlayer);
+					G333Messages.sendNotification(sPlayer, "Items sorted.");
+
+				} else if (targetblock.getType() == Material.FURNACE) {
+					G333Inventory.sortPlayerInventoryItems(sPlayer);
+					G333Messages.sendNotification(sPlayer, "Items sorted.");
+                
 				} else {
+					//player inventory
 					BITPlayer.sortinventory(sPlayer, ScreenType.CHAT_SCREEN);
-					//if (G333Config.g333Config.SORT_DISPLAYSORTARCHIEVEMENT) 
-						G333Messages.sendNotification(sPlayer, "Items sorted.");
-					
+					G333Messages.sendNotification(sPlayer, "Items sorted.");
 				}
 			}
 			return true;

@@ -1,5 +1,8 @@
 package dk.gabriel333.BukkitInventoryTools;
 
+import org.bukkit.Material;
+import org.bukkit.block.Dispenser;
+import org.bukkit.block.Furnace;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -93,6 +96,16 @@ public class BITCommandDigiLock implements CommandExecutor {
 							sPlayer.openInventoryWindow(inv);
 						} else if (BITDigiLock.isDoor(digilock.getBlock())) {
 							BITDigiLock.openDoor(sPlayer, block);
+						} else if (digilock.getBlock().getType()==Material.FURNACE){
+							Furnace furnace = (Furnace) block.getState();
+							Inventory inv = furnace.getInventory();
+							sPlayer.openInventoryWindow(inv);
+						} else if (digilock.getBlock().getType()==Material.DISPENSER){
+							Dispenser dispenser = (Dispenser) block.getState();
+							Inventory inv = dispenser.getInventory();
+							sPlayer.openInventoryWindow(inv);
+						} else if (digilock.getBlock().getType()==Material.TRAP_DOOR){
+							BITDigiLock.openTrapdoor(sPlayer, block);
 						}
 					} else {
 						sPlayer.sendMessage("wrong pincode!");

@@ -98,7 +98,6 @@ public class BITInputListener extends InputListener {
 									"You are the owner");
 							BITGui.setPincode(sPlayer, targetblock);
 						} else {
-
 							G333Messages.sendNotification(sPlayer,
 									"Locked with Digilock");
 							if (G333Config.g333Config.DEBUG_PERMISSIONS) {
@@ -131,12 +130,10 @@ public class BITInputListener extends InputListener {
 								}
 								sPlayer.sendMessage("Install SpoutCraft or use command /dlock to create lock.");
 							}
-
 						} else {
 							G333Messages.sendNotification(sPlayer,
 									"You cant lock doubledoors");
 						}
-
 					}
 				}
 			}
@@ -144,17 +141,12 @@ public class BITInputListener extends InputListener {
 
 		// FURNACE_INVENTORY SCREEN
 		else if (screentype == ScreenType.FURNACE_INVENTORY) {
-			//Furnace furnace = (Furnace) targetblock.getState();
-			//Inventory inventory = furnace.getInventory();
 			if (keypressed.equals(G333Config.g333Config.LIBRARY_SORTKEY)) {
-				//if (targetblock.getType() == Material.FURNACE) {
 					if (G333Permissions.hasPerm(sPlayer, "sortinventory.use",
 							G333Permissions.NOT_QUIET)) {
-						//G333Inventory.sortInventoryItems(sPlayer, inventory);
 						G333Inventory.sortPlayerInventoryItems(sPlayer);
 					}
 					G333Messages.sendNotification(sPlayer, "Inventory sorted.");
-				//}
 			} else if (keypressed.equals("KEY_ESCAPE")) {
 				// sPlayer.closeActiveWindow();
 			}

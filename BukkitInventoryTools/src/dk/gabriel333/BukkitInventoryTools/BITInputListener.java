@@ -69,19 +69,13 @@ public class BITInputListener extends InputListener {
 		// GAME_SCREEN
 		else if (screentype == ScreenType.GAME_SCREEN) {
 			if (keypressed.equals(G333Config.g333Config.LIBRARY_LOCKKEY)) {
-				if (G333Permissions.hasPerm(sPlayer, "digilock.create",
-						G333Permissions.NOT_QUIET)
-						|| G333Permissions.hasPerm(sPlayer, "digilock.admin",
-								G333Permissions.QUIET)) {
-					if (G333Config.g333Config.DEBUG_PERMISSIONS) {
-						sPlayer.sendMessage(ChatColor.GREEN
-								+ "0a) BITInputlistener: You have permission digilock.create");
-					}
-				} else {
-					if (G333Config.g333Config.DEBUG_PERMISSIONS) {
-						sPlayer.sendMessage(ChatColor.GREEN
-								+ "0b) BITInputlistener: You DONT have permission digilock.create");
-					}
+				if (BITDigiLock.isLocked(targetblock) && !BITDigiLock.isLockable(targetblock)) {
+					BITDigiLock digilock = BITDigiLock.loadDigiLock(
+							sPlayer, targetblock);
+					digilock.RemoveDigiLock(sPlayer);
+					sPlayer.sendMessage("Warning: You had an DigiLock on a illegal block. The DigiLock has been removed.");
+					sPlayer.sendMessage("Make a ticket and tell the developer how it happened on:");
+					sPlayer.sendMessage("http://dev.bukkit.org/server-mods/bukkitinventorytools/tickets/");
 				}
 				if (BITDigiLock.isLockable(targetblock)) {
 					if (BITDigiLock.isLocked(targetblock)) {

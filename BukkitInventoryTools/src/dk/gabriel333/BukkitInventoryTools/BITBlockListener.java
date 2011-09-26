@@ -50,9 +50,7 @@ public class BITBlockListener extends BlockListener {
 		if (event.isCancelled())
 			return;
 		SpoutBlock block = (SpoutBlock) event.getBlock();
-		SpoutPlayer sPlayer = (SpoutPlayer) event.getPlayer();
 		if (BITDigiLock.isLocked(block)) {
-			sPlayer.damage(1);
 			event.setCancelled(true);
 		} 
 	}

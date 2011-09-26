@@ -46,6 +46,7 @@ public class BITInputListener extends InputListener {
 								"sortinventory.use", G333Permissions.NOT_QUIET)) {
 							G333Inventory.sortInventoryItems(sPlayer,
 									sChest.getLargestInventory());
+							G333Inventory.sortPlayerInventoryItems(sPlayer);
 						}
 						// if
 						// (G333Config.g333Config.SORT_DISPLAYSORTARCHIEVEMENT)

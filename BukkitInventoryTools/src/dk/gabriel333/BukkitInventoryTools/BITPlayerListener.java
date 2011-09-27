@@ -62,11 +62,11 @@ public class BITPlayerListener extends PlayerListener {
 								if (digilock.getPincode().equals(
 										BITGui.pincode2.getText())) {
 									sPlayer.openInventoryWindow(inv);
-								} //else {
-									//event.setCancelled(true);
-							//	}
+								} // else {
+									// event.setCancelled(true);
+								// }
 							} else {
-								//event.setCancelled(true);
+								// event.setCancelled(true);
 								sPlayer.sendMessage("Locked with Digilock.");
 							}
 						}
@@ -79,6 +79,11 @@ public class BITPlayerListener extends PlayerListener {
 							if (digilock.isOwner(sPlayer)
 									|| digilock.isCoowner(sPlayer)) {
 								BITDigiLock.openDigiLockSound(block);
+								if (BITDigiLock.isDoorOpen(sPlayer, block)) {
+									BITDigiLock.closeDoor(sPlayer, block);
+								} else {
+									BITDigiLock.openDoor(sPlayer, block);
+								}
 								G333Messages.sendNotification(sPlayer,
 										"Used with fingerprint");
 							} else {
@@ -109,6 +114,11 @@ public class BITPlayerListener extends PlayerListener {
 							if (digilock.isOwner(sPlayer)
 									|| digilock.isCoowner(sPlayer)) {
 								BITDigiLock.openDigiLockSound(block);
+								if (BITDigiLock.isTrapdoorOpen(sPlayer, block)) {
+									BITDigiLock.closeTrapdoor(sPlayer, block);
+								} else {
+									BITDigiLock.openTrapdoor(sPlayer, block);
+								}
 								G333Messages.sendNotification(sPlayer,
 										"Used with fingerprint");
 							} else {
@@ -157,33 +167,32 @@ public class BITPlayerListener extends PlayerListener {
 					}
 					// HANDLING FURNACE
 					else if (block.getType().equals(Material.FURNACE)) {
-						//if (sPlayer.isSpoutCraftEnabled()) {
-							if (digilock.getPincode().equals("")
-									|| digilock.getPincode().equals(
-											"fingerprint")) {
-								// USE FURNACE BY FINGERPRINT (playername)
-								if (digilock.isOwner(sPlayer)
-										|| digilock.isCoowner(sPlayer)) {
-									G333Messages.sendNotification(sPlayer,
-											"Used with fingerprint");
-								} else {
-									sPlayer.sendMessage("Your fingerprint does not match the DigiLock");
-									event.setCancelled(true);
-								}
+						// if (sPlayer.isSpoutCraftEnabled()) {
+						if (digilock.getPincode().equals("")
+								|| digilock.getPincode().equals("fingerprint")) {
+							// USE FURNACE BY FINGERPRINT (playername)
+							if (digilock.isOwner(sPlayer)
+									|| digilock.isCoowner(sPlayer)) {
+								G333Messages.sendNotification(sPlayer,
+										"Used with fingerprint");
 							} else {
+								sPlayer.sendMessage("Your fingerprint does not match the DigiLock");
 								event.setCancelled(true);
-								if (sPlayer.isSpoutCraftEnabled()) {
-									BITGui.getPincode(sPlayer, block);
-								} else {
-									sPlayer.sendMessage("Digilock'ed by "
-											+ sPlayer.getName());
-								}
 							}
-						//} else {
-						//	sPlayer.sendMessage("Digilock'ed by "
-						//			+ sPlayer.getName());
-						//	event.setCancelled(true);
-						//}
+						} else {
+							event.setCancelled(true);
+							if (sPlayer.isSpoutCraftEnabled()) {
+								BITGui.getPincode(sPlayer, block);
+							} else {
+								sPlayer.sendMessage("Digilock'ed by "
+										+ sPlayer.getName());
+							}
+						}
+						// } else {
+						// sPlayer.sendMessage("Digilock'ed by "
+						// + sPlayer.getName());
+						// event.setCancelled(true);
+						// }
 					}
 					// HANDLING LEVER
 					else if (block.getType().equals(Material.LEVER)) {

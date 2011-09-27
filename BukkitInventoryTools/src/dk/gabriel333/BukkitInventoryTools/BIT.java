@@ -14,9 +14,9 @@ import org.bukkit.plugin.java.JavaPlugin;
 
 import com.alta189.sqlLibrary.MySQL.mysqlCore;
 import com.alta189.sqlLibrary.SQLite.sqlCore;
-//import com.nijikokun.register.payment.Method;
-//import com.nijikokun.register.payment.Methods;
-
+import com.nijikokun.register.payment.Method;
+//import com.nijikokun.register.payment.Method.MethodAccount;
+import com.nijikokun.register.payment.Methods;
 import de.Keyle.MyWolf.MyWolfPlugin;
 import dk.gabriel333.Library.G333Config;
 import dk.gabriel333.Library.G333Messages;
@@ -26,11 +26,13 @@ import me.neatmonster.spoutbackpack.SBHandler;
 
 public class BIT extends JavaPlugin {
 
-	public static BIT plugin;
-
+	public BIT plugin;
+	
 	public static Boolean spout = false;
 
-	public static Boolean useRegister = false;
+	// Hook into register
+	public Methods Methods;
+	public Method Method;
 
 	// Hook into SpoutBackpack
 	public static SBHandler spoutBackpackHandler; // The Backpack
@@ -59,7 +61,7 @@ public class BIT extends JavaPlugin {
 			G333Config.setupConfig(this);
 			setupSpout();
 			setupSQL();
-			setupEconomy();
+			setupRegister();
 			setupSpoutBackpack();
 			setupMyWolf();
 			registerEvents();
@@ -125,8 +127,16 @@ public class BIT extends JavaPlugin {
 		}
 	}
 
-	private void setupEconomy() {
-
+	private void setupRegister() {
+		//Methods.setMethod(plugin); 
+		//Methods.createMethod(plugin);
+		/*Method = Methods.getMethod();
+		if (Methods.getMethod() != null)
+			G333Messages.showInfo("Register enabled: " + Method.getName()
+					+ " v" + Method.getVersion() + ").");
+		else
+			G333Messages.showInfo("Register disabled.");
+			*/
 	}
 
 	public static boolean isPlayer(CommandSender sender) {
@@ -264,7 +274,5 @@ public class BIT extends JavaPlugin {
 			}
 		}
 	}
-
-
 
 }

@@ -10,7 +10,6 @@ import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 
 import org.bukkit.material.Door;
-import org.bukkit.plugin.Plugin;
 import org.getspout.spoutapi.SpoutManager;
 import org.getspout.spoutapi.block.SpoutBlock;
 import org.getspout.spoutapi.block.SpoutChest;
@@ -24,9 +23,9 @@ public class BITDigiLock {
 
 	private BIT plugin;
 
-	public BITDigiLock(Plugin plugin) {
-		plugin = this.plugin;
-	}
+	//public BITDigiLock(Plugin plugin) {
+	//	plugin = this.plugin;
+	//}
 
 	protected SpoutBlock block;
 	protected String pincode;
@@ -189,13 +188,13 @@ public class BITDigiLock {
 	}
 
 	public boolean isCoowner(SpoutPlayer sPlayer) {
-		if (coOwners.contains(sPlayer.getName()))
+		if (coOwners.toLowerCase().contains(sPlayer.getName().toLowerCase()))
 			return true;
 		return false;
 	}
 
 	public boolean isOwner(SpoutPlayer sPlayer) {
-		if (owner.equals(sPlayer.getName()))
+		if (owner.toLowerCase().equals(sPlayer.getName().toLowerCase()))
 			return true;
 		return false;
 	}
@@ -205,7 +204,7 @@ public class BITDigiLock {
 	}
 
 	public boolean removeCoowner(SpoutPlayer sPlayer) {
-		if (coOwners.contains(sPlayer.getName())) {
+		if (coOwners.toLowerCase().contains(sPlayer.getName().toLowerCase())) {
 			coOwners = coOwners.replace("," + sPlayer.getName(), "");
 			return true;
 		}
@@ -521,30 +520,35 @@ public class BITDigiLock {
 		}
 	}
 
-	public static void openTrapdoor(SpoutPlayer sPlayer, SpoutBlock block) {
-		openDigiLockSound(block);
+	public static void openTrapdoor(SpoutPlayer sPlayer, SpoutBlock sBlock) {
+		openDigiLockSound(sBlock);
 		if (G333Config.g333Config.DEBUG_DOOR)
 			sPlayer.sendMessage("The trapdoor is closed. OpenDoor");
-		block.setData((byte) (block.getState().getData().getData() | 4));
+		sBlock.setData((byte) (sBlock.getState().getData().getData() | 4));
+		BITDigiLock digilock = BITDigiLock.loadDigiLock(sPlayer, sBlock);
+		if (digilock.getClosetimer() > 0) {
+			BITDigiLock.scheduleCloseTrapdoor(sPlayer, sBlock,
+					digilock.getClosetimer());
+		}
 	}
 
-	public static void closeTrapdoor(SpoutPlayer sPlayer, SpoutBlock block) {
-		block.setData((byte) ((block.getState().getData().getData() | 4) ^ 4));
+	public static void closeTrapdoor(SpoutPlayer sPlayer, SpoutBlock sBlock) {
+		sBlock.setData((byte) ((sBlock.getState().getData().getData() | 4) ^ 4));
 		if (G333Config.g333Config.DEBUG_DOOR)
 			sPlayer.sendMessage("Close the door.");
 	}
 
-	public static void toggleTrapdoor(SpoutPlayer sPlayer, SpoutBlock block) {
-		block.setData((byte) (block.getState().getData().getData() ^ 4));
+	public static void toggleTrapdoor(SpoutPlayer sPlayer, SpoutBlock sBlock) {
+		sBlock.setData((byte) (sBlock.getState().getData().getData() ^ 4));
 	}
 
-	public static void openDigiLockSound(SpoutBlock block) {
+	public static void openDigiLockSound(SpoutBlock sBlock) {
 		SpoutManager
 				.getSoundManager()
 				.playGlobalCustomSoundEffect(
-						BIT.plugin,
+						plugin,
 						"http://dl.dropbox.com/u/36067670/BukkitInventoryTools/Sounds/Digilock.wav",
-						true, block.getLocation(), 5);
+						true, sBlock.getLocation(), 5);
 	}
 
 	public static int scheduleCloseDoor(final SpoutPlayer sPlayer,
@@ -552,7 +556,7 @@ public class BITDigiLock {
 		int fs = closetimer * 20;
 		// 20 ticks / second
 		int taskID = BIT.plugin.getServer().getScheduler()
-				.scheduleSyncDelayedTask(BIT.plugin, new Runnable() {
+				.scheduleSyncDelayedTask(plugin, new Runnable() {
 					public void run() {
 						SpoutBlock sb = sBlock;
 						SpoutPlayer sp = sPlayer;
@@ -561,6 +565,26 @@ public class BITDigiLock {
 						if (BITDigiLock.isDoor(sb)) {
 							if (BITDigiLock.isDoorOpen(sp, sb))
 								BITDigiLock.closeDoor(sp, sb);
+						}
+					}
+				}, fs);
+		return taskID;
+	}
+	
+	public static int scheduleCloseTrapdoor(final SpoutPlayer sPlayer,
+			final SpoutBlock sBlock, final int closetimer) {
+		int fs = closetimer * 20;
+		// 20 ticks / second
+		int taskID = BIT.plugin.getServer().getScheduler()
+				.scheduleSyncDelayedTask(plugin, new Runnable() {
+					public void run() {
+						SpoutBlock sb = sBlock;
+						SpoutPlayer sp = sPlayer;
+						if (G333Config.g333Config.DEBUG_DOOR)
+							sp.sendMessage("Autoclosing the trapdoor in "+closetimer+" seconds");
+						if (sBlock.getType()==Material.TRAP_DOOR) {
+							if (BITDigiLock.isTrapdoorOpen(sp, sb))
+								BITDigiLock.closeTrapdoor(sp, sb);
 						}
 					}
 				}, fs);

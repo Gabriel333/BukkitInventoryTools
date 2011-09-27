@@ -28,8 +28,8 @@ public class BITSpoutListener extends SpoutListener {
 			Button button = ((ButtonClickEvent) event).getButton();
 			UUID uuid = button.getId();
 			SpoutPlayer sPlayer = ((ButtonClickEvent) event).getPlayer();
-			SpoutBlock block = (SpoutBlock) sPlayer.getTargetBlock(null, 4);
-			BITDigiLock digilock = BITDigiLock.loadDigiLock(sPlayer, block);
+			SpoutBlock sBlock = (SpoutBlock) sPlayer.getTargetBlock(null, 4);
+			BITDigiLock digilock = BITDigiLock.loadDigiLock(sPlayer, sBlock);
 
 			// ************************************
 			// Buttons in getPincodeWindow
@@ -41,7 +41,7 @@ public class BITSpoutListener extends SpoutListener {
 						|| G333Permissions.hasPerm(sPlayer, "digilock.admin",
 								G333Permissions.QUIET)) {
 					if (BITDigiLock.isChest(digilock.getBlock())) {
-						SpoutChest sChest = (SpoutChest) block.getState();
+						SpoutChest sChest = (SpoutChest) sBlock.getState();
 						Inventory inv = sChest.getLargestInventory();
 						sPlayer.openInventoryWindow(inv);
 						
@@ -53,12 +53,12 @@ public class BITSpoutListener extends SpoutListener {
 					} else if (digilock.getBlock().getType() == Material.STONE_BUTTON) {
 
 					} else if (digilock.getBlock().getType() == Material.DISPENSER) {
-						Dispenser dispenser = (Dispenser) block.getState();
+						Dispenser dispenser = (Dispenser) sBlock.getState();
 						Inventory inv = dispenser.getInventory();
 						sPlayer.openInventoryWindow(inv);
 
 					} else if (digilock.getBlock().getType() == Material.FURNACE) {
-						Furnace furnace = (Furnace) block.getState();
+						Furnace furnace = (Furnace) sBlock.getState();
 						Inventory inv = furnace.getInventory();
 						sPlayer.openInventoryWindow(inv);
 
@@ -67,7 +67,7 @@ public class BITSpoutListener extends SpoutListener {
 					} else if (digilock.getBlock().getType() == Material.TRAP_DOOR) {
 						BITDigiLock.openTrapdoor(sPlayer, digilock.getBlock());
 						
-					} else if (BITDigiLock.isSign(block)) {
+					} else if (BITDigiLock.isSign(sBlock)) {
 
 					}
 				} else {
@@ -85,6 +85,7 @@ public class BITSpoutListener extends SpoutListener {
 			} else if (BITGui.BITButtons.get(uuid) == "getPincodeCancel") {
 				BITGui.popupGetPincode.close();
 				BITGui.popupGetPincode.removeWidgets(plugin);
+				BITGui.cleanupGetPincode(sPlayer, sBlock);
 			}
 
 			// ************************************
@@ -93,16 +94,15 @@ public class BITSpoutListener extends SpoutListener {
 			else if (BITGui.BITButtons.get(uuid) == "setPincodeLock"
 					&& G333Permissions.hasPerm(sPlayer, "digilock.create",
 							G333Permissions.QUIET)) {
-				BITGui.popupSetPincode.close();
-				BITGui.popupSetPincode.removeWidgets(plugin);
-				if (BITGui.closetimer1.getText()==""){
-					BITGui.closetimer1.setText("0");
-				}
-				BITDigiLock.SaveDigiLock(sPlayer, block,
+				if (validateSetPincodeFields(sPlayer)){
+					BITGui.popupSetPincode.close();
+					BITGui.popupSetPincode.removeWidgets(plugin);
+					  BITDigiLock.SaveDigiLock(sPlayer, sBlock,
 						BITGui.pincode3.getText(), BITGui.owner1.getText(),
 						Integer.valueOf(BITGui.closetimer1.getText()),
-						BITGui.listOfCoOwners.getText(), "", block.getTypeId(),
+						BITGui.listOfCoOwners.getText(), "", sBlock.getTypeId(),
 						"");
+				}
 				
 			} else if ((BITGui.BITButtons.get(uuid) == "setPincodeCancel")) {
 				BITGui.popupSetPincode.close();
@@ -111,7 +111,7 @@ public class BITSpoutListener extends SpoutListener {
 			} else if ((BITGui.BITButtons.get(uuid) == "setPincodeRemove")) {
 				BITGui.popupSetPincode.close();
 				BITGui.popupSetPincode.removeWidgets(plugin);
-				if (BITDigiLock.isLocked(block)) {
+				if (BITDigiLock.isLocked(sBlock)) {
 					digilock.RemoveDigiLock(sPlayer);
 				}
 				
@@ -130,5 +130,17 @@ public class BITSpoutListener extends SpoutListener {
 							+ BITGui.BITButtons.get(uuid));
 			}
 		}
+	}
+	
+	private boolean validateSetPincodeFields(SpoutPlayer sPlayer) {
+		int closetimer = Integer.valueOf(BITGui.closetimer1.getText());
+		if (BITGui.closetimer1.getText()==""){
+			BITGui.closetimer1.setText("0");
+		}
+		if (closetimer<0 || closetimer> 3600) {
+			G333Messages.sendNotification(sPlayer, "Error in closetimer");
+			return false;
+		} 
+		return true;
 	}
 }

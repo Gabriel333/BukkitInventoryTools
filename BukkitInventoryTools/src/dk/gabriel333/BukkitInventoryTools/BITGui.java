@@ -50,7 +50,7 @@ public class BITGui {
 
 		pincode2.setText("");
 		pincode2.setTooltip("Enter the pincode and press unlock.");
-		pincode2.setCursorPosition(1);
+		pincode2.setCursorPosition(1).setMaximumCharacters(10);
 		pincode2.setX(x).setY(y);
 		pincode2.setHeight(height).setWidth(width);
 		popupGetPincode.attachWidget(plugin, pincode2);
@@ -169,7 +169,7 @@ public class BITGui {
 		BITButtons.put(ownerButton.getId(), "OwnerButton");
 		// owner1
 		owner1.setTooltip("Owner of the DigiLock");
-		owner1.setCursorPosition(1);
+		owner1.setCursorPosition(1).setMaximumCharacters(20);
 		owner1.setX(x + w1 + 1).setY(y);
 		owner1.setHeight(height).setWidth(w2);
 		popupSetPincode.attachWidget(plugin, owner1);
@@ -184,7 +184,7 @@ public class BITGui {
 		BITButtons.put(closetimerButton.getId(), "ClosetimerButton");
 		// closetimer1
 		closetimer1.setTooltip("Autoclosing time in sec.");
-		closetimer1.setCursorPosition(1);
+		closetimer1.setCursorPosition(1).setMaximumCharacters(4);
 		closetimer1.setX(x +170 + w1 + 1).setY(y);
 		closetimer1.setHeight(height).setWidth(w2);
 		popupSetPincode.attachWidget(plugin, closetimer1);
@@ -213,7 +213,7 @@ public class BITGui {
 		w2 = 80;
 		// pincode3
 		pincode3.setTooltip("Enter/change the pincode...");
-		pincode3.setCursorPosition(1);
+		pincode3.setCursorPosition(1).setMaximumCharacters(10);
 		pincode3.setX(x).setY(y);
 		pincode3.setHeight(height).setWidth(w1);
 		popupSetPincode.attachWidget(plugin, pincode3);
@@ -256,6 +256,14 @@ public class BITGui {
 		popupSetPincode.setTransparent(true);
 		sPlayer.getMainScreen().attachPopupScreen(popupSetPincode);
 
+	}
+	
+	public static void cleanupSetPincode(SpoutPlayer sPlayer, SpoutBlock block) {
+		sPlayer.getMainScreen().removeWidget(popupSetPincode);
+	}
+	
+	public static void cleanupGetPincode(SpoutPlayer sPlayer, SpoutBlock block) {
+		sPlayer.getMainScreen().removeWidget(popupGetPincode);
 	}
 
 }

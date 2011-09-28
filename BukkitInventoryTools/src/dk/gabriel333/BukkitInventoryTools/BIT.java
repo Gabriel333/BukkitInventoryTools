@@ -15,7 +15,6 @@ import org.bukkit.plugin.java.JavaPlugin;
 import com.alta189.sqlLibrary.MySQL.mysqlCore;
 import com.alta189.sqlLibrary.SQLite.sqlCore;
 import com.nijikokun.register.payment.Method;
-//import com.nijikokun.register.payment.Method.MethodAccount;
 import com.nijikokun.register.payment.Methods;
 import de.Keyle.MyWolf.MyWolfPlugin;
 import dk.gabriel333.Library.G333Config;
@@ -26,7 +25,7 @@ import me.neatmonster.spoutbackpack.SBHandler;
 
 public class BIT extends JavaPlugin {
 
-	public BIT plugin;
+	public static BIT plugin;
 	
 	public static Boolean spout = false;
 
@@ -128,15 +127,15 @@ public class BIT extends JavaPlugin {
 	}
 
 	private void setupRegister() {
-		//Methods.setMethod(plugin); 
-		//Methods.createMethod(plugin);
-		/*Method = Methods.getMethod();
+		Methods.setMethod(plugin); 
+		//Methods.createMethod(BIT.plugin);
+		Method = Methods.getMethod();
 		if (Methods.getMethod() != null)
 			G333Messages.showInfo("Register enabled: " + Method.getName()
 					+ " v" + Method.getVersion() + ").");
 		else
 			G333Messages.showInfo("Register disabled.");
-			*/
+			
 	}
 
 	public static boolean isPlayer(CommandSender sender) {

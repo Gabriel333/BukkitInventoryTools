@@ -10,6 +10,7 @@ import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 
 import org.bukkit.material.Door;
+import org.bukkit.plugin.Plugin;
 import org.getspout.spoutapi.SpoutManager;
 import org.getspout.spoutapi.block.SpoutBlock;
 import org.getspout.spoutapi.block.SpoutChest;
@@ -23,9 +24,9 @@ public class BITDigiLock {
 
 	private BIT plugin;
 
-	//public BITDigiLock(Plugin plugin) {
-	//	plugin = this.plugin;
-	//}
+	public BITDigiLock(Plugin plugin) {
+		plugin = this.plugin;
+	}
 
 	protected SpoutBlock block;
 	protected String pincode;
@@ -35,8 +36,6 @@ public class BITDigiLock {
 	protected String shared;
 	protected int typeId;
 	protected String connectedTo;
-
-	// protected boolean locked = true;
 
 	/**
 	 * Constructs a new BITDigiLock
@@ -546,7 +545,7 @@ public class BITDigiLock {
 		SpoutManager
 				.getSoundManager()
 				.playGlobalCustomSoundEffect(
-						plugin,
+						BIT.plugin,
 						"http://dl.dropbox.com/u/36067670/BukkitInventoryTools/Sounds/Digilock.wav",
 						true, sBlock.getLocation(), 5);
 	}
@@ -556,7 +555,7 @@ public class BITDigiLock {
 		int fs = closetimer * 20;
 		// 20 ticks / second
 		int taskID = BIT.plugin.getServer().getScheduler()
-				.scheduleSyncDelayedTask(plugin, new Runnable() {
+				.scheduleSyncDelayedTask(BIT.plugin, new Runnable() {
 					public void run() {
 						SpoutBlock sb = sBlock;
 						SpoutPlayer sp = sPlayer;
@@ -576,7 +575,7 @@ public class BITDigiLock {
 		int fs = closetimer * 20;
 		// 20 ticks / second
 		int taskID = BIT.plugin.getServer().getScheduler()
-				.scheduleSyncDelayedTask(plugin, new Runnable() {
+				.scheduleSyncDelayedTask(BIT.plugin, new Runnable() {
 					public void run() {
 						SpoutBlock sb = sBlock;
 						SpoutPlayer sp = sPlayer;

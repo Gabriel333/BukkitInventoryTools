@@ -40,7 +40,7 @@ public class BITBlockListener extends BlockListener {
 		SpoutBlock block = (SpoutBlock) event.getBlock();
 		SpoutPlayer sPlayer = (SpoutPlayer) event.getPlayer();
 		SpoutBlock blockOnTop = block.getRelative(BlockFace.UP);
-		if (BITDigiLock.isLocked(block) ||  BITDigiLock.isLocked(blockOnTop)) {
+		if (BITDigiLock.isLocked(block) || BITDigiLock.isLocked(blockOnTop)) {
 			sPlayer.damage(10);
 			event.setCancelled(true);
 		} 

@@ -18,8 +18,6 @@ import dk.gabriel333.Library.G333Permissions;
 
 public class BITPlayerListener extends PlayerListener {
 
-	// private static BIT plugin;
-
 	public void onPlayerInteract(PlayerInteractEvent event) {
 		if (event.isCancelled())
 			return;
@@ -62,11 +60,8 @@ public class BITPlayerListener extends PlayerListener {
 								if (digilock.getPincode().equals(
 										BITGui.pincode2.getText())) {
 									sPlayer.openInventoryWindow(inv);
-								} // else {
-									// event.setCancelled(true);
-								// }
+								}
 							} else {
-								// event.setCancelled(true);
 								sPlayer.sendMessage("Locked with Digilock.");
 							}
 						}
@@ -76,6 +71,7 @@ public class BITPlayerListener extends PlayerListener {
 						if (digilock.getPincode().equals("")
 								|| digilock.getPincode().equals("fingerprint")) {
 							// TOGGLE DOOR BY FINGERPRINT / NAME
+							event.setCancelled(true);
 							if (digilock.isOwner(sPlayer)
 									|| digilock.isCoowner(sPlayer)) {
 								BITDigiLock.openDigiLockSound(block);
@@ -88,8 +84,10 @@ public class BITPlayerListener extends PlayerListener {
 										"Used with fingerprint");
 							} else {
 								sPlayer.sendMessage("Your fingerprint does not match the DigiLock");
-								BITDigiLock.closeDoor(sPlayer, block);
-								event.setCancelled(true);
+								if (BITDigiLock.isDoorOpen(sPlayer, block)) {
+									BITDigiLock.openDigiLockSound(block);
+									BITDigiLock.closeDoor(sPlayer, block);
+								}
 							}
 						} else {
 							// ASK FOR PINCODE
@@ -111,6 +109,7 @@ public class BITPlayerListener extends PlayerListener {
 						if (digilock.getPincode().equals("")
 								|| digilock.getPincode().equals("fingerprint")) {
 							// TOGGLE DOOR BY FINGERPRINT / NAME
+							event.setCancelled(true);
 							if (digilock.isOwner(sPlayer)
 									|| digilock.isCoowner(sPlayer)) {
 								BITDigiLock.openDigiLockSound(block);
@@ -123,8 +122,10 @@ public class BITPlayerListener extends PlayerListener {
 										"Used with fingerprint");
 							} else {
 								sPlayer.sendMessage("Your fingerprint does not match the DigiLock");
-								BITDigiLock.closeDoor(sPlayer, block);
-								event.setCancelled(true);
+								if (BITDigiLock.isTrapdoorOpen(sPlayer, block)) {
+									BITDigiLock.openDigiLockSound(block);
+									BITDigiLock.closeDoor(sPlayer, block);
+								}
 							}
 						} else {
 							// ASK FOR PINCODE
@@ -188,11 +189,6 @@ public class BITPlayerListener extends PlayerListener {
 										+ sPlayer.getName());
 							}
 						}
-						// } else {
-						// sPlayer.sendMessage("Digilock'ed by "
-						// + sPlayer.getName());
-						// event.setCancelled(true);
-						// }
 					}
 					// HANDLING LEVER
 					else if (block.getType().equals(Material.LEVER)) {
@@ -269,7 +265,6 @@ public class BITPlayerListener extends PlayerListener {
 								event.setCancelled(true);
 							}
 						}
-
 					}
 					// BOOKSHELF
 					else if ((block.getType().equals(Material.BOOKSHELF))) {
@@ -334,27 +329,5 @@ public class BITPlayerListener extends PlayerListener {
 			sPlayer.sendMessage("Event:" + event.getEventName() + " type:"
 					+ event.getType());
 		}
-		// BackpackPlayer player =
-		// BackpackManager.getBackpackPlayer(event.getPlayer());
-		// player.updateDialogWindow();
-		// if (player.isBackpackDisabled()) {
-		// return;
-		// }
-		// int page = Math.min(event.getNewSlot(), player.getMaxInventoryPages()
-		// - 1);
-		// int current = player.getCurrentInventoryPage();
-		// if (player.getPlayer().isSneaking() && page != current && page <
-		// player.getMaxInventoryPages()) {
-		// while (page > current) {
-		// player.nextPage();
-		// current++;
-		// }
-		// while (page < current) {
-		// player.previousPage();
-		// current--;
-		// }
-		// player.getPlayer().updateInventory();
-		// }
 	}
-
 }

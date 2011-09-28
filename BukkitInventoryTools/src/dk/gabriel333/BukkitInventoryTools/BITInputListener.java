@@ -4,6 +4,7 @@ import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.block.Dispenser;
 import org.bukkit.inventory.Inventory;
+import org.bukkit.material.Door;
 import org.getspout.spoutapi.block.SpoutBlock;
 import org.getspout.spoutapi.block.SpoutChest;
 import org.getspout.spoutapi.event.input.InputListener;
@@ -112,8 +113,7 @@ public class BITInputListener extends InputListener {
 					} else {
 						// TODO: REMEMBER TO REMOVE GABRIEL3333
 						// ----------------------------------------------------------
-						if (!BITDigiLock.isDoubleDoor(targetblock)
-								|| sPlayer.getName().equals("Gabriel333")) {
+						if (!BITDigiLock.isDoubleDoor(targetblock)) {
 							if (sPlayer.isSpoutCraftEnabled()) {
 								if (G333Permissions.hasPerm(sPlayer,
 										"digilock.use",
@@ -136,7 +136,14 @@ public class BITInputListener extends InputListener {
 							}
 						} else {
 							G333Messages.sendNotification(sPlayer,
-									"You cant lock doubledoors");
+									"Doubledoors under implementation. :-)");
+							Door door = (Door) targetblock.getState().getData();
+							sPlayer.sendMessage("Facing:"+door.getFacing()+" Hinge:"+door.getHingeCorner());
+							// left door:NORTH,NORTH_EAST Right door:WEST,NORTH_WEST
+							// left door:EAST,SOUTH_EAST Right door: NORTH,NORTH_EAST
+							// left door:SOUTH,SOUTH_WEST Right door:EAST,SOUTH_EAST
+							// left door:WEST,NORTH_WESTRight door:SOUTH,SOUTH_WEST
+							
 						}
 					}
 				}
@@ -183,8 +190,7 @@ public class BITInputListener extends InputListener {
 		}
 
 		else {
-			// sPlayer.sendMessage("Inputlistener, Unhandled screentype:"
-			// + screentype);
+			// UNHANDLED SCREENTYPE
 		}
 	}
 

@@ -7,6 +7,7 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Event;
 import org.bukkit.event.Event.Priority;
+import org.bukkit.event.Event.Type;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.PluginDescriptionFile;
 import org.bukkit.plugin.PluginManager;
@@ -16,6 +17,7 @@ import com.alta189.sqlLibrary.MySQL.mysqlCore;
 import com.alta189.sqlLibrary.SQLite.sqlCore;
 import com.nijikokun.register.payment.Method;
 import com.nijikokun.register.payment.Methods;
+
 import de.Keyle.MyWolf.MyWolfPlugin;
 import dk.gabriel333.Library.G333Config;
 import dk.gabriel333.Library.G333Messages;
@@ -26,7 +28,7 @@ import me.neatmonster.spoutbackpack.SBHandler;
 public class BIT extends JavaPlugin {
 
 	public static BIT plugin;
-	
+
 	public static Boolean spout = false;
 
 	// Hook into register
@@ -65,7 +67,7 @@ public class BIT extends JavaPlugin {
 			setupMyWolf();
 			registerEvents();
 			addCommands();
-			G333Messages.showInfo(pdfFile.getName() + " version "
+			G333Messages.showInfo("BIT version "
 					+ pdfFile.getVersion() + " is enabled!");
 		} else {
 			G333Messages.showError(pdfFile.getName() + " version "
@@ -125,17 +127,12 @@ public class BIT extends JavaPlugin {
 			G333Messages.showError("Safety is dependend on Spout!");
 		}
 	}
-
+	
 	private void setupRegister() {
-		Methods.setMethod(plugin); 
-		//Methods.createMethod(BIT.plugin);
-		Method = Methods.getMethod();
-		if (Methods.getMethod() != null)
-			G333Messages.showInfo("Register enabled: " + Method.getName()
-					+ " v" + Method.getVersion() + ").");
-		else
-			G333Messages.showInfo("Register disabled.");
-			
+		getServer().getPluginManager().registerEvent(Type.PLUGIN_ENABLE,
+				new BITServerListener(this), Priority.Monitor, this);
+		getServer().getPluginManager().registerEvent(Type.PLUGIN_DISABLE,
+				new BITServerListener(this), Priority.Monitor, this);
 	}
 
 	public static boolean isPlayer(CommandSender sender) {

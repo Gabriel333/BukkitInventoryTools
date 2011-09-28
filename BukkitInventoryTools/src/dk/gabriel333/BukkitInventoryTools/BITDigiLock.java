@@ -57,7 +57,11 @@ public class BITDigiLock {
 			String pincode, String owner, Integer closetimer, String coowners,
 			String shared, int typeId, String connectedTo) {
 		String query = null;
+		boolean createlock = true;
+		boolean newLock = true;
+		int price = G333Config.DIGILOCK_PRICE;
 		if (isLocked(block)) {
+			newLock = false;
 			query = "UPDATE " + BIT.digilockTable + " SET pincode='" + pincode
 					+ "', owner='" + owner + "', closetimer=" + closetimer
 					+ " , coowners='" + coowners + "', shared='" + shared
@@ -81,7 +85,6 @@ public class BITDigiLock {
 							+ "';";
 				}
 			}
-			G333Messages.sendNotification(sPlayer, "DigiLock updated.");
 		} else {
 			query = "INSERT INTO " + BIT.digilockTable
 					+ " (pincode, owner, closetimer, "
@@ -92,7 +95,6 @@ public class BITDigiLock {
 					+ block.getWorld().getName() + "', '" + coowners + "', '"
 					+ shared + "', " + block.getTypeId() + ", '" + connectedTo
 					+ "');";
-
 			if (isDoor(block)) {
 				Door door = (Door) block.getState().getData();
 				if (door.isTopHalf()) {
@@ -108,23 +110,48 @@ public class BITDigiLock {
 							+ ", '" + connectedTo + "');";
 				}
 			}
-			G333Messages.sendNotification(sPlayer, "DigiLock created.");
 		}
-		if (G333Config.g333Config.DEBUG_SQL)
-			sPlayer.sendMessage(ChatColor.YELLOW + "Updating lock: " + query);
-		if (G333Config.g333Config.STORAGE_TYPE.equals("MYSQL")) {
-			try {
-				BIT.manageMySQL.insertQuery(query);
-			} catch (MalformedURLException e) {
-				e.printStackTrace();
-			} catch (InstantiationException e) {
-				e.printStackTrace();
-			} catch (IllegalAccessException e) {
-				e.printStackTrace();
+		if (BIT.plugin.Method.hasAccount(sPlayer.getName())) {
+			if (BIT.plugin.Method.getAccount(sPlayer.getName())
+					.hasEnough(price)) {
+				BIT.plugin.Method.getAccount(sPlayer.getName()).subtract(price);
+				sPlayer.sendMessage("Your account ("
+						+ BIT.plugin.Method.getAccount(sPlayer.getName())
+								.balance() + ") has been deducted " + price
+						+ " bucks");
+			} else {
+				sPlayer.sendMessage("You dont have enough money ("						+ BIT.plugin.Method.getAccount(sPlayer.getName())
+						.balance() + "). Price is:"
+						+ price);
+				createlock = false;
+			}
+		}
+		if (createlock) {
+			if (G333Config.g333Config.DEBUG_SQL)
+				sPlayer.sendMessage(ChatColor.YELLOW + "Updating lock: "
+						+ query);
+			if (G333Config.g333Config.STORAGE_TYPE.equals("MYSQL")) {
+				try {
+					BIT.manageMySQL.insertQuery(query);
+				} catch (MalformedURLException e) {
+					e.printStackTrace();
+				} catch (InstantiationException e) {
+					e.printStackTrace();
+				} catch (IllegalAccessException e) {
+					e.printStackTrace();
+				}
+			} else {
+				BIT.manageSQLite.insertQuery(query);
+			}
+			if (newLock) {
+				G333Messages.sendNotification(sPlayer, "DigiLock created.");
+			} else {
+				G333Messages.sendNotification(sPlayer, "DigiLock updated.");
 			}
 		} else {
-			BIT.manageSQLite.insertQuery(query);
+			sPlayer.sendMessage("You dont have enough money. Price is:" + price);
 		}
+
 	}
 
 	public static Boolean isLocked(SpoutBlock block) {
@@ -560,7 +587,8 @@ public class BITDigiLock {
 						SpoutBlock sb = sBlock;
 						SpoutPlayer sp = sPlayer;
 						if (G333Config.g333Config.DEBUG_DOOR)
-							sp.sendMessage("Autoclosing the door in "+closetimer+" seconds");
+							sp.sendMessage("Autoclosing the door in "
+									+ closetimer + " seconds");
 						if (BITDigiLock.isDoor(sb)) {
 							if (BITDigiLock.isDoorOpen(sp, sb))
 								BITDigiLock.closeDoor(sp, sb);
@@ -569,7 +597,7 @@ public class BITDigiLock {
 				}, fs);
 		return taskID;
 	}
-	
+
 	public static int scheduleCloseTrapdoor(final SpoutPlayer sPlayer,
 			final SpoutBlock sBlock, final int closetimer) {
 		int fs = closetimer * 20;
@@ -580,8 +608,9 @@ public class BITDigiLock {
 						SpoutBlock sb = sBlock;
 						SpoutPlayer sp = sPlayer;
 						if (G333Config.g333Config.DEBUG_DOOR)
-							sp.sendMessage("Autoclosing the trapdoor in "+closetimer+" seconds");
-						if (sBlock.getType()==Material.TRAP_DOOR) {
+							sp.sendMessage("Autoclosing the trapdoor in "
+									+ closetimer + " seconds");
+						if (sBlock.getType() == Material.TRAP_DOOR) {
 							if (BITDigiLock.isTrapdoorOpen(sp, sb))
 								BITDigiLock.closeTrapdoor(sp, sb);
 						}

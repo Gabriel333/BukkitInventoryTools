@@ -12,10 +12,16 @@ public class G333Config extends Configuration {
 	public String LIBRARY_SORTKEY;
 	public String LIBRARY_MENUKEY;
 	public String LIBRARY_LOCKKEY;
+	
+	public String STORAGE_TYPE;
+	public String STORAGE_HOST;
+	public String STORAGE_USERNAME;
+	public String STORAGE_PASSWORD;
+	public String STORAGE_DATABASE;
+	
 	public Boolean SORT_DISPLAYSORTARCHIEVEMENT;
 	private String SORT_SORTSEQ;
 	public String[] SORTSEQ;
-	
 	private String SORT_TOOLS;
 	public static String[] tools;
 	private String SORT_WEAPONS;
@@ -29,11 +35,8 @@ public class G333Config extends Configuration {
 	private String SORT_BUCKETS;
 	public static String[] buckets;
 	
-	public String STORAGE_TYPE;
-	public String STORAGE_HOST;
-	public String STORAGE_USERNAME;
-	public String STORAGE_PASSWORD;
-	public String STORAGE_DATABASE;
+	public static int DIGILOCK_PRICE;
+	
 	public Boolean DEBUG_PERMISSIONS;
 	public Boolean DEBUG_SORTINVENTORY;
 	public Boolean DEBUG_ONENABLE;
@@ -77,6 +80,7 @@ public class G333Config extends Configuration {
 		buckets = SORT_BUCKETS.split(",");
 		
 		//Digilock
+		DIGILOCK_PRICE = getIntParm("DigiLock.Price", 100);
 		
 		//Debug
 		DEBUG_PERMISSIONS = getBooleanParm("Debug.Permissions", false);
@@ -115,6 +119,16 @@ public class G333Config extends Configuration {
 	}
 
 	private Boolean dosave = false;
+	
+	private int getIntParm(String string, int def) {
+		String str = getString(string);
+		if (str == null) {
+			dosave = true;
+			G333Messages.showWarning("Missing parameter:" +string);
+			
+		} 
+		return getInt(string,def);
+	}
 
 	private String getStringParm(String string, String def) {
 		String str = getString(string);
@@ -132,7 +146,6 @@ public class G333Config extends Configuration {
 			dosave = true;
 			G333Messages.showWarning("Missing parameter:" +string);
 		} 
-		
 		return getBoolean(string,def);
 	}
 

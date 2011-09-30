@@ -1,6 +1,6 @@
 package dk.gabriel333.BukkitInventoryTools;
 
-import com.nijikokun.register.payment.Method;
+import dk.gabriel333.register.payment.Method;
 import dk.gabriel333.Library.G333Messages;
 
 public class BITEconomy {

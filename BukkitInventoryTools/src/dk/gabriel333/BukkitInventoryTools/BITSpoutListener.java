@@ -42,11 +42,11 @@ public class BITSpoutListener extends SpoutListener {
 						SpoutChest sChest = (SpoutChest) sBlock.getState();
 						Inventory inv = sChest.getLargestInventory();
 						sPlayer.openInventoryWindow(inv);
-						
+
 					} else if (BITDigiLock.isDoor(digilock.getBlock())) {
 						BITDigiLock.openDigiLockSound(digilock.getBlock());
 						BITDigiLock.openDoor(sPlayer, digilock.getBlock());
-						
+
 					} else if (digilock.getBlock().getType() == Material.LEVER) {
 
 					} else if (digilock.getBlock().getType() == Material.STONE_BUTTON) {
@@ -66,7 +66,7 @@ public class BITSpoutListener extends SpoutListener {
 					} else if (digilock.getBlock().getType() == Material.TRAP_DOOR) {
 						BITDigiLock.openDigiLockSound(digilock.getBlock());
 						BITDigiLock.openTrapdoor(sPlayer, digilock.getBlock());
-						
+
 					} else if (BITDigiLock.isSign(sBlock)) {
 
 					}
@@ -82,10 +82,12 @@ public class BITSpoutListener extends SpoutListener {
 					sPlayer.damage(5);
 				}
 				BITGui.popupGetPincode.removeWidgets(BIT.plugin);
+				BITGui.cleanupGetPincode(sPlayer);
 			} else if (BITGui.BITButtons.get(uuid) == "getPincodeCancel") {
 				BITGui.popupGetPincode.close();
 				BITGui.popupGetPincode.removeWidgets(BIT.plugin);
-				//BITGui.cleanupGetPincode(sPlayer, sBlock);
+				BITGui.cleanupGetPincode(sPlayer);
+				// BITGui.cleanupGetPincode(sPlayer, sBlock);
 			}
 
 			// ************************************
@@ -94,27 +96,31 @@ public class BITSpoutListener extends SpoutListener {
 			else if (BITGui.BITButtons.get(uuid) == "setPincodeLock"
 					&& G333Permissions.hasPerm(sPlayer, "digilock.create",
 							G333Permissions.QUIET)) {
-				if (validateSetPincodeFields(sPlayer)){
+				if (validateSetPincodeFields(sPlayer)) {
 					BITGui.popupSetPincode.close();
 					BITGui.popupSetPincode.removeWidgets(BIT.plugin);
-					  BITDigiLock.SaveDigiLock(sPlayer, sBlock,
-						BITGui.pincode3.getText(), BITGui.owner1.getText(),
-						Integer.valueOf(BITGui.closetimer1.getText()),
-						BITGui.listOfCoOwners.getText(), "", sBlock.getTypeId(),
-						"");
-				}
-				
+					BITDigiLock.SaveDigiLock(sPlayer, sBlock,
+							BITGui.pincode3.getText(), BITGui.owner1.getText(),
+							Integer.valueOf(BITGui.closetimer1.getText()),
+							BITGui.listOfCoOwners.getText(), "",
+							sBlock.getTypeId(), "");
+					BITGui.cleanupSetPincode(sPlayer);
+					}
+
 			} else if ((BITGui.BITButtons.get(uuid) == "setPincodeCancel")) {
 				BITGui.popupSetPincode.close();
 				BITGui.popupSetPincode.removeWidgets(BIT.plugin);
+				BITGui.cleanupSetPincode(sPlayer);
 				
 			} else if ((BITGui.BITButtons.get(uuid) == "setPincodeRemove")) {
 				BITGui.popupSetPincode.close();
 				BITGui.popupSetPincode.removeWidgets(BIT.plugin);
+				BITGui.cleanupSetPincode(sPlayer);
+				
 				if (BITDigiLock.isLocked(sBlock)) {
 					digilock.RemoveDigiLock(sPlayer);
 				}
-				
+
 			} else if ((BITGui.BITButtons.get(uuid) == "OwnerButton")) {
 
 			} else if ((BITGui.BITButtons.get(uuid) == "CoOwnerButton")) {
@@ -131,16 +137,16 @@ public class BITSpoutListener extends SpoutListener {
 			}
 		}
 	}
-	
+
 	private boolean validateSetPincodeFields(SpoutPlayer sPlayer) {
 		int closetimer = Integer.valueOf(BITGui.closetimer1.getText());
-		if (BITGui.closetimer1.getText()==""){
+		if (BITGui.closetimer1.getText() == "") {
 			BITGui.closetimer1.setText("0");
 		}
-		if (closetimer<0 || closetimer> 3600) {
+		if (closetimer < 0 || closetimer > 3600) {
 			G333Messages.sendNotification(sPlayer, "Error in closetimer");
 			return false;
-		} 
+		}
 		return true;
 	}
 }

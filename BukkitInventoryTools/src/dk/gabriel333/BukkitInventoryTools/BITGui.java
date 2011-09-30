@@ -39,8 +39,8 @@ public class BITGui {
 		int x = 170;
 
 		GenericItemWidget itemwidget = new GenericItemWidget(new ItemStack(95));
-		//GenericItemWidget itemwidget = new GenericItemWidget(new ItemStack(
-		//		getPincodeBlock(block)));
+		// GenericItemWidget itemwidget = new GenericItemWidget(new ItemStack(
+		// getPincodeBlock(block)));
 		itemwidget.setX(x + 2 * height).setY(y);
 		itemwidget.setHeight(height * 2).setWidth(height * 2)
 				.setDepth(height * 2);
@@ -76,9 +76,9 @@ public class BITGui {
 		popupGetPincode.setTransparent(true);
 		sPlayer.getMainScreen().attachPopupScreen(popupGetPincode);
 	}
-	
-	public static void closeGetPincode(){
-		
+
+	public static void closeGetPincode() {
+
 	}
 
 	@SuppressWarnings("unused")
@@ -141,8 +141,8 @@ public class BITGui {
 		x = 170;
 		y = 50;
 		GenericItemWidget itemwidget = new GenericItemWidget(new ItemStack(95));
-		//GenericItemWidget itemwidget = new GenericItemWidget(new ItemStack(
-		//		getPincodeBlock(block)));
+		// GenericItemWidget itemwidget = new GenericItemWidget(new ItemStack(
+		// getPincodeBlock(block)));
 		itemwidget.setX(x + 2 * height).setY(y);
 		itemwidget.setHeight(height * 2).setWidth(height * 2)
 				.setDepth(height * 2);
@@ -173,10 +173,10 @@ public class BITGui {
 		owner1.setX(x + w1 + 1).setY(y);
 		owner1.setHeight(height).setWidth(w2);
 		popupSetPincode.attachWidget(plugin, owner1);
-		
+
 		// closetimerButton
 		GenericButton closetimerButton = new GenericButton("Closetimer");
-		closetimerButton.setAuto(false).setX(x+170).setY(y).setHeight(height)
+		closetimerButton.setAuto(false).setX(x + 170).setY(y).setHeight(height)
 				.setWidth(w1);
 		closetimerButton.setTooltip("Set closetimer");
 		popupSetPincode.attachWidget(plugin, closetimerButton);
@@ -185,10 +185,10 @@ public class BITGui {
 		// closetimer1
 		closetimer1.setTooltip("Autoclosing time in sec.");
 		closetimer1.setCursorPosition(1).setMaximumCharacters(4);
-		closetimer1.setX(x +170 + w1 + 1).setY(y);
+		closetimer1.setX(x + 170 + w1 + 1).setY(y);
 		closetimer1.setHeight(height).setWidth(w2);
 		popupSetPincode.attachWidget(plugin, closetimer1);
-		
+
 		y = y + height;
 
 		// setCoOwnerButton
@@ -257,12 +257,12 @@ public class BITGui {
 		sPlayer.getMainScreen().attachPopupScreen(popupSetPincode);
 
 	}
-	
-	public static void cleanupSetPincode(SpoutPlayer sPlayer, SpoutBlock block) {
+
+	public static void cleanupSetPincode(SpoutPlayer sPlayer) {
 		sPlayer.getMainScreen().removeWidget(popupSetPincode);
 	}
-	
-	public static void cleanupGetPincode(SpoutPlayer sPlayer, SpoutBlock block) {
+
+	public static void cleanupGetPincode(SpoutPlayer sPlayer) {
 		sPlayer.getMainScreen().removeWidget(popupGetPincode);
 	}
 

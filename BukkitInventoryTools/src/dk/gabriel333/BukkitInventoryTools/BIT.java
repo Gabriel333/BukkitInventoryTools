@@ -15,8 +15,8 @@ import org.bukkit.plugin.java.JavaPlugin;
 
 import com.alta189.sqlLibrary.MySQL.mysqlCore;
 import com.alta189.sqlLibrary.SQLite.sqlCore;
-import com.nijikokun.register.payment.Method;
-import com.nijikokun.register.payment.Methods;
+import dk.gabriel333.register.payment.Method;
+import dk.gabriel333.register.payment.Methods;
 
 import de.Keyle.MyWolf.MyWolfPlugin;
 import dk.gabriel333.Library.G333Config;
@@ -67,8 +67,8 @@ public class BIT extends JavaPlugin {
 			setupMyWolf();
 			registerEvents();
 			addCommands();
-			G333Messages.showInfo("BIT version "
-					+ pdfFile.getVersion() + " is enabled!");
+			G333Messages.showInfo("BIT version " + pdfFile.getVersion()
+					+ " is enabled!");
 		} else {
 			G333Messages.showError(pdfFile.getName() + " version "
 					+ pdfFile.getVersion() + " could not be installed!");
@@ -124,15 +124,22 @@ public class BIT extends JavaPlugin {
 			spout = true;
 			G333Messages.showInfo("Spout is detected.");
 		} else {
-			G333Messages.showError("Safety is dependend on Spout!");
+			G333Messages.showError("BIT is dependend on Spout!");
 		}
 	}
-	
+
 	private void setupRegister() {
-		getServer().getPluginManager().registerEvent(Type.PLUGIN_ENABLE,
-				new BITServerListener(this), Priority.Monitor, this);
-		getServer().getPluginManager().registerEvent(Type.PLUGIN_DISABLE,
-				new BITServerListener(this), Priority.Monitor, this);
+		Plugin iconomyPlugin = this.getServer().getPluginManager()
+				.getPlugin("iConomy");
+		Plugin boseconomyPlugin = this.getServer().getPluginManager()
+				.getPlugin("BOSEconomy");
+		if (iconomyPlugin!=null || boseconomyPlugin!=null) {
+			getServer().getPluginManager().registerEvent(Type.PLUGIN_ENABLE,
+					new BITServerListener(this), Priority.Monitor, this);
+			getServer().getPluginManager().registerEvent(Type.PLUGIN_DISABLE,
+					new BITServerListener(this), Priority.Monitor, this);
+		}
+			
 	}
 
 	public static boolean isPlayer(CommandSender sender) {

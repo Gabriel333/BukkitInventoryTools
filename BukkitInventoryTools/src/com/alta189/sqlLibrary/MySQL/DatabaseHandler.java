@@ -77,7 +77,7 @@ public class DatabaseHandler {
 		    
 		    return result;
 		} catch (SQLException ex) {
-			core.writeError("Error at SQL Query: " + ex.getMessage(), false);
+			core.writeError("(4)Error at SQL Query: " + ex.getMessage(), false);
 		}
 		return null;
 	}
@@ -141,7 +141,7 @@ public class DatabaseHandler {
 			if (ex.getMessage().contains("exist")) {
 				return false;
 			} else {
-				core.writeError("Error at SQL Query: " + ex.getMessage(), false);
+				core.writeError("(4)Error at SQL Query: " + ex.getMessage(), false);
 			}
 		}
 		

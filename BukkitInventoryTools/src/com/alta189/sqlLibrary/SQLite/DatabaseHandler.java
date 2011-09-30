@@ -77,7 +77,7 @@ public class DatabaseHandler {
 			if (ex.getMessage().toLowerCase().contains("locking") || ex.getMessage().toLowerCase().contains("locked")) {
 				return retryResult(query);
 			}else{
-				core.writeError("Error at SQL Query: " + ex.getMessage(), false);
+				core.writeError("(1)Error at SQL Query: " + ex.getMessage(), false);
 			}
 			
 		}
@@ -182,7 +182,8 @@ public class DatabaseHandler {
 	private ResultSet retryResult(String query) {
 		Boolean passed = false;
 		int n=0;
-		while (!passed || n<9) {
+		while (!passed && n<9) {
+			n++;
 			try {
 				Connection connection = getConnection();
 			    Statement statement = connection.createStatement();
@@ -190,14 +191,14 @@ public class DatabaseHandler {
 			    ResultSet result = statement.executeQuery(query);
 			    
 			    passed = true;
-			    n++;
+			    
 			    return result;
 			} catch (SQLException ex) {
 				
 				if (ex.getMessage().toLowerCase().contains("locking") || ex.getMessage().toLowerCase().contains("locked")) {
 					passed = false;
 				}else{
-					core.writeError("Error at SQL Query: " + ex.getMessage(), false);
+					core.writeError("(2)Error at SQL Query: " + ex.getMessage(), false);
 				}
 			}
 		}
@@ -207,8 +208,9 @@ public class DatabaseHandler {
 	
 	private void retry(String query) {
 		Boolean passed = false;
-		
-		while (!passed) {
+		int n=0;
+		while (!passed && n<9) {
+			n++;
 			try {
 				Connection connection = getConnection();
 			    Statement statement = connection.createStatement();
@@ -223,7 +225,7 @@ public class DatabaseHandler {
 				if (ex.getMessage().toLowerCase().contains("locking") || ex.getMessage().toLowerCase().contains("locked") ) {
 					passed = false;
 				}else{
-					core.writeError("Error at SQL Query: " + ex.getMessage(), false);
+					core.writeError("(3)Error at SQL Query: " + ex.getMessage(), false);
 				}
 			}
 		}

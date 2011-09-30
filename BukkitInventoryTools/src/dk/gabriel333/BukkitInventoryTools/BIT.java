@@ -30,7 +30,7 @@ public class BIT extends JavaPlugin {
 	public static BIT plugin;
 
 	public static Boolean spout = false;
-
+ 
 	// Hook into register
 	public Methods Methods;
 	public Method Method;

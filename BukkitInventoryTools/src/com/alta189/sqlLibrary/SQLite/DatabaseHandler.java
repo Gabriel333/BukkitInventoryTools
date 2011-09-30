@@ -181,8 +181,8 @@ public class DatabaseHandler {
 	
 	private ResultSet retryResult(String query) {
 		Boolean passed = false;
-		
-		while (!passed) {
+		int n=0;
+		while (!passed || n<9) {
 			try {
 				Connection connection = getConnection();
 			    Statement statement = connection.createStatement();
@@ -190,7 +190,7 @@ public class DatabaseHandler {
 			    ResultSet result = statement.executeQuery(query);
 			    
 			    passed = true;
-			    
+			    n++;
 			    return result;
 			} catch (SQLException ex) {
 				

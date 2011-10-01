@@ -91,7 +91,6 @@ public class BITSpoutListener extends SpoutListener {
 				BITGui.popupGetPincode.close();
 				BITGui.popupGetPincode.removeWidgets(BIT.plugin);
 				BITGui.cleanupGetPincode(sPlayer);
-				// BITGui.cleanupGetPincode(sPlayer, sBlock);
 			}
 
 			// ************************************
@@ -143,10 +142,10 @@ public class BITSpoutListener extends SpoutListener {
 	}
 
 	private boolean validateSetPincodeFields(SpoutPlayer sPlayer) {
-		int closetimer = Integer.valueOf(BITGui.closetimer1.getText());
-		if (BITGui.closetimer1.getText() == "") {
+		if (BITGui.closetimer1.getText().equals("")) {
 			BITGui.closetimer1.setText("0");
 		}
+		int closetimer = Integer.valueOf(BITGui.closetimer1.getText());
 		if (closetimer < 0 || closetimer > 3600) {
 			G333Messages.sendNotification(sPlayer, "Error in closetimer");
 			return false;

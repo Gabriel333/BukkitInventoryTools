@@ -4,7 +4,6 @@ import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.block.Dispenser;
 import org.bukkit.inventory.Inventory;
-import org.bukkit.material.Door;
 import org.getspout.spoutapi.block.SpoutBlock;
 import org.getspout.spoutapi.block.SpoutChest;
 import org.getspout.spoutapi.event.input.InputListener;
@@ -51,7 +50,8 @@ public class BITInputListener extends InputListener {
 							G333Inventory.sortPlayerInventoryItems(sPlayer);
 						}
 						if (G333Config.g333Config.SORT_DISPLAYSORTARCHIEVEMENT) {
-							G333Messages.sendNotification(sPlayer, "Chest sorted.");
+							G333Messages.sendNotification(sPlayer,
+									"Chest sorted.");
 						}
 					}
 				} else if (keypressed.equals("KEY_ESCAPE")) {
@@ -87,8 +87,12 @@ public class BITInputListener extends InputListener {
 					if (BITDigiLock.isLocked(targetblock)) {
 						BITDigiLock digilock = BITDigiLock.loadDigiLock(
 								sPlayer, targetblock);
-						if (BITDigiLock.isDoor(targetblock)) {
+						if (BITDigiLock.isDoubleDoor(targetblock)) {
+							BITDigiLock.closeDoubleDoor(sPlayer, targetblock);
+						} else if (BITDigiLock.isDoor(targetblock)) {
 							BITDigiLock.closeDoor(sPlayer, targetblock);
+						} else if (BITDigiLock.isTrapdoor(targetblock)) {
+							BITDigiLock.closeTrapdoor(sPlayer, targetblock);
 						}
 						if ((sPlayer.getName().equals(digilock.getOwner()) && G333Permissions
 								.hasPerm(sPlayer, "digilock.create",
@@ -110,41 +114,29 @@ public class BITInputListener extends InputListener {
 										+ "2) BITInputlistener: You DONT have permission to open a locked door/chest");
 							}
 						}
-					} else {
-						// TODO: REMEMBER TO REMOVE GABRIEL3333
-						// ----------------------------------------------------------
-						if (!BITDigiLock.isDoubleDoor(targetblock)) {
-							if (sPlayer.isSpoutCraftEnabled()) {
-								if (G333Permissions.hasPerm(sPlayer,
-										"digilock.use",
-										G333Permissions.NOT_QUIET)
-										|| G333Permissions.hasPerm(sPlayer,
-												"digilock.admin",
-												G333Permissions.NOT_QUIET)) {
-									if (G333Config.g333Config.DEBUG_PERMISSIONS) {
-										sPlayer.sendMessage(ChatColor.GREEN
-												+ "3) BITInputlistener: You have permission to open a locked door/chest");
-									}
-									BITGui.setPincode(sPlayer, targetblock);
-								}
-							} else {
+					} else { // TARGETBLOCK IS NOT LOCKED
+						if (sPlayer.isSpoutCraftEnabled()) {
+							if (G333Permissions.hasPerm(sPlayer,
+									"digilock.use", G333Permissions.NOT_QUIET)
+									|| G333Permissions.hasPerm(sPlayer,
+											"digilock.admin",
+											G333Permissions.NOT_QUIET)) {
 								if (G333Config.g333Config.DEBUG_PERMISSIONS) {
 									sPlayer.sendMessage(ChatColor.GREEN
-											+ "4) BITInputlistener: You DONT have permission to open a locked door/chest");
+											+ "3) BITInputlistener: You have permission to open a locked door/chest");
 								}
-								sPlayer.sendMessage("Install SpoutCraft or use command /dlock to create lock.");
+								if (BITDigiLock.isDoubleDoor(targetblock)) {
+									SpoutBlock leftdoor = BITDigiLock
+											.getLeftDoubleDoor(targetblock);
+									BITGui.setPincode(sPlayer, leftdoor);
+								} else {
+									BITGui.setPincode(sPlayer, targetblock);
+								}
 							}
 						} else {
-							G333Messages.sendNotification(sPlayer,
-									"Doubledoors under implementation. :-)");
-							Door door = (Door) targetblock.getState().getData();
-							sPlayer.sendMessage("Facing:"+door.getFacing()+" Hinge:"+door.getHingeCorner());
-							// left door:NORTH,NORTH_EAST Right door:WEST,NORTH_WEST
-							// left door:EAST,SOUTH_EAST Right door: NORTH,NORTH_EAST
-							// left door:SOUTH,SOUTH_WEST Right door:EAST,SOUTH_EAST
-							// left door:WEST,NORTH_WESTRight door:SOUTH,SOUTH_WEST
-							
+							sPlayer.sendMessage("Install SpoutCraft or use command /dlock to create lock.");
 						}
+
 					}
 				}
 			}

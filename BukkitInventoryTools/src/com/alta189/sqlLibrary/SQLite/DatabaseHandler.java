@@ -182,7 +182,7 @@ public class DatabaseHandler {
 	private ResultSet retryResult(String query) {
 		Boolean passed = false;
 		int n=0;
-		while (!passed && n<9) {
+		while (!passed && n<19) {
 			n++;
 			try {
 				Connection connection = getConnection();
@@ -209,7 +209,7 @@ public class DatabaseHandler {
 	private void retry(String query) {
 		Boolean passed = false;
 		int n=0;
-		while (!passed && n<9) {
+		while (!passed && n<19) {
 			n++;
 			try {
 				Connection connection = getConnection();

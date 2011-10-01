@@ -94,17 +94,19 @@ public class BITCommandDigiLock implements CommandExecutor {
 							SpoutChest sChest = (SpoutChest) block.getState();
 							Inventory inv = sChest.getLargestInventory();
 							sPlayer.openInventoryWindow(inv);
+						} else if (BITDigiLock.isDoubleDoor(block)) {
+							BITDigiLock.openDoubleDoor(sPlayer, block);
 						} else if (BITDigiLock.isDoor(digilock.getBlock())) {
 							BITDigiLock.openDoor(sPlayer, block);
-						} else if (digilock.getBlock().getType()==Material.FURNACE){
+						} else if (digilock.getBlock().getType() == Material.FURNACE) {
 							Furnace furnace = (Furnace) block.getState();
 							Inventory inv = furnace.getInventory();
 							sPlayer.openInventoryWindow(inv);
-						} else if (digilock.getBlock().getType()==Material.DISPENSER){
+						} else if (digilock.getBlock().getType() == Material.DISPENSER) {
 							Dispenser dispenser = (Dispenser) block.getState();
 							Inventory inv = dispenser.getInventory();
 							sPlayer.openInventoryWindow(inv);
-						} else if (digilock.getBlock().getType()==Material.TRAP_DOOR){
+						} else if (digilock.getBlock().getType() == Material.TRAP_DOOR) {
 							BITDigiLock.openTrapdoor(sPlayer, block);
 						}
 					} else {
@@ -128,6 +130,9 @@ public class BITCommandDigiLock implements CommandExecutor {
 						SpoutChest sChest = (SpoutChest) block.getState();
 						Inventory inv = sChest.getLargestInventory();
 						sPlayer.openInventoryWindow(inv);
+					} else if (BITDigiLock.isDoubleDoor(digilock.getBlock())) {
+						BITDigiLock.openDoubleDoor(sPlayer, block);
+
 					} else if (BITDigiLock.isDoor(digilock.getBlock())) {
 						BITDigiLock.openDoor(sPlayer, block);
 					}

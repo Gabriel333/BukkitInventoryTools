@@ -43,6 +43,10 @@ public class BITSpoutListener extends SpoutListener {
 						Inventory inv = sChest.getLargestInventory();
 						sPlayer.openInventoryWindow(inv);
 
+					} else if(BITDigiLock.isDoubleDoor(digilock.getBlock())) {
+						BITDigiLock.openDigiLockSound(digilock.getBlock());
+						BITDigiLock.openDoubleDoor(sPlayer, digilock.getBlock());
+						
 					} else if (BITDigiLock.isDoor(digilock.getBlock())) {
 						BITDigiLock.openDigiLockSound(digilock.getBlock());
 						BITDigiLock.openDoor(sPlayer, digilock.getBlock());

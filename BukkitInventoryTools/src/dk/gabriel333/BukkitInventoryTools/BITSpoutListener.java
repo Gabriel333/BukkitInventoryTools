@@ -44,11 +44,11 @@ public class BITSpoutListener extends SpoutListener {
 						sPlayer.openInventoryWindow(inv);
 
 					} else if(BITDigiLock.isDoubleDoor(digilock.getBlock())) {
-						BITDigiLock.openDigiLockSound(digilock.getBlock());
+						BITDigiLock.playDigiLockSound(digilock.getBlock());
 						BITDigiLock.openDoubleDoor(sPlayer, digilock.getBlock());
 						
 					} else if (BITDigiLock.isDoor(digilock.getBlock())) {
-						BITDigiLock.openDigiLockSound(digilock.getBlock());
+						BITDigiLock.playDigiLockSound(digilock.getBlock());
 						BITDigiLock.openDoor(sPlayer, digilock.getBlock());
 
 					} else if (digilock.getBlock().getType() == Material.LEVER) {
@@ -68,7 +68,7 @@ public class BITSpoutListener extends SpoutListener {
 					} else if (digilock.getBlock().getType() == Material.BOOKSHELF) {
 
 					} else if (digilock.getBlock().getType() == Material.TRAP_DOOR) {
-						BITDigiLock.openDigiLockSound(digilock.getBlock());
+						BITDigiLock.playDigiLockSound(digilock.getBlock());
 						BITDigiLock.openTrapdoor(sPlayer, digilock.getBlock());
 
 					} else if (BITDigiLock.isSign(sBlock)) {

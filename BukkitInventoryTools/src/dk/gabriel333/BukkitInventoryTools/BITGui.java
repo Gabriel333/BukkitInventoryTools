@@ -245,12 +245,14 @@ public class BITGui {
 			removeButton.setEnabled(true);
 			menuButtons.add(removeButton);
 			BITButtons.put(removeButton.getId(), "setPincodeRemove");
+			popupSetPincode.attachWidget(plugin, removeButton);
 		} else {
 			menuButtons.remove(removeButton);
 			BITButtons.remove("setPincodeRemove");
-			removeButton.setEnabled(false).setDirty(true);
+			popupSetPincode.removeWidget(removeButton);
+			//removeButton.setEnabled(false).setDirty(true);
 		}
-		popupSetPincode.attachWidget(plugin, removeButton);
+		popupSetPincode.setDirty(true);
 
 		// Open Window
 		popupSetPincode.setTransparent(true);

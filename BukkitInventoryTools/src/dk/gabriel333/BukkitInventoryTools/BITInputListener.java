@@ -54,9 +54,6 @@ public class BITInputListener extends InputListener {
 									"Chest sorted.");
 						}
 					}
-				} else if (keypressed.equals("KEY_ESCAPE")) {
-
-					// sPlayer.closeActiveWindow();
 				}
 			} else
 			// targetblock is NOT a chest, so it must be SpoutBackPack
@@ -152,32 +149,33 @@ public class BITInputListener extends InputListener {
 				if (G333Config.g333Config.SORT_DISPLAYSORTARCHIEVEMENT) {
 					G333Messages.sendNotification(sPlayer, "Inventory sorted.");
 				}
-			} else if (keypressed.equals("KEY_ESCAPE")) {
-				// sPlayer.closeActiveWindow();
-			}
+			} 
 		}
+		
 		// DISPENCER_INVENTORY SCREEN
 		else if (screentype == ScreenType.DISPENSER_INVENTORY) {
-			Dispenser dispenser = (Dispenser) targetblock.getState();
-			Inventory inventory = dispenser.getInventory();
 			if (keypressed.equals(G333Config.g333Config.LIBRARY_SORTKEY)) {
 				if (G333Permissions.hasPerm(sPlayer, "sortinventory.use",
 						G333Permissions.NOT_QUIET)) {
-					G333Inventory.sortInventoryItems(sPlayer, inventory);
-					G333Inventory.sortPlayerInventoryItems(sPlayer);
+					if (targetblock.getType() == Material.DISPENSER) {
+						Dispenser dispenser = (Dispenser) targetblock
+								.getState();
+						Inventory inventory = dispenser.getInventory();
+						G333Inventory.sortInventoryItems(sPlayer, inventory);
+						G333Inventory.sortPlayerInventoryItems(sPlayer);
+					}
 				}
 				if (G333Config.g333Config.SORT_DISPLAYSORTARCHIEVEMENT) {
 					G333Messages.sendNotification(sPlayer, "Inventory sorted.");
 				}
-			} else if (keypressed.equals("KEY_ESCAPE")) {
-				// sPlayer.closeActiveWindow();
-			}
+			} 
 		}
 
 		// CUSTOM_SCREEN
 		else if (screentype == ScreenType.CUSTOM_SCREEN) {
 			if (keypressed.equals("KEY_ESCAPE")) {
 				sPlayer.closeActiveWindow();
+				sPlayer.getMainScreen().removeWidgets(BIT.plugin);
 			}
 		}
 

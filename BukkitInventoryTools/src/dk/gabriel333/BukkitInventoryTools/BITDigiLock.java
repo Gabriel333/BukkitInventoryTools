@@ -10,6 +10,7 @@ import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 
 import org.bukkit.material.Door;
+import org.bukkit.material.Lever;
 import org.bukkit.plugin.Plugin;
 import org.getspout.spoutapi.SpoutManager;
 import org.getspout.spoutapi.block.SpoutBlock;
@@ -362,22 +363,57 @@ public class BITDigiLock {
 		return false;
 	}
 
-	public static void leverOn(SpoutPlayer sPlayer, SpoutBlock block) {
-		openDigiLockSound(block);
-		block.setData((byte) (block.getState().getData().getData() | 8));
-	}
-
-	public static void leverOff(SpoutPlayer sPlayer, SpoutBlock block) {
-		block.setData((byte) ((block.getState().getData().getData() | 8) ^ 8));
-	}
-
-	public static void openDigiLockSound(SpoutBlock sBlock) {
+	public static void playDigiLockSound(SpoutBlock sBlock) {
 		SpoutManager
 				.getSoundManager()
 				.playGlobalCustomSoundEffect(
 						BIT.plugin,
 						"http://dl.dropbox.com/u/36067670/BukkitInventoryTools/Sounds/Digilock.wav",
 						true, sBlock.getLocation(), 5);
+	}
+
+	// *******************************************************
+	//
+	// LEVERS
+	//
+	// *******************************************************
+	public static void leverOn(SpoutPlayer sPlayer, SpoutBlock block) {
+		playDigiLockSound(block);
+		Lever lever = (Lever) block.getState().getData();
+		lever.setPowered(true);
+		// block.setData((byte) (block.getState().getData().getData() | 8));
+		BITDigiLock digilock = BITDigiLock.loadDigiLock(sPlayer, block);
+		if (digilock.getClosetimer() > 0) {
+			scheduleLeverOff(sPlayer, block, digilock.getClosetimer());
+		}
+	}
+
+	public static void leverOff(SpoutPlayer sPlayer, SpoutBlock block) {
+		playDigiLockSound(block);
+		Lever lever = (Lever) block.getState().getData();
+		lever.setPowered(false);
+		// block.setData((byte) ((block.getState().getData().getData() | 8) ^
+		// 8));
+	}
+
+	//
+	public static int scheduleLeverOff(final SpoutPlayer sPlayer,
+			final SpoutBlock sBlock, final int closetimer) {
+		int fs = closetimer * 20;
+		// 20 ticks / second
+		int taskID = BIT.plugin.getServer().getScheduler()
+				.scheduleSyncDelayedTask(BIT.plugin, new Runnable() {
+					public void run() {
+						SpoutBlock sb = sBlock;
+						SpoutPlayer sp = sPlayer;
+						Lever lever = (Lever) sb.getState().getData();
+						if (G333Config.g333Config.DEBUG_DOOR)
+							sp.sendMessage("Turning lever off in " + closetimer
+									+ " seconds");
+						lever.setPowered(false);
+					}
+				}, fs);
+		return taskID;
 	}
 
 	// *******************************************************
@@ -407,7 +443,7 @@ public class BITDigiLock {
 	}
 
 	public static void openDoor(SpoutPlayer sPlayer, SpoutBlock block) {
-		openDigiLockSound(block);
+		playDigiLockSound(block);
 		Door door = (Door) block.getState().getData();
 		SpoutBlock nextBlock;
 		if (G333Config.g333Config.DEBUG_DOOR)
@@ -424,13 +460,12 @@ public class BITDigiLock {
 		}
 		BITDigiLock digilock = BITDigiLock.loadDigiLock(sPlayer, block);
 		if (digilock.getClosetimer() > 0 && !isDoubleDoor(block)) {
-			scheduleCloseDoor(sPlayer, block,
-					digilock.getClosetimer());
+			scheduleCloseDoor(sPlayer, block, digilock.getClosetimer());
 		}
 	}
 
 	public static void closeDoor(SpoutPlayer sPlayer, SpoutBlock block) {
-		openDigiLockSound(block);
+		playDigiLockSound(block);
 		Door door = (Door) block.getState().getData();
 		SpoutBlock nextBlock;
 		block.setData((byte) ((block.getState().getData().getData() | 4) ^ 4));
@@ -448,6 +483,7 @@ public class BITDigiLock {
 	}
 
 	public static void toggleDoor(SpoutPlayer sPlayer, SpoutBlock block) {
+		playDigiLockSound(block);
 		Door door = (Door) block.getState().getData();
 		SpoutBlock nextBlock;
 		block.setData((byte) (block.getState().getData().getData() ^ 4));
@@ -505,7 +541,7 @@ public class BITDigiLock {
 	}
 
 	public static void openTrapdoor(SpoutPlayer sPlayer, SpoutBlock sBlock) {
-		openDigiLockSound(sBlock);
+		playDigiLockSound(sBlock);
 		if (G333Config.g333Config.DEBUG_DOOR)
 			sPlayer.sendMessage("The trapdoor is closed. OpenDoor");
 		sBlock.setData((byte) (sBlock.getState().getData().getData() | 4));
@@ -572,12 +608,10 @@ public class BITDigiLock {
 		if (isDoubleDoor(sBlock)) {
 			if (isLeftDoubleDoor(sBlock)) {
 				closeDoor(sPlayer, sBlock);
-				openDoor(sPlayer,
-						getRightDoubleDoor(sBlock));
+				openDoor(sPlayer, getRightDoubleDoor(sBlock));
 			} else {
 				openDoor(sPlayer, sBlock);
-				closeDoor(sPlayer,
-						BITDigiLock.getLeftDoubleDoor(sBlock));
+				closeDoor(sPlayer, BITDigiLock.getLeftDoubleDoor(sBlock));
 			}
 		}
 	}
@@ -586,18 +620,15 @@ public class BITDigiLock {
 		if (isDoubleDoor(sBlock)) {
 			if (isLeftDoubleDoor(sBlock)) {
 				openDoor(sPlayer, sBlock);
-				closeDoor(sPlayer,
-						getRightDoubleDoor(sBlock));
+				closeDoor(sPlayer, getRightDoubleDoor(sBlock));
 			} else {
 				closeDoor(sPlayer, sBlock);
-				openDoor(sPlayer,
-						getLeftDoubleDoor(sBlock));
+				openDoor(sPlayer, getLeftDoubleDoor(sBlock));
 			}
 		}
 		BITDigiLock digilock = loadDigiLock(sPlayer, sBlock);
 		if (digilock.getClosetimer() > 0) {
-			scheduleCloseDoubleDoor(sPlayer, sBlock,
-					digilock.getClosetimer());
+			scheduleCloseDoubleDoor(sPlayer, sBlock, digilock.getClosetimer());
 		}
 	}
 

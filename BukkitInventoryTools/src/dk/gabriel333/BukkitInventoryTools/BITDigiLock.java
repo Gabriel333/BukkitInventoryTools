@@ -61,7 +61,7 @@ public class BITDigiLock {
 		boolean createlock = true;
 		boolean newLock = true;
 		int price = G333Config.DIGILOCK_PRICE;
-		block = BITDigiLock.getDigiLockBlock(block);
+		block = getDigiLockBlock(block);
 		if (isLocked(block)) {
 			newLock = false;
 			query = "UPDATE " + BIT.digilockTable + " SET pincode='" + pincode
@@ -129,7 +129,7 @@ public class BITDigiLock {
 	}
 
 	public static Boolean isLocked(SpoutBlock block) {
-		block = BITDigiLock.getDigiLockBlock(block);
+		block = getDigiLockBlock(block);
 		String query = "SELECT * FROM " + BIT.digilockTable + " WHERE (x = "
 				+ block.getX() + " AND y = " + block.getY() + " AND z = "
 				+ block.getZ() + " AND world='" + block.getWorld().getName()
@@ -161,15 +161,15 @@ public class BITDigiLock {
 	}
 
 	private static SpoutBlock getDigiLockBlock(SpoutBlock block) {
-		if (BITDigiLock.isDoor(block)) {
-			if (BITDigiLock.isDoubleDoor(block)) {
-				block = BITDigiLock.getLeftDoubleDoor(block);
+		if (isDoor(block)) {
+			if (isDoubleDoor(block)) {
+				block = getLeftDoubleDoor(block);
 			}
 			Door door = (Door) block.getState().getData();
 			if (door.isTopHalf()) {
 				block = block.getRelative(BlockFace.DOWN);
 			}
-		} else if (BITDigiLock.isChest(block)) {
+		} else if (isChest(block)) {
 			SpoutChest sChest1 = (SpoutChest) block.getState();
 			if (sChest1.isDoubleChest()) {
 				SpoutChest sChest2 = sChest1.getOtherSide();
@@ -283,7 +283,7 @@ public class BITDigiLock {
 	}
 
 	public static BITDigiLock loadDigiLock(SpoutPlayer sPlayer, SpoutBlock block) {
-		block = BITDigiLock.getDigiLockBlock(block);
+		block = getDigiLockBlock(block);
 		String query = "SELECT * FROM " + BIT.digilockTable + " WHERE (x = "
 				+ block.getX() + " AND y = " + block.getY() + " AND z = "
 				+ block.getZ() + " AND world='" + block.getWorld().getName()
@@ -382,7 +382,7 @@ public class BITDigiLock {
 		Lever lever = (Lever) block.getState().getData();
 		lever.setPowered(true);
 		// block.setData((byte) (block.getState().getData().getData() | 8));
-		BITDigiLock digilock = BITDigiLock.loadDigiLock(sPlayer, block);
+		BITDigiLock digilock = loadDigiLock(sPlayer, block);
 		if (digilock.getClosetimer() > 0) {
 			scheduleLeverOff(sPlayer, block, digilock.getClosetimer());
 		}
@@ -458,7 +458,7 @@ public class BITDigiLock {
 			nextBlock
 					.setData((byte) (nextBlock.getState().getData().getData() | 4));
 		}
-		BITDigiLock digilock = BITDigiLock.loadDigiLock(sPlayer, block);
+		BITDigiLock digilock = loadDigiLock(sPlayer, block);
 		if (digilock.getClosetimer() > 0 && !isDoubleDoor(block)) {
 			scheduleCloseDoor(sPlayer, block, digilock.getClosetimer());
 		}
@@ -545,7 +545,7 @@ public class BITDigiLock {
 		if (G333Config.g333Config.DEBUG_DOOR)
 			sPlayer.sendMessage("The trapdoor is closed. OpenDoor");
 		sBlock.setData((byte) (sBlock.getState().getData().getData() | 4));
-		BITDigiLock digilock = BITDigiLock.loadDigiLock(sPlayer, sBlock);
+		BITDigiLock digilock = loadDigiLock(sPlayer, sBlock);
 		if (digilock.getClosetimer() > 0) {
 			scheduleCloseTrapdoor(sPlayer, sBlock, digilock.getClosetimer());
 		}
@@ -611,7 +611,7 @@ public class BITDigiLock {
 				openDoor(sPlayer, getRightDoubleDoor(sBlock));
 			} else {
 				openDoor(sPlayer, sBlock);
-				closeDoor(sPlayer, BITDigiLock.getLeftDoubleDoor(sBlock));
+				closeDoor(sPlayer, getLeftDoubleDoor(sBlock));
 			}
 		}
 	}
@@ -641,28 +641,28 @@ public class BITDigiLock {
 			// left door:EAST,SOUTH_EAST Right door:NORTH,NORTH_EAST
 			if (door.getFacing() == BlockFace.NORTH
 					&& door.getHingeCorner() == BlockFace.NORTH_EAST) {
-				if (BITDigiLock.isDoor(block.getRelative(BlockFace.WEST))) {
+				if (isDoor(block.getRelative(BlockFace.WEST))) {
 					return true;
 				} else {
 					return false;
 				}
 			} else if (door.getFacing() == BlockFace.WEST
 					&& door.getHingeCorner() == BlockFace.NORTH_WEST) {
-				if (BITDigiLock.isDoor(block.getRelative(BlockFace.SOUTH))) {
+				if (isDoor(block.getRelative(BlockFace.SOUTH))) {
 					return true;
 				} else {
 					return false;
 				}
 			} else if (door.getFacing() == BlockFace.EAST
 					&& door.getHingeCorner() == BlockFace.SOUTH_EAST) {
-				if (BITDigiLock.isDoor(block.getRelative(BlockFace.NORTH))) {
+				if (isDoor(block.getRelative(BlockFace.NORTH))) {
 					return true;
 				} else {
 					return false;
 				}
 			} else if (door.getFacing() == BlockFace.SOUTH
 					&& door.getHingeCorner() == BlockFace.SOUTH_WEST) {
-				if (BITDigiLock.isDoor(block.getRelative(BlockFace.EAST))) {
+				if (isDoor(block.getRelative(BlockFace.EAST))) {
 					return true;
 				} else {
 					return false;
@@ -759,7 +759,7 @@ public class BITDigiLock {
 	// TODO: KAN SLETTES
 
 	public static void showDoorInfo(SpoutPlayer sPlayer, SpoutBlock targetblock) {
-		if (BITDigiLock.isDoor(targetblock)) {
+		if (isDoor(targetblock)) {
 
 			Door door = (Door) targetblock.getState().getData();
 			sPlayer.sendMessage("Facing:" + door.getFacing() + " Hinge:"
@@ -775,7 +775,7 @@ public class BITDigiLock {
 
 			if (door.getFacing() == BlockFace.NORTH
 					&& door.getHingeCorner() == BlockFace.NORTH_EAST) {
-				if (BITDigiLock.isDoor(rightdoor.getRelative(BlockFace.WEST))) {
+				if (isDoor(rightdoor.getRelative(BlockFace.WEST))) {
 					rightdoor = rightdoor.getRelative(BlockFace.WEST);
 					sPlayer.sendMessage("1-Block to the north(left) is:"
 							+ leftdoor.getType());
@@ -790,7 +790,7 @@ public class BITDigiLock {
 				}
 			} else if (door.getFacing() == BlockFace.WEST
 					&& door.getHingeCorner() == BlockFace.NORTH_WEST) {
-				if (BITDigiLock.isDoor(rightdoor.getRelative(BlockFace.SOUTH))) {
+				if (isDoor(rightdoor.getRelative(BlockFace.SOUTH))) {
 					rightdoor = rightdoor.getRelative(BlockFace.SOUTH);
 					sPlayer.sendMessage("3-Block to the north(left) is:"
 							+ leftdoor.getType());
@@ -806,7 +806,7 @@ public class BITDigiLock {
 
 			} else if (door.getFacing() == BlockFace.EAST
 					&& door.getHingeCorner() == BlockFace.SOUTH_EAST) {
-				if (BITDigiLock.isDoor(rightdoor.getRelative(BlockFace.NORTH))) {
+				if (isDoor(rightdoor.getRelative(BlockFace.NORTH))) {
 					rightdoor = rightdoor.getRelative(BlockFace.NORTH);
 					sPlayer.sendMessage("5-Block to the north(left) is:"
 							+ leftdoor.getType());
@@ -821,7 +821,7 @@ public class BITDigiLock {
 				}
 			} else if (door.getFacing() == BlockFace.SOUTH
 					&& door.getHingeCorner() == BlockFace.SOUTH_WEST) {
-				if (BITDigiLock.isDoor(rightdoor.getRelative(BlockFace.EAST))) {
+				if (isDoor(rightdoor.getRelative(BlockFace.EAST))) {
 					rightdoor = rightdoor.getRelative(BlockFace.EAST);
 					sPlayer.sendMessage("7-Block to the north(left) is:"
 							+ leftdoor.getType());

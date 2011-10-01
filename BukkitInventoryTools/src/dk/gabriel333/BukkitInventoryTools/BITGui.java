@@ -250,6 +250,7 @@ public class BITGui {
 			menuButtons.remove(removeButton);
 			BITButtons.remove("setPincodeRemove");
 			popupSetPincode.removeWidget(removeButton);
+			popupSetPincode.setVisible(false);
 			//removeButton.setEnabled(false).setDirty(true);
 		}
 		popupSetPincode.setDirty(true);

@@ -23,7 +23,7 @@ public class BITInputListener extends InputListener {
 		ScreenType screentype = event.getScreenType();
 		String keypressed = event.getKey().name();
 		SpoutBlock targetblock = (SpoutBlock) sPlayer.getTargetBlock(null, 4);
-		BITPlayer bPlayer;
+		BITPlayer bPlayer = new BITPlayer(sPlayer);
 		bPlayer.setPincode(sPlayer, targetblock);
 		// PLAYER_INVENTORY
 		if (screentype == ScreenType.PLAYER_INVENTORY) {
@@ -104,7 +104,7 @@ public class BITInputListener extends InputListener {
 										+ "1) BITInputlistener: You have permission to open a locked door/chest");
 							G333Messages.sendNotification(sPlayer,
 									"You are the owner");
-							BITGui.setPincode(sPlayer, targetblock);
+							bPlayer.setPincode(sPlayer, targetblock);
 						} else {
 							G333Messages.sendNotification(sPlayer,
 									"Locked with Digilock");
@@ -127,9 +127,9 @@ public class BITInputListener extends InputListener {
 								if (BITDigiLock.isDoubleDoor(targetblock)) {
 									SpoutBlock leftdoor = BITDigiLock
 											.getLeftDoubleDoor(targetblock);
-									BITGui.setPincode(sPlayer, leftdoor);
+									bPlayer.setPincode(sPlayer, leftdoor);
 								} else {
-									BITGui.setPincode(sPlayer, targetblock);
+									bPlayer.setPincode(sPlayer, targetblock);
 								}
 							}
 						} else {

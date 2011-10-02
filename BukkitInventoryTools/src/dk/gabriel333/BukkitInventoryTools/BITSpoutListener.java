@@ -43,13 +43,15 @@ public class BITSpoutListener extends SpoutListener {
 						Inventory inv = sChest.getLargestInventory();
 						sPlayer.openInventoryWindow(inv);
 
-					} else if(BITDigiLock.isDoubleDoor(digilock.getBlock())) {
+					} else if (BITDigiLock.isDoubleDoor(digilock.getBlock())) {
 						BITDigiLock.playDigiLockSound(digilock.getBlock());
-						BITDigiLock.openDoubleDoor(sPlayer, digilock.getBlock());
-						
+						BITDigiLock.openDoubleDoor(sPlayer,
+								digilock.getBlock(), digilock.getUseCost());
+
 					} else if (BITDigiLock.isDoor(digilock.getBlock())) {
 						BITDigiLock.playDigiLockSound(digilock.getBlock());
-						BITDigiLock.openDoor(sPlayer, digilock.getBlock());
+						BITDigiLock.openDoor(sPlayer, digilock.getBlock(),
+								digilock.getUseCost());
 
 					} else if (digilock.getBlock().getType() == Material.LEVER) {
 
@@ -69,7 +71,8 @@ public class BITSpoutListener extends SpoutListener {
 
 					} else if (digilock.getBlock().getType() == Material.TRAP_DOOR) {
 						BITDigiLock.playDigiLockSound(digilock.getBlock());
-						BITDigiLock.openTrapdoor(sPlayer, digilock.getBlock());
+						BITDigiLock.openTrapdoor(sPlayer, digilock.getBlock(),
+								digilock.getUseCost());
 
 					} else if (BITDigiLock.isSign(sBlock)) {
 
@@ -77,7 +80,7 @@ public class BITSpoutListener extends SpoutListener {
 				} else {
 					G333Messages.sendNotification(sPlayer, "Wrong pincode!");
 					if (BITDigiLock.isDoor(digilock.getBlock())) {
-						BITDigiLock.closeDoor(sPlayer, digilock.getBlock());
+						BITDigiLock.closeDoor(sPlayer, digilock.getBlock(), 0);
 					} else if (BITDigiLock.isChest(digilock.getBlock())
 							|| digilock.getBlock().getType() == Material.DISPENSER
 							|| digilock.getBlock().getType() == Material.FURNACE) {
@@ -106,20 +109,21 @@ public class BITSpoutListener extends SpoutListener {
 							BITGui.pincode3.getText(), BITGui.owner1.getText(),
 							Integer.valueOf(BITGui.closetimer1.getText()),
 							BITGui.listOfCoOwners.getText(), "",
-							sBlock.getTypeId(), "");
+							sBlock.getTypeId(), "",
+							Integer.valueOf(BITGui.useCost1.getText()));
 					BITGui.cleanupSetPincode(sPlayer);
-					}
+				}
 
 			} else if ((BITGui.BITButtons.get(uuid) == "setPincodeCancel")) {
 				BITGui.popupSetPincode.close();
 				BITGui.popupSetPincode.removeWidgets(BIT.plugin);
 				BITGui.cleanupSetPincode(sPlayer);
-				
+
 			} else if ((BITGui.BITButtons.get(uuid) == "setPincodeRemove")) {
 				BITGui.popupSetPincode.close();
 				BITGui.popupSetPincode.removeWidgets(BIT.plugin);
 				BITGui.cleanupSetPincode(sPlayer);
-				
+
 				if (BITDigiLock.isLocked(sBlock)) {
 					digilock.RemoveDigiLock(sPlayer);
 				}
@@ -145,11 +149,25 @@ public class BITSpoutListener extends SpoutListener {
 		if (BITGui.closetimer1.getText().equals("")) {
 			BITGui.closetimer1.setText("0");
 		}
+		if (BITGui.useCost1.getText().equals("")) {
+			BITGui.useCost1.setText("0");
+		}
 		int closetimer = Integer.valueOf(BITGui.closetimer1.getText());
+		int useCost = Integer.valueOf(BITGui.useCost1.getText());
 		if (closetimer < 0 || closetimer > 3600) {
 			G333Messages.sendNotification(sPlayer, "Error in closetimer");
 			return false;
+		} else if (useCost > G333Config.DIGILOCK_USEMAXCOST) {
+			G333Messages.sendNotification(sPlayer, "Cost must be less "
+					+ G333Config.DIGILOCK_USEMAXCOST);
+			BITGui.useCost1.setText(BITGui.useCost1.setText("100").toString());
+			return false;
+		} else if (useCost < 0) {
+			G333Messages.sendNotification(sPlayer, "Cost must be > 0");
+			BITGui.useCost1.setText(BITGui.useCost1.setText("0").toString());
+			return false;
 		}
+
 		return true;
 	}
 }

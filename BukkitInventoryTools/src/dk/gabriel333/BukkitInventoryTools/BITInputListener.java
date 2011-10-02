@@ -85,9 +85,9 @@ public class BITInputListener extends InputListener {
 						BITDigiLock digilock = BITDigiLock.loadDigiLock(
 								sPlayer, targetblock);
 						if (BITDigiLock.isDoubleDoor(targetblock)) {
-							BITDigiLock.closeDoubleDoor(sPlayer, targetblock);
+							BITDigiLock.closeDoubleDoor(sPlayer, targetblock,0);
 						} else if (BITDigiLock.isDoor(targetblock)) {
-							BITDigiLock.closeDoor(sPlayer, targetblock);
+							BITDigiLock.closeDoor(sPlayer, targetblock,0);
 						} else if (BITDigiLock.isTrapdoor(targetblock)) {
 							BITDigiLock.closeTrapdoor(sPlayer, targetblock);
 						}

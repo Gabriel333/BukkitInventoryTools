@@ -30,6 +30,7 @@ public class BITCommandDigiLock implements CommandExecutor {
 		String shared = "";
 		String owner = sPlayer.getName();
 		Integer closetimer = 0; // never closes automatically
+		int usecost=0;
 		if (!BIT.isPlayer(sPlayer)) {
 			G333Messages.showError("You cant use this command in the console.");
 			return false;
@@ -48,7 +49,8 @@ public class BITCommandDigiLock implements CommandExecutor {
 			if (!BITDigiLock.isLocked(block)) {
 				if (args.length == 0) {
 					sPlayer.sendMessage("Usage: /digilock [pincode]|[unlock pincode]"
-							+ "|[lock pincode]|[owner playername]|[closetimer seconds]|[remove]|[info]");
+							+ "|[lock pincode]|[owner playername]|[closetimer seconds]"+
+							"|[usecost cost]|[remove]|[info]");
 					return true;
 				} else {
 					String action;
@@ -70,6 +72,10 @@ public class BITCommandDigiLock implements CommandExecutor {
 							if (n + 1 <= args.length)
 								closetimer = Integer.getInteger(args[n + 1]);
 							n++;
+						}  else if (action.equalsIgnoreCase("usecost")) {
+							if (n + 1 <= args.length)
+								usecost = Integer.getInteger(args[n + 1]);
+							n++;
 						} else if (action.equalsIgnoreCase("remove")) {
 
 						}
@@ -78,7 +84,7 @@ public class BITCommandDigiLock implements CommandExecutor {
 							G333Permissions.NOT_QUIET)) {
 						BITDigiLock.SaveDigiLock(sPlayer, block, pincode,
 								owner, closetimer, coowners, shared,
-								block.getTypeId(), "");
+								block.getTypeId(), "",usecost);
 						return true;
 					}
 
@@ -95,9 +101,9 @@ public class BITCommandDigiLock implements CommandExecutor {
 							Inventory inv = sChest.getLargestInventory();
 							sPlayer.openInventoryWindow(inv);
 						} else if (BITDigiLock.isDoubleDoor(block)) {
-							BITDigiLock.openDoubleDoor(sPlayer, block);
+							BITDigiLock.openDoubleDoor(sPlayer, block,digilock.getUseCost());
 						} else if (BITDigiLock.isDoor(digilock.getBlock())) {
-							BITDigiLock.openDoor(sPlayer, block);
+							BITDigiLock.openDoor(sPlayer, block,digilock.getUseCost());
 						} else if (digilock.getBlock().getType() == Material.FURNACE) {
 							Furnace furnace = (Furnace) block.getState();
 							Inventory inv = furnace.getInventory();
@@ -107,7 +113,7 @@ public class BITCommandDigiLock implements CommandExecutor {
 							Inventory inv = dispenser.getInventory();
 							sPlayer.openInventoryWindow(inv);
 						} else if (digilock.getBlock().getType() == Material.TRAP_DOOR) {
-							BITDigiLock.openTrapdoor(sPlayer, block);
+							BITDigiLock.openTrapdoor(sPlayer, block,digilock.getUseCost());
 						}
 					} else {
 						sPlayer.sendMessage("wrong pincode!");
@@ -131,17 +137,18 @@ public class BITCommandDigiLock implements CommandExecutor {
 						Inventory inv = sChest.getLargestInventory();
 						sPlayer.openInventoryWindow(inv);
 					} else if (BITDigiLock.isDoubleDoor(digilock.getBlock())) {
-						BITDigiLock.openDoubleDoor(sPlayer, block);
+						BITDigiLock.openDoubleDoor(sPlayer, block,digilock.getUseCost());
 
 					} else if (BITDigiLock.isDoor(digilock.getBlock())) {
-						BITDigiLock.openDoor(sPlayer, block);
+						BITDigiLock.openDoor(sPlayer, block,digilock.getUseCost());
 					}
 				} else {
 					if (args.length == 1)
 						sPlayer.damage(5);
 					sPlayer.sendMessage("Wrong pincode!");
 					sPlayer.sendMessage("Usage: /digilock [pincode]|[unlock pincode]"
-							+ "|[lock pincode]|[owner playername]|[closetimer seconds]|[remove]|[info]");
+							+ "|[lock pincode]|[owner playername]|[closetimer seconds]"
+							+"|[usecost cost]|[remove]|[info]");
 				}
 			}
 			return true;

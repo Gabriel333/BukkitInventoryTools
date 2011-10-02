@@ -77,9 +77,9 @@ public class BITPlayerListener extends PlayerListener {
 								BITDigiLock.playDigiLockSound(block);
 								if (BITDigiLock
 										.isDoubleDoorOpen(sPlayer, block)) {
-									BITDigiLock.closeDoubleDoor(sPlayer, block);
+									BITDigiLock.closeDoubleDoor(sPlayer, block,0);
 								} else {
-									BITDigiLock.openDoubleDoor(sPlayer, block);
+									BITDigiLock.openDoubleDoor(sPlayer, block,digilock.getUseCost());
 								}
 								G333Messages.sendNotification(sPlayer,
 										"Used with fingerprint");
@@ -88,7 +88,7 @@ public class BITPlayerListener extends PlayerListener {
 								if (BITDigiLock
 										.isDoubleDoorOpen(sPlayer, block)) {
 									BITDigiLock.playDigiLockSound(block);
-									BITDigiLock.closeDoubleDoor(sPlayer, block);
+									BITDigiLock.closeDoubleDoor(sPlayer, block,0);
 								}
 							}
 						} else {
@@ -102,7 +102,7 @@ public class BITPlayerListener extends PlayerListener {
 											+ sPlayer.getName());
 								}
 							} else {
-								BITDigiLock.closeDoubleDoor(sPlayer, block);
+								BITDigiLock.closeDoubleDoor(sPlayer, block,0);
 								BITDigiLock.playDigiLockSound(block);
 							}
 						}
@@ -117,9 +117,9 @@ public class BITPlayerListener extends PlayerListener {
 									|| digilock.isCoowner(sPlayer)) {
 								BITDigiLock.playDigiLockSound(block);
 								if (BITDigiLock.isDoorOpen(sPlayer, block)) {
-									BITDigiLock.closeDoor(sPlayer, block);
+									BITDigiLock.closeDoor(sPlayer, block,0);
 								} else {
-									BITDigiLock.openDoor(sPlayer, block);
+									BITDigiLock.openDoor(sPlayer, block,digilock.getUseCost());
 								}
 								G333Messages.sendNotification(sPlayer,
 										"Used with fingerprint");
@@ -127,7 +127,7 @@ public class BITPlayerListener extends PlayerListener {
 								sPlayer.sendMessage("Your fingerprint does not match the DigiLock");
 								if (BITDigiLock.isDoorOpen(sPlayer, block)) {
 									BITDigiLock.playDigiLockSound(block);
-									BITDigiLock.closeDoor(sPlayer, block);
+									BITDigiLock.closeDoor(sPlayer, block,0);
 								}
 							}
 						} else {
@@ -140,7 +140,7 @@ public class BITPlayerListener extends PlayerListener {
 											+ sPlayer.getName());
 								}
 							} else {
-								BITDigiLock.closeDoor(sPlayer, block);
+								BITDigiLock.closeDoor(sPlayer, block,0);
 								BITDigiLock.playDigiLockSound(block);
 							}
 						}
@@ -157,7 +157,7 @@ public class BITPlayerListener extends PlayerListener {
 								if (BITDigiLock.isTrapdoorOpen(sPlayer, block)) {
 									BITDigiLock.closeTrapdoor(sPlayer, block);
 								} else {
-									BITDigiLock.openTrapdoor(sPlayer, block);
+									BITDigiLock.openTrapdoor(sPlayer, block,digilock.getUseCost());
 								}
 								G333Messages.sendNotification(sPlayer,
 										"Used with fingerprint");
@@ -165,7 +165,7 @@ public class BITPlayerListener extends PlayerListener {
 								sPlayer.sendMessage("Your fingerprint does not match the DigiLock");
 								if (BITDigiLock.isTrapdoorOpen(sPlayer, block)) {
 									BITDigiLock.playDigiLockSound(block);
-									BITDigiLock.closeDoor(sPlayer, block);
+									BITDigiLock.closeDoor(sPlayer, block,0);
 								}
 							}
 						} else {
@@ -245,7 +245,7 @@ public class BITPlayerListener extends PlayerListener {
 								if (lever.isPowered()) {
 									BITDigiLock.leverOff(sPlayer, block);
 								} else {
-									BITDigiLock.leverOn(sPlayer, block);
+									BITDigiLock.leverOn(sPlayer, block,digilock.getUseCost());
 								}
 							} else {
 								sPlayer.sendMessage("Your fingerprint does not match the DigiLock");
@@ -261,7 +261,7 @@ public class BITPlayerListener extends PlayerListener {
 									BITGui.getPincode(sPlayer, block);
 									if (digilock.getPincode().equals(
 											BITGui.pincode2.getText())) {
-										BITDigiLock.leverOn(sPlayer, block);
+										BITDigiLock.leverOn(sPlayer, block,digilock.getUseCost());
 										BITDigiLock.playDigiLockSound(block);
 									} else {
 										BITDigiLock.leverOff(sPlayer, block);

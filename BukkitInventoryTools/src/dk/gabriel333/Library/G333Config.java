@@ -35,7 +35,9 @@ public class G333Config extends Configuration {
 	private String SORT_BUCKETS;
 	public static String[] buckets;
 	
-	public static int DIGILOCK_PRICE;
+	public static int DIGILOCK_COST;
+	public static int DIGILOCK_USEMAXCOST;
+	public static int DIGILOCK_DESTROYCOST;
 	
 	public Boolean DEBUG_PERMISSIONS;
 	public Boolean DEBUG_SORTINVENTORY;
@@ -80,7 +82,9 @@ public class G333Config extends Configuration {
 		buckets = SORT_BUCKETS.split(",");
 		
 		//Digilock
-		DIGILOCK_PRICE = getIntParm("DigiLock.Price", 100);
+		DIGILOCK_COST = getIntParm("DigiLock.Cost", 100);
+		DIGILOCK_USEMAXCOST = getIntParm("DigiLock.UseMaxCost", 0);
+		DIGILOCK_DESTROYCOST = getIntParm("DigiLock.DestroyCost", -10);
 		
 		//Debug
 		DEBUG_PERMISSIONS = getBooleanParm("Debug.Permissions", false);

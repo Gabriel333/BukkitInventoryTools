@@ -67,8 +67,15 @@ Sort:
 # |                  Properties for Digilock             | #
 # +------------------------------------------------------+ #
 ############################################################
+# Cost:        Is the cost of creating a new DigiLock
+# UseMaxCost:  Is the limit of the cost the PLAYER can
+#              charge anotherplayer, to use his DigiLock. 
+# DestroyCost: Is the cost for destroying a DigiLock. If the
+#              cost is negative, the player will gain money.
 DigiLock:
-    Price: 100
+    Cost: 100
+    UseMaxCost: 100
+    DestroyCost: -10
 
 ############################################################
 # +------------------------------------------------------+ #

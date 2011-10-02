@@ -118,10 +118,12 @@ public class BITGui {
 	public static GenericTextField closetimer1 = new GenericTextField();
 	public static GenericTextField listOfCoOwners = new GenericTextField();
 	public static GenericTextField connectedTo = new GenericTextField();
+	public static GenericTextField useCost1 = new GenericTextField();
+	
 
 	public static void setPincode(SpoutPlayer sPlayer, SpoutBlock block) {
 		int height = 20;
-		int x, y, w1, w2;
+		int x, y, w1, w2, w3, w4;
 
 		BITDigiLock digilock;
 		if (BITDigiLock.isLocked(block)) {
@@ -130,11 +132,13 @@ public class BITGui {
 			owner1.setText(digilock.getOwner());
 			listOfCoOwners.setText(digilock.getCoOwners());
 			closetimer1.setText(Integer.toString(digilock.getClosetimer()));
+			useCost1.setText(Integer.toString(digilock.getUseCost()));
 		} else {
 			pincode3.setText("");
 			owner1.setText(sPlayer.getName());
 			listOfCoOwners.setText("");
 			closetimer1.setText("0");
+			useCost1.setText("0");
 		}
 
 		// GIF
@@ -158,6 +162,9 @@ public class BITGui {
 		x = 10;
 		w1 = 60;
 		w2 = 80;
+		w3 = 50;
+		w4 = 50;
+		
 		y = 170;
 		// ownerButton
 		GenericButton ownerButton = new GenericButton("Owner");
@@ -176,7 +183,7 @@ public class BITGui {
 
 		// closetimerButton
 		GenericButton closetimerButton = new GenericButton("Closetimer");
-		closetimerButton.setAuto(false).setX(x + 170).setY(y).setHeight(height)
+		closetimerButton.setAuto(false).setX(x + w1+w2+10).setY(y).setHeight(height)
 				.setWidth(w1);
 		closetimerButton.setTooltip("Set closetimer");
 		popupSetPincode.attachWidget(plugin, closetimerButton);
@@ -185,11 +192,28 @@ public class BITGui {
 		// closetimer1
 		closetimer1.setTooltip("Autoclosing time in sec.");
 		closetimer1.setCursorPosition(1).setMaximumCharacters(4);
-		closetimer1.setX(x + 170 + w1 + 1).setY(y);
-		closetimer1.setHeight(height).setWidth(w2);
+		closetimer1.setX(x + w1+1+w2+ 10+ w1+1).setY(y);
+		closetimer1.setHeight(height).setWidth(w3);
 		popupSetPincode.attachWidget(plugin, closetimer1);
+		
+		//useCostButton
+		GenericButton useCostButton = new GenericButton("Use cost");
+		useCostButton.setAuto(false).setX(x + w1+w2+10+w1+w3+10).setY(y).setHeight(height)
+				.setWidth(w1);
+		useCostButton.setTooltip("Set cost");
+		popupSetPincode.attachWidget(plugin, useCostButton);
+		menuButtons.add(useCostButton);
+		BITButtons.put(useCostButton.getId(), "UseCostButton");
+		//useCost1
+		useCost1.setTooltip("This is the cost to use the DigiLock");
+		useCost1.setCursorPosition(1).setMaximumCharacters(4);
+		useCost1.setX(x + w1+w2+10+w1+w3+10+w1 + 1).setY(y);
+		useCost1.setHeight(height).setWidth(w4);
+		popupSetPincode.attachWidget(plugin, useCost1);
+		
+		
 
-		y = y + height;
+		y = y + height+1;
 
 		// setCoOwnerButton
 		GenericButton CoOwnerButton = new GenericButton("CoOwners");
@@ -237,8 +261,9 @@ public class BITGui {
 		BITButtons.put(cancelButton2.getId(), "setPincodeCancel");
 
 		// removeButton
-		GenericButton removeButton = new GenericButton("Remove");
+		
 		if (BITDigiLock.isLocked(block)) {
+			GenericButton removeButton = new GenericButton("Remove");
 			removeButton.setAuto(false).setX(x - w1 - 10).setY(y)
 					.setHeight(height).setWidth(w1);
 			removeButton.setTooltip("Press Remove to delete the lock.");
@@ -247,10 +272,10 @@ public class BITGui {
 			BITButtons.put(removeButton.getId(), "setPincodeRemove");
 			popupSetPincode.attachWidget(plugin, removeButton);
 		} else {
-			menuButtons.remove(removeButton);
-			BITButtons.remove("setPincodeRemove");
-			popupSetPincode.removeWidget(removeButton);
-			popupSetPincode.setVisible(false);
+			//menuButtons.remove(removeButton);
+			//BITButtons.remove("setPincodeRemove");
+			//popupSetPincode.removeWidget(removeButton);
+			//popupSetPincode.setVisible(false);
 			//removeButton.setEnabled(false).setDirty(true);
 		}
 		popupSetPincode.setDirty(true);
@@ -262,11 +287,11 @@ public class BITGui {
 	}
 
 	public static void cleanupSetPincode(SpoutPlayer sPlayer) {
-		sPlayer.getMainScreen().removeWidget(popupSetPincode);
+		popupSetPincode.removeWidgets(BIT.plugin);
 	}
 
 	public static void cleanupGetPincode(SpoutPlayer sPlayer) {
-		sPlayer.getMainScreen().removeWidget(popupGetPincode);
+		popupGetPincode.removeWidgets(BIT.plugin);
 	}
 
 }

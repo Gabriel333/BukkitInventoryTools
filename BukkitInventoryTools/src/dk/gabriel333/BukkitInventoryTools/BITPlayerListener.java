@@ -25,6 +25,7 @@ public class BITPlayerListener extends PlayerListener {
 				|| event.getAction().equals(Action.LEFT_CLICK_BLOCK)) {
 			SpoutPlayer sPlayer = (SpoutPlayer) event.getPlayer();
 			SpoutBlock block = (SpoutBlock) event.getClickedBlock();
+			BITPlayer bPlayer = (BITPlayer) sPlayer;
 			if (G333Config.g333Config.DEBUG_GUI)
 				sPlayer.sendMessage("BITPlayerListener:Event:"
 						+ event.getEventName() + " action:" + event.getAction()
@@ -53,12 +54,13 @@ public class BITPlayerListener extends PlayerListener {
 						} else {
 							event.setCancelled(true);
 							if (sPlayer.isSpoutCraftEnabled()) {
-								BITGui.getPincode(sPlayer, block);
+								
+								bPlayer.getPincode(sPlayer, block);
 								SpoutChest sChest = (SpoutChest) block
 										.getState();
 								Inventory inv = sChest.getLargestInventory();
 								if (digilock.getPincode().equals(
-										BITGui.pincode2.getText())) {
+										bPlayer.pincode2.getText())) {
 									sPlayer.openInventoryWindow(inv);
 								}
 							} else {
@@ -95,7 +97,7 @@ public class BITPlayerListener extends PlayerListener {
 							// ASK FOR PINCODE
 							if (!BITDigiLock.isDoubleDoorOpen(sPlayer, block)) {
 								if (sPlayer.isSpoutCraftEnabled()) {
-									BITGui.getPincode(sPlayer, BITDigiLock
+									bPlayer.getPincode(sPlayer, BITDigiLock
 											.getLeftDoubleDoor(block));
 								} else {
 									sPlayer.sendMessage("Digilock'ed by "
@@ -134,7 +136,7 @@ public class BITPlayerListener extends PlayerListener {
 							// ASK FOR PINCODE
 							if (!BITDigiLock.isDoorOpen(sPlayer, block)) {
 								if (sPlayer.isSpoutCraftEnabled()) {
-									BITGui.getPincode(sPlayer, block);
+									bPlayer.getPincode(sPlayer, block);
 								} else {
 									sPlayer.sendMessage("Digilock'ed by "
 											+ sPlayer.getName());
@@ -172,7 +174,7 @@ public class BITPlayerListener extends PlayerListener {
 							// ASK FOR PINCODE
 							if (!BITDigiLock.isTrapdoorOpen(sPlayer, block)) {
 								if (sPlayer.isSpoutCraftEnabled()) {
-									BITGui.getPincode(sPlayer, block);
+									bPlayer.getPincode(sPlayer, block);
 								} else {
 									sPlayer.sendMessage("Digilock'ed by "
 											+ sPlayer.getName());
@@ -199,7 +201,7 @@ public class BITPlayerListener extends PlayerListener {
 						} else {
 							event.setCancelled(true);
 							if (sPlayer.isSpoutCraftEnabled()) {
-								BITGui.getPincode(sPlayer, block);
+								bPlayer.getPincode(sPlayer, block);
 							} else {
 								sPlayer.sendMessage("Digilock'ed by "
 										+ sPlayer.getName());
@@ -224,7 +226,7 @@ public class BITPlayerListener extends PlayerListener {
 						} else {
 							event.setCancelled(true);
 							if (sPlayer.isSpoutCraftEnabled()) {
-								BITGui.getPincode(sPlayer, block);
+								bPlayer.getPincode(sPlayer, block);
 							} else {
 								sPlayer.sendMessage("Digilock'ed by "
 										+ sPlayer.getName());
@@ -258,9 +260,9 @@ public class BITPlayerListener extends PlayerListener {
 								lever.setPowered(false);
 							} else {
 								if (sPlayer.isSpoutCraftEnabled()) {
-									BITGui.getPincode(sPlayer, block);
+									bPlayer.getPincode(sPlayer, block);
 									if (digilock.getPincode().equals(
-											BITGui.pincode2.getText())) {
+											bPlayer.pincode2.getText())) {
 										BITDigiLock.leverOn(sPlayer, block,digilock.getUseCost());
 										BITDigiLock.playDigiLockSound(block);
 									} else {
@@ -292,9 +294,9 @@ public class BITPlayerListener extends PlayerListener {
 							}
 						} else {
 							if (sPlayer.isSpoutCraftEnabled()) {
-								BITGui.getPincode(sPlayer, block);
+								bPlayer.getPincode(sPlayer, block);
 								if (digilock.getPincode().equals(
-										BITGui.pincode2.getText())) {
+										bPlayer.pincode2.getText())) {
 									// okay - go on
 
 								} else {
@@ -327,9 +329,9 @@ public class BITPlayerListener extends PlayerListener {
 							}
 						} else {
 							if (sPlayer.isSpoutCraftEnabled()) {
-								BITGui.getPincode(sPlayer, block);
+								bPlayer.getPincode(sPlayer, block);
 								if (digilock.getPincode().equals(
-										BITGui.pincode2.getText())) {
+										bPlayer.pincode2.getText())) {
 									// okay - go on
 								} else {
 									// if (G333Config.g333Config.DEBUG_DOOR)

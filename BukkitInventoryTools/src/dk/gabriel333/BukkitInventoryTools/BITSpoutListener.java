@@ -28,13 +28,14 @@ public class BITSpoutListener extends SpoutListener {
 			SpoutPlayer sPlayer = ((ButtonClickEvent) event).getPlayer();
 			SpoutBlock sBlock = (SpoutBlock) sPlayer.getTargetBlock(null, 4);
 			BITDigiLock digilock = BITDigiLock.loadDigiLock(sPlayer, sBlock);
+			BITPlayer bPlayer = (BITPlayer) sPlayer;
 
 			// ************************************
 			// Buttons in getPincodeWindow
 			// ************************************
-			if (BITGui.BITButtons.get(uuid) == "getPincodeUnlock") {
-				BITGui.popupGetPincode.close();
-				if ((digilock.getPincode().equals(BITGui.pincode2.getText()) && G333Permissions
+			if (bPlayer.BITButtons.get(uuid) == "getPincodeUnlock") {
+				bPlayer.popupGetPincode.close();
+				if ((digilock.getPincode().equals(bPlayer.pincode2.getText()) && G333Permissions
 						.hasPerm(sPlayer, "digilock.use", G333Permissions.QUIET))
 						|| G333Permissions.hasPerm(sPlayer, "digilock.admin",
 								G333Permissions.QUIET)) {
@@ -90,59 +91,59 @@ public class BITSpoutListener extends SpoutListener {
 					}
 					sPlayer.damage(5);
 				}
-				BITGui.popupGetPincode.removeWidgets(BIT.plugin);
-				BITGui.cleanupGetPincode(sPlayer);
-			} else if (BITGui.BITButtons.get(uuid) == "getPincodeCancel") {
-				BITGui.popupGetPincode.close();
-				BITGui.popupGetPincode.removeWidgets(BIT.plugin);
-				BITGui.cleanupGetPincode(sPlayer);
+				bPlayer.popupGetPincode.removeWidgets(BIT.plugin);
+				bPlayer.cleanupGetPincode(sPlayer);
+			} else if (bPlayer.BITButtons.get(uuid) == "getPincodeCancel") {
+				bPlayer.popupGetPincode.close();
+				bPlayer.popupGetPincode.removeWidgets(BIT.plugin);
+				bPlayer.cleanupGetPincode(sPlayer);
 			}
 
 			// ************************************
 			// Buttons in BITGui.setPincode
 			// ************************************
-			else if (BITGui.BITButtons.get(uuid) == "setPincodeLock"
+			else if (bPlayer.BITButtons.get(uuid) == "setPincodeLock"
 					&& G333Permissions.hasPerm(sPlayer, "digilock.create",
 							G333Permissions.QUIET)) {
 				if (validateSetPincodeFields(sPlayer)) {
-					BITGui.popupSetPincode.close();
-					// BITGui.popupSetPincode.removeWidgets(BIT.plugin);
+					bPlayer.popupSetPincode.close();
+					// bPlayer.popupSetPincode.removeWidgets(BIT.plugin);
 					BITDigiLock.SaveDigiLock(sPlayer, sBlock,
-							BITGui.pincode3.getText(), BITGui.owner1.getText(),
-							Integer.valueOf(BITGui.closetimer1.getText()),
-							BITGui.listOfCoOwners.getText(), "",
+							bPlayer.pincode3.getText(), bPlayer.owner1.getText(),
+							Integer.valueOf(bPlayer.closetimer1.getText()),
+							bPlayer.listOfCoOwners.getText(), "",
 							sBlock.getTypeId(), "",
-							Integer.valueOf(BITGui.useCost1.getText()));
-					BITGui.cleanupSetPincode(sPlayer);
+							Integer.valueOf(bPlayer.useCost1.getText()));
+					bPlayer.cleanupSetPincode(sPlayer);
 				}
 
-			} else if ((BITGui.BITButtons.get(uuid) == "setPincodeCancel")) {
-				BITGui.popupSetPincode.close();
-				// BITGui.popupSetPincode.removeWidgets(BIT.plugin);
-				BITGui.cleanupSetPincode(sPlayer);
+			} else if ((bPlayer.BITButtons.get(uuid) == "setPincodeCancel")) {
+				bPlayer.popupSetPincode.close();
+				// bPlayer.popupSetPincode.removeWidgets(BIT.plugin);
+				bPlayer.cleanupSetPincode(sPlayer);
 
-			} else if ((BITGui.BITButtons.get(uuid) == "setPincodeRemove")) {
-				BITGui.popupSetPincode.close();
-				// BITGui.popupSetPincode.removeWidgets(BIT.plugin);
-				BITGui.cleanupSetPincode(sPlayer);
+			} else if ((bPlayer.BITButtons.get(uuid) == "setPincodeRemove")) {
+				bPlayer.popupSetPincode.close();
+				// bPlayer.popupSetPincode.removeWidgets(BIT.plugin);
+				bPlayer.cleanupSetPincode(sPlayer);
 
 				if (BITDigiLock.isLocked(sBlock)) {
 					digilock.RemoveDigiLock(sPlayer);
 				}
 
-			} else if ((BITGui.BITButtons.get(uuid) == "OwnerButton")) {
+			} else if ((bPlayer.BITButtons.get(uuid) == "OwnerButton")) {
 				if (validateSetPincodeFields(sPlayer)) {
 				}
 
-			} else if ((BITGui.BITButtons.get(uuid) == "CoOwnerButton")) {
+			} else if ((bPlayer.BITButtons.get(uuid) == "CoOwnerButton")) {
 				if (validateSetPincodeFields(sPlayer)) {
 				}
 
-			} else if ((BITGui.BITButtons.get(uuid) == "UseCostButton")) {
+			} else if ((bPlayer.BITButtons.get(uuid) == "UseCostButton")) {
 				if (validateSetPincodeFields(sPlayer)) {
 				}
 				
-			} else if ((BITGui.BITButtons.get(uuid) == "ClosetimerButton")) {
+			} else if ((bPlayer.BITButtons.get(uuid) == "ClosetimerButton")) {
 				if (validateSetPincodeFields(sPlayer)) {
 				}
 
@@ -155,42 +156,43 @@ public class BITSpoutListener extends SpoutListener {
 			else {
 				if (G333Config.g333Config.DEBUG_GUI)
 					sPlayer.sendMessage("BITSpoutListener: Unknow button:"
-							+ BITGui.BITButtons.get(uuid));
+							+ bPlayer.BITButtons.get(uuid));
 			}
 		}
 	}
 
 	private boolean validateSetPincodeFields(SpoutPlayer sPlayer) {
-		if (BITGui.closetimer1.getText().equals("")) {
-			BITGui.closetimer1.setText("0");
-			BITGui.popupSetPincode.setDirty(true);
+		BITPlayer bPlayer = (BITPlayer) sPlayer;
+		if (bPlayer.closetimer1.getText().equals("")) {
+			bPlayer.closetimer1.setText("0");
+			bPlayer.popupSetPincode.setDirty(true);
 		}
-		if (BITGui.useCost1.getText().equals("")) {
-			BITGui.useCost1.setText("0");
-			BITGui.popupSetPincode.setDirty(true);
+		if (bPlayer.useCost1.getText().equals("")) {
+			bPlayer.useCost1.setText("0");
+			bPlayer.popupSetPincode.setDirty(true);
 		}
-		int closetimer = Integer.valueOf(BITGui.closetimer1.getText());
-		int useCost = Integer.valueOf(BITGui.useCost1.getText());
+		int closetimer = Integer.valueOf(bPlayer.closetimer1.getText());
+		int useCost = Integer.valueOf(bPlayer.useCost1.getText());
 		if (closetimer < 0) {
 			G333Messages.sendNotification(sPlayer, "Closetimer must be > 0");
-			BITGui.closetimer1.setText("0");
-			BITGui.popupSetPincode.setDirty(true);
+			bPlayer.closetimer1.setText("0");
+			bPlayer.popupSetPincode.setDirty(true);
 			return false;
 		} else if(closetimer > 3600) {
 			G333Messages.sendNotification(sPlayer, "Closetim. must be<3600");
-			BITGui.closetimer1.setText("3600");
-			BITGui.popupSetPincode.setDirty(true);
+			bPlayer.closetimer1.setText("3600");
+			bPlayer.popupSetPincode.setDirty(true);
 			return false;
 		} else if (useCost > G333Config.DIGILOCK_USEMAXCOST) {
 			G333Messages.sendNotification(sPlayer, "Cost must be less "
 					+ G333Config.DIGILOCK_USEMAXCOST);
-			BITGui.useCost1.setText(String.valueOf(G333Config.DIGILOCK_USEMAXCOST));
-			BITGui.popupSetPincode.setDirty(true);
+			bPlayer.useCost1.setText(String.valueOf(G333Config.DIGILOCK_USEMAXCOST));
+			bPlayer.popupSetPincode.setDirty(true);
 			return false;
 		} else if (useCost < 0) {
 			G333Messages.sendNotification(sPlayer, "Cost must be > 0");
-			BITGui.useCost1.setText("0");
-			BITGui.popupSetPincode.setDirty(true);
+			bPlayer.useCost1.setText("0");
+			bPlayer.popupSetPincode.setDirty(true);
 			return false;
 		}
 

@@ -23,8 +23,8 @@ public class BITInputListener extends InputListener {
 		ScreenType screentype = event.getScreenType();
 		String keypressed = event.getKey().name();
 		SpoutBlock targetblock = (SpoutBlock) sPlayer.getTargetBlock(null, 4);
-		BITPlayer bPlayer = new BITPlayer(sPlayer);
-		bPlayer.setPincode(sPlayer, targetblock);
+		BITPlayer bPlayer = (BITPlayer) sPlayer;
+		//bPlayer.setPincode(sPlayer, targetblock);
 		// PLAYER_INVENTORY
 		if (screentype == ScreenType.PLAYER_INVENTORY) {
 			if (keypressed.equals(G333Config.g333Config.LIBRARY_SORTKEY)) {

@@ -4,11 +4,11 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.UUID;
 
-import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.Plugin;
 import org.getspout.spout.inventory.CustomMCInventory;
+import org.getspout.spoutapi.SpoutManager;
 import org.getspout.spoutapi.block.SpoutBlock;
 import org.getspout.spoutapi.gui.GenericButton;
 import org.getspout.spoutapi.gui.GenericItemWidget;
@@ -17,13 +17,10 @@ import org.getspout.spoutapi.gui.GenericTextField;
 import org.getspout.spoutapi.gui.PopupScreen;
 import org.getspout.spoutapi.gui.ScreenType;
 import org.getspout.spoutapi.player.SpoutPlayer;
-//import org.getspout.spoutapi.block.SpoutChest;
-
-//import de.Keyle.MyWolf.MyWolfPlugin;
 import de.Keyle.MyWolf.MyWolfPlugin;
 import dk.gabriel333.Library.G333Inventory;
 
-public abstract class BITPlayer implements SpoutPlayer, Player {
+public abstract class BITPlayer implements SpoutPlayer {
 
 	public BITPlayer bPlayer;
 
@@ -31,18 +28,18 @@ public abstract class BITPlayer implements SpoutPlayer, Player {
 		plugin = BIT.plugin;
 	}
 	
-	protected Player player;
+	protected SpoutPlayer player;
 
 	public BITPlayer getPlayer() {
 		return bPlayer;
 	}
 	
-	public void setPlayer(Player player){
+	public void setPlayer(SpoutPlayer player){
 		bPlayer=(BITPlayer) player;
 	}
 	
-	BITPlayer(Player player) {
-		this.player = player;
+	BITPlayer(SpoutPlayer player) {
+		this.player = SpoutManager.getPlayer(player);
 	}
 
 	public static void sortinventory(SpoutPlayer sPlayer, ScreenType screentype) {

@@ -87,20 +87,23 @@ public class BITDigiLock {
 					+ block.getWorld().getName() + "', '" + coowners + "', '"
 					+ shared + "', " + block.getTypeId() + ", '" + connectedTo
 					+ "', " + useCost + " );";
-			if (BIT.plugin.Method.hasAccount(sPlayer.getName()) && cost > 0) {
-				if (BIT.plugin.Method.getAccount(sPlayer.getName()).hasEnough(
-						cost)) {
-					BIT.plugin.Method.getAccount(sPlayer.getName()).subtract(
-							cost);
-					sPlayer.sendMessage("Your account ("
-							+ BIT.plugin.Method.getAccount(sPlayer.getName())
-									.balance() + ") has been deducted " + cost
-							+ " bucks");
-				} else {
-					sPlayer.sendMessage("You dont have enough money ("
-							+ BIT.plugin.Method.getAccount(sPlayer.getName())
-									.balance() + "). Cost is:" + cost);
-					createlock = false;
+			if (BIT.useEconomy) {
+				if (BIT.plugin.Method.hasAccount(sPlayer.getName()) && cost > 0) {
+					if (BIT.plugin.Method.getAccount(sPlayer.getName())
+							.hasEnough(cost)) {
+						BIT.plugin.Method.getAccount(sPlayer.getName())
+								.subtract(cost);
+						sPlayer.sendMessage("Your account ("
+								+ BIT.plugin.Method.getAccount(
+										sPlayer.getName()).balance()
+								+ ") has been deducted " + cost + " bucks");
+					} else {
+						sPlayer.sendMessage("You dont have enough money ("
+								+ BIT.plugin.Method.getAccount(
+										sPlayer.getName()).balance()
+								+ "). Cost is:" + cost);
+						createlock = false;
+					}
 				}
 			}
 		}
@@ -337,6 +340,7 @@ public class BITDigiLock {
 
 	public void RemoveDigiLock(SpoutPlayer sPlayer) {
 		boolean deletelock = true;
+		if (BIT.useEconomy){
 		if (BIT.plugin.Method.hasAccount(sPlayer.getName())) {
 			if (BIT.plugin.Method.getAccount(sPlayer.getName()).hasEnough(
 					G333Config.DIGILOCK_DESTROYCOST)
@@ -354,7 +358,7 @@ public class BITDigiLock {
 						+ G333Config.DIGILOCK_DESTROYCOST);
 				deletelock = false;
 			}
-		}
+		}}
 		String query = "DELETE FROM " + BIT.digilockTable + " WHERE (x = "
 				+ block.getX() + " AND y = " + block.getY() + " AND z = "
 				+ block.getZ() + " AND world='" + block.getWorld().getName()
@@ -416,7 +420,7 @@ public class BITDigiLock {
 	// *******************************************************
 	public static void leverOn(SpoutPlayer sPlayer, SpoutBlock block, int cost) {
 		boolean setleveron = true;
-		if (cost > 0) {
+		if (BIT.useEconomy && cost > 0) {
 			if (BIT.plugin.Method.hasAccount(sPlayer.getName())) {
 				if (BIT.plugin.Method.getAccount(sPlayer.getName()).hasEnough(
 						cost)) {
@@ -503,7 +507,7 @@ public class BITDigiLock {
 	public static void openDoor(SpoutPlayer sPlayer, SpoutBlock block, int cost) {
 		boolean opendoor = true;
 		BITDigiLock digilock = loadDigiLock(sPlayer, block);
-		if (cost > 0) {
+		if (BIT.useEconomy && cost > 0) {
 			if (BIT.plugin.Method.hasAccount(sPlayer.getName())) {
 				if (BIT.plugin.Method.getAccount(sPlayer.getName()).hasEnough(
 						cost)) {
@@ -546,7 +550,7 @@ public class BITDigiLock {
 
 	public static void closeDoor(SpoutPlayer sPlayer, SpoutBlock block, int cost) {
 		boolean closedoor = true;
-		if (cost > 0) {
+		if (BIT.useEconomy && cost > 0) {
 			if (BIT.plugin.Method.hasAccount(sPlayer.getName())) {
 				if (BIT.plugin.Method.getAccount(sPlayer.getName()).hasEnough(
 						cost)) {
@@ -646,7 +650,7 @@ public class BITDigiLock {
 			int cost) {
 		boolean opentrapdoor = true;
 		BITDigiLock digilock = loadDigiLock(sPlayer, sBlock);
-		if (cost > 0) {
+		if (BIT.useEconomy && cost > 0) {
 			if (BIT.plugin.Method.hasAccount(sPlayer.getName())) {
 				if (BIT.plugin.Method.getAccount(sPlayer.getName()).hasEnough(
 						cost)) {

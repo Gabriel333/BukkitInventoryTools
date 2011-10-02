@@ -23,6 +23,7 @@ public class BITServerListener extends ServerListener {
 					.getPlugin())) {
 				this.plugin.Method = null;
 				G333Messages.showInfo("Economy plugin is disabled");
+				BIT.useEconomy=false;
 				// Message when payment method is disabled.
 			}
 		}
@@ -39,9 +40,11 @@ public class BITServerListener extends ServerListener {
 				G333Messages.showInfo("Register enabled: "
 						+ this.plugin.Method.getName() + " v"
 						+ this.plugin.Method.getVersion() + ").");
+				BIT.useEconomy=true;
 			} else {
 				G333Messages
 						.showWarning("Register could not find a economy plugin.");
+				BIT.useEconomy=false;
 			}
 		}
 	}

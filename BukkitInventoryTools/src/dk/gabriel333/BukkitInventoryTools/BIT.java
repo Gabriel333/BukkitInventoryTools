@@ -30,8 +30,9 @@ public class BIT extends JavaPlugin {
 	public static BIT plugin;
 
 	public static Boolean spout = false;
- 
+
 	// Hook into register
+	public static Boolean useEconomy = false;
 	public Methods Methods;
 	public Method Method;
 
@@ -133,13 +134,17 @@ public class BIT extends JavaPlugin {
 				.getPlugin("iConomy");
 		Plugin boseconomyPlugin = this.getServer().getPluginManager()
 				.getPlugin("BOSEconomy");
-		if (iconomyPlugin!=null || boseconomyPlugin!=null) {
+		Plugin essentialsPlugin = this.getServer().getPluginManager()
+				.getPlugin("Essentials");
+		Plugin multiCurrencyPlugin = this.getServer().getPluginManager()
+				.getPlugin("MultiCurrency");
+		if (iconomyPlugin != null || boseconomyPlugin != null
+				|| essentialsPlugin != null || multiCurrencyPlugin != null) {
 			getServer().getPluginManager().registerEvent(Type.PLUGIN_ENABLE,
 					new BITServerListener(this), Priority.Monitor, this);
 			getServer().getPluginManager().registerEvent(Type.PLUGIN_DISABLE,
 					new BITServerListener(this), Priority.Monitor, this);
 		}
-			
 	}
 
 	public static boolean isPlayer(CommandSender sender) {

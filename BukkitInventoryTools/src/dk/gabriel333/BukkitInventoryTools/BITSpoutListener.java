@@ -58,11 +58,13 @@ public class BITSpoutListener extends SpoutListener {
 					} else if (digilock.getBlock().getType() == Material.STONE_BUTTON) {
 
 					} else if (digilock.getBlock().getType() == Material.DISPENSER) {
+						BITDigiLock.playDigiLockSound(digilock.getBlock());
 						Dispenser dispenser = (Dispenser) sBlock.getState();
 						Inventory inv = dispenser.getInventory();
 						sPlayer.openInventoryWindow(inv);
 
 					} else if (digilock.getBlock().getType() == Material.FURNACE) {
+						BITDigiLock.playDigiLockSound(digilock.getBlock());
 						Furnace furnace = (Furnace) sBlock.getState();
 						Inventory inv = furnace.getInventory();
 						sPlayer.openInventoryWindow(inv);

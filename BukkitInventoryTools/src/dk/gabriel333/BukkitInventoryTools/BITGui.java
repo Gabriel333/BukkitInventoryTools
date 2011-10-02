@@ -288,10 +288,12 @@ public class BITGui {
 
 	public static void cleanupSetPincode(SpoutPlayer sPlayer) {
 		popupSetPincode.removeWidgets(BIT.plugin);
+		popupSetPincode.setDirty(true);
 	}
 
 	public static void cleanupGetPincode(SpoutPlayer sPlayer) {
 		popupGetPincode.removeWidgets(BIT.plugin);
+		popupGetPincode.setDirty(true);
 	}
 
 }

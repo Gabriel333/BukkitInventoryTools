@@ -25,12 +25,13 @@ public class BITCommandDigiLock implements CommandExecutor {
 			String label, String[] args) {
 		SpoutPlayer sPlayer = (SpoutPlayer) sender;
 		SpoutBlock block = (SpoutBlock) sPlayer.getTargetBlock(null, 4);
+		block = BITDigiLock.getDigiLockBlock(block);
 		String pincode = "0000";
 		String coowners = "";
 		String shared = "";
 		String owner = sPlayer.getName();
 		Integer closetimer = 0; // never closes automatically
-		int usecost=0;
+		int usecost = 0;
 		if (!BIT.isPlayer(sPlayer)) {
 			G333Messages.showError("You cant use this command in the console.");
 			return false;
@@ -48,10 +49,7 @@ public class BITCommandDigiLock implements CommandExecutor {
 			// sPlayer.sendMessage("args.length: " + args.length);
 			if (!BITDigiLock.isLocked(block)) {
 				if (args.length == 0) {
-					sPlayer.sendMessage("Usage: /digilock [pincode]|[unlock pincode]"
-							+ "|[lock pincode]|[owner playername]|[closetimer seconds]"+
-							"|[usecost cost]|[remove]|[info]");
-					return true;
+					return false;
 				} else {
 					String action;
 					// LOCK
@@ -72,20 +70,23 @@ public class BITCommandDigiLock implements CommandExecutor {
 							if (n + 1 <= args.length)
 								closetimer = Integer.getInteger(args[n + 1]);
 							n++;
-						}  else if (action.equalsIgnoreCase("usecost")) {
+						} else if (action.equalsIgnoreCase("usecost")) {
 							if (n + 1 <= args.length)
 								usecost = Integer.getInteger(args[n + 1]);
 							n++;
 						} else if (action.equalsIgnoreCase("remove")) {
-
+							return false;
 						}
 					}
 					if (G333Permissions.hasPerm(sPlayer, "digilock.create",
-							G333Permissions.NOT_QUIET)) {
+							G333Permissions.NOT_QUIET)
+							&& args[0].equalsIgnoreCase("lock")) {
 						BITDigiLock.SaveDigiLock(sPlayer, block, pincode,
 								owner, closetimer, coowners, shared,
-								block.getTypeId(), "",usecost);
+								block.getTypeId(), "", usecost);
 						return true;
+					} else {
+						return false;
 					}
 
 				}
@@ -101,9 +102,11 @@ public class BITCommandDigiLock implements CommandExecutor {
 							Inventory inv = sChest.getLargestInventory();
 							sPlayer.openInventoryWindow(inv);
 						} else if (BITDigiLock.isDoubleDoor(block)) {
-							BITDigiLock.openDoubleDoor(sPlayer, block,digilock.getUseCost());
+							BITDigiLock.openDoubleDoor(sPlayer, block,
+									digilock.getUseCost());
 						} else if (BITDigiLock.isDoor(digilock.getBlock())) {
-							BITDigiLock.openDoor(sPlayer, block,digilock.getUseCost());
+							BITDigiLock.openDoor(sPlayer, block,
+									digilock.getUseCost());
 						} else if (digilock.getBlock().getType() == Material.FURNACE) {
 							Furnace furnace = (Furnace) block.getState();
 							Inventory inv = furnace.getInventory();
@@ -113,7 +116,8 @@ public class BITCommandDigiLock implements CommandExecutor {
 							Inventory inv = dispenser.getInventory();
 							sPlayer.openInventoryWindow(inv);
 						} else if (digilock.getBlock().getType() == Material.TRAP_DOOR) {
-							BITDigiLock.openTrapdoor(sPlayer, block,digilock.getUseCost());
+							BITDigiLock.openTrapdoor(sPlayer, block,
+									digilock.getUseCost());
 						}
 					} else {
 						sPlayer.sendMessage("wrong pincode!");
@@ -137,18 +141,18 @@ public class BITCommandDigiLock implements CommandExecutor {
 						Inventory inv = sChest.getLargestInventory();
 						sPlayer.openInventoryWindow(inv);
 					} else if (BITDigiLock.isDoubleDoor(digilock.getBlock())) {
-						BITDigiLock.openDoubleDoor(sPlayer, block,digilock.getUseCost());
+						BITDigiLock.openDoubleDoor(sPlayer, block,
+								digilock.getUseCost());
 
 					} else if (BITDigiLock.isDoor(digilock.getBlock())) {
-						BITDigiLock.openDoor(sPlayer, block,digilock.getUseCost());
+						BITDigiLock.openDoor(sPlayer, block,
+								digilock.getUseCost());
 					}
 				} else {
 					if (args.length == 1)
 						sPlayer.damage(5);
 					sPlayer.sendMessage("Wrong pincode!");
-					sPlayer.sendMessage("Usage: /digilock [pincode]|[unlock pincode]"
-							+ "|[lock pincode]|[owner playername]|[closetimer seconds]"
-							+"|[usecost cost]|[remove]|[info]");
+					return false;
 				}
 			}
 			return true;

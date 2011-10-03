@@ -166,7 +166,7 @@ public class BITDigiLock {
 		return false;
 	}
 
-	private static SpoutBlock getDigiLockBlock(SpoutBlock block) {
+	public static SpoutBlock getDigiLockBlock(SpoutBlock block) {
 		if (isDoor(block)) {
 			if (isDoubleDoor(block)) {
 				block = getLeftDoubleDoor(block);
@@ -179,7 +179,20 @@ public class BITDigiLock {
 			SpoutChest sChest1 = (SpoutChest) block.getState();
 			if (sChest1.isDoubleChest()) {
 				SpoutChest sChest2 = sChest1.getOtherSide();
-				block = (SpoutBlock) sChest2.getBlock();
+				SpoutBlock block2 = (SpoutBlock) sChest2.getBlock();
+				if (sChest1.getX() == sChest2.getX()) {
+					if (sChest1.getZ() < sChest2.getZ()) {
+						return block;
+					} else {
+						return block2;
+					}
+				} else {
+					if (sChest1.getX() < sChest2.getX()) {
+						return block;
+					} else {
+						return block2;
+					}
+				}
 			}
 		}
 		return block;
@@ -340,25 +353,26 @@ public class BITDigiLock {
 
 	public void RemoveDigiLock(SpoutPlayer sPlayer) {
 		boolean deletelock = true;
-		if (BIT.useEconomy){
-		if (BIT.plugin.Method.hasAccount(sPlayer.getName())) {
-			if (BIT.plugin.Method.getAccount(sPlayer.getName()).hasEnough(
-					G333Config.DIGILOCK_DESTROYCOST)
-					|| G333Config.DIGILOCK_DESTROYCOST < 0) {
-				BIT.plugin.Method.getAccount(sPlayer.getName()).subtract(
-						G333Config.DIGILOCK_DESTROYCOST);
-				sPlayer.sendMessage("Your account ("
-						+ BIT.plugin.Method.getAccount(sPlayer.getName())
-								.balance() + ") has been deducted "
-						+ G333Config.DIGILOCK_DESTROYCOST + " bucks");
-			} else {
-				sPlayer.sendMessage("You dont have enough money ("
-						+ BIT.plugin.Method.getAccount(sPlayer.getName())
-								.balance() + "). Cost is:"
-						+ G333Config.DIGILOCK_DESTROYCOST);
-				deletelock = false;
+		if (BIT.useEconomy) {
+			if (BIT.plugin.Method.hasAccount(sPlayer.getName())) {
+				if (BIT.plugin.Method.getAccount(sPlayer.getName()).hasEnough(
+						G333Config.DIGILOCK_DESTROYCOST)
+						|| G333Config.DIGILOCK_DESTROYCOST < 0) {
+					BIT.plugin.Method.getAccount(sPlayer.getName()).subtract(
+							G333Config.DIGILOCK_DESTROYCOST);
+					sPlayer.sendMessage("Your account ("
+							+ BIT.plugin.Method.getAccount(sPlayer.getName())
+									.balance() + ") has been deducted "
+							+ G333Config.DIGILOCK_DESTROYCOST + " bucks");
+				} else {
+					sPlayer.sendMessage("You dont have enough money ("
+							+ BIT.plugin.Method.getAccount(sPlayer.getName())
+									.balance() + "). Cost is:"
+							+ G333Config.DIGILOCK_DESTROYCOST);
+					deletelock = false;
+				}
 			}
-		}}
+		}
 		String query = "DELETE FROM " + BIT.digilockTable + " WHERE (x = "
 				+ block.getX() + " AND y = " + block.getY() + " AND z = "
 				+ block.getZ() + " AND world='" + block.getWorld().getName()

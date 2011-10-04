@@ -29,6 +29,7 @@ public class BITCommandDigiLock implements CommandExecutor {
 		String pincode = "0000";
 		String coowners = "";
 		String shared = "";
+		String connectedto = "";
 		String owner = sPlayer.getName();
 		Integer closetimer = 0; // never closes automatically
 		int usecost = 0;
@@ -76,9 +77,13 @@ public class BITCommandDigiLock implements CommandExecutor {
 							n++;
 						} else if (action.equalsIgnoreCase("coowners")) {
 							if (n + 1 <= args.length)
-								coowners =args[n + 1];
+								coowners = args[n + 1];
 							n++;
-						} else if (action.equalsIgnoreCase("remove")) {
+						} else if (action.equalsIgnoreCase("connectedto")) {
+							if (n + 1 <= args.length)
+								connectedto = args[n + 1];
+							n++;
+						}else if (action.equalsIgnoreCase("remove")) {
 							return false;
 						}
 					}
@@ -87,7 +92,7 @@ public class BITCommandDigiLock implements CommandExecutor {
 							&& args[0].equalsIgnoreCase("lock")) {
 						BITDigiLock.SaveDigiLock(sPlayer, block, pincode,
 								owner, closetimer, coowners, shared,
-								block.getTypeId(), "", usecost);
+								block.getTypeId(), connectedto, usecost);
 						return true;
 					} else {
 						return false;
@@ -97,7 +102,6 @@ public class BITCommandDigiLock implements CommandExecutor {
 			} else { // digilock is locked
 				BITDigiLock digilock = BITDigiLock.loadDigiLock(sPlayer, block);
 				String action = args[0];
-
 				// UNLOCK *************************************************
 				if (action.equalsIgnoreCase("unlock") && args.length == 2) {
 					if (digilock.getPincode().equalsIgnoreCase(args[1])) {
@@ -140,21 +144,56 @@ public class BITCommandDigiLock implements CommandExecutor {
 								sPlayer.getName()) || G333Permissions.hasPerm(
 								sPlayer, "digilock.admin",
 								G333Permissions.NOT_QUIET)) && args.length == 2) {
-					digilock.addCoowner(args[2]); 
+					digilock.addCoowner(args[1]);
+					BITDigiLock.SaveDigiLock(sPlayer, digilock.getBlock(),
+							digilock.getPincode(), digilock.getOwner(),
+							digilock.getClosetimer(), digilock.getCoOwners(),
+							digilock.getShared(), digilock.getBlock()
+									.getTypeId(), digilock.getConnectedTo(), digilock.getUseCost());
 					// remcoowner ***************************************
 				} else if (action.equalsIgnoreCase("remcoowner")
 						&& (digilock.getOwner().equalsIgnoreCase(
 								sPlayer.getName()) || G333Permissions.hasPerm(
 								sPlayer, "digilock.admin",
 								G333Permissions.NOT_QUIET)) && args.length == 2) {
-					digilock.removeCoowner(args[2]);
-				    // INFO ***************************************
+					digilock.removeCoowner(args[1]);
+					BITDigiLock.SaveDigiLock(sPlayer, digilock.getBlock(),
+							digilock.getPincode(), digilock.getOwner(),
+							digilock.getClosetimer(), digilock.getCoOwners(),
+							digilock.getShared(), digilock.getBlock()
+									.getTypeId(), digilock.getConnectedTo(), digilock.getUseCost());
+					// usecost ***************************************
+				} else if (action.equalsIgnoreCase("usecost")
+						&& (digilock.getOwner().equalsIgnoreCase(
+								sPlayer.getName()) || G333Permissions.hasPerm(
+								sPlayer, "digilock.admin",
+								G333Permissions.NOT_QUIET)) && args.length == 2) {
+					digilock.setUseCost(Integer.parseInt(args[1]));
+					BITDigiLock.SaveDigiLock(sPlayer, digilock.getBlock(),
+							digilock.getPincode(), digilock.getOwner(),
+							digilock.getClosetimer(), digilock.getCoOwners(),
+							digilock.getShared(), digilock.getBlock()
+									.getTypeId(), digilock.getConnectedTo(), digilock.getUseCost());
+					// connectedto ***************************************
+				} else if (action.equalsIgnoreCase("connectedto")
+						&& (digilock.getOwner().equalsIgnoreCase(
+								sPlayer.getName()) || G333Permissions.hasPerm(
+								sPlayer, "digilock.admin",
+								G333Permissions.NOT_QUIET)) && args.length == 2) {
+					digilock.setConnectedTo(args[1]);
+					BITDigiLock.SaveDigiLock(sPlayer, digilock.getBlock(),
+							digilock.getPincode(), digilock.getOwner(),
+							digilock.getClosetimer(), digilock.getCoOwners(),
+							digilock.getShared(), digilock.getBlock()
+									.getTypeId(), digilock.getConnectedTo(), digilock.getUseCost());
+					// INFO ***************************************
 				} else if (action.equalsIgnoreCase("info")) {
-					sPlayer.sendMessage("The owner of this lock is:"
+					sPlayer.sendMessage("The owner of this lock is: "
 							+ digilock.getOwner());
-					sPlayer.sendMessage("The coOwner of this lock is:"
+					sPlayer.sendMessage("The coOwner of this lock is: "
 							+ digilock.getCoOwners());
-					sPlayer.sendMessage("The cost is: "+digilock.getUseCost()+" and Autoclose is:"+digilock.getClosetimer());					
+					sPlayer.sendMessage("The cost is: " + digilock.getUseCost()
+							+ " and Autoclose is: " + digilock.getClosetimer());
 				} else if (digilock.getPincode().equalsIgnoreCase(args[0])
 						&& args.length == 1) {
 					if (BITDigiLock.isChest(digilock.getBlock())) {

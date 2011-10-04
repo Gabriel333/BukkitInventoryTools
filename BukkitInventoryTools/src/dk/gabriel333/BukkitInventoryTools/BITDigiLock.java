@@ -212,12 +212,13 @@ public class BITDigiLock {
 	}
 
 	public void addCoowner(String name) {
-		coOwners = coOwners.concat("," + name);
+		this.coOwners = coOwners.concat("," + name);
 	}
 
 	public boolean removeCoowner(String name) {
 		if (coOwners.toLowerCase().contains(name.toLowerCase())) {
-			coOwners = coOwners.replace("," + name, "");
+			this.coOwners = coOwners.replace(name, "");
+			this.coOwners = coOwners.replace(",,", ",");
 			return true;
 		}
 		return false;
@@ -270,6 +271,10 @@ public class BITDigiLock {
 		return useCost;
 	}
 
+	public String getConnectedTo() {
+		return connectedTo;
+	}
+	
 	public void setPincode(String pincode) {
 		this.pincode = pincode;
 	}
@@ -292,6 +297,14 @@ public class BITDigiLock {
 
 	public void setShared(String shared) {
 		this.shared = shared;
+	}
+	
+	public void setUseCost(int useCost) {
+		this.useCost = useCost;
+	}
+
+	public void setConnectedTo(String connectedTo) {
+		this.connectedTo = connectedTo;
 	}
 
 	public void setDigiLock(SpoutBlock block, String pincode, String owner,

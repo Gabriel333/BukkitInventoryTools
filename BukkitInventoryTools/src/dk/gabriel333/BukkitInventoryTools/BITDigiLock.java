@@ -199,7 +199,8 @@ public class BITDigiLock {
 	}
 
 	public boolean isCoowner(SpoutPlayer sPlayer) {
-		if (coOwners.toLowerCase().contains(sPlayer.getName().toLowerCase()))
+		if (coOwners.toLowerCase().contains(sPlayer.getName().toLowerCase())||
+				coOwners.toLowerCase().contains("everyone")) 
 			return true;
 		return false;
 	}
@@ -210,13 +211,13 @@ public class BITDigiLock {
 		return false;
 	}
 
-	public void addCoowner(SpoutPlayer sPlayer) {
-		coOwners = coOwners.concat("," + sPlayer.getName());
+	public void addCoowner(String name) {
+		coOwners = coOwners.concat("," + name);
 	}
 
-	public boolean removeCoowner(SpoutPlayer sPlayer) {
-		if (coOwners.toLowerCase().contains(sPlayer.getName().toLowerCase())) {
-			coOwners = coOwners.replace("," + sPlayer.getName(), "");
+	public boolean removeCoowner(String name) {
+		if (coOwners.toLowerCase().contains(name.toLowerCase())) {
+			coOwners = coOwners.replace("," + name, "");
 			return true;
 		}
 		return false;

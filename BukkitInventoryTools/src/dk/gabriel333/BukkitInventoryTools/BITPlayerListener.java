@@ -34,6 +34,7 @@ public class BITPlayerListener extends PlayerListener {
 				BITDigiLock digilock = BITDigiLock.loadDigiLock(sPlayer, block);
 				if (G333Permissions.hasPerm(sPlayer, "digilock.use",
 						G333Permissions.NOT_QUIET)) {
+					// HANDLING A CHEST AND DOUBLECHEST
 					if (BITDigiLock.isChest(block)) {
 						if (digilock.getPincode().equals("")
 								|| digilock.getPincode().equals("fingerprint")) {

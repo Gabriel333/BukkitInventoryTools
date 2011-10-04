@@ -74,6 +74,10 @@ public class BITCommandDigiLock implements CommandExecutor {
 							if (n + 1 <= args.length)
 								usecost = Integer.getInteger(args[n + 1]);
 							n++;
+						} else if (action.equalsIgnoreCase("coowners")) {
+							if (n + 1 <= args.length)
+								coowners =args[n + 1];
+							n++;
 						} else if (action.equalsIgnoreCase("remove")) {
 							return false;
 						}
@@ -130,10 +134,27 @@ public class BITCommandDigiLock implements CommandExecutor {
 								sPlayer, "digilock.admin",
 								G333Permissions.NOT_QUIET)) && args.length == 1) {
 					digilock.RemoveDigiLock(sPlayer);
-					// INFO ***************************************
+					// addcoowner ***************************************
+				} else if (action.equalsIgnoreCase("addcoowner")
+						&& (digilock.getOwner().equalsIgnoreCase(
+								sPlayer.getName()) || G333Permissions.hasPerm(
+								sPlayer, "digilock.admin",
+								G333Permissions.NOT_QUIET)) && args.length == 2) {
+					digilock.addCoowner(args[2]); 
+					// remcoowner ***************************************
+				} else if (action.equalsIgnoreCase("remcoowner")
+						&& (digilock.getOwner().equalsIgnoreCase(
+								sPlayer.getName()) || G333Permissions.hasPerm(
+								sPlayer, "digilock.admin",
+								G333Permissions.NOT_QUIET)) && args.length == 2) {
+					digilock.removeCoowner(args[2]);
+				    // INFO ***************************************
 				} else if (action.equalsIgnoreCase("info")) {
 					sPlayer.sendMessage("The owner of this lock is:"
 							+ digilock.getOwner());
+					sPlayer.sendMessage("The coOwner of this lock is:"
+							+ digilock.getCoOwners());
+					sPlayer.sendMessage("The cost is: "+digilock.getUseCost()+" and Autoclose is:"+digilock.getClosetimer());					
 				} else if (digilock.getPincode().equalsIgnoreCase(args[0])
 						&& args.length == 1) {
 					if (BITDigiLock.isChest(digilock.getBlock())) {

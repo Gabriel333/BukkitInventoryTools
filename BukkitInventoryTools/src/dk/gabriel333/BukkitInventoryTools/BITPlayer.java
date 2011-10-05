@@ -5,9 +5,7 @@ import org.bukkit.inventory.Inventory;
 import org.getspout.spout.inventory.CustomMCInventory;
 import org.getspout.spoutapi.gui.ScreenType;
 import org.getspout.spoutapi.player.SpoutPlayer;
-//import org.getspout.spoutapi.block.SpoutChest;
 
-//import de.Keyle.MyWolf.MyWolfPlugin;
 import de.Keyle.MyWolf.MyWolfPlugin;
 import dk.gabriel333.Library.G333Inventory;
 

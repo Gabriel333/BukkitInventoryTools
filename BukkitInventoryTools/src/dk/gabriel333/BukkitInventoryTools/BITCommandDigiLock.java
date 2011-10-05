@@ -26,7 +26,7 @@ public class BITCommandDigiLock implements CommandExecutor {
 		SpoutPlayer sPlayer = (SpoutPlayer) sender;
 		SpoutBlock block = (SpoutBlock) sPlayer.getTargetBlock(null, 4);
 		block = BITDigiLock.getDigiLockBlock(block);
-		String pincode = "0000";
+		String pincode = "";
 		String coowners = "";
 		String shared = "";
 		String connectedto = "";

@@ -18,5 +18,6 @@
 	<classpathentry kind="lib" path="C:/Private/Dropbox/Libraries/Newest/Spout.jar"/>
 	<classpathentry kind="lib" path="C:/Private/Dropbox/Libraries/Newest/SpoutAPI.jar"/>
 	<classpathentry kind="lib" path="C:/Private/Dropbox/Libraries/Newest/SpoutBackpack.jar"/>
+	<classpathentry kind="lib" path="C:/Private/Dropbox/Libraries/Newest/bpermissions.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

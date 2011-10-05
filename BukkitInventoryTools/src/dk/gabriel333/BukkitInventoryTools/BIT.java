@@ -37,9 +37,8 @@ public class BIT extends JavaPlugin {
 	public Method Method;
 
 	// Hook into SpoutBackpack
-	public static SBHandler spoutBackpackHandler; // The Backpack
-													// inventoryHandler
-	public static Boolean spoutbackpack = false; // is SpoutBackpack installed.
+	public static SBHandler spoutBackpackHandler; 
+	public static Boolean spoutbackpack = false; 
 
 	// Hook into MyWolf
 	public static Boolean mywolf = false;

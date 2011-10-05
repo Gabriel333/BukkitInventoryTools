@@ -9,6 +9,9 @@ import org.getspout.spoutapi.player.SpoutPlayer;
 import com.nijiko.permissions.PermissionHandler;
 import com.nijikokun.bukkit.Permissions.Permissions;
 
+//import bPermissions
+import de.bananaco.permissions.worlds.WorldPermissionsManager;
+
 //import PermissionsEx classes
 import ru.tehkode.permissions.PermissionManager;
 import ru.tehkode.permissions.bukkit.PermissionsEx;
@@ -22,16 +25,19 @@ public class G333Permissions {
 	// Hook into Permissions 3.xxx
 	private static Plugin permissions3Plugin;
 	private static PermissionHandler permission3Handler;
-	public static Boolean permissions3 = false; // Permissions3 or
-												// SuperpermBridge
+	public static Boolean permissions3 = false; 
+	
 	// Hook into PermissionsBukkit
 	private static Plugin permissionsBukkitPlugin;
-	public static Boolean permissionsBukkit = false; // PermissionsBukkit
-														// support
+	public static Boolean permissionsBukkit = false; 
 
 	// Hook into PermissionsEx
 	private static Plugin permissionsExPlugin;
-	public static Boolean permissionsex = false; // Permissionsex support
+	public static Boolean permissionsex = false; 
+
+	// Hook into bPermissions
+	public static WorldPermissionsManager wpm = null;
+	public static Boolean bPermissions = false;
 
 	// Initialize all permissionsplugins
 	public static void setupPermissions(Plugin plugin) {
@@ -80,6 +86,16 @@ public class G333Permissions {
 				}
 
 			}
+			// bPermissions
+			try {
+				//wpm = Permissions.getWorldPermissionsManager();
+				//bPermissions = true;
+				//G333Messages.showInfo("bPermissions is detected.");
+				//numberOfPermissionSystems++;
+			} catch (Exception e) {
+				
+			}
+			
 			// No permission systems found
 			if (permissions3Plugin == null && permissionsBukkitPlugin == null
 					&& permissionsExPlugin == null) {
@@ -144,7 +160,7 @@ public class G333Permissions {
 					.getPermissionManager();
 			hasPermission = permissionsexManager.has(sPlayer,
 					(PERMISSION_NODE + label).toLowerCase());
-		}
+		} 
 
 		// return permission
 		if (hasPermission) {

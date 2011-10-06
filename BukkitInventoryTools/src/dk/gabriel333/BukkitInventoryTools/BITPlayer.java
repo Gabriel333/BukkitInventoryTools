@@ -22,7 +22,7 @@ import dk.gabriel333.Library.G333Inventory;
 
 public abstract class BITPlayer implements Player,SpoutPlayer {
 
-	public static void sortinventory(SpoutPlayer sPlayer, ScreenType screentype) {
+	public void sortinventory(SpoutPlayer sPlayer, ScreenType screentype) {
 		// sort the ordinary player inventory
 		Inventory inventory = sPlayer.getInventory();
 		G333Inventory.sortPlayerInventoryItems(sPlayer);
@@ -108,7 +108,7 @@ public abstract class BITPlayer implements Player,SpoutPlayer {
 	}
 	
 	@SuppressWarnings("unused")
-	private static int getPincodeBlock(SpoutBlock block) {
+	private int getPincodeBlock(SpoutBlock block) {
 		switch (block.getTypeId()) {
 		case 23:
 			return 23; // Dispenser

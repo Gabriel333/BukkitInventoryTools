@@ -23,7 +23,7 @@ public class BITGui {
 	public static ArrayList<GenericButton> menuButtons = new ArrayList<GenericButton>();
 	public static HashMap<UUID, String> BITButtons = new HashMap<UUID, String>();
 
-	public static PopupScreen popupInventoryMenu = new GenericPopup();
+	//public static PopupScreen popupInventoryMenu = new GenericPopup();
 	public static GenericTextField pincode = new GenericTextField();
 	public static GenericTextField owner = new GenericTextField();
 
@@ -34,7 +34,7 @@ public class BITGui {
 	public static PopupScreen popupGetPincode = new GenericPopup();
 	public static GenericTextField pincode2 = new GenericTextField();
 
-	public static void getPincode(SpoutPlayer sPlayer, SpoutBlock block) {
+	public static void getPincodeXXX(SpoutPlayer sPlayer, SpoutBlock block) {
 		int y = 50, height = 20, width = 100;
 		int x = 170;
 

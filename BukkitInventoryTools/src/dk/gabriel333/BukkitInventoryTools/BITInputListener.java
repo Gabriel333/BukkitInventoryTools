@@ -11,6 +11,7 @@ import org.getspout.spoutapi.event.input.KeyPressedEvent;
 import org.getspout.spoutapi.event.input.KeyReleasedEvent;
 import org.getspout.spoutapi.event.input.RenderDistanceChangeEvent;
 import org.getspout.spoutapi.gui.ScreenType;
+import org.getspout.spoutapi.player.SpoutPlayer;
 
 import dk.gabriel333.Library.*;
 
@@ -18,7 +19,8 @@ public class BITInputListener extends InputListener {
 
 	@Override
 	public void onKeyPressedEvent(KeyPressedEvent event) {
-		BITPlayer sPlayer = (BITPlayer) event.getPlayer();
+		SpoutPlayer sPlayer =  event.getPlayer();
+		BITPlayer bPlayer = new BITPlayer(sPlayer);
 		ScreenType screentype = event.getScreenType();
 		String keypressed = event.getKey().name();
 		SpoutBlock targetblock = (SpoutBlock) sPlayer.getTargetBlock(null, 4);
@@ -27,7 +29,7 @@ public class BITInputListener extends InputListener {
 			if (keypressed.equals(G333Config.g333Config.LIBRARY_SORTKEY)) {
 				if (G333Permissions.hasPerm(sPlayer, "sortinventory.use",
 						G333Permissions.NOT_QUIET)) {
-					sPlayer.sortinventory(sPlayer, event.getScreenType());
+					bPlayer.sortinventory(sPlayer, event.getScreenType());
 					if (G333Config.g333Config.SORT_DISPLAYSORTARCHIEVEMENT) {
 						G333Messages.sendNotification(sPlayer, "Items sorted.");
 					}
@@ -61,7 +63,7 @@ public class BITInputListener extends InputListener {
 					if (G333Config.g333Config.SORT_DISPLAYSORTARCHIEVEMENT) {
 						G333Messages.sendNotification(sPlayer, "Items sorted.");
 					}
-					sPlayer.sortinventory(sPlayer, ScreenType.CHEST_INVENTORY);
+					bPlayer.sortinventory(sPlayer, ScreenType.CHEST_INVENTORY);
 				}
 			}
 		}
@@ -100,7 +102,7 @@ public class BITInputListener extends InputListener {
 										+ "1) BITInputlistener: You have permission to open a locked door/chest");
 							G333Messages.sendNotification(sPlayer,
 									"You are the owner");
-							sPlayer.setPincode(sPlayer, targetblock);
+							bPlayer.setPincode(sPlayer, targetblock);
 						} else {
 							G333Messages.sendNotification(sPlayer,
 									"Locked with Digilock");
@@ -123,9 +125,9 @@ public class BITInputListener extends InputListener {
 								if (BITDigiLock.isDoubleDoor(targetblock)) {
 									SpoutBlock leftdoor = BITDigiLock
 											.getLeftDoubleDoor(targetblock);
-									sPlayer.setPincode(sPlayer, leftdoor);
+									bPlayer.setPincode(sPlayer, leftdoor);
 								} else {
-									sPlayer.setPincode(sPlayer, targetblock);
+									bPlayer.setPincode(sPlayer, targetblock);
 								}
 							}
 						} else {

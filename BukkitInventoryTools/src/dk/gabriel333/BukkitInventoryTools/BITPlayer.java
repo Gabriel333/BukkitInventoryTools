@@ -20,8 +20,22 @@ import org.getspout.spoutapi.player.SpoutPlayer;
 import de.Keyle.MyWolf.MyWolfPlugin;
 import dk.gabriel333.Library.G333Inventory;
 
-public abstract class BITPlayer implements Player,SpoutPlayer {
+public class BITPlayer {
+	
+	protected Player player;
 
+	public BITPlayer(SpoutPlayer sPlayer) {
+		this.player = sPlayer;
+	}
+
+	public void getPlayer(SpoutPlayer sPlayer){
+		this.player =  sPlayer;
+	}
+	
+	public String getName(){
+		return player.getName();
+	}
+	
 	public void sortinventory(SpoutPlayer sPlayer, ScreenType screentype) {
 		// sort the ordinary player inventory
 		Inventory inventory = sPlayer.getInventory();
@@ -52,25 +66,21 @@ public abstract class BITPlayer implements Player,SpoutPlayer {
 		}
 	}
 	
-	public GenericTextField pincode = new GenericTextField();
-	public GenericTextField owner = new GenericTextField();
-	public ArrayList<GenericButton> menuButtons = new ArrayList<GenericButton>();
-	public HashMap<UUID, String> BITButtons = new HashMap<UUID, String>();
+	public static GenericTextField getPincode = new GenericTextField();
+	public static ArrayList<GenericButton> menuButtons = new ArrayList<GenericButton>();
+	public static HashMap<UUID, String> BITButtons = new HashMap<UUID, String>();
 
 	// ***************************************************************
 	// getPincode: Open GenericPopup and ask for pincode before to
 	// unlock the inventory.
 	// ***************************************************************
 	public PopupScreen popupGetPincode = new GenericPopup();
-	public GenericTextField pincode2 = new GenericTextField();
 
 	public void getPincode(SpoutPlayer sPlayer, SpoutBlock block) {
 		int y = 50, height = 20, width = 100;
 		int x = 170;
 
 		GenericItemWidget itemwidget = new GenericItemWidget(new ItemStack(95));
-		// GenericItemWidget itemwidget = new GenericItemWidget(new ItemStack(
-		// getPincodeBlock(block)));
 		itemwidget.setX(x + 2 * height).setY(y);
 		itemwidget.setHeight(height * 2).setWidth(height * 2)
 				.setDepth(height * 2);
@@ -78,12 +88,13 @@ public abstract class BITPlayer implements Player,SpoutPlayer {
 		popupGetPincode.attachWidget(BIT.plugin, itemwidget);
 		y = y + 3 * height;
 
-		pincode2.setText("");
-		pincode2.setTooltip("Enter the pincode and press unlock.");
-		pincode2.setCursorPosition(1).setMaximumCharacters(10);
-		pincode2.setX(x).setY(y);
-		pincode2.setHeight(height).setWidth(width);
-		popupGetPincode.attachWidget(BIT.plugin, pincode2);
+		getPincode.setText("");
+		getPincode.setTooltip("Enter the pincode and press unlock.");
+		getPincode.setCursorPosition(1).setMaximumCharacters(10);
+		getPincode.setX(x).setY(y);
+		getPincode.setHeight(height).setWidth(width);
+		getPincode.setPasswordField(true);
+		popupGetPincode.attachWidget(BIT.plugin, getPincode);
 		y = y + height;
 
 		GenericButton unlockButton = new GenericButton("Unlock");
@@ -139,28 +150,29 @@ public abstract class BITPlayer implements Player,SpoutPlayer {
 	// inventory.
 	// ***************************************************************
 	public PopupScreen popupSetPincode = new GenericPopup();
-	public GenericTextField pincode3 = new GenericTextField();
-	public GenericTextField owner1 = new GenericTextField();
-	public GenericTextField closetimer1 = new GenericTextField();
-	public GenericTextField listOfCoOwners = new GenericTextField();
-	public GenericTextField connectedTo = new GenericTextField();
-	public GenericTextField useCost1 = new GenericTextField();
+	public static GenericTextField setPincode = new GenericTextField();
+	public static GenericTextField owner1 = new GenericTextField();
+	public static GenericTextField closetimer1 = new GenericTextField();
+	public static GenericTextField listOfCoOwners = new GenericTextField();
+	public static GenericTextField connectedTo = new GenericTextField();
+	public static GenericTextField useCost1 = new GenericTextField();
 	
-
 	public void setPincode(SpoutPlayer sPlayer, SpoutBlock block) {
 		int height = 20;
 		int x, y, w1, w2, w3, w4;
 
 		BITDigiLock digilock;
 		if (BITDigiLock.isLocked(block)) {
+			sPlayer.sendMessage("the block was locked");
 			digilock = BITDigiLock.loadDigiLock(sPlayer, block);
-			pincode3.setText(digilock.getPincode());
+			setPincode.setText(digilock.getPincode());
 			owner1.setText(digilock.getOwner());
 			listOfCoOwners.setText(digilock.getCoOwners());
 			closetimer1.setText(Integer.toString(digilock.getClosetimer()));
 			useCost1.setText(Integer.toString(digilock.getUseCost()));
 		} else {
-			pincode3.setText("");
+			sPlayer.sendMessage("the block was NOT locked");
+			setPincode.setText("");
 			owner1.setText(sPlayer.getName());
 			listOfCoOwners.setText("");
 			closetimer1.setText("0");
@@ -236,9 +248,6 @@ public abstract class BITPlayer implements Player,SpoutPlayer {
 		useCost1.setX(x + w1+w2+10+w1+w3+10+w1 + 1).setY(y);
 		useCost1.setHeight(height).setWidth(w4);
 		popupSetPincode.attachWidget(BIT.plugin, useCost1);
-		
-		
-
 		y = y + height+1;
 
 		// setCoOwnerButton
@@ -262,11 +271,11 @@ public abstract class BITPlayer implements Player,SpoutPlayer {
 		w1 = 80;
 		w2 = 80;
 		// pincode3
-		pincode3.setTooltip("Enter/change the pincode...");
-		pincode3.setCursorPosition(1).setMaximumCharacters(10);
-		pincode3.setX(x).setY(y);
-		pincode3.setHeight(height).setWidth(w1);
-		popupSetPincode.attachWidget(BIT.plugin, pincode3);
+		setPincode.setTooltip("Enter/change the pincode...");
+		setPincode.setCursorPosition(1).setMaximumCharacters(10);
+		setPincode.setX(x).setY(y);
+		setPincode.setHeight(height).setWidth(w1);
+		popupSetPincode.attachWidget(BIT.plugin, setPincode);
 		y = y + height;
 
 		// lockButton
@@ -301,8 +310,7 @@ public abstract class BITPlayer implements Player,SpoutPlayer {
 			//menuButtons.remove(removeButton);
 			//BITButtons.remove("setPincodeRemove");
 			//popupSetPincode.removeWidget(removeButton);
-			//popupSetPincode.setVisible(false);
-			//removeButton.setEnabled(false).setDirty(true);
+
 		}
 		popupSetPincode.setDirty(true);
 

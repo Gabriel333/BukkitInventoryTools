@@ -1,5 +1,8 @@
 package dk.gabriel333.BukkitInventoryTools;
 
+import org.bukkit.event.block.BlockListener;
+
+/*
 import org.bukkit.block.BlockFace;
 import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.block.BlockBurnEvent;
@@ -18,9 +21,9 @@ import org.bukkit.event.block.SignChangeEvent;
 import org.bukkit.material.Door;
 import org.getspout.spoutapi.block.SpoutBlock;
 import org.getspout.spoutapi.player.SpoutPlayer;
-
+*/
 public class BITBlockListener extends BlockListener {
-
+/*
 	public void onBlockRedstoneChange(BlockRedstoneEvent event) {
 		SpoutBlock block = (SpoutBlock) event.getBlock();
 		if (BITDigiLock.isDoor(block)) {
@@ -166,5 +169,5 @@ public class BITBlockListener extends BlockListener {
 		}
 	}
 	
-	
+	*/
 }

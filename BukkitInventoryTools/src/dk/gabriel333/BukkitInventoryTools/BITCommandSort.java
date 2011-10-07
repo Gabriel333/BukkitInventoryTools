@@ -11,6 +11,7 @@ import org.bukkit.inventory.Inventory;
 
 import org.getspout.spoutapi.block.SpoutChest;
 import org.getspout.spoutapi.gui.ScreenType;
+import org.getspout.spoutapi.player.SpoutPlayer;
 
 import dk.gabriel333.Library.*;
 
@@ -22,7 +23,8 @@ public class BITCommandSort implements CommandExecutor {
 	@Override
 	public boolean onCommand(CommandSender sender, Command command,
 			String label, String[] args) {
-		BITPlayer sPlayer = (BITPlayer) sender;
+		SpoutPlayer sPlayer =  (SpoutPlayer) sender;
+		BITPlayer bPlayer = new BITPlayer(sPlayer);
 		Block targetblock = sPlayer.getTargetBlock(null, 4);
 		if (BIT.isPlayer(sender)) {
 			if (G333Permissions.hasPerm(sender, "sortinventory.use",
@@ -47,7 +49,7 @@ public class BITCommandSort implements CommandExecutor {
                 
 				} else {
 					//player inventory
-					sPlayer.sortinventory(sPlayer, ScreenType.CHAT_SCREEN);
+					bPlayer.sortinventory(sPlayer, ScreenType.CHAT_SCREEN);
 					G333Messages.sendNotification(sPlayer, "Items sorted.");
 				}
 			}

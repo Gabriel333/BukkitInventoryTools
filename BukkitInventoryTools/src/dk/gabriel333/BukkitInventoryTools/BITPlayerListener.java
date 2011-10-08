@@ -58,22 +58,13 @@ public class BITPlayerListener extends PlayerListener {
 										"Opened by fingerprint");
 								sPlayer.openInventoryWindow(inv);
 							} else {
-								sPlayer.sendMessage("Your fingerprint does not match the DigiLock");
 								event.setCancelled(true);
+								sPlayer.sendMessage("Your fingerprint does not match the DigiLock");
 							}
 						} else {
 							event.setCancelled(true);
 							if (sPlayer.isSpoutCraftEnabled()) {
 								bPlayer.getPincode(sPlayer, block);
-								SpoutChest sChest = (SpoutChest) block
-										.getState();
-								Inventory inv = sChest.getLargestInventory();
-								if (digilock.getPincode().equals(
-										BIT.pincode.get(userno))) {
-									sPlayer.sendMessage("open chest");
-									sPlayer.openInventoryWindow(inv);
-
-								}
 							} else {
 								sPlayer.sendMessage("Locked with Digilock.");
 							}
@@ -211,8 +202,8 @@ public class BITPlayerListener extends PlayerListener {
 								G333Messages.sendNotification(sPlayer,
 										"Opened with fingerprint");
 							} else {
-								sPlayer.sendMessage("Your fingerprint does not match the DigiLock");
 								event.setCancelled(true);
+								sPlayer.sendMessage("Your fingerprint does not match the DigiLock");
 							}
 						} else {
 							event.setCancelled(true);
@@ -223,7 +214,6 @@ public class BITPlayerListener extends PlayerListener {
 										+ sPlayer.getName());
 							}
 						}
-
 					}
 					// HANDLING FURNACE
 					else if (block.getType().equals(Material.FURNACE)) {
@@ -236,8 +226,8 @@ public class BITPlayerListener extends PlayerListener {
 								G333Messages.sendNotification(sPlayer,
 										"Used with fingerprint");
 							} else {
-								sPlayer.sendMessage("Your fingerprint does not match the DigiLock");
 								event.setCancelled(true);
+								sPlayer.sendMessage("Your fingerprint does not match the DigiLock");
 							}
 						} else {
 							event.setCancelled(true);
@@ -307,8 +297,8 @@ public class BITPlayerListener extends PlayerListener {
 								G333Messages.sendNotification(sPlayer,
 										"Used with fingerprint");
 							} else {
-								sPlayer.sendMessage("Your fingerprint does not match the DigiLock");
 								event.setCancelled(true);
+								sPlayer.sendMessage("Your fingerprint does not match the DigiLock");
 							}
 						} else {
 							if (sPlayer.isSpoutCraftEnabled()) {
@@ -316,9 +306,7 @@ public class BITPlayerListener extends PlayerListener {
 								if (digilock.getPincode().equals(
 										BIT.pincode.get(userno))) {
 									// okay - go on
-
 								} else {
-
 									event.setCancelled(true);
 								}
 							} else {
@@ -342,8 +330,8 @@ public class BITPlayerListener extends PlayerListener {
 								G333Messages.sendNotification(sPlayer,
 										"Used with fingerprint");
 							} else {
-								sPlayer.sendMessage("Your fingerprint does not match the DigiLock");
 								event.setCancelled(true);
+								sPlayer.sendMessage("Your fingerprint does not match the DigiLock");
 							}
 						} else {
 							if (sPlayer.isSpoutCraftEnabled()) {
@@ -396,8 +384,6 @@ public class BITPlayerListener extends PlayerListener {
 		UUID uuid = event.getPlayer().getUniqueId();
 		G333Messages.showInfo("Userno:" + BIT.usercounter + " Kicked.("
 				+ event.getPlayer().getName() + ")");
-		int userno=BIT.userno.get(uuid);
-		BIT.userNumbers.remove(userno);
 		BIT.popupGetPincode.remove(uuid);
 		BIT.popupSetPincode.remove(uuid);
 		BIT.pincode.remove(uuid);
@@ -415,7 +401,6 @@ public class BITPlayerListener extends PlayerListener {
 				+ event.getPlayer().getName() + ")");
 		UUID uuid = event.getPlayer().getUniqueId();
 		BIT.userno.put(uuid, BIT.usercounter);
-		BIT.userNumbers.add(BIT.usercounter);
 		BIT.popupGetPincode.put(uuid, new GenericPopup());
 		BIT.popupSetPincode.put(uuid ,new GenericPopup());
 		BIT.pincode.put(uuid, new GenericTextField());
@@ -433,7 +418,6 @@ public class BITPlayerListener extends PlayerListener {
 		int userno=BIT.userno.get(uuid);
 		G333Messages.showInfo("Userno:" + userno + " quit.("
 				+ event.getPlayer().getName() + ")");
-		BIT.userNumbers.remove(userno);
 		BIT.popupGetPincode.remove(uuid);
 		BIT.popupSetPincode.remove(uuid);
 		BIT.pincode.remove(uuid);

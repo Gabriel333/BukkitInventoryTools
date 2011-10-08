@@ -1,7 +1,6 @@
 package dk.gabriel333.BukkitInventoryTools;
 
 import java.net.MalformedURLException;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.UUID;
 import java.util.logging.Logger;
@@ -58,7 +57,6 @@ public class BIT extends JavaPlugin {
 	//USERDATA
 	public static int usercounter=0;
 	public static HashMap<UUID, Integer> userno = new HashMap<UUID, Integer>();
-	public static ArrayList<Integer> userNumbers = new ArrayList<Integer>();
 	public static HashMap<UUID,PopupScreen> popupGetPincode = new HashMap<UUID,PopupScreen>();
 	public static HashMap<UUID,PopupScreen> popupSetPincode = new HashMap<UUID,PopupScreen>();
 	public static HashMap<UUID,GenericTextField> pincode = new HashMap<UUID,GenericTextField>();
@@ -254,7 +252,6 @@ public class BIT extends JavaPlugin {
 							G333Messages.showInfo("Creating table "
 									+ BIT.digilockTable);
 						}
-						// Use mysqlCore.createTable(query) to create tables
 						manageMySQL.createTable(query);
 					}
 				} else {
@@ -302,7 +299,6 @@ public class BIT extends JavaPlugin {
 						+ "world VARCHAR(255), shared VARCHAR(255), coowners VARCHAR(255), "
 						+ "typeid INT, connectedto VARCHAR(20), usecost INT);";
 				manageSQLite.createTable(query);
-				// Use sqlCore.createTable(query) to create tables
 			}
 		}
 	}

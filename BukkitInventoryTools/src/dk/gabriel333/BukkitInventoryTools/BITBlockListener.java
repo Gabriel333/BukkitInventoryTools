@@ -2,7 +2,6 @@ package dk.gabriel333.BukkitInventoryTools;
 
 import org.bukkit.event.block.BlockListener;
 
-
 import org.bukkit.block.BlockFace;
 import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.block.BlockBurnEvent;
@@ -25,11 +24,13 @@ public class BITBlockListener extends BlockListener {
 
 	public void onBlockRedstoneChange(BlockRedstoneEvent event) {
 		SpoutBlock block = (SpoutBlock) event.getBlock();
-		if (BITDigiLock.isDoor(block)) {
-			Door door = (Door) block.getState().getData();
-			if (BITDigiLock.isLocked(block)) {
-				if (!door.isOpen()) {
-					event.setNewCurrent(event.getOldCurrent());
+		if (BITDigiLock.isLocked(block)) {
+			if (BITDigiLock.isDoor(block)) {
+				if (!BITDigiLock.isDoubleDoor(block)) {
+					Door door = (Door) block.getState().getData();
+					if (!door.isOpen()) {
+						event.setNewCurrent(event.getOldCurrent());
+					}
 				}
 			}
 		}
@@ -45,7 +46,7 @@ public class BITBlockListener extends BlockListener {
 		if (BITDigiLock.isLocked(block) || BITDigiLock.isLocked(blockOnTop)) {
 			sPlayer.damage(10);
 			event.setCancelled(true);
-		} 
+		}
 	}
 
 	public void onBlockDamage(BlockDamageEvent event) {
@@ -54,9 +55,9 @@ public class BITBlockListener extends BlockListener {
 		SpoutBlock block = (SpoutBlock) event.getBlock();
 		if (BITDigiLock.isLocked(block)) {
 			event.setCancelled(true);
-		} 
+		}
 	}
-	
+
 	public void onBlockPhysics(BlockPhysicsEvent event) {
 		if (event.isCancelled())
 			return;
@@ -74,7 +75,6 @@ public class BITBlockListener extends BlockListener {
 			event.setCancelled(true);
 		}
 	}
-	
 
 	@Override
 	public void onBlockFade(BlockFadeEvent event) {
@@ -86,7 +86,7 @@ public class BITBlockListener extends BlockListener {
 			event.setCancelled(true);
 		}
 	}
-	
+
 	@Override
 	public void onBlockForm(BlockFormEvent event) {
 		super.onBlockForm(event);
@@ -97,7 +97,7 @@ public class BITBlockListener extends BlockListener {
 			event.setCancelled(true);
 		}
 	}
-	
+
 	@Override
 	public void onBlockFromTo(BlockFromToEvent event) {
 		super.onBlockFromTo(event);
@@ -108,7 +108,7 @@ public class BITBlockListener extends BlockListener {
 			event.setCancelled(true);
 		}
 	}
-	
+
 	@Override
 	public void onBlockSpread(BlockSpreadEvent event) {
 		super.onBlockSpread(event);
@@ -119,7 +119,7 @@ public class BITBlockListener extends BlockListener {
 			event.setCancelled(true);
 		}
 	}
-	
+
 	@Override
 	public void onBlockIgnite(BlockIgniteEvent event) {
 		super.onBlockIgnite(event);
@@ -132,7 +132,7 @@ public class BITBlockListener extends BlockListener {
 			event.setCancelled(true);
 		}
 	}
-	
+
 	@Override
 	public void onSignChange(SignChangeEvent event) {
 		super.onSignChange(event);
@@ -145,7 +145,7 @@ public class BITBlockListener extends BlockListener {
 			event.setCancelled(true);
 		}
 	}
-	
+
 	@Override
 	public void onBlockPistonExtend(BlockPistonExtendEvent event) {
 		super.onBlockPistonExtend(event);
@@ -156,7 +156,7 @@ public class BITBlockListener extends BlockListener {
 			event.setCancelled(true);
 		}
 	}
-	
+
 	@Override
 	public void onBlockPistonRetract(BlockPistonRetractEvent event) {
 		super.onBlockPistonRetract(event);
@@ -167,6 +167,5 @@ public class BITBlockListener extends BlockListener {
 			event.setCancelled(true);
 		}
 	}
-	
-	
+
 }

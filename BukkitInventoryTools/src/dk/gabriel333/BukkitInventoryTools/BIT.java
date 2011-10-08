@@ -1,6 +1,9 @@
 package dk.gabriel333.BukkitInventoryTools;
 
 import java.net.MalformedURLException;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.UUID;
 import java.util.logging.Logger;
 
 import org.bukkit.command.CommandSender;
@@ -12,6 +15,8 @@ import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.PluginDescriptionFile;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
+import org.getspout.spoutapi.gui.GenericTextField;
+import org.getspout.spoutapi.gui.PopupScreen;
 
 import com.alta189.sqlLibrary.MySQL.mysqlCore;
 import com.alta189.sqlLibrary.SQLite.sqlCore;
@@ -50,7 +55,19 @@ public class BIT extends JavaPlugin {
 	public static Logger log = Logger.getLogger("Minecraft");
 	public static String digilockTable = "BukkitInventoryTools3";
 
-	// Test for SortInventory
+	//USERDATA
+	public static int usercounter=0;
+	public static HashMap<UUID, Integer> userno = new HashMap<UUID, Integer>();
+	public static ArrayList<Integer> userNumbers = new ArrayList<Integer>();
+	public static HashMap<UUID,PopupScreen> popupGetPincode = new HashMap<UUID,PopupScreen>();
+	public static HashMap<UUID,PopupScreen> popupSetPincode = new HashMap<UUID,PopupScreen>();
+	public static HashMap<UUID,GenericTextField> pincode = new HashMap<UUID,GenericTextField>();
+	public static HashMap<UUID,GenericTextField> owner = new HashMap<UUID,GenericTextField>();
+	public static HashMap<UUID,GenericTextField> closetimer = new HashMap<UUID,GenericTextField>();
+	public static HashMap<UUID,GenericTextField> coOwners = new HashMap<UUID,GenericTextField>();
+	public static HashMap<UUID,GenericTextField> useCost = new HashMap<UUID,GenericTextField>();
+	public static HashMap<UUID,GenericTextField> connectedTo = new HashMap<UUID,GenericTextField>();
+	public static HashMap<UUID,GenericTextField> shared = new HashMap<UUID,GenericTextField>();
 
 	@Override
 	public void onEnable() {
@@ -74,7 +91,8 @@ public class BIT extends JavaPlugin {
 					+ pdfFile.getVersion() + " could not be installed!");
 		}
 	}
-
+	
+	// Test for SortInventory
 	private Boolean isSortInventoryInstalled() {
 		Plugin sortInventoryPlugin = this.getServer().getPluginManager()
 				.getPlugin("SortInventory");
@@ -100,6 +118,12 @@ public class BIT extends JavaPlugin {
 		pm.registerEvent(Event.Type.CUSTOM_EVENT,
 				new BITInventoryListener(this), Event.Priority.Normal, this);
 		pm.registerEvent(Event.Type.PLAYER_INTERACT, new BITPlayerListener(),
+				Priority.Normal, this);
+		pm.registerEvent(Event.Type.PLAYER_JOIN, new BITPlayerListener(),
+				Priority.Normal, this);
+		pm.registerEvent(Event.Type.PLAYER_QUIT, new BITPlayerListener(),
+				Priority.Normal, this);
+		pm.registerEvent(Event.Type.PLAYER_KICK, new BITPlayerListener(),
 				Priority.Normal, this);
 	}
 

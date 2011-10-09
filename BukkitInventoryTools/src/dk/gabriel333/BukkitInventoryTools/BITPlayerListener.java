@@ -3,6 +3,7 @@ package dk.gabriel333.BukkitInventoryTools;
 import java.util.UUID;
 
 import org.bukkit.Material;
+import org.bukkit.block.Dispenser;
 import org.bukkit.block.Sign;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.player.PlayerInteractEvent;
@@ -12,6 +13,7 @@ import org.bukkit.event.player.PlayerKickEvent;
 import org.bukkit.event.player.PlayerListener;
 import org.bukkit.event.player.PlayerLoginEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
+import org.bukkit.inventory.Inventory;
 import org.bukkit.material.Lever;
 
 import org.getspout.spoutapi.block.SpoutBlock;
@@ -79,8 +81,7 @@ public class BITPlayerListener extends PlayerListener {
 							if (digilock.isOwner(sPlayer)
 									|| digilock.isCoowner(sPlayer)) {
 								BITDigiLock.playDigiLockSound(block);
-								if (BITDigiLock
-										.isDoubleDoorOpen(block)) {
+								if (BITDigiLock.isDoubleDoorOpen(block)) {
 									BITDigiLock.closeDoubleDoor(sPlayer, block,
 											0);
 								} else {
@@ -91,8 +92,7 @@ public class BITPlayerListener extends PlayerListener {
 										"Used with fingerprint");
 							} else {
 								sPlayer.sendMessage("Your fingerprint does not match the DigiLock");
-								if (BITDigiLock
-										.isDoubleDoorOpen(block)) {
+								if (BITDigiLock.isDoubleDoorOpen(block)) {
 									BITDigiLock.playDigiLockSound(block);
 									BITDigiLock.closeDoubleDoor(sPlayer, block,
 											0);
@@ -210,6 +210,7 @@ public class BITPlayerListener extends PlayerListener {
 							event.setCancelled(true);
 							if (sPlayer.isSpoutCraftEnabled()) {
 								bPlayer.getPincode(sPlayer, block);
+								
 							} else {
 								sPlayer.sendMessage("Digilock'ed by "
 										+ sPlayer.getName());
@@ -372,11 +373,56 @@ public class BITPlayerListener extends PlayerListener {
 					sPlayer.sendMessage("There is no digilock on this block");
 					if (BITDigiLock.isLever(block)) {
 						Lever lever = (Lever) block.getState().getData();
-						sPlayer.sendMessage("You pulled the lever:"+lever);
-						sPlayer.sendMessage("getAttachedFace:"+lever.getAttachedFace());
-						sPlayer.sendMessage("getFacing:"+lever.getFacing());
-						sPlayer.sendMessage("getItemType:"+lever.getItemType());
-						
+						sPlayer.sendMessage("You pulled the lever:" + lever);
+						sPlayer.sendMessage("getAttachedFace:"
+								+ lever.getAttachedFace());
+						sPlayer.sendMessage("getFacing:" + lever.getFacing());
+						sPlayer.sendMessage("getItemType:"
+								+ lever.getItemType());
+
+					}
+					if (BITDigiLock.isChest(block)) {
+
+					}
+					// HANDLING THE DOUBLEDOOR
+					else if (BITDigiLock.isDoubleDoor(block)) {
+
+					}
+					// HANDLING THE DOOR
+					else if (BITDigiLock.isDoor(block)) {
+
+					}
+					// HANDLING TRAP_DOOR
+					else if (block.getType().equals(Material.TRAP_DOOR)) {
+
+					}
+					// HANDLING DISPENCER
+					else if (block.getType().equals(Material.DISPENSER)) {
+
+					}
+					// HANDLING FURNACE
+					else if (block.getType().equals(Material.FURNACE)) {
+
+					}
+					// HANDLING LEVER
+					else if (block.getType().equals(Material.LEVER)) {
+						if (BITDigiLock.isNeighbourLocked(block)) {
+							event.setCancelled(true);
+						}
+					}
+					// HANDLING STONE_BUTTON
+					else if (block.getType().equals(Material.STONE_BUTTON)) {
+						if (BITDigiLock.isNeighbourLocked(block)) {
+							event.setCancelled(true);
+						}
+					}
+					// BOOKSHELF
+					else if ((block.getType().equals(Material.BOOKSHELF))) {
+
+					}
+					// HANDLING SIGN and SIGN_POST
+					else if (BITDigiLock.isSign(block)) {
+
 					}
 				}
 
@@ -415,13 +461,13 @@ public class BITPlayerListener extends PlayerListener {
 		BIT.connectedTo.put(uuid, new GenericTextField());
 		BIT.usercounter++;
 	}
-	
+
 	public void onPlayerQuit(PlayerQuitEvent event) {
 		UUID uuid = event.getPlayer().getUniqueId();
 		removeUserData(uuid);
 	}
 
-	private void removeUserData(UUID uuid){
+	private void removeUserData(UUID uuid) {
 		BIT.popupGetPincode.remove(uuid);
 		BIT.popupSetPincode.remove(uuid);
 		BIT.pincode.remove(uuid);

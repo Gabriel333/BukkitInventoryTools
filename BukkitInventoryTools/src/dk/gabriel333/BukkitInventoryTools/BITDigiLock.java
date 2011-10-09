@@ -471,6 +471,18 @@ public class BITDigiLock {
 						"http://dl.dropbox.com/u/36067670/BukkitInventoryTools/Sounds/Digilock.wav",
 						true, sBlock.getLocation(), 5);
 	}
+	
+	public static boolean isNeighbourLocked(SpoutBlock block) {
+			if (isLocked(block.getFace(BlockFace.EAST))
+					|| isLocked(block.getFace(BlockFace.NORTH))
+					|| isLocked(block.getFace(BlockFace.SOUTH))
+					|| isLocked(block.getFace(BlockFace.WEST))
+					|| isLocked(block.getFace(BlockFace.DOWN))
+					|| isLocked(block.getFace(BlockFace.UP))) {
+				return true;
+			}
+			return false;
+	}
 
 	// *******************************************************
 	//

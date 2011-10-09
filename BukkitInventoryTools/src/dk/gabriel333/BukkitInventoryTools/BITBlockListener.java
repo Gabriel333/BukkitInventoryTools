@@ -40,27 +40,11 @@ public class BITBlockListener extends BlockListener {
 					if (G333Config.config.DEBUG_EVENTS)
 						G333Messages
 								.showInfo("BlockRedstoneEvt-doubledoor is open");
-					
-					if (BITDigiLock.isLeftDoubleDoor(block)) {
-						Door door = (Door) block.getState().getData();
-						if (door.isOpen()) {
-							BITDigiLock.closeDoor(block);
-							//event.setNewCurrent(event.getOldCurrent());
-						}
-					} else {
-						SpoutBlock otherblock = BITDigiLock.getLeftDoubleDoor(block);
-						Door door = (Door) otherblock.getState().getData();
-						if (!door.isOpen()) {
-							BITDigiLock.openDoor(otherblock);
-							//event.setNewCurrent(event.getOldCurrent());
-						}
-					}
 				} else {
 					if (G333Config.config.DEBUG_EVENTS)
 						G333Messages
 								.showInfo("BlockRedstoneEvt-doubledoor is closed");
-
-				}
+			    }
 			} else if (BITDigiLock.isDoor(block)) {
 
 				if (G333Config.config.DEBUG_EVENTS)

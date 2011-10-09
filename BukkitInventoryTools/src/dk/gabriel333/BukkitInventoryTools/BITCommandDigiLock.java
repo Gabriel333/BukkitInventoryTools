@@ -100,7 +100,7 @@ public class BITCommandDigiLock implements CommandExecutor {
 
 				}
 			} else { // digilock is locked
-				BITDigiLock digilock = BITDigiLock.loadDigiLock(sPlayer, block);
+				BITDigiLock digilock = BITDigiLock.loadDigiLock(block);
 				String action = args[0];
 				// UNLOCK *************************************************
 				if (action.equalsIgnoreCase("unlock") && args.length == 2) {

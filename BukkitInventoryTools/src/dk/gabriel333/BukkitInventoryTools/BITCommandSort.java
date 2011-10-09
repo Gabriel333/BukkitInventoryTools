@@ -25,7 +25,7 @@ public class BITCommandSort implements CommandExecutor {
 			String label, String[] args) {
 		SpoutPlayer sPlayer =  (SpoutPlayer) sender;
 		BITPlayer bPlayer = new BITPlayer(sPlayer);
-		Block targetblock = sPlayer.getTargetBlock(null, 4);
+		Block targetblock = sPlayer.getTargetBlock(null, 5);
 		if (BIT.isPlayer(sender)) {
 			if (G333Permissions.hasPerm(sender, "sortinventory.use",
 					G333Permissions.NOT_QUIET)) {

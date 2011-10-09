@@ -20,17 +20,56 @@ import org.bukkit.material.Door;
 import org.getspout.spoutapi.block.SpoutBlock;
 import org.getspout.spoutapi.player.SpoutPlayer;
 
+import dk.gabriel333.Library.G333Config;
+import dk.gabriel333.Library.G333Messages;
+
 public class BITBlockListener extends BlockListener {
 
 	public void onBlockRedstoneChange(BlockRedstoneEvent event) {
 		SpoutBlock block = (SpoutBlock) event.getBlock();
 		if (BITDigiLock.isLocked(block)) {
-			if (BITDigiLock.isDoor(block)) {
-				if (!BITDigiLock.isDoubleDoor(block)) {
-					Door door = (Door) block.getState().getData();
-					if (!door.isOpen()) {
-						event.setNewCurrent(event.getOldCurrent());
+
+			if (G333Config.config.DEBUG_EVENTS)
+				G333Messages.showInfo("BlockRedstoneEvt:"
+						+ event.getBlock().getType() + " getOC:"
+						+ event.getOldCurrent() + " getNC:"
+						+ event.getNewCurrent());
+
+			if (BITDigiLock.isDoubleDoor(block)) {
+				if (BITDigiLock.isDoubleDoorOpen(block)) {
+					if (G333Config.config.DEBUG_EVENTS)
+						G333Messages
+								.showInfo("BlockRedstoneEvt-doubledoor is open");
+					
+					if (BITDigiLock.isLeftDoubleDoor(block)) {
+						Door door = (Door) block.getState().getData();
+						if (door.isOpen()) {
+							BITDigiLock.closeDoor(block);
+							//event.setNewCurrent(event.getOldCurrent());
+						}
+					} else {
+						SpoutBlock otherblock = BITDigiLock.getLeftDoubleDoor(block);
+						Door door = (Door) otherblock.getState().getData();
+						if (!door.isOpen()) {
+							BITDigiLock.openDoor(otherblock);
+							//event.setNewCurrent(event.getOldCurrent());
+						}
 					}
+				} else {
+					if (G333Config.config.DEBUG_EVENTS)
+						G333Messages
+								.showInfo("BlockRedstoneEvt-doubledoor is closed");
+
+				}
+			} else if (BITDigiLock.isDoor(block)) {
+
+				if (G333Config.config.DEBUG_EVENTS)
+					G333Messages.showInfo("BlockRedstoneEvt-door");
+
+				Door door = (Door) block.getState().getData();
+				if (!door.isOpen()) {
+					event.setNewCurrent(event.getOldCurrent());
+
 				}
 			}
 		}
@@ -63,7 +102,18 @@ public class BITBlockListener extends BlockListener {
 			return;
 		SpoutBlock block = (SpoutBlock) event.getBlock();
 		if (BITDigiLock.isLocked(block)) {
-			event.setCancelled(true);
+			if (BITDigiLock.isLockable(block)
+					&& BITDigiLock.isLockable(event.getChangedType())) {
+
+				if (G333Config.config.DEBUG_EVENTS) {
+					G333Messages.showInfo("BlockPhysicsEvt:"
+							+ event.getBlock().getType() + " getCT:"
+							+ event.getChangedType());
+
+				}
+			} else {
+				event.setCancelled(true);
+			}
 		}
 	}
 
@@ -103,9 +153,24 @@ public class BITBlockListener extends BlockListener {
 		super.onBlockFromTo(event);
 		if (event.isCancelled())
 			return;
+		if (G333Config.config.DEBUG_EVENTS) {
+			G333Messages.showInfo("BlockFromTo:" + event.getBlock().getType()
+					+ " ToBlk:" + event.getToBlock().getType());
+		}
 		SpoutBlock block = (SpoutBlock) event.getBlock();
-		if (BITDigiLock.isLocked(block)) {
-			event.setCancelled(true);
+		SpoutBlock toBlock = (SpoutBlock) event.getToBlock();
+		if (BITDigiLock.isLocked(block) || BITDigiLock.isLocked(toBlock)) {
+			BITDigiLock digilock = BITDigiLock.loadDigiLock(block);
+			BITDigiLock toDigilock = BITDigiLock.loadDigiLock(toBlock);
+			if (digilock.getOwner().equalsIgnoreCase(toDigilock.getOwner())) {
+				if (G333Config.config.DEBUG_EVENTS) {
+					G333Messages.showInfo("BlockFromTo:"
+							+ event.getBlock().getType() + " ToBlk:"
+							+ event.getToBlock().getType());
+				}
+			} else {
+				event.setCancelled(true);
+			}
 		}
 	}
 
@@ -139,9 +204,9 @@ public class BITBlockListener extends BlockListener {
 		if (event.isCancelled())
 			return;
 		SpoutBlock block = (SpoutBlock) event.getBlock();
-		SpoutPlayer sPlayer = (SpoutPlayer) event.getPlayer();
+		// SpoutPlayer sPlayer = (SpoutPlayer) event.getPlayer();
 		if (BITDigiLock.isLocked(block)) {
-			sPlayer.damage(1);
+			// sPlayer.damage(1);
 			event.setCancelled(true);
 		}
 	}

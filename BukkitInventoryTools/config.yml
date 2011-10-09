@@ -90,3 +90,4 @@ Debug:
     Keyboard: false
     SQL: false
     GUI: false
+    Events: false

@@ -64,7 +64,7 @@ public class G333Inventory {
 		} else if (to_amt == 0 && from_amt > 0) {
 			to_amt = total_amt;
 			from_amt = 0;
-			if (G333Config.g333Config.DEBUG_SORTINVENTORY) {
+			if (G333Config.config.DEBUG_SORTINVENTORY) {
 				G333Messages.showInfo("1) (from,to)=(" + fromslot + ">"
 						+ toslot + ") To_amt=" + to_amt + " from_amt="
 						+ from_amt + " total_amt=" + total_amt);
@@ -104,7 +104,7 @@ public class G333Inventory {
 				if (total_amt > 64) {
 					to_amt = 64;
 					from_amt = total_amt - 64;
-					if (G333Config.g333Config.DEBUG_SORTINVENTORY) {
+					if (G333Config.config.DEBUG_SORTINVENTORY) {
 						G333Messages.showInfo("4) To_amt=" + to_amt
 								+ " from_amt=" + from_amt + " total_amt="
 								+ total_amt);
@@ -114,7 +114,7 @@ public class G333Inventory {
 					return;
 				} else {
 					// total_amt is <= 64 so everything goes to toslot
-					if (G333Config.g333Config.DEBUG_SORTINVENTORY) {
+					if (G333Config.config.DEBUG_SORTINVENTORY) {
 						G333Messages.showInfo("5) To_amt=" + to_amt
 								+ " from_amt=" + from_amt + " total_amt="
 								+ total_amt);
@@ -130,13 +130,13 @@ public class G333Inventory {
 
 	public static void orderInventoryItems(Inventory inventory, int startslot) {
 		int n = startslot;
-		for (int m = 0; m < G333Config.g333Config.SORTSEQ.length; m++) {
+		for (int m = 0; m < G333Config.config.SORTSEQ.length; m++) {
 			Material mat = Material
-					.matchMaterial(G333Config.g333Config.SORTSEQ[m]);
+					.matchMaterial(G333Config.config.SORTSEQ[m]);
 			if (mat == null) {
 				G333Messages.showError("Configuration error i config.yml.");
 				G333Messages.showError(" Unknown material in SORTSEQ:"
-						+ G333Config.g333Config.SORTSEQ[m]);
+						+ G333Config.config.SORTSEQ[m]);
 			} else if (inventory.contains(mat)) {
 				for (int i = n; i < inventory.getSize(); i++) {
 					if (inventory.getItem(i).getType() == mat) {

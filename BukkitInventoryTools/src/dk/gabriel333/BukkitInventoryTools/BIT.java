@@ -41,8 +41,8 @@ public class BIT extends JavaPlugin {
 	public Method Method;
 
 	// Hook into SpoutBackpack
-	public static SBHandler spoutBackpackHandler; 
-	public static Boolean spoutbackpack = false; 
+	public static SBHandler spoutBackpackHandler;
+	public static Boolean spoutbackpack = false;
 
 	// Hook into MyWolf
 	public static Boolean mywolf = false;
@@ -54,18 +54,18 @@ public class BIT extends JavaPlugin {
 	public static Logger log = Logger.getLogger("Minecraft");
 	public static String digilockTable = "BukkitInventoryTools3";
 
-	//USERDATA
-	public static int usercounter=0;
+	// USERDATA
+	public static int usercounter = 0;
 	public static HashMap<UUID, Integer> userno = new HashMap<UUID, Integer>();
-	public static HashMap<UUID,PopupScreen> popupGetPincode = new HashMap<UUID,PopupScreen>();
-	public static HashMap<UUID,PopupScreen> popupSetPincode = new HashMap<UUID,PopupScreen>();
-	public static HashMap<UUID,GenericTextField> pincode = new HashMap<UUID,GenericTextField>();
-	public static HashMap<UUID,GenericTextField> owner = new HashMap<UUID,GenericTextField>();
-	public static HashMap<UUID,GenericTextField> closetimer = new HashMap<UUID,GenericTextField>();
-	public static HashMap<UUID,GenericTextField> coOwners = new HashMap<UUID,GenericTextField>();
-	public static HashMap<UUID,GenericTextField> useCost = new HashMap<UUID,GenericTextField>();
-	public static HashMap<UUID,GenericTextField> connectedTo = new HashMap<UUID,GenericTextField>();
-	public static HashMap<UUID,GenericTextField> shared = new HashMap<UUID,GenericTextField>();
+	public static HashMap<UUID, PopupScreen> popupGetPincode = new HashMap<UUID, PopupScreen>();
+	public static HashMap<UUID, PopupScreen> popupSetPincode = new HashMap<UUID, PopupScreen>();
+	public static HashMap<UUID, GenericTextField> pincode = new HashMap<UUID, GenericTextField>();
+	public static HashMap<UUID, GenericTextField> owner = new HashMap<UUID, GenericTextField>();
+	public static HashMap<UUID, GenericTextField> closetimer = new HashMap<UUID, GenericTextField>();
+	public static HashMap<UUID, GenericTextField> coOwners = new HashMap<UUID, GenericTextField>();
+	public static HashMap<UUID, GenericTextField> useCost = new HashMap<UUID, GenericTextField>();
+	public static HashMap<UUID, GenericTextField> connectedTo = new HashMap<UUID, GenericTextField>();
+	public static HashMap<UUID, GenericTextField> shared = new HashMap<UUID, GenericTextField>();
 
 	@Override
 	public void onEnable() {
@@ -89,7 +89,7 @@ public class BIT extends JavaPlugin {
 					+ pdfFile.getVersion() + " could not be installed!");
 		}
 	}
-	
+
 	// Test for SortInventory
 	private Boolean isSortInventoryInstalled() {
 		Plugin sortInventoryPlugin = this.getServer().getPluginManager()
@@ -108,6 +108,28 @@ public class BIT extends JavaPlugin {
 		pm.registerEvent(Event.Type.BLOCK_BREAK, new BITBlockListener(),
 				Priority.Normal, this);
 		pm.registerEvent(Event.Type.BLOCK_DAMAGE, new BITBlockListener(),
+				Priority.Normal, this);
+		pm.registerEvent(Type.REDSTONE_CHANGE, new BITBlockListener(),
+				Priority.Normal, this);
+		pm.registerEvent(Type.BLOCK_PHYSICS, new BITBlockListener(),
+				Priority.Normal, this);
+		pm.registerEvent(Type.BLOCK_FROMTO, new BITBlockListener(),
+				Priority.Normal, this);
+		pm.registerEvent(Type.BLOCK_FORM, new BITBlockListener(),
+				Priority.Normal, this);
+		pm.registerEvent(Type.BLOCK_BURN, new BITBlockListener(),
+				Priority.Normal, this);
+		pm.registerEvent(Type.BLOCK_FADE, new BITBlockListener(),
+				Priority.Normal, this);
+		pm.registerEvent(Type.BLOCK_SPREAD, new BITBlockListener(),
+				Priority.Normal, this);
+		pm.registerEvent(Type.BLOCK_IGNITE, new BITBlockListener(),
+				Priority.Normal, this);
+		pm.registerEvent(Type.SIGN_CHANGE, new BITBlockListener(),
+				Priority.Normal, this);
+		pm.registerEvent(Type.BLOCK_PISTON_EXTEND, new BITBlockListener(),
+				Priority.Normal, this);
+		pm.registerEvent(Type.BLOCK_PISTON_RETRACT, new BITBlockListener(),
 				Priority.Normal, this);
 		pm.registerEvent(Event.Type.CUSTOM_EVENT, new BITInputListener(),
 				Event.Priority.Normal, this);
@@ -212,14 +234,14 @@ public class BIT extends JavaPlugin {
 	}
 
 	private void setupSQL() {
-		if (G333Config.g333Config.STORAGE_TYPE.equals("MYSQL")) {
+		if (G333Config.config.STORAGE_TYPE.equals("MYSQL")) {
 			// Declare MySQL Handler
 			manageMySQL = new mysqlCore(log,
 					"[" + G333Plugin.PLUGIN_NAME + "]",
-					G333Config.g333Config.STORAGE_HOST,
-					G333Config.g333Config.STORAGE_DATABASE,
-					G333Config.g333Config.STORAGE_USERNAME,
-					G333Config.g333Config.STORAGE_PASSWORD);
+					G333Config.config.STORAGE_HOST,
+					G333Config.config.STORAGE_DATABASE,
+					G333Config.config.STORAGE_USERNAME,
+					G333Config.config.STORAGE_PASSWORD);
 			G333Messages.showInfo("MySQL Initializing");
 			// Initialize MySQL Handler
 			manageMySQL.initialize();
@@ -256,7 +278,7 @@ public class BIT extends JavaPlugin {
 					}
 				} else {
 					G333Messages.showError("MySQL connection failed");
-					G333Config.g333Config.STORAGE_HOST = "SQLITE";
+					G333Config.config.STORAGE_HOST = "SQLITE";
 				}
 			} catch (MalformedURLException e) {
 				e.printStackTrace();

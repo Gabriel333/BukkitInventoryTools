@@ -154,7 +154,7 @@ public class BITPlayer {
 		int x, y, w1, w2, w3, w4;
 
 		if (BITDigiLock.isLocked(block)) {
-			BITDigiLock digilock = BITDigiLock.loadDigiLock(sPlayer, block);
+			BITDigiLock digilock = BITDigiLock.loadDigiLock(block);
 			BIT.pincode.get(uuid).setText(digilock.getPincode());
 			BIT.owner.get(uuid).setText(digilock.getOwner());
 			BIT.coOwners.get(uuid).setText(digilock.getCoOwners());

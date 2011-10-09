@@ -5,6 +5,7 @@ import java.util.UUID;
 import org.bukkit.Material;
 import org.bukkit.block.Dispenser;
 import org.bukkit.block.Furnace;
+import org.bukkit.block.Sign;
 import org.bukkit.event.Event;
 import org.bukkit.inventory.Inventory;
 
@@ -27,10 +28,10 @@ public class BITSpoutListener extends SpoutListener {
 			UUID uuid = button.getId();
 			SpoutPlayer sPlayer = ((ButtonClickEvent) event).getPlayer();
 			BITPlayer bPlayer = new BITPlayer(sPlayer);
-			SpoutBlock sBlock = (SpoutBlock) sPlayer.getTargetBlock(null, 4);
+			SpoutBlock sBlock = (SpoutBlock) sPlayer.getTargetBlock(null, 5);
 			if (sBlock != null) {
 				BITDigiLock digilock = BITDigiLock
-						.loadDigiLock(sPlayer, sBlock);
+						.loadDigiLock(sBlock);
 				UUID uuid2 = sPlayer.getUniqueId();
 				// ************************************
 				// Buttons in getPincodeWindow
@@ -83,6 +84,12 @@ public class BITSpoutListener extends SpoutListener {
 									digilock.getBlock(), digilock.getUseCost());
 
 						} else if (BITDigiLock.isSign(sBlock)) {
+							if (sPlayer.isSpoutCraftEnabled()) {
+								Sign sign = (Sign) sBlock.getState();
+								sPlayer.openSignEditGUI(sign);
+							} else {
+
+							}
 
 						}
 					} else {
@@ -157,7 +164,7 @@ public class BITSpoutListener extends SpoutListener {
 				// This only happens if I have forgot to handle a button
 				// ************************************
 				else {
-					if (G333Config.g333Config.DEBUG_GUI)
+					if (G333Config.config.DEBUG_GUI)
 						sPlayer.sendMessage("BITSpoutListener: Unknow button:"
 								+ BITPlayer.BITButtons.get(uuid));
 				}

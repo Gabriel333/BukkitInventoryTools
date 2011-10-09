@@ -164,13 +164,13 @@ public class G333Permissions {
 
 		// return permission
 		if (hasPermission) {
-			if (G333Config.g333Config.DEBUG_PERMISSIONS)
+			if (G333Config.config.DEBUG_PERMISSIONS)
 				sPlayer.sendMessage(ChatColor.GREEN
 						+ "G333Permissions: You have permission to: "
 						+ (PERMISSION_NODE + label).toLowerCase());
 			return true;
 		} else if (NOT_QUIET) {
-			if (G333Config.g333Config.DEBUG_PERMISSIONS)
+			if (G333Config.config.DEBUG_PERMISSIONS)
 				sPlayer.sendMessage(ChatColor.RED
 						+ "G333Permissions: You DONT have permission to: "
 						+ (PERMISSION_NODE + label).toLowerCase());

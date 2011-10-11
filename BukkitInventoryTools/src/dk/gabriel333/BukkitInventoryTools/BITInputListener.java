@@ -19,166 +19,185 @@ public class BITInputListener extends InputListener {
 
 	@Override
 	public void onKeyPressedEvent(KeyPressedEvent event) {
-		SpoutPlayer sPlayer =  event.getPlayer();
+		SpoutPlayer sPlayer = event.getPlayer();
 		BITPlayer bPlayer = new BITPlayer(sPlayer);
 		ScreenType screentype = event.getScreenType();
 		String keypressed = event.getKey().name();
-		SpoutBlock targetblock = (SpoutBlock) sPlayer.getTargetBlock(null, 4);
-		// PLAYER_INVENTORY
-		if (screentype == ScreenType.PLAYER_INVENTORY) {
-			if (keypressed.equals(G333Config.config.LIBRARY_SORTKEY)) {
-				if (G333Permissions.hasPerm(sPlayer, "sortinventory.use",
-						G333Permissions.NOT_QUIET)) {
-					bPlayer.sortinventory(sPlayer, event.getScreenType());
-					if (G333Config.config.SORT_DISPLAYSORTARCHIEVEMENT) {
-						G333Messages.sendNotification(sPlayer, "Items sorted.");
-					}
-				}
-			}
-		}
-
-		// CHEST_INVENTORY
-		else if (screentype == ScreenType.CHEST_INVENTORY) {
-			// CHEST or DOUBLECHEST
-			if (BITDigiLock.isChest(targetblock)) {
-				SpoutChest sChest = (SpoutChest) targetblock.getState();
+		SpoutBlock targetblock = (SpoutBlock) sPlayer.getTargetBlock(null, 5);
+		if (targetblock != null) {
+			// PLAYER_INVENTORY
+			if (screentype == ScreenType.PLAYER_INVENTORY) {
 				if (keypressed.equals(G333Config.config.LIBRARY_SORTKEY)) {
-					if (targetblock.getType() == Material.CHEST) {
-						if (G333Permissions.hasPerm(sPlayer,
-								"sortinventory.use", G333Permissions.NOT_QUIET)) {
-							G333Inventory.sortInventoryItems(sPlayer,
-									sChest.getLargestInventory());
-							G333Inventory.sortPlayerInventoryItems(sPlayer);
-						}
+					if (G333Permissions.hasPerm(sPlayer, "sortinventory.use",
+							G333Permissions.NOT_QUIET)) {
+						bPlayer.sortinventory(sPlayer, event.getScreenType());
 						if (G333Config.config.SORT_DISPLAYSORTARCHIEVEMENT) {
 							G333Messages.sendNotification(sPlayer,
-									"Chest sorted.");
+									"Items sorted.");
 						}
 					}
-				}
-			} else
-			// targetblock is NOT a chest, so it must be SpoutBackPack
-			{
-				if (keypressed.equals(G333Config.config.LIBRARY_SORTKEY)) {
-					if (G333Config.config.SORT_DISPLAYSORTARCHIEVEMENT) {
-						G333Messages.sendNotification(sPlayer, "Items sorted.");
-					}
-					bPlayer.sortinventory(sPlayer, ScreenType.CHEST_INVENTORY);
 				}
 			}
-		}
 
-		// GAME_SCREEN
-		else if (screentype == ScreenType.GAME_SCREEN) {
-			if (keypressed.equals(G333Config.config.LIBRARY_LOCKKEY)) {
-				if (BITDigiLock.isLocked(targetblock)
-						&& !BITDigiLock.isLockable(targetblock)) {
-					BITDigiLock digilock = BITDigiLock.loadDigiLock(targetblock);
-					digilock.RemoveDigiLock(sPlayer);
-					sPlayer.sendMessage("Warning: You had an DigiLock on a illegal block. The DigiLock has been removed.");
-					sPlayer.sendMessage("Make a ticket and tell the developer how it happened on:");
-					sPlayer.sendMessage("http://dev.bukkit.org/server-mods/bukkitinventorytools/tickets/");
-				}
-				if (BITDigiLock.isLockable(targetblock)) {
-					if (BITDigiLock.isLocked(targetblock)) {
-						BITDigiLock digilock = BITDigiLock.loadDigiLock(targetblock);
-						if (BITDigiLock.isDoubleDoor(targetblock)) {
-							BITDigiLock.closeDoubleDoor(sPlayer, targetblock,0);
-						} else if (BITDigiLock.isDoor(targetblock)) {
-							BITDigiLock.closeDoor(sPlayer, targetblock,0);
-						} else if (BITDigiLock.isTrapdoor(targetblock)) {
-							BITDigiLock.closeTrapdoor(sPlayer, targetblock);
-						}
-						if ((sPlayer.getName().equals(digilock.getOwner()) && G333Permissions
-								.hasPerm(sPlayer, "digilock.create",
-										G333Permissions.NOT_QUIET))
-								|| G333Permissions.hasPerm(sPlayer,
-										"digilock.admin",
-										G333Permissions.NOT_QUIET)) {
-							if (G333Config.config.DEBUG_PERMISSIONS)
-								sPlayer.sendMessage(ChatColor.GREEN
-										+ "1) BITInputlistener: You have permission to open a locked door/chest");
-							G333Messages.sendNotification(sPlayer,
-									"You are the owner");
-							bPlayer.setPincode(sPlayer, targetblock);
-						} else {
-							G333Messages.sendNotification(sPlayer,
-									"Locked with Digilock");
-							if (G333Config.config.DEBUG_PERMISSIONS) {
-								sPlayer.sendMessage(ChatColor.GREEN
-										+ "2) BITInputlistener: You DONT have permission to open a locked door/chest");
+			// CHEST_INVENTORY
+			else if (screentype == ScreenType.CHEST_INVENTORY) {
+				// CHEST or DOUBLECHEST
+				if (BITDigiLock.isChest(targetblock)) {
+					SpoutChest sChest = (SpoutChest) targetblock.getState();
+					if (keypressed.equals(G333Config.config.LIBRARY_SORTKEY)) {
+						if (targetblock.getType() == Material.CHEST) {
+							if (G333Permissions.hasPerm(sPlayer,
+									"sortinventory.use",
+									G333Permissions.NOT_QUIET)) {
+								G333Inventory.sortInventoryItems(sPlayer,
+										sChest.getLargestInventory());
+								G333Inventory.sortPlayerInventoryItems(sPlayer);
+							}
+							if (G333Config.config.SORT_DISPLAYSORTARCHIEVEMENT) {
+								G333Messages.sendNotification(sPlayer,
+										"Chest sorted.");
 							}
 						}
-					} else { // TARGETBLOCK IS NOT LOCKED
-						if (sPlayer.isSpoutCraftEnabled()) {
-							if (G333Permissions.hasPerm(sPlayer,
-									"digilock.use", G333Permissions.NOT_QUIET)
+					}
+				} else
+				// targetblock is NOT a chest, so it must be SpoutBackPack
+				{
+					if (keypressed.equals(G333Config.config.LIBRARY_SORTKEY)) {
+						if (G333Config.config.SORT_DISPLAYSORTARCHIEVEMENT) {
+							G333Messages.sendNotification(sPlayer,
+									"Items sorted.");
+						}
+						bPlayer.sortinventory(sPlayer,
+								ScreenType.CHEST_INVENTORY);
+					}
+				}
+			}
+
+			// GAME_SCREEN
+			else if (screentype == ScreenType.GAME_SCREEN) {
+				if (keypressed.equals(G333Config.config.LIBRARY_LOCKKEY)) {
+					if (BITDigiLock.isLocked(targetblock)
+							&& !BITDigiLock.isLockable(targetblock)) {
+						BITDigiLock digilock = BITDigiLock
+								.loadDigiLock(targetblock);
+						digilock.RemoveDigiLock(sPlayer);
+						sPlayer.sendMessage("Warning: You had an DigiLock on a illegal block. The DigiLock has been removed.");
+						sPlayer.sendMessage("Make a ticket and tell the developer how it happened on:");
+						sPlayer.sendMessage("http://dev.bukkit.org/server-mods/bukkitinventorytools/tickets/");
+					}
+					if (BITDigiLock.isLockable(targetblock)) {
+						if (BITDigiLock.isLocked(targetblock)) {
+							BITDigiLock digilock = BITDigiLock
+									.loadDigiLock(targetblock);
+							if (BITDigiLock.isDoubleDoor(targetblock)) {
+								BITDigiLock.closeDoubleDoor(sPlayer,
+										targetblock, 0);
+							} else if (BITDigiLock.isDoor(targetblock)) {
+								BITDigiLock.closeDoor(sPlayer, targetblock, 0);
+							} else if (BITDigiLock.isTrapdoor(targetblock)) {
+								BITDigiLock.closeTrapdoor(sPlayer, targetblock);
+							}
+							if ((sPlayer.getName().equals(digilock.getOwner()) && G333Permissions
+									.hasPerm(sPlayer, "digilock.create",
+											G333Permissions.NOT_QUIET))
 									|| G333Permissions.hasPerm(sPlayer,
 											"digilock.admin",
 											G333Permissions.NOT_QUIET)) {
+								if (G333Config.config.DEBUG_PERMISSIONS)
+									sPlayer.sendMessage(ChatColor.GREEN
+											+ "1) BITInputlistener: You have permission to open a locked door/chest");
+								G333Messages.sendNotification(sPlayer,
+										"You are the owner");
+								bPlayer.setPincode(sPlayer, targetblock);
+							} else {
+								G333Messages.sendNotification(sPlayer,
+										"Locked with Digilock");
 								if (G333Config.config.DEBUG_PERMISSIONS) {
 									sPlayer.sendMessage(ChatColor.GREEN
-											+ "3) BITInputlistener: You have permission to open a locked door/chest");
-								}
-								if (BITDigiLock.isDoubleDoor(targetblock)) {
-									SpoutBlock leftdoor = BITDigiLock
-											.getLeftDoubleDoor(targetblock);
-									bPlayer.setPincode(sPlayer, leftdoor);
-								} else {
-									bPlayer.setPincode(sPlayer, targetblock);
+											+ "2) BITInputlistener: You DONT have permission to open a locked door/chest");
 								}
 							}
-						} else {
-							sPlayer.sendMessage("Install SpoutCraft or use command /dlock to create lock.");
-						}
+						} else { // TARGETBLOCK IS NOT LOCKED
+							if (sPlayer.isSpoutCraftEnabled()) {
+								if (G333Permissions.hasPerm(sPlayer,
+										"digilock.use",
+										G333Permissions.NOT_QUIET)
+										|| G333Permissions.hasPerm(sPlayer,
+												"digilock.admin",
+												G333Permissions.NOT_QUIET)) {
+									if (G333Config.config.DEBUG_PERMISSIONS) {
+										sPlayer.sendMessage(ChatColor.GREEN
+												+ "3) BITInputlistener: You have permission to open a locked door/chest");
+									}
+									if (BITDigiLock.isDoubleDoor(targetblock)) {
+										SpoutBlock leftdoor = BITDigiLock
+												.getLeftDoubleDoor(targetblock);
+										BITDigiLock.closeDoubleDoor(sPlayer,
+												leftdoor, 0);
+										bPlayer.setPincode(sPlayer, leftdoor);
+									} else if (BITDigiLock.isDoor(targetblock)) {
+										BITDigiLock.closeDoor(targetblock);
+										bPlayer.setPincode(sPlayer, targetblock);
+									} else {
+										bPlayer.setPincode(sPlayer, targetblock);
+									}
 
+								}
+							} else {
+								sPlayer.sendMessage("Install SpoutCraft or use command /dlock to create lock.");
+							}
+
+						}
 					}
 				}
 			}
-		}
 
-		// FURNACE_INVENTORY SCREEN
-		else if (screentype == ScreenType.FURNACE_INVENTORY) {
-			if (keypressed.equals(G333Config.config.LIBRARY_SORTKEY)) {
-				if (G333Permissions.hasPerm(sPlayer, "sortinventory.use",
-						G333Permissions.NOT_QUIET)) {
-					G333Inventory.sortPlayerInventoryItems(sPlayer);
-				}
-				if (G333Config.config.SORT_DISPLAYSORTARCHIEVEMENT) {
-					G333Messages.sendNotification(sPlayer, "Inventory sorted.");
-				}
-			} 
-		}
-		
-		// DISPENCER_INVENTORY SCREEN
-		else if (screentype == ScreenType.DISPENSER_INVENTORY) {
-			if (keypressed.equals(G333Config.config.LIBRARY_SORTKEY)) {
-				if (G333Permissions.hasPerm(sPlayer, "sortinventory.use",
-						G333Permissions.NOT_QUIET)) {
-					if (targetblock.getType() == Material.DISPENSER) {
-						Dispenser dispenser = (Dispenser) targetblock
-								.getState();
-						Inventory inventory = dispenser.getInventory();
-						G333Inventory.sortInventoryItems(sPlayer, inventory);
+			// FURNACE_INVENTORY SCREEN
+			else if (screentype == ScreenType.FURNACE_INVENTORY) {
+				if (keypressed.equals(G333Config.config.LIBRARY_SORTKEY)) {
+					if (G333Permissions.hasPerm(sPlayer, "sortinventory.use",
+							G333Permissions.NOT_QUIET)) {
 						G333Inventory.sortPlayerInventoryItems(sPlayer);
 					}
+					if (G333Config.config.SORT_DISPLAYSORTARCHIEVEMENT) {
+						G333Messages.sendNotification(sPlayer,
+								"Inventory sorted.");
+					}
 				}
-				if (G333Config.config.SORT_DISPLAYSORTARCHIEVEMENT) {
-					G333Messages.sendNotification(sPlayer, "Inventory sorted.");
-				}
-			} 
-		}
-
-		// CUSTOM_SCREEN
-		else if (screentype == ScreenType.CUSTOM_SCREEN) {
-			if (keypressed.equals("KEY_ESCAPE")) {
-				sPlayer.closeActiveWindow();
-				sPlayer.getMainScreen().removeWidgets(BIT.plugin);
 			}
-		}
 
-		else {
-			// UNHANDLED SCREENTYPE
+			// DISPENCER_INVENTORY SCREEN
+			else if (screentype == ScreenType.DISPENSER_INVENTORY) {
+				if (keypressed.equals(G333Config.config.LIBRARY_SORTKEY)) {
+					if (G333Permissions.hasPerm(sPlayer, "sortinventory.use",
+							G333Permissions.NOT_QUIET)) {
+						if (targetblock.getType() == Material.DISPENSER) {
+							Dispenser dispenser = (Dispenser) targetblock
+									.getState();
+							Inventory inventory = dispenser.getInventory();
+							G333Inventory
+									.sortInventoryItems(sPlayer, inventory);
+							G333Inventory.sortPlayerInventoryItems(sPlayer);
+						}
+					}
+					if (G333Config.config.SORT_DISPLAYSORTARCHIEVEMENT) {
+						G333Messages.sendNotification(sPlayer,
+								"Inventory sorted.");
+					}
+				}
+			}
+
+			// CUSTOM_SCREEN
+			else if (screentype == ScreenType.CUSTOM_SCREEN) {
+				if (keypressed.equals("KEY_ESCAPE")) {
+					sPlayer.closeActiveWindow();
+					sPlayer.getMainScreen().removeWidgets(BIT.plugin);
+				}
+			}
+
+			else {
+				// UNHANDLED SCREENTYPE
+			}
 		}
 	}
 

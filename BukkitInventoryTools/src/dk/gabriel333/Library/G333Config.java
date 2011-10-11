@@ -7,6 +7,7 @@ import java.io.InputStream;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.util.config.Configuration;
 
+@SuppressWarnings("deprecation")
 public class G333Config extends Configuration {
 	public String LIBRARY_LANGUAGE;
 	public String LIBRARY_SORTKEY;

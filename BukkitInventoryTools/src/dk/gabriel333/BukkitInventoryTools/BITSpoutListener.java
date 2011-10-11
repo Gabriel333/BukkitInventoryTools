@@ -8,6 +8,7 @@ import org.bukkit.block.Furnace;
 import org.bukkit.block.Sign;
 import org.bukkit.event.Event;
 import org.bukkit.inventory.Inventory;
+import org.bukkit.material.Lever;
 
 import org.getspout.spoutapi.block.SpoutBlock;
 import org.getspout.spoutapi.block.SpoutChest;
@@ -61,7 +62,16 @@ public class BITSpoutListener extends SpoutListener {
 									digilock.getUseCost());
 
 						} else if (digilock.getBlock().getType() == Material.LEVER) {
-
+							Lever lever = (Lever) sBlock.getState().getData();
+							if (lever.isPowered()) {
+								BITDigiLock.leverOff(sPlayer, sBlock);
+							} else {
+								BITDigiLock.leverOn(sPlayer, sBlock,
+										digilock.getUseCost());
+								
+							}
+							BITDigiLock.playDigiLockSound(sBlock);
+							
 						} else if (digilock.getBlock().getType() == Material.STONE_BUTTON) {
 
 						} else if (digilock.getBlock().getType() == Material.DISPENSER) {

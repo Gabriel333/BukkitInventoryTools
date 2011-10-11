@@ -28,36 +28,51 @@ public class BITBlockListener extends BlockListener {
 	public void onBlockRedstoneChange(BlockRedstoneEvent event) {
 		SpoutBlock block = (SpoutBlock) event.getBlock();
 		if (BITDigiLock.isLocked(block)) {
-
 			if (G333Config.config.DEBUG_EVENTS)
 				G333Messages.showInfo("BlockRedstoneEvt:"
 						+ event.getBlock().getType() + " getOC:"
 						+ event.getOldCurrent() + " getNC:"
 						+ event.getNewCurrent());
-
 			if (BITDigiLock.isDoubleDoor(block)) {
-				if (BITDigiLock.isDoubleDoorOpen(block)) {
-					if (G333Config.config.DEBUG_EVENTS)
-						G333Messages
-								.showInfo("BlockRedstoneEvt-doubledoor is open");
-				} else {
-					if (G333Config.config.DEBUG_EVENTS)
-						G333Messages
-								.showInfo("BlockRedstoneEvt-doubledoor is closed");
-			    }
+
 			} else if (BITDigiLock.isDoor(block)) {
-
-				if (G333Config.config.DEBUG_EVENTS)
-					G333Messages.showInfo("BlockRedstoneEvt-door");
-
 				Door door = (Door) block.getState().getData();
 				if (!door.isOpen()) {
 					event.setNewCurrent(event.getOldCurrent());
-
 				}
 			}
 		}
+	}
 
+	public void onBlockPhysics(BlockPhysicsEvent event) {
+		if (event.isCancelled())
+			return;
+
+		SpoutBlock block = (SpoutBlock) event.getBlock();
+		if (BITDigiLock.isLocked(block)) {
+			event.setCancelled(true);
+			if (G333Config.config.DEBUG_EVENTS) {
+				G333Messages.showInfo("BlockPhysicsEvt:"
+						+ event.getBlock().getType() + " getCT:"
+						+ event.getChangedType());
+			}
+		}
+	}
+
+	@Override
+	public void onBlockFromTo(BlockFromToEvent event) {
+		super.onBlockFromTo(event);
+		if (event.isCancelled())
+			return;
+		SpoutBlock block = (SpoutBlock) event.getBlock();
+		if (BITDigiLock.isLocked(block)) {
+			event.setCancelled(true);
+			if (G333Config.config.DEBUG_EVENTS) {
+				G333Messages.showInfo("BlockFromTo:"
+						+ event.getBlock().getType() + " ToBlk:"
+						+ event.getToBlock().getType());
+			}
+		}
 	}
 
 	public void onBlockBreak(BlockBreakEvent event) {
@@ -67,7 +82,7 @@ public class BITBlockListener extends BlockListener {
 		SpoutPlayer sPlayer = (SpoutPlayer) event.getPlayer();
 		SpoutBlock blockOnTop = block.getRelative(BlockFace.UP);
 		if (BITDigiLock.isLocked(block) || BITDigiLock.isLocked(blockOnTop)) {
-			sPlayer.damage(10);
+			sPlayer.damage(5);
 			event.setCancelled(true);
 		}
 	}
@@ -76,28 +91,10 @@ public class BITBlockListener extends BlockListener {
 		if (event.isCancelled())
 			return;
 		SpoutBlock block = (SpoutBlock) event.getBlock();
+		// SpoutPlayer sPlayer = (SpoutPlayer) event.getPlayer();
 		if (BITDigiLock.isLocked(block)) {
+			// sPlayer.damage(1);
 			event.setCancelled(true);
-		}
-	}
-
-	public void onBlockPhysics(BlockPhysicsEvent event) {
-		if (event.isCancelled())
-			return;
-		SpoutBlock block = (SpoutBlock) event.getBlock();
-		if (BITDigiLock.isLocked(block)) {
-			if (BITDigiLock.isLockable(block)
-					&& BITDigiLock.isLockable(event.getChangedType())) {
-
-				if (G333Config.config.DEBUG_EVENTS) {
-					G333Messages.showInfo("BlockPhysicsEvt:"
-							+ event.getBlock().getType() + " getCT:"
-							+ event.getChangedType());
-
-				}
-			} else {
-				event.setCancelled(true);
-			}
 		}
 	}
 
@@ -129,32 +126,6 @@ public class BITBlockListener extends BlockListener {
 		SpoutBlock block = (SpoutBlock) event.getBlock();
 		if (BITDigiLock.isLocked(block)) {
 			event.setCancelled(true);
-		}
-	}
-
-	@Override
-	public void onBlockFromTo(BlockFromToEvent event) {
-		super.onBlockFromTo(event);
-		if (event.isCancelled())
-			return;
-		if (G333Config.config.DEBUG_EVENTS) {
-			G333Messages.showInfo("BlockFromTo:" + event.getBlock().getType()
-					+ " ToBlk:" + event.getToBlock().getType());
-		}
-		SpoutBlock block = (SpoutBlock) event.getBlock();
-		SpoutBlock toBlock = (SpoutBlock) event.getToBlock();
-		if (BITDigiLock.isLocked(block) || BITDigiLock.isLocked(toBlock)) {
-			BITDigiLock digilock = BITDigiLock.loadDigiLock(block);
-			BITDigiLock toDigilock = BITDigiLock.loadDigiLock(toBlock);
-			if (digilock.getOwner().equalsIgnoreCase(toDigilock.getOwner())) {
-				if (G333Config.config.DEBUG_EVENTS) {
-					G333Messages.showInfo("BlockFromTo:"
-							+ event.getBlock().getType() + " ToBlk:"
-							+ event.getToBlock().getType());
-				}
-			} else {
-				event.setCancelled(true);
-			}
 		}
 	}
 

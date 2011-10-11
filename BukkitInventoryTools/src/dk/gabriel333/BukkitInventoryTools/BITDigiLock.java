@@ -8,6 +8,7 @@ import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
+import org.bukkit.block.Dispenser;
 
 import org.bukkit.material.Door;
 import org.bukkit.material.Lever;
@@ -471,17 +472,60 @@ public class BITDigiLock {
 						"http://dl.dropbox.com/u/36067670/BukkitInventoryTools/Sounds/Digilock.wav",
 						true, sBlock.getLocation(), 5);
 	}
-	
+
 	public static boolean isNeighbourLocked(SpoutBlock block) {
-			if (isLocked(block.getFace(BlockFace.EAST))
-					|| isLocked(block.getFace(BlockFace.NORTH))
-					|| isLocked(block.getFace(BlockFace.SOUTH))
-					|| isLocked(block.getFace(BlockFace.WEST))
-					|| isLocked(block.getFace(BlockFace.DOWN))
-					|| isLocked(block.getFace(BlockFace.UP))) {
+		for (BlockFace bf : BlockFace.values()) {
+			if (isLocked(block.getRelative(bf))) {
 				return true;
 			}
+		}
+		return false;
+	}
+
+	public static boolean isNeighbourSameOwner(SpoutBlock block, String owner) {
+		for (BlockFace bf : BlockFace.values()) {
+			if (isLocked(block.getRelative(bf))) {
+				BITDigiLock digilock = BITDigiLock.loadDigiLock(block
+						.getFace(bf));
+				if (digilock.getOwner().equalsIgnoreCase(owner)) {
+					return true;
+				}
+			}
+		}
+		return false;
+	}
+
+	public SpoutBlock getNextLockedBlock(SpoutPlayer sPlayer, SpoutBlock sBlock) {
+		for (int i = -1; i < 1 + 1; i++) {
+			for (int j = -1; j < +1; j++) {
+				for (int k = -1; k < +1; k++) {
+					if (!(i == 0 && j == 0 && k == 0)) {
+						SpoutBlock sb = sBlock.getRelative(i, j, k);
+						if (BITDigiLock.isLocked(sb)
+								&& (BITDigiLock.isDoubleDoor(sb)
+										|| BITDigiLock.isDoor(sb)
+										|| BITDigiLock.isTrapdoor(sb) || BITDigiLock
+											.isDispenser(sb))) {
+							return sb;
+						}
+					}
+				}
+			}
+		}
+		return null;
+	}
+
+	// *******************************************************
+	//
+	// DISPENSER
+	//
+	// *******************************************************
+	public static boolean isDispenser(SpoutBlock sBlock) {
+		if (sBlock.getType().equals(Material.DISPENSER)) {
+			return true;
+		} else {
 			return false;
+		}
 	}
 
 	// *******************************************************
@@ -497,44 +541,96 @@ public class BITDigiLock {
 		}
 	}
 
-	public static void leverOn(SpoutPlayer sPlayer, SpoutBlock block, int cost) {
-		boolean setleveron = true;
-		if (BIT.useEconomy && cost > 0) {
-			if (BIT.plugin.Method.hasAccount(sPlayer.getName())) {
-				if (BIT.plugin.Method.getAccount(sPlayer.getName()).hasEnough(
-						cost)) {
-					BIT.plugin.Method.getAccount(sPlayer.getName()).subtract(
-							cost);
-					sPlayer.sendMessage("Your account ("
-							+ BIT.plugin.Method.getAccount(sPlayer.getName())
-									.balance() + ") has been deducted " + cost
-							+ " bucks");
-				} else {
-					sPlayer.sendMessage("You dont have enough money ("
-							+ BIT.plugin.Method.getAccount(sPlayer.getName())
-									.balance() + "). Cost is:" + cost);
-					setleveron = false;
+	public static boolean isLeverOn(SpoutBlock block) {
+		Lever lever = (Lever) block.getState().getData();
+		return lever.isPowered();
+	}
+
+	public static void leverOn(SpoutPlayer sPlayer, SpoutBlock sBlock, int cost) {
+		boolean doTheWork = false;
+		BITDigiLock digilock = BITDigiLock.loadDigiLock(sBlock);
+		SpoutBlock nextBlock = digilock.getNextLockedBlock(sPlayer, sBlock);
+		if (nextBlock != null) {
+			BITDigiLock nextDigilock = BITDigiLock.loadDigiLock(nextBlock);
+
+			if (digilock.getOwner().equalsIgnoreCase(nextDigilock.getOwner())) {
+				doTheWork = true;
+			} else {
+				sPlayer.sendMessage("You are not the owner of the "
+						+ nextBlock.getType());
+			}
+			boolean setleveron = true;
+			if (BIT.useEconomy && cost > 0 && doTheWork) {
+				if (BIT.plugin.Method.hasAccount(sPlayer.getName())) {
+					if (BIT.plugin.Method.getAccount(sPlayer.getName())
+							.hasEnough(cost)) {
+						BIT.plugin.Method.getAccount(sPlayer.getName())
+								.subtract(cost);
+						BIT.plugin.Method.getAccount(nextDigilock.getOwner())
+								.add(cost);
+						sPlayer.sendMessage("Your account ("
+								+ BIT.plugin.Method.getAccount(
+										sPlayer.getName()).balance()
+								+ ") has been deducted " + cost + " bucks");
+					} else {
+						sPlayer.sendMessage("You dont have enough money ("
+								+ BIT.plugin.Method.getAccount(
+										sPlayer.getName()).balance()
+								+ "). Cost is:" + cost);
+						setleveron = false;
+					}
 				}
 			}
-		}
-		if (setleveron) {
-			BITDigiLock digilock = loadDigiLock(block);
-			playDigiLockSound(block);
-			Lever lever = (Lever) block.getState().getData();
-			lever.setPowered(true);
-			// block.setData((byte) (block.getState().getData().getData() | 8));
-			if (digilock.getClosetimer() > 0) {
-				scheduleLeverOff(sPlayer, block, digilock.getClosetimer());
+			if (setleveron && doTheWork) {
+				playDigiLockSound(sBlock);
+				Lever lever = (Lever) sBlock.getState().getData();
+				lever.setPowered(true);
+				if (BITDigiLock.isDoubleDoor(nextBlock)) {
+					BITDigiLock.openDoubleDoor(sPlayer, nextBlock, 0);
+				} else if (BITDigiLock.isDoor(nextBlock)) {
+					BITDigiLock.openDoor(sPlayer, nextBlock, 0);
+				} else if (BITDigiLock.isTrapdoor(nextBlock)) {
+					BITDigiLock.openTrapdoor(sPlayer, nextBlock, 0);
+				} else if (nextBlock.getType().equals(Material.DISPENSER)) {
+					Dispenser dispenser = (Dispenser) nextBlock.getState();
+					dispenser.dispense();
+				}
+				if (digilock.getClosetimer() > 0) {
+					scheduleLeverOff(sPlayer, sBlock, digilock.getClosetimer());
+				}
 			}
 		}
 	}
 
-	public static void leverOff(SpoutPlayer sPlayer, SpoutBlock block) {
-		playDigiLockSound(block);
-		Lever lever = (Lever) block.getState().getData();
-		lever.setPowered(false);
-		// block.setData((byte) ((block.getState().getData().getData() | 8) ^
-		// 8));
+	public static void leverOff(SpoutPlayer sPlayer, SpoutBlock sBlock) {
+		if (BITDigiLock.isLeverOn(sBlock)) {
+			boolean doTheWork = false;
+			BITDigiLock digilock = BITDigiLock.loadDigiLock(sBlock);
+			SpoutBlock nextBlock = digilock.getNextLockedBlock(sPlayer, sBlock);
+			if (nextBlock != null) {
+				BITDigiLock nextDigilock = BITDigiLock.loadDigiLock(nextBlock);
+				if (digilock.getOwner().equalsIgnoreCase(
+						nextDigilock.getOwner())) {
+					doTheWork = true;
+				} else {
+					sPlayer.sendMessage("You are not the owner of the "
+							+ nextBlock.getType());
+				}
+				if (doTheWork) {
+					playDigiLockSound(sBlock);
+					Lever lever = (Lever) sBlock.getState().getData();
+					lever.setPowered(false);
+					//sPlayer.sendMessage("setPowered-false");
+					if (BITDigiLock.isDoubleDoor(nextBlock)) {
+						BITDigiLock.openDoubleDoor(sPlayer, nextBlock, 0);
+					} else if (BITDigiLock.isDoor(nextBlock)) {
+						BITDigiLock.openDoor(sPlayer, nextBlock, 0);
+					} else if (BITDigiLock.isTrapdoor(nextBlock)) {
+						BITDigiLock.openTrapdoor(sPlayer, nextBlock, 0);
+					}
+				}
+			}
+		}
 	}
 
 	//
@@ -547,11 +643,11 @@ public class BITDigiLock {
 					public void run() {
 						SpoutBlock sb = sBlock;
 						SpoutPlayer sp = sPlayer;
-						Lever lever = (Lever) sb.getState().getData();
 						if (G333Config.config.DEBUG_DOOR)
 							sp.sendMessage("Turning lever off in " + closetimer
 									+ " seconds");
-						lever.setPowered(false);
+						if (BITDigiLock.isLeverOn(sBlock))
+							BITDigiLock.leverOff(sp, sb);
 					}
 				}, fs);
 		return taskID;
@@ -585,7 +681,6 @@ public class BITDigiLock {
 
 	public static void openDoor(SpoutPlayer sPlayer, SpoutBlock block, int cost) {
 		boolean opendoor = true;
-		BITDigiLock digilock = loadDigiLock(block);
 		if (BIT.useEconomy && cost > 0) {
 			if (BIT.plugin.Method.hasAccount(sPlayer.getName())) {
 				if (BIT.plugin.Method.getAccount(sPlayer.getName()).hasEnough(
@@ -619,16 +714,18 @@ public class BITDigiLock {
 					nextBlock.setData((byte) (nextBlock.getState().getData()
 							.getData() | 4));
 				}
-				if (digilock.getClosetimer() > 0 && !isDoubleDoor(block)) {
-					scheduleCloseDoor(sPlayer, block, digilock.getClosetimer(),
-							0);
+				if (BITDigiLock.isLocked(block)) {
+					BITDigiLock digilock = loadDigiLock(block);
+					if (digilock.getClosetimer() > 0 && !isDoubleDoor(block)) {
+						scheduleCloseDoor(sPlayer, block,
+								digilock.getClosetimer(), 0);
+					}
 				}
 			}
 		}
 	}
 
 	public static void openDoor(SpoutBlock block) {
-		// BITDigiLock digilock = loadDigiLock(block);
 		Door door = (Door) block.getState().getData();
 		SpoutBlock nextBlock;
 		if (!isDoorOpen(block)) {
@@ -643,10 +740,6 @@ public class BITDigiLock {
 				nextBlock.setData((byte) (nextBlock.getState().getData()
 						.getData() | 4));
 			}
-			// if (digilock.getClosetimer() > 0 && !isDoubleDoor(block)) {
-			// scheduleCloseDoor(sPlayer, block, digilock.getClosetimer(),
-			// 0);
-			// }
 		}
 
 	}
@@ -738,8 +831,10 @@ public class BITDigiLock {
 							sp.sendMessage("Autoclosing the door in "
 									+ closetimer + " seconds");
 						if (isDoor(sb) && !isDoubleDoor(sb)) {
-							if (isDoorOpen(sb))
+							if (isDoorOpen(sb)) {
 								closeDoor(sp, sb, c);
+								playDigiLockSound(sBlock);
+							}
 						}
 					}
 				}, fs);
@@ -770,7 +865,6 @@ public class BITDigiLock {
 	public static void openTrapdoor(SpoutPlayer sPlayer, SpoutBlock sBlock,
 			int cost) {
 		boolean opentrapdoor = true;
-		BITDigiLock digilock = loadDigiLock(sBlock);
 		if (BIT.useEconomy && cost > 0) {
 			if (BIT.plugin.Method.hasAccount(sPlayer.getName())) {
 				if (BIT.plugin.Method.getAccount(sPlayer.getName()).hasEnough(
@@ -791,11 +885,14 @@ public class BITDigiLock {
 		}
 		if (opentrapdoor) {
 			if (!isTrapdoorOpen(sPlayer, sBlock)) {
-				playDigiLockSound(sBlock);
 				sBlock.setData((byte) (sBlock.getState().getData().getData() | 4));
-				if (digilock.getClosetimer() > 0) {
-					scheduleCloseTrapdoor(sPlayer, sBlock,
-							digilock.getClosetimer());
+				if (BITDigiLock.isLocked(sBlock)) {
+					playDigiLockSound(sBlock);
+					BITDigiLock digilock = loadDigiLock(sBlock);
+					if (digilock.getClosetimer() > 0) {
+						scheduleCloseTrapdoor(sPlayer, sBlock,
+								digilock.getClosetimer());
+					}
 				}
 			}
 		}
@@ -824,8 +921,10 @@ public class BITDigiLock {
 							sp.sendMessage("Autoclosing the trapdoor in "
 									+ closetimer + " seconds");
 						if (sBlock.getType() == Material.TRAP_DOOR) {
-							if (isTrapdoorOpen(sp, sb))
+							if (isTrapdoorOpen(sp, sb)) {
 								closeTrapdoor(sp, sb);
+								playDigiLockSound(sBlock);
+							}
 						}
 					}
 				}, fs);
@@ -877,10 +976,12 @@ public class BITDigiLock {
 				openDoor(sPlayer, getLeftDoubleDoor(sBlock), cost);
 			}
 		}
-		BITDigiLock digilock = loadDigiLock(sBlock);
-		if (digilock.getClosetimer() > 0) {
-			scheduleCloseDoubleDoor(sPlayer, sBlock, digilock.getClosetimer(),
-					0);
+		if (BITDigiLock.isLocked(sBlock)) {
+			BITDigiLock digilock = loadDigiLock(sBlock);
+			if (digilock.getClosetimer() > 0) {
+				scheduleCloseDoubleDoor(sPlayer, sBlock,
+						digilock.getClosetimer(), 0);
+			}
 		}
 	}
 
@@ -1001,8 +1102,10 @@ public class BITDigiLock {
 							sp.sendMessage("Autoclosing the DoubleDoor in "
 									+ closetimer + " seconds");
 						if (isDoubleDoor(sBlock)) {
-							if (isDoubleDoorOpen(sb))
+							if (isDoubleDoorOpen(sb)) {
 								closeDoubleDoor(sp, sb, c);
+								playDigiLockSound(sBlock);
+							}
 						}
 					}
 				}, fs);

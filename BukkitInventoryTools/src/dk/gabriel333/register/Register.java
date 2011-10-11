@@ -24,6 +24,7 @@ import org.bukkit.event.Event.Type;
  * @copyright (c) 2011
  * @license AOL license <http://aol.nexua.org>
  */
+@SuppressWarnings("deprecation")
 public class Register extends JavaPlugin {
 
     public Configuration config;

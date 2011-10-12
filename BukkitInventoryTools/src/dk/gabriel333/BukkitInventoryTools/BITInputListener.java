@@ -24,7 +24,7 @@ public class BITInputListener extends InputListener {
 		ScreenType screentype = event.getScreenType();
 		String keypressed = event.getKey().name();
 		SpoutBlock targetblock = (SpoutBlock) sPlayer.getTargetBlock(null, 5);
-		if (targetblock != null) {
+		if (BITDigiLock.isLockable(targetblock)) {
 			// PLAYER_INVENTORY
 			if (screentype == ScreenType.PLAYER_INVENTORY) {
 				if (keypressed.equals(G333Config.config.LIBRARY_SORTKEY)) {
@@ -198,7 +198,7 @@ public class BITInputListener extends InputListener {
 			else {
 				// UNHANDLED SCREENTYPE
 			}
-		}
+		} 
 	}
 
 	@Override

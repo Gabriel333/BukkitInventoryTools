@@ -2,7 +2,7 @@ package dk.gabriel333.BukkitInventoryTools;
 
 import java.net.MalformedURLException;
 import java.util.HashMap;
-import java.util.UUID;
+import java.util.Map;
 import java.util.logging.Logger;
 
 import org.bukkit.command.CommandSender;
@@ -14,6 +14,7 @@ import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.PluginDescriptionFile;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
+import org.getspout.spoutapi.block.SpoutBlock;
 import org.getspout.spoutapi.gui.GenericTextField;
 import org.getspout.spoutapi.gui.PopupScreen;
 
@@ -56,16 +57,17 @@ public class BIT extends JavaPlugin {
 
 	// USERDATA
 	public static int usercounter = 0;
-	public static HashMap<UUID, Integer> userno = new HashMap<UUID, Integer>();
-	public static HashMap<UUID, PopupScreen> popupGetPincode = new HashMap<UUID, PopupScreen>();
-	public static HashMap<UUID, PopupScreen> popupSetPincode = new HashMap<UUID, PopupScreen>();
-	public static HashMap<UUID, GenericTextField> pincode = new HashMap<UUID, GenericTextField>();
-	public static HashMap<UUID, GenericTextField> owner = new HashMap<UUID, GenericTextField>();
-	public static HashMap<UUID, GenericTextField> closetimer = new HashMap<UUID, GenericTextField>();
-	public static HashMap<UUID, GenericTextField> coOwners = new HashMap<UUID, GenericTextField>();
-	public static HashMap<UUID, GenericTextField> useCost = new HashMap<UUID, GenericTextField>();
-	public static HashMap<UUID, GenericTextField> connectedTo = new HashMap<UUID, GenericTextField>();
-	public static HashMap<UUID, GenericTextField> shared = new HashMap<UUID, GenericTextField>();
+	public static Map<Integer, Integer> userno = new HashMap<Integer, Integer>();
+	public static Map<Integer, PopupScreen> popupGetPincode = new HashMap<Integer, PopupScreen>();
+	public static Map<Integer, PopupScreen> popupSetPincode = new HashMap<Integer, PopupScreen>();
+	public static Map<Integer, GenericTextField> pincode = new HashMap<Integer, GenericTextField>();
+	public static Map<Integer, GenericTextField> owner = new HashMap<Integer, GenericTextField>();
+	public static Map<Integer, GenericTextField> closetimer = new HashMap<Integer, GenericTextField>();
+	public static Map<Integer, GenericTextField> coOwners = new HashMap<Integer, GenericTextField>();
+	public static Map<Integer, GenericTextField> useCost = new HashMap<Integer, GenericTextField>();
+	public static Map<Integer, GenericTextField> connectedTo = new HashMap<Integer, GenericTextField>();
+	public static Map<Integer, GenericTextField> shared = new HashMap<Integer, GenericTextField>();
+	public static Map<Integer, SpoutBlock> clickedBlock = new HashMap<Integer, SpoutBlock>();
 
 	@Override
 	public void onEnable() {
@@ -141,8 +143,8 @@ public class BIT extends JavaPlugin {
 				Priority.Normal, this);
 		pm.registerEvent(Event.Type.PLAYER_JOIN, new BITPlayerListener(),
 				Priority.Normal, this);
-		//pm.registerEvent(Event.Type.PLAYER_LOGIN, new BITPlayerListener(),
-		//		Priority.Normal, this);
+		pm.registerEvent(Event.Type.PLAYER_LOGIN, new BITPlayerListener(),
+				Priority.Normal, this);
 		pm.registerEvent(Event.Type.PLAYER_QUIT, new BITPlayerListener(),
 				Priority.Normal, this);
 		pm.registerEvent(Event.Type.PLAYER_KICK, new BITPlayerListener(),

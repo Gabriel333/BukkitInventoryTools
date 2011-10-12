@@ -28,17 +28,18 @@ public class BITSpoutListener extends SpoutListener {
 			UUID uuid = button.getId();
 			SpoutPlayer sPlayer = ((ButtonClickEvent) event).getPlayer();
 			BITPlayer bPlayer = new BITPlayer(sPlayer);
-			SpoutBlock sBlock = (SpoutBlock) sPlayer.getTargetBlock(null, 5);
-			if (sBlock != null) {
+			//SpoutBlock sBlock = (SpoutBlock) sPlayer.getTargetBlock(null, 5);
+			int id = sPlayer.getEntityId();
+			SpoutBlock sBlock = BIT.clickedBlock.get(id);
+			if (BITDigiLock.isLocked(sBlock)) {
 				BITDigiLock digilock = BITDigiLock.loadDigiLock(sBlock);
-				UUID uuid2 = sPlayer.getUniqueId();
 				// ************************************
 				// Buttons in getPincodeWindow
 				// ************************************
 				if (BITPlayer.BITButtons.get(uuid) == "getPincodeUnlock") {
-					BIT.popupGetPincode.get(uuid2).close();
+					BIT.popupGetPincode.get(id).close();
 					if ((digilock.getPincode().equals(
-							BIT.pincode.get(uuid2).getText()) && G333Permissions
+							BIT.pincode.get(id).getText()) && G333Permissions
 							.hasPerm(sPlayer, "digilock.use",
 									G333Permissions.QUIET))
 							|| G333Permissions.hasPerm(sPlayer,
@@ -66,7 +67,8 @@ public class BITSpoutListener extends SpoutListener {
 
 						} else if (digilock.getBlock().getType() == Material.STONE_BUTTON) {
 							if (!BITDigiLock.isButtonOn(digilock.getBlock())) {
-								BITDigiLock.pressButtonOn(sPlayer, digilock.getBlock(),
+								BITDigiLock.pressButtonOn(sPlayer,
+										digilock.getBlock(),
 										digilock.getUseCost());
 								BITDigiLock.playDigiLockSound(sBlock);
 							}
@@ -104,18 +106,20 @@ public class BITSpoutListener extends SpoutListener {
 						if (BITDigiLock.isDoor(digilock.getBlock())) {
 							BITDigiLock.closeDoor(sPlayer, digilock.getBlock(),
 									0);
-						} else if (BITDigiLock.isChest(digilock.getBlock())
-								|| digilock.getBlock().getType() == Material.DISPENSER
-								|| digilock.getBlock().getType() == Material.FURNACE) {
+						} else if (BITDigiLock.isChest(sBlock)
+								|| BITDigiLock.isDispenser(sBlock)
+								|| sBlock.getType() == Material.FURNACE) {
 							sPlayer.closeActiveWindow();
+						} else if (BITDigiLock.isLever(sBlock)) {
+							BITDigiLock.leverOff(sPlayer, sBlock);
 						}
 						sPlayer.damage(5);
 					}
-					BIT.popupSetPincode.get(uuid2).removeWidgets(BIT.plugin);
+					BIT.popupSetPincode.get(id).removeWidgets(BIT.plugin);
 					bPlayer.cleanupGetPincode(sPlayer);
 				} else if (BITPlayer.BITButtons.get(uuid) == "getPincodeCancel") {
 					sPlayer.closeActiveWindow();
-					BIT.popupSetPincode.get(uuid2).removeWidgets(BIT.plugin);
+					BIT.popupSetPincode.get(id).removeWidgets(BIT.plugin);
 					bPlayer.cleanupGetPincode(sPlayer);
 				}
 
@@ -127,12 +131,16 @@ public class BITSpoutListener extends SpoutListener {
 								G333Permissions.QUIET)) {
 					if (validateSetPincodeFields(sPlayer)) {
 						sPlayer.closeActiveWindow();
-						BITDigiLock.SaveDigiLock(sPlayer, sBlock, BIT.pincode
-								.get(uuid2).getText(), BIT.owner.get(uuid2)
-								.getText(), Integer.valueOf(BIT.closetimer.get(
-								uuid2).getText()), BIT.coOwners.get(uuid2)
-								.getText(), "", sBlock.getTypeId(), "", Integer
-								.valueOf(BIT.useCost.get(uuid2).getText()));
+						BITDigiLock
+								.SaveDigiLock(sPlayer, sBlock,
+										BIT.pincode.get(id).getText(),
+										BIT.owner.get(id).getText(), Integer
+												.valueOf(BIT.closetimer.get(id)
+														.getText()),
+										BIT.coOwners.get(id).getText(), "",
+										sBlock.getTypeId(), "", Integer
+												.valueOf(BIT.useCost.get(id)
+														.getText()));
 						bPlayer.cleanupSetPincode(sPlayer);
 					}
 
@@ -174,43 +182,47 @@ public class BITSpoutListener extends SpoutListener {
 						sPlayer.sendMessage("BITSpoutListener: Unknow button:"
 								+ BITPlayer.BITButtons.get(uuid));
 				}
+			} else {
+				// targetblock is not locked
+				G333Messages.sendNotification(sPlayer,
+						"The " + sBlock.getType() + " is not locked!");
 			}
 		}
 	}
 
 	private boolean validateSetPincodeFields(SpoutPlayer sPlayer) {
-		UUID uuid = sPlayer.getUniqueId();
-		if (BIT.closetimer.get(uuid).getText().equals("")) {
-			BIT.closetimer.get(uuid).setText("0");
-			BIT.popupSetPincode.get(uuid).setDirty(true);
+		int id = sPlayer.getEntityId();
+		if (BIT.closetimer.get(id).getText().equals("")) {
+			BIT.closetimer.get(id).setText("0");
+			BIT.popupSetPincode.get(id).setDirty(true);
 		}
-		if (BIT.useCost.get(uuid).getText().equals("")) {
-			BIT.useCost.get(uuid).setText("0");
-			BIT.popupSetPincode.get(uuid).setDirty(true);
+		if (BIT.useCost.get(id).getText().equals("")) {
+			BIT.useCost.get(id).setText("0");
+			BIT.popupSetPincode.get(id).setDirty(true);
 		}
-		int closetimer = Integer.valueOf(BIT.closetimer.get(uuid).getText());
-		int useCost = Integer.valueOf(BIT.useCost.get(uuid).getText());
+		int closetimer = Integer.valueOf(BIT.closetimer.get(id).getText());
+		int useCost = Integer.valueOf(BIT.useCost.get(id).getText());
 		if (closetimer < 0) {
 			G333Messages.sendNotification(sPlayer, "Closetimer must be > 0");
-			BIT.closetimer.get(uuid).setText("0");
-			BIT.popupSetPincode.get(uuid).setDirty(true);
+			BIT.closetimer.get(id).setText("0");
+			BIT.popupSetPincode.get(id).setDirty(true);
 			return false;
 		} else if (closetimer > 3600) {
 			G333Messages.sendNotification(sPlayer, "Closetim. must be<3600");
-			BIT.closetimer.get(uuid).setText("3600");
-			BIT.popupSetPincode.get(uuid).setDirty(true);
+			BIT.closetimer.get(id).setText("3600");
+			BIT.popupSetPincode.get(id).setDirty(true);
 			return false;
 		} else if (useCost > G333Config.DIGILOCK_USEMAXCOST) {
 			G333Messages.sendNotification(sPlayer, "Cost must be less "
 					+ G333Config.DIGILOCK_USEMAXCOST);
-			BIT.useCost.get(uuid).setText(
+			BIT.useCost.get(id).setText(
 					String.valueOf(G333Config.DIGILOCK_USEMAXCOST));
-			BIT.popupSetPincode.get(uuid).setDirty(true);
+			BIT.popupSetPincode.get(id).setDirty(true);
 			return false;
 		} else if (useCost < 0) {
 			G333Messages.sendNotification(sPlayer, "Cost must be > 0");
-			BIT.useCost.get(uuid).setText("0");
-			BIT.popupSetPincode.get(uuid).setDirty(true);
+			BIT.useCost.get(id).setText("0");
+			BIT.popupSetPincode.get(id).setDirty(true);
 			return false;
 		}
 

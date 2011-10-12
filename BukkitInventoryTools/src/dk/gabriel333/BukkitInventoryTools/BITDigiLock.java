@@ -539,6 +539,7 @@ public class BITDigiLock {
 			SpoutBlock nextBlock = digilock.getNextLockedBlock(sPlayer, sBlock);
 			if (nextBlock != null) {
 				BITDigiLock nextDigilock = BITDigiLock.loadDigiLock(nextBlock);
+				sPlayer.sendMessage("nextBlock:"+nextBlock.getType());
 				if (digilock.getOwner().equalsIgnoreCase(nextDigilock.getOwner())) {
 					doTheWork = true;
 				} else {
@@ -578,7 +579,7 @@ public class BITDigiLock {
 						BITDigiLock.openDoor(sPlayer, nextBlock, 0);
 					} else if (BITDigiLock.isTrapdoor(nextBlock)) {
 						BITDigiLock.openTrapdoor(sPlayer, nextBlock, 0);
-					} else if (nextBlock.getType().equals(Material.DISPENSER)) {
+					} else if (BITDigiLock.isDispenser(nextBlock)) {
 						Dispenser dispenser = (Dispenser) nextBlock.getState();
 						dispenser.dispense();
 					}

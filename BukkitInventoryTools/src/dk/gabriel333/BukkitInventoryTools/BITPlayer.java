@@ -74,25 +74,25 @@ public class BITPlayer {
 	public void getPincode(SpoutPlayer sPlayer, SpoutBlock block) {
 		int y = 50, height = 20, width = 100;
 		int x = 170;
-		UUID uuid = sPlayer.getUniqueId();
+		int id = sPlayer.getEntityId();
 
 		GenericItemWidget itemwidget = new GenericItemWidget(new ItemStack(95));
 		itemwidget.setX(x + 2 * height).setY(y);
 		itemwidget.setHeight(height * 2).setWidth(height * 2)
 				.setDepth(height * 2);
 		itemwidget.setTooltip("Locked inventory");
-		BIT.popupGetPincode.get(uuid).attachWidget(
+		BIT.popupGetPincode.get(id).attachWidget(
 						BIT.plugin, itemwidget);
 		y = y + 3 * height;
 		
-		BIT.pincode.get(uuid).setText("");
-		BIT.pincode.get(uuid).setTooltip("Enter the pincode and press unlock.");
-		BIT.pincode.get(uuid).setCursorPosition(1).setMaximumCharacters(10);
-		BIT.pincode.get(uuid).setX(x).setY(y);
-		BIT.pincode.get(uuid).setHeight(height).setWidth(width);
-		BIT.pincode.get(uuid).setPasswordField(true);
-		BIT.popupGetPincode.get(uuid).attachWidget(
-						BIT.plugin, BIT.pincode.get(uuid));
+		BIT.pincode.get(id).setText("");
+		BIT.pincode.get(id).setTooltip("Enter the pincode and press unlock.");
+		BIT.pincode.get(id).setCursorPosition(1).setMaximumCharacters(10);
+		BIT.pincode.get(id).setX(x).setY(y);
+		BIT.pincode.get(id).setHeight(height).setWidth(width);
+		BIT.pincode.get(id).setPasswordField(true);
+		BIT.popupGetPincode.get(id).attachWidget(
+						BIT.plugin, BIT.pincode.get(id));
 		y = y + height;
 
 		GenericButton unlockButton = new GenericButton("Unlock");
@@ -101,20 +101,20 @@ public class BITPlayer {
 		// unlockButton.setTooltip("Enter the pincode and press unlock.");
 		menuButtons.add(unlockButton);
 		BITButtons.put(unlockButton.getId(), "getPincodeUnlock");
-		BIT.popupGetPincode.get(uuid).attachWidget(BIT.plugin, unlockButton);
+		BIT.popupGetPincode.get(id).attachWidget(BIT.plugin, unlockButton);
 
 		GenericButton cancelButton = new GenericButton("Cancel");
 		cancelButton.setAuto(false).setX(x + width + 10).setY(y)
 				.setHeight(height).setWidth(width);
 		// cancelButton.setTooltip("Cancel");
-		BIT.popupGetPincode.get(uuid).attachWidget(BIT.plugin, cancelButton);
+		BIT.popupGetPincode.get(id).attachWidget(BIT.plugin, cancelButton);
 		menuButtons.add(cancelButton);
 		BITButtons.put(cancelButton.getId(), "getPincodeCancel");
 
 		// Open Window
-		BIT.popupGetPincode.get(uuid).setTransparent(true);
+		BIT.popupGetPincode.get(id).setTransparent(true);
 		sPlayer.getMainScreen().attachPopupScreen(
-				BIT.popupGetPincode.get(uuid));
+				BIT.popupGetPincode.get(id));
 	}
 
 	@SuppressWarnings("unused")
@@ -149,23 +149,23 @@ public class BITPlayer {
 	// inventory.
 	// ***************************************************************
 	public void setPincode(SpoutPlayer sPlayer, SpoutBlock block) {
-		UUID uuid = sPlayer.getUniqueId();
+		int id = sPlayer.getEntityId();
 		int height = 20;
 		int x, y, w1, w2, w3, w4;
 
 		if (BITDigiLock.isLocked(block)) {
 			BITDigiLock digilock = BITDigiLock.loadDigiLock(block);
-			BIT.pincode.get(uuid).setText(digilock.getPincode());
-			BIT.owner.get(uuid).setText(digilock.getOwner());
-			BIT.coOwners.get(uuid).setText(digilock.getCoOwners());
-			BIT.closetimer.get(uuid).setText(Integer.toString(digilock.getClosetimer()));
-			BIT.useCost.get(uuid).setText(Integer.toString(digilock.getUseCost()));
+			BIT.pincode.get(id).setText(digilock.getPincode());
+			BIT.owner.get(id).setText(digilock.getOwner());
+			BIT.coOwners.get(id).setText(digilock.getCoOwners());
+			BIT.closetimer.get(id).setText(Integer.toString(digilock.getClosetimer()));
+			BIT.useCost.get(id).setText(Integer.toString(digilock.getUseCost()));
 		} else {
-			BIT.pincode.get(uuid).setText("");
-			BIT.owner.get(uuid).setText(sPlayer.getName());
-			BIT.coOwners.get(uuid).setText("");
-			BIT.closetimer.get(uuid).setText("0");
-			BIT.useCost.get(uuid).setText("0");
+			BIT.pincode.get(id).setText("");
+			BIT.owner.get(id).setText(sPlayer.getName());
+			BIT.coOwners.get(id).setText("");
+			BIT.closetimer.get(id).setText("0");
+			BIT.useCost.get(id).setText("0");
 		}
 
 		// GIF
@@ -182,7 +182,7 @@ public class BITPlayer {
 		} else {
 			itemwidget.setTooltip("Locked inventory");
 		}
-		BIT.popupSetPincode.get(uuid).attachWidget(BIT.plugin, itemwidget);
+		BIT.popupSetPincode.get(id).attachWidget(BIT.plugin, itemwidget);
 		y = y + 3 * height;
 
 		// first row -------- x=20-170-------------------------------------
@@ -198,46 +198,46 @@ public class BITPlayer {
 		ownerButton.setAuto(false).setX(x).setY(y).setHeight(height)
 				.setWidth(w1);
 		ownerButton.setTooltip("Set Owner");
-		BIT.popupSetPincode.get(uuid).attachWidget(BIT.plugin, ownerButton);
+		BIT.popupSetPincode.get(id).attachWidget(BIT.plugin, ownerButton);
 		menuButtons.add(ownerButton);
 		BITButtons.put(ownerButton.getId(), "OwnerButton");
 		// owner1
-		BIT.owner.get(uuid).setTooltip("Owner of the DigiLock");
-		BIT.owner.get(uuid).setCursorPosition(1).setMaximumCharacters(20);
-		BIT.owner.get(uuid).setX(x + w1 + 1).setY(y);
-		BIT.owner.get(uuid).setHeight(height).setWidth(w2);
-		BIT.popupSetPincode.get(uuid).attachWidget(BIT.plugin, BIT.owner.get(uuid));
+		BIT.owner.get(id).setTooltip("Owner of the DigiLock");
+		BIT.owner.get(id).setCursorPosition(1).setMaximumCharacters(20);
+		BIT.owner.get(id).setX(x + w1 + 1).setY(y);
+		BIT.owner.get(id).setHeight(height).setWidth(w2);
+		BIT.popupSetPincode.get(id).attachWidget(BIT.plugin, BIT.owner.get(id));
 
 		// closetimerButton
 		GenericButton closetimerButton = new GenericButton("Closetimer");
 		closetimerButton.setAuto(false).setX(x + w1 + w2 + 10).setY(y)
 				.setHeight(height).setWidth(w1);
 		closetimerButton.setTooltip("Set closetimer");
-		BIT.popupSetPincode.get(uuid).attachWidget(BIT.plugin,
+		BIT.popupSetPincode.get(id).attachWidget(BIT.plugin,
 				closetimerButton);
 		menuButtons.add(closetimerButton);
 		BITButtons.put(closetimerButton.getId(), "ClosetimerButton");
 		// closetimer
-		BIT.closetimer.get(uuid).setTooltip("Autoclosing time in sec.");
-		BIT.closetimer.get(uuid).setCursorPosition(1).setMaximumCharacters(4);
-		BIT.closetimer.get(uuid).setX(x + w1 + 1 + w2 + 10 + w1 + 1).setY(y);
-		BIT.closetimer.get(uuid).setHeight(height).setWidth(w3);
-		BIT.popupSetPincode.get(uuid).attachWidget(BIT.plugin, BIT.closetimer.get(uuid));
+		BIT.closetimer.get(id).setTooltip("Autoclosing time in sec.");
+		BIT.closetimer.get(id).setCursorPosition(1).setMaximumCharacters(4);
+		BIT.closetimer.get(id).setX(x + w1 + 1 + w2 + 10 + w1 + 1).setY(y);
+		BIT.closetimer.get(id).setHeight(height).setWidth(w3);
+		BIT.popupSetPincode.get(id).attachWidget(BIT.plugin, BIT.closetimer.get(id));
 
 		// useCostButton
 		GenericButton useCostButton = new GenericButton("Use cost");
 		useCostButton.setAuto(false).setX(x + w1 + w2 + 10 + w1 + w3 + 10)
 				.setY(y).setHeight(height).setWidth(w1);
 		useCostButton.setTooltip("Set cost");
-		BIT.popupSetPincode.get(uuid).attachWidget(BIT.plugin, useCostButton);
+		BIT.popupSetPincode.get(id).attachWidget(BIT.plugin, useCostButton);
 		menuButtons.add(useCostButton);
 		BITButtons.put(useCostButton.getId(), "UseCostButton");
 		// useCost1
-		BIT.useCost.get(uuid).setTooltip("This is the cost to use the DigiLock");
-		BIT.useCost.get(uuid).setCursorPosition(1).setMaximumCharacters(4);
-		BIT.useCost.get(uuid).setX(x + w1 + w2 + 10 + w1 + w3 + 10 + w1 + 1).setY(y);
-		BIT.useCost.get(uuid).setHeight(height).setWidth(w4);
-		BIT.popupSetPincode.get(uuid).attachWidget(BIT.plugin, BIT.useCost.get(uuid));
+		BIT.useCost.get(id).setTooltip("This is the cost to use the DigiLock");
+		BIT.useCost.get(id).setCursorPosition(1).setMaximumCharacters(4);
+		BIT.useCost.get(id).setX(x + w1 + w2 + 10 + w1 + w3 + 10 + w1 + 1).setY(y);
+		BIT.useCost.get(id).setHeight(height).setWidth(w4);
+		BIT.popupSetPincode.get(id).attachWidget(BIT.plugin, BIT.useCost.get(id));
 		y = y + height + 1;
 
 		// setCoOwnerButton
@@ -245,15 +245,15 @@ public class BITPlayer {
 		CoOwnerButton.setAuto(false).setX(x).setY(y).setHeight(height)
 				.setWidth(w1);
 		CoOwnerButton.setTooltip("CoOwners must be seperated by a comma.");
-		BIT.popupSetPincode.get(uuid).attachWidget(BIT.plugin, CoOwnerButton);
+		BIT.popupSetPincode.get(id).attachWidget(BIT.plugin, CoOwnerButton);
 		menuButtons.add(CoOwnerButton);
 		BITButtons.put(CoOwnerButton.getId(), "CoOwnerButton");
 		// listOfCoOwners
-		BIT.coOwners.get(uuid).setX(x + w1 + 1).setY(y).setWidth(340).setHeight(height);
-		BIT.coOwners.get(uuid).setMaximumCharacters(200);
-		BIT.coOwners.get(uuid).setText(BIT.coOwners.get(uuid).getText());
-		BIT.popupSetPincode.get(uuid)
-				.attachWidget(BIT.plugin, BIT.coOwners.get(uuid));
+		BIT.coOwners.get(id).setX(x + w1 + 1).setY(y).setWidth(340).setHeight(height);
+		BIT.coOwners.get(id).setMaximumCharacters(200);
+		BIT.coOwners.get(id).setText(BIT.coOwners.get(id).getText());
+		BIT.popupSetPincode.get(id)
+				.attachWidget(BIT.plugin, BIT.coOwners.get(id));
 		y = y + height;
 
 		// Second row ------------X=170-270-370------------------------------
@@ -262,13 +262,13 @@ public class BITPlayer {
 		w1 = 80;
 		w2 = 80;
 		// pincode3
-		BIT.pincode.get(uuid).setTooltip("Enter/change the pincode...");
-		BIT.pincode.get(uuid).setCursorPosition(1).setMaximumCharacters(10);
-		BIT.pincode.get(uuid).setX(x).setY(y);
-		BIT.pincode.get(uuid).setHeight(height).setWidth(w1);
-		BIT.pincode.get(uuid).setPasswordField(false);
-		BIT.popupSetPincode.get(uuid).attachWidget(BIT.plugin,
-				BIT.pincode.get(uuid));
+		BIT.pincode.get(id).setTooltip("Enter/change the pincode...");
+		BIT.pincode.get(id).setCursorPosition(1).setMaximumCharacters(10);
+		BIT.pincode.get(id).setX(x).setY(y);
+		BIT.pincode.get(id).setHeight(height).setWidth(w1);
+		BIT.pincode.get(id).setPasswordField(false);
+		BIT.popupSetPincode.get(id).attachWidget(BIT.plugin,
+				BIT.pincode.get(id));
 		y = y + height;
 
 		// lockButton
@@ -276,7 +276,7 @@ public class BITPlayer {
 		lockButton.setAuto(false).setX(x).setY(y).setHeight(height)
 				.setWidth(w1);
 		lockButton.setTooltip("Enter/change the pincode and press lock.");
-		BIT.popupSetPincode.get(uuid).attachWidget(BIT.plugin, lockButton);
+		BIT.popupSetPincode.get(id).attachWidget(BIT.plugin, lockButton);
 		menuButtons.add(lockButton);
 		BITButtons.put(lockButton.getId(), "setPincodeLock");
 
@@ -284,7 +284,7 @@ public class BITPlayer {
 		GenericButton cancelButton2 = new GenericButton("Cancel");
 		cancelButton2.setAuto(false).setX(x + w1 + 10).setY(y)
 				.setHeight(height).setWidth(w1);
-		BIT.popupSetPincode.get(uuid).attachWidget(BIT.plugin, cancelButton2);
+		BIT.popupSetPincode.get(id).attachWidget(BIT.plugin, cancelButton2);
 		menuButtons.add(cancelButton2);
 		BITButtons.put(cancelButton2.getId(), "setPincodeCancel");
 
@@ -297,7 +297,7 @@ public class BITPlayer {
 			removeButton.setEnabled(true);
 			menuButtons.add(removeButton);
 			BITButtons.put(removeButton.getId(), "setPincodeRemove");
-			BIT.popupSetPincode.get(uuid).attachWidget(BIT.plugin,
+			BIT.popupSetPincode.get(id).attachWidget(BIT.plugin,
 					removeButton);
 		} else {
 			// menuButtons.remove(removeButton);
@@ -305,25 +305,25 @@ public class BITPlayer {
 			// popupSetPincode.removeWidget(removeButton);
 
 		}
-		BIT.popupSetPincode.get(uuid).setDirty(true);
+		BIT.popupSetPincode.get(id).setDirty(true);
 
 		// Open Window
-		BIT.popupSetPincode.get(uuid).setTransparent(true);
+		BIT.popupSetPincode.get(id).setTransparent(true);
 		sPlayer.getMainScreen().attachPopupScreen(
-				BIT.popupSetPincode.get(uuid));
+				BIT.popupSetPincode.get(id));
 
 	}
 
 	public void cleanupSetPincode(SpoutPlayer sPlayer) {
-		UUID uuid = sPlayer.getUniqueId();
-		BIT.popupSetPincode.get(uuid).removeWidgets(BIT.plugin);
-		BIT.popupSetPincode.get(uuid).setDirty(true);
+		int id = sPlayer.getEntityId();
+		BIT.popupSetPincode.get(id).removeWidgets(BIT.plugin);
+		BIT.popupSetPincode.get(id).setDirty(true);
 	}
 
 	public void cleanupGetPincode(SpoutPlayer sPlayer) {
-		UUID uuid = sPlayer.getUniqueId();
-		BIT.popupGetPincode.get(uuid).removeWidgets(BIT.plugin);
-		BIT.popupGetPincode.get(uuid).setDirty(true);
+		int id = sPlayer.getEntityId();
+		BIT.popupGetPincode.get(id).removeWidgets(BIT.plugin);
+		BIT.popupGetPincode.get(id).setDirty(true);
 	}
 
 }

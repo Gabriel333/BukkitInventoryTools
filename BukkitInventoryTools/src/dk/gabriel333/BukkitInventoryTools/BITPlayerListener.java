@@ -12,6 +12,7 @@ import org.bukkit.event.player.PlayerItemHeldEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerKickEvent;
 import org.bukkit.event.player.PlayerListener;
+import org.bukkit.event.player.PlayerLoginEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.material.Button;
@@ -37,6 +38,8 @@ public class BITPlayerListener extends PlayerListener {
 			SpoutPlayer sPlayer = (SpoutPlayer) event.getPlayer();
 			BITPlayer bPlayer = new BITPlayer(sPlayer);
 			SpoutBlock block = (SpoutBlock) event.getClickedBlock();
+			int id = sPlayer.getEntityId();
+			BIT.clickedBlock.put(id, block);
 			UUID uuid = sPlayer.getUniqueId();
 			if (G333Config.config.DEBUG_GUI)
 				sPlayer.sendMessage("BITPlayerListener:Event:"
@@ -433,51 +436,59 @@ public class BITPlayerListener extends PlayerListener {
 		}
 	}
 
-//	public void onPlayerLogin(PlayerLoginEvent event) {
-//		UUID uuid = event.getPlayer().getUniqueId();
-//		addUserData(uuid);
-//	}
+	public void onPlayerLogin(PlayerLoginEvent event) {
+		int id = event.getPlayer().getEntityId();
+		if (!BIT.userno.containsKey(id)){
+			addUserData(id);}
+	}
 
 	public void onPlayerKick(PlayerKickEvent event) {
-		UUID uuid = event.getPlayer().getUniqueId();
-		removeUserData(uuid);
+		int id = event.getPlayer().getEntityId();
+		if (BIT.userno.containsKey(id)){
+			removeUserData(id);
+		}
 	}
 
 	public void onPlayerJoin(PlayerJoinEvent event) {
-		UUID uuid = event.getPlayer().getUniqueId();
-		addUserData(uuid);
+		int id = event.getPlayer().getEntityId();
+		if (!BIT.userno.containsKey(id)){
+		addUserData(id);}
 	}
 
 	public void onPlayerQuit(PlayerQuitEvent event) {
-		UUID uuid = event.getPlayer().getUniqueId();
-		removeUserData(uuid);
+		int id = event.getPlayer().getEntityId();
+		if (BIT.userno.containsKey(id)){
+			removeUserData(id);
+		}
 	}
 
-	private void removeUserData(UUID uuid) {
-		BIT.popupGetPincode.remove(uuid);
-		BIT.popupSetPincode.remove(uuid);
-		BIT.pincode.remove(uuid);
-		BIT.owner.remove(uuid);
-		BIT.coOwners.remove(uuid);
-		BIT.closetimer.remove(uuid);
-		BIT.useCost.remove(uuid);
-		BIT.shared.remove(uuid);
-		BIT.connectedTo.remove(uuid);
-		BIT.userno.remove(uuid);
+	private void removeUserData(int id) {
+		BIT.userno.remove(id);
+		BIT.popupGetPincode.remove(id);
+		BIT.popupSetPincode.remove(id);
+		BIT.pincode.remove(id);
+		BIT.owner.remove(id);
+		BIT.coOwners.remove(id);
+		BIT.closetimer.remove(id);
+		BIT.useCost.remove(id);
+		BIT.shared.remove(id);
+		BIT.connectedTo.remove(id);
+		BIT.clickedBlock.remove(id);
 	}
 
-	private void addUserData(UUID uuid) {
-		BIT.userno.put(uuid, BIT.usercounter);
-		BIT.popupGetPincode.put(uuid, new GenericPopup());
-		BIT.popupSetPincode.put(uuid, new GenericPopup());
-		BIT.pincode.put(uuid, new GenericTextField());
-		BIT.owner.put(uuid, new GenericTextField());
-		BIT.coOwners.put(uuid, new GenericTextField());
-		BIT.closetimer.put(uuid, new GenericTextField());
-		BIT.useCost.put(uuid, new GenericTextField());
-		BIT.shared.put(uuid, new GenericTextField());
-		BIT.connectedTo.put(uuid, new GenericTextField());
+	private void addUserData(int id) {
+		BIT.userno.put(id, new Integer(0));
+		BIT.popupGetPincode.put(id, new GenericPopup());
+		BIT.popupSetPincode.put(id, new GenericPopup());
+		BIT.pincode.put(id, new GenericTextField());
+		BIT.owner.put(id, new GenericTextField());
+		BIT.coOwners.put(id, new GenericTextField());
+		BIT.closetimer.put(id, new GenericTextField());
+		BIT.useCost.put(id, new GenericTextField());
+		BIT.shared.put(id, new GenericTextField());
+		BIT.connectedTo.put(id, new GenericTextField());
 		BIT.usercounter++;
+		BIT.clickedBlock.put(id, null);
 	}
 
 }

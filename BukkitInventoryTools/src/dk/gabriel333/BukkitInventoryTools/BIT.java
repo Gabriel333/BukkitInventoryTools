@@ -14,7 +14,7 @@ import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.PluginDescriptionFile;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
-import org.getspout.spoutapi.block.SpoutBlock;
+//import org.getspout.spoutapi.block.SpoutBlock;
 import org.getspout.spoutapi.gui.GenericTextField;
 import org.getspout.spoutapi.gui.PopupScreen;
 
@@ -67,7 +67,7 @@ public class BIT extends JavaPlugin {
 	public static Map<Integer, GenericTextField> useCost = new HashMap<Integer, GenericTextField>();
 	public static Map<Integer, GenericTextField> connectedTo = new HashMap<Integer, GenericTextField>();
 	public static Map<Integer, GenericTextField> shared = new HashMap<Integer, GenericTextField>();
-	public static Map<Integer, SpoutBlock> clickedBlock = new HashMap<Integer, SpoutBlock>();
+	//public static Map<Integer, SpoutBlock> clickedBlock = new HashMap<Integer, SpoutBlock>();
 
 	@Override
 	public void onEnable() {

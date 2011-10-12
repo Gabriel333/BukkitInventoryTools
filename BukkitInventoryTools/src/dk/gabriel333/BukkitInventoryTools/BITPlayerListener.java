@@ -38,8 +38,8 @@ public class BITPlayerListener extends PlayerListener {
 			SpoutPlayer sPlayer = (SpoutPlayer) event.getPlayer();
 			BITPlayer bPlayer = new BITPlayer(sPlayer);
 			SpoutBlock block = (SpoutBlock) event.getClickedBlock();
-			int id = sPlayer.getEntityId();
-			BIT.clickedBlock.put(id, block);
+			//int id = sPlayer.getEntityId();
+			//BIT.clickedBlock.put(id, block);
 			UUID uuid = sPlayer.getUniqueId();
 			if (G333Config.config.DEBUG_GUI)
 				sPlayer.sendMessage("BITPlayerListener:Event:"
@@ -346,6 +346,7 @@ public class BITPlayerListener extends PlayerListener {
 								if (sPlayer.isSpoutCraftEnabled()) {
 									Sign sign = (Sign) block.getState();
 									sPlayer.openSignEditGUI(sign);
+									sign.update();
 								} else {
 
 								}
@@ -473,7 +474,7 @@ public class BITPlayerListener extends PlayerListener {
 		BIT.useCost.remove(id);
 		BIT.shared.remove(id);
 		BIT.connectedTo.remove(id);
-		BIT.clickedBlock.remove(id);
+		//BIT.clickedBlock.remove(id);
 	}
 
 	private void addUserData(int id) {
@@ -488,7 +489,7 @@ public class BITPlayerListener extends PlayerListener {
 		BIT.shared.put(id, new GenericTextField());
 		BIT.connectedTo.put(id, new GenericTextField());
 		BIT.usercounter++;
-		BIT.clickedBlock.put(id, null);
+		//BIT.clickedBlock.put(id, null);
 	}
 
 }

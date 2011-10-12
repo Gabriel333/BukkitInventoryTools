@@ -28,10 +28,10 @@ public class BITSpoutListener extends SpoutListener {
 			UUID uuid = button.getId();
 			SpoutPlayer sPlayer = ((ButtonClickEvent) event).getPlayer();
 			BITPlayer bPlayer = new BITPlayer(sPlayer);
-			//SpoutBlock sBlock = (SpoutBlock) sPlayer.getTargetBlock(null, 5);
+			SpoutBlock sBlock = (SpoutBlock) sPlayer.getTargetBlock(null, 5);
 			int id = sPlayer.getEntityId();
-			SpoutBlock sBlock = BIT.clickedBlock.get(id);
-			if (BITDigiLock.isLocked(sBlock)) {
+			//SpoutBlock sBlock = BIT.clickedBlock.get(id);
+			if (BITDigiLock.isLockable(sBlock)) {
 				BITDigiLock digilock = BITDigiLock.loadDigiLock(sBlock);
 				// ************************************
 				// Buttons in getPincodeWindow
@@ -182,11 +182,7 @@ public class BITSpoutListener extends SpoutListener {
 						sPlayer.sendMessage("BITSpoutListener: Unknow button:"
 								+ BITPlayer.BITButtons.get(uuid));
 				}
-			} else {
-				// targetblock is not locked
-				G333Messages.sendNotification(sPlayer,
-						"The " + sBlock.getType() + " is not locked!");
-			}
+			} 
 		}
 	}
 

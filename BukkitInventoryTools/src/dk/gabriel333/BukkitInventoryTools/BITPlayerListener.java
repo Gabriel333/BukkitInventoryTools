@@ -12,9 +12,9 @@ import org.bukkit.event.player.PlayerItemHeldEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerKickEvent;
 import org.bukkit.event.player.PlayerListener;
-import org.bukkit.event.player.PlayerLoginEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.inventory.Inventory;
+import org.bukkit.material.Button;
 import org.bukkit.material.Lever;
 
 import org.getspout.spoutapi.block.SpoutBlock;
@@ -272,58 +272,58 @@ public class BITPlayerListener extends PlayerListener {
 								BITDigiLock.playDigiLockSound(block);
 							} else {
 								sPlayer.sendMessage("Your fingerprint does not match the DigiLock");
-								lever.setPowered(false);
 								event.setCancelled(true);
+								BITDigiLock.leverOff(sPlayer, block);
 							}
 						} else {
 							if (lever.isPowered()) {
-								BITDigiLock.playDigiLockSound(block);
-								lever.setPowered(false);
+								BITDigiLock.leverOff(sPlayer, block);
 							} else {
-								event.setCancelled(true);
 								if (sPlayer.isSpoutCraftEnabled()) {
 									bPlayer.getPincode(sPlayer, block);
-
 								} else {
 									sPlayer.sendMessage("Digilock'ed by "
 											+ sPlayer.getName());
 									event.setCancelled(true);
 								}
 							}
-
 						}
 					}
+
 					// HANDLING STONE_BUTTON
 					else if (block.getType().equals(Material.STONE_BUTTON)) {
-						if (!BITDigiLock.isNeighbourSameOwner(block,
-								sPlayer.getName())) {
-							event.setCancelled(true);
-							sPlayer.sendMessage("You are not owner of the connected block!");
-						} else if (digilock.getPincode().equals("")
+						if (digilock.getPincode().equals("")
 								|| digilock.getPincode().equals("fingerprint")) {
 							// PRESS STONE_BUTTON BY FINGERPRINT
 							// (playername)
+							Button button = (Button) block.getState().getData();
 							if (digilock.isOwner(sPlayer)
 									|| digilock.isCoowner(sPlayer)) {
 								G333Messages.sendNotification(sPlayer,
 										"Used with fingerprint");
+								BITDigiLock.playDigiLockSound(block);
+								if (!button.isPowered()) {
+									BITDigiLock.pressButtonOn(sPlayer, block,
+											digilock.getUseCost());
+								}
 							} else {
 								event.setCancelled(true);
 								sPlayer.sendMessage("Your fingerprint does not match the DigiLock");
 							}
 						} else {
+							event.setCancelled(true);
 							if (sPlayer.isSpoutCraftEnabled()) {
 								bPlayer.getPincode(sPlayer, block);
 								if (digilock.getPincode().equals(
 										BIT.pincode.get(uuid).getText())) {
 									// okay - go on
 								} else {
-									event.setCancelled(true);
+									// event.setCancelled(true);
 								}
 							} else {
 								sPlayer.sendMessage("Digilock'ed by "
 										+ sPlayer.getName());
-								event.setCancelled(true);
+								// event.setCancelled(true);
 							}
 						}
 					}
@@ -405,21 +405,10 @@ public class BITPlayerListener extends PlayerListener {
 					}
 					// HANDLING LEVER
 					else if (block.getType().equals(Material.LEVER)) {
-						if (!BITDigiLock.isNeighbourSameOwner(block,
-								sPlayer.getName())) {
-							sPlayer.sendMessage("Cancel....");
-
-							event.setCancelled(true);
-						}
 
 					}
 					// HANDLING STONE_BUTTON
 					else if (block.getType().equals(Material.STONE_BUTTON)) {
-						if (!BITDigiLock.isNeighbourSameOwner(block,
-								sPlayer.getName())) {
-							sPlayer.sendMessage("Cancel....");
-							event.setCancelled(true);
-						}
 
 					}
 					// BOOKSHELF
@@ -444,9 +433,10 @@ public class BITPlayerListener extends PlayerListener {
 		}
 	}
 
-	public void onPlayerLogin(PlayerLoginEvent event) {
-
-	}
+//	public void onPlayerLogin(PlayerLoginEvent event) {
+//		UUID uuid = event.getPlayer().getUniqueId();
+//		addUserData(uuid);
+//	}
 
 	public void onPlayerKick(PlayerKickEvent event) {
 		UUID uuid = event.getPlayer().getUniqueId();
@@ -455,17 +445,7 @@ public class BITPlayerListener extends PlayerListener {
 
 	public void onPlayerJoin(PlayerJoinEvent event) {
 		UUID uuid = event.getPlayer().getUniqueId();
-		BIT.userno.put(uuid, BIT.usercounter);
-		BIT.popupGetPincode.put(uuid, new GenericPopup());
-		BIT.popupSetPincode.put(uuid, new GenericPopup());
-		BIT.pincode.put(uuid, new GenericTextField());
-		BIT.owner.put(uuid, new GenericTextField());
-		BIT.coOwners.put(uuid, new GenericTextField());
-		BIT.closetimer.put(uuid, new GenericTextField());
-		BIT.useCost.put(uuid, new GenericTextField());
-		BIT.shared.put(uuid, new GenericTextField());
-		BIT.connectedTo.put(uuid, new GenericTextField());
-		BIT.usercounter++;
+		addUserData(uuid);
 	}
 
 	public void onPlayerQuit(PlayerQuitEvent event) {
@@ -484,6 +464,20 @@ public class BITPlayerListener extends PlayerListener {
 		BIT.shared.remove(uuid);
 		BIT.connectedTo.remove(uuid);
 		BIT.userno.remove(uuid);
+	}
+
+	private void addUserData(UUID uuid) {
+		BIT.userno.put(uuid, BIT.usercounter);
+		BIT.popupGetPincode.put(uuid, new GenericPopup());
+		BIT.popupSetPincode.put(uuid, new GenericPopup());
+		BIT.pincode.put(uuid, new GenericTextField());
+		BIT.owner.put(uuid, new GenericTextField());
+		BIT.coOwners.put(uuid, new GenericTextField());
+		BIT.closetimer.put(uuid, new GenericTextField());
+		BIT.useCost.put(uuid, new GenericTextField());
+		BIT.shared.put(uuid, new GenericTextField());
+		BIT.connectedTo.put(uuid, new GenericTextField());
+		BIT.usercounter++;
 	}
 
 }

@@ -8,7 +8,6 @@ import org.bukkit.block.Furnace;
 import org.bukkit.block.Sign;
 import org.bukkit.event.Event;
 import org.bukkit.inventory.Inventory;
-import org.bukkit.material.Lever;
 
 import org.getspout.spoutapi.block.SpoutBlock;
 import org.getspout.spoutapi.block.SpoutChest;
@@ -31,8 +30,7 @@ public class BITSpoutListener extends SpoutListener {
 			BITPlayer bPlayer = new BITPlayer(sPlayer);
 			SpoutBlock sBlock = (SpoutBlock) sPlayer.getTargetBlock(null, 5);
 			if (sBlock != null) {
-				BITDigiLock digilock = BITDigiLock
-						.loadDigiLock(sBlock);
+				BITDigiLock digilock = BITDigiLock.loadDigiLock(sBlock);
 				UUID uuid2 = sPlayer.getUniqueId();
 				// ************************************
 				// Buttons in getPincodeWindow
@@ -62,18 +60,16 @@ public class BITSpoutListener extends SpoutListener {
 									digilock.getUseCost());
 
 						} else if (digilock.getBlock().getType() == Material.LEVER) {
-							Lever lever = (Lever) sBlock.getState().getData();
-							if (lever.isPowered()) {
-								BITDigiLock.leverOff(sPlayer, sBlock);
-							} else {
-								BITDigiLock.leverOn(sPlayer, sBlock,
-										digilock.getUseCost());
-								
-							}
+							BITDigiLock.leverOn(sPlayer, sBlock,
+									digilock.getUseCost());
 							BITDigiLock.playDigiLockSound(sBlock);
-							
-						} else if (digilock.getBlock().getType() == Material.STONE_BUTTON) {
 
+						} else if (digilock.getBlock().getType() == Material.STONE_BUTTON) {
+							if (!BITDigiLock.isButtonOn(digilock.getBlock())) {
+								BITDigiLock.pressButtonOn(sPlayer, digilock.getBlock(),
+										digilock.getUseCost());
+								BITDigiLock.playDigiLockSound(sBlock);
+							}
 						} else if (digilock.getBlock().getType() == Material.DISPENSER) {
 							BITDigiLock.playDigiLockSound(digilock.getBlock());
 							Dispenser dispenser = (Dispenser) sBlock.getState();

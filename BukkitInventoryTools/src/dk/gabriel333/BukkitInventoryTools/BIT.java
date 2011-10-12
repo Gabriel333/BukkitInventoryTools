@@ -141,6 +141,8 @@ public class BIT extends JavaPlugin {
 				Priority.Normal, this);
 		pm.registerEvent(Event.Type.PLAYER_JOIN, new BITPlayerListener(),
 				Priority.Normal, this);
+		//pm.registerEvent(Event.Type.PLAYER_LOGIN, new BITPlayerListener(),
+		//		Priority.Normal, this);
 		pm.registerEvent(Event.Type.PLAYER_QUIT, new BITPlayerListener(),
 				Priority.Normal, this);
 		pm.registerEvent(Event.Type.PLAYER_KICK, new BITPlayerListener(),

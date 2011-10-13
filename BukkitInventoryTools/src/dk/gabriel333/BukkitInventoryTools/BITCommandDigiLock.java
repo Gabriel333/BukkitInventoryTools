@@ -106,7 +106,7 @@ public class BITCommandDigiLock implements CommandExecutor {
 					BITDigiLock digilock = BITDigiLock.loadDigiLock(block);
 					String action = args[0];
 					// UNLOCK *************************************************
-					if (action.equalsIgnoreCase("unlock") && args.length == 2) {
+					if (action.equalsIgnoreCase("unlock") && args.length == 2){
 						if (digilock.getPincode().equalsIgnoreCase(args[1])) {
 							if (BITDigiLock.isChest(digilock.getBlock())) {
 								SpoutChest sChest = (SpoutChest) block
@@ -123,18 +123,28 @@ public class BITCommandDigiLock implements CommandExecutor {
 								Furnace furnace = (Furnace) block.getState();
 								Inventory inv = furnace.getInventory();
 								sPlayer.openInventoryWindow(inv);
-							} else if (digilock.getBlock().getType() == Material.DISPENSER) {
+							} else if (BITDigiLock.isDispenser(block)) {
 								Dispenser dispenser = (Dispenser) block
 										.getState();
 								Inventory inv = dispenser.getInventory();
 								sPlayer.openInventoryWindow(inv);
-							} else if (digilock.getBlock().getType() == Material.TRAP_DOOR) {
+							} else if (BITDigiLock.isTrapdoor(block)) {
 								BITDigiLock.openTrapdoor(sPlayer, block,
 										digilock.getUseCost());
+							} else if (BITDigiLock.isLever(block)) {
+								if (BITDigiLock.isLeverOn(block)){
+									BITDigiLock.leverOff(sPlayer, block);
+								} else {
+									if (BITDigiLock.isLeverOn(block)){
+										BITDigiLock.leverOff(sPlayer, block);
+									} else {
+									BITDigiLock.leverOn(sPlayer, block, digilock.getUseCost());
+									}
+								}
 							}
 						} else {
 							sPlayer.sendMessage("wrong pincode!");
-							sPlayer.damage(10);
+							sPlayer.damage(5);
 						}
 						// REMOVE ***************************************
 					} else if (action.equalsIgnoreCase("remove")
@@ -144,6 +154,21 @@ public class BITCommandDigiLock implements CommandExecutor {
 											G333Permissions.NOT_QUIET))
 							&& args.length == 1) {
 						digilock.RemoveDigiLock(sPlayer);
+						// closetimer ***************************************
+					} else if (action.equalsIgnoreCase("closetimer")
+							&& (digilock.getOwner().equalsIgnoreCase(
+									sPlayer.getName()) || G333Permissions
+									.hasPerm(sPlayer, "digilock.admin",
+											G333Permissions.NOT_QUIET))
+							&& args.length == 2) {
+						digilock.setClosetimer(Integer.valueOf(args[1]));
+						BITDigiLock.SaveDigiLock(sPlayer, digilock.getBlock(),
+								digilock.getPincode(), digilock.getOwner(),
+								digilock.getClosetimer(),
+								digilock.getCoOwners(), digilock.getShared(),
+								digilock.getBlock().getTypeId(),
+								digilock.getConnectedTo(),
+								digilock.getUseCost());
 						// addcoowner ***************************************
 					} else if (action.equalsIgnoreCase("addcoowner")
 							&& (digilock.getOwner().equalsIgnoreCase(
@@ -211,7 +236,7 @@ public class BITCommandDigiLock implements CommandExecutor {
 						sPlayer.sendMessage("The coOwner of this lock is: "
 								+ digilock.getCoOwners());
 						sPlayer.sendMessage("The cost is: "
-								+ digilock.getUseCost() + " and Autoclose is: "
+								+ digilock.getUseCost() + " and closetimer is: "
 								+ digilock.getClosetimer());
 					} else if (digilock.getPincode().equalsIgnoreCase(args[0])
 							&& args.length == 1) {
@@ -227,6 +252,24 @@ public class BITCommandDigiLock implements CommandExecutor {
 						} else if (BITDigiLock.isDoor(digilock.getBlock())) {
 							BITDigiLock.openDoor(sPlayer, block,
 									digilock.getUseCost());
+						}  else if (digilock.getBlock().getType() == Material.FURNACE) {
+							Furnace furnace = (Furnace) block.getState();
+							Inventory inv = furnace.getInventory();
+							sPlayer.openInventoryWindow(inv);
+						} else if (BITDigiLock.isDispenser(block)) {
+							Dispenser dispenser = (Dispenser) block
+									.getState();
+							Inventory inv = dispenser.getInventory();
+							sPlayer.openInventoryWindow(inv);
+						} else if (BITDigiLock.isTrapdoor(block)) {
+							BITDigiLock.openTrapdoor(sPlayer, block,
+									digilock.getUseCost());
+						} else if (BITDigiLock.isLever(block)) {
+							if (BITDigiLock.isLeverOn(block)){
+								BITDigiLock.leverOff(sPlayer, block);
+							} else {
+							BITDigiLock.leverOn(sPlayer, block, digilock.getUseCost());
+							}
 						}
 					} else {
 						if (args.length == 1)

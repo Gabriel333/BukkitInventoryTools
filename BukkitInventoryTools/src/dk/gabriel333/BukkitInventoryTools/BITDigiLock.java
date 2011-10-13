@@ -36,7 +36,6 @@ public class BITDigiLock {
 	protected String owner;
 	protected int closetimer;
 	protected String coOwners;
-	protected String shared;
 	protected int typeId;
 	protected String connectedTo;
 	protected int useCost;
@@ -46,14 +45,13 @@ public class BITDigiLock {
 	 * 
 	 */
 	BITDigiLock(SpoutBlock block, String pincode, String owner, int closetimer,
-			String coowners, String shared, int typeId, String connectedTo,
+			String coowners, int typeId, String connectedTo,
 			int useCost) {
 		this.block = block;
 		this.pincode = pincode;
 		this.owner = owner;
 		this.closetimer = closetimer;
 		this.coOwners = coowners;
-		this.shared = shared;
 		this.typeId = typeId;
 		this.connectedTo = connectedTo;
 		this.useCost = useCost;
@@ -74,8 +72,6 @@ public class BITDigiLock {
 	 *            is number of seconds before the door closes.
 	 * @param coowners
 	 *            is the list of co - owners of the DigiLock.
-	 * @param shared
-	 *            - not used.
 	 * @param typeId
 	 *            is the type of the block.
 	 * @param connectedTo
@@ -85,7 +81,7 @@ public class BITDigiLock {
 	 */
 	public static void SaveDigiLock(SpoutPlayer sPlayer, SpoutBlock block,
 			String pincode, String owner, Integer closetimer, String coowners,
-			String shared, int typeId, String connectedTo, int useCost) {
+			int typeId, String connectedTo, int useCost) {
 		String query;
 		boolean createlock = true;
 		boolean newLock = true;
@@ -95,7 +91,7 @@ public class BITDigiLock {
 			newLock = false;
 			query = "UPDATE " + BIT.digilockTable + " SET pincode='" + pincode
 					+ "', owner='" + owner + "', closetimer=" + closetimer
-					+ " , coowners='" + coowners + "', shared='" + shared
+					+ " , coowners='" + coowners 
 					+ "', typeid=" + typeId + ", connectedto='" + connectedTo
 					+ "', usecost=" + useCost
 
@@ -106,12 +102,12 @@ public class BITDigiLock {
 			// NEW DIGILOCK
 			query = "INSERT INTO " + BIT.digilockTable
 					+ " (pincode, owner, closetimer, "
-					+ "x, y, z, world, coowners, shared, "
+					+ "x, y, z, world, coowners, "
 					+ "typeid, connectedto, usecost) VALUES ('" + pincode
 					+ "', '" + owner + "', " + closetimer + ", " + block.getX()
 					+ ", " + block.getY() + ", " + block.getZ() + ", '"
-					+ block.getWorld().getName() + "', '" + coowners + "', '"
-					+ shared + "', " + block.getTypeId() + ", '" + connectedTo
+					+ block.getWorld().getName() + "', '" + coowners 
+					+ "', " + block.getTypeId() + ", '" + connectedTo
 					+ "', " + useCost + " );";
 			if (BIT.useEconomy) {
 				if (BIT.plugin.Method.hasAccount(sPlayer.getName()) && cost > 0) {
@@ -280,10 +276,6 @@ public class BITDigiLock {
 		return pincode;
 	}
 
-	public String getShared() {
-		return shared;
-	}
-
 	public String getOwner() {
 		return owner;
 	}
@@ -328,10 +320,6 @@ public class BITDigiLock {
 		this.coOwners = coowners;
 	}
 
-	public void setShared(String shared) {
-		this.shared = shared;
-	}
-
 	public void setUseCost(int useCost) {
 		this.useCost = useCost;
 	}
@@ -341,14 +329,13 @@ public class BITDigiLock {
 	}
 
 	public void setDigiLock(SpoutBlock block, String pincode, String owner,
-			int closetimer, String coowners, String shared, String connectedTo,
+			int closetimer, String coowners, String connectedTo,
 			int useCost) {
 		this.block = block;
 		this.pincode = pincode;
 		this.owner = owner;
 		this.closetimer = closetimer;
 		this.coOwners = coowners;
-		this.shared = shared;
 		this.typeId = block.getTypeId();
 		this.connectedTo = connectedTo;
 		this.useCost = useCost;
@@ -381,12 +368,11 @@ public class BITDigiLock {
 				String owner = result.getString("owner");
 				int closetimer = result.getInt("closetimer");
 				String coowners = result.getString("coowners");
-				String shared = result.getString("shared");
 				int typeId = result.getInt("typeId");
 				String connectedTo = result.getString("connectedto");
 				int useCost = result.getInt("usecost");
 				BITDigiLock digilock = new BITDigiLock(block, pincode, owner,
-						closetimer, coowners, shared, typeId, connectedTo,
+						closetimer, coowners, typeId, connectedTo,
 						useCost);
 				return digilock;
 			} else {

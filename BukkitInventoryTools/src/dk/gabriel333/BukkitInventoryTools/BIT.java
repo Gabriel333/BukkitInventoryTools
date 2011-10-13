@@ -303,45 +303,35 @@ public class BIT extends JavaPlugin {
 			manageSQLite.initialize();
 			// Check if the table exists, if it doesn't create it
 			String query = "";
+			String insert = "";
 			if (!manageSQLite.checkTable(digilockTable)) {
 				if (manageSQLite.checkTable(oldDigilockTable)) {
 					G333Messages.showInfo("Upgrade table " + oldDigilockTable
 							+ " to " + digilockTable + ".");
-					/*
-					 * query = "CREATE TABLE " + digilockTable +
-					 * " (id INT AUTO_INCREMENT PRIMARY_KEY," +
-					 * " pincode VARCHAR(20), owner VARCHAR(255), closetimer INT, x INT,"
-					 * +
-					 * " y INT, z INT, world VARCHAR(255), shared VARCHAR(255),"
-					 * +
-					 * " coowners VARCHAR(255), typeid INT, connectedto VARCHAR(20),"
-					 * +
-					 * " usecost INT) AS (SELECT pincode, owner, closetimer, x, y, z,"
-					 * + " world, shared, typeid, connectedto, usecost FROM " +
-					 * oldDigilockTable + ");";
-					 */
-
 					query = "CREATE TABLE "
 							+ digilockTable
-							+ " (id INT AUTO_INCREMENT PRIMARY_KEY, pincode VARCHAR(20),"
-							+ "owner VARCHAR(255), closetimer INT,x INT,y INT,z INT,"
-							+ "world VARCHAR(255),shared VARCHAR(255),coowners VARCHAR(255),"
-							+ "typeid INT,connectedto VARCHAR(20),usecost INT) AS SELECT pincode, "
-							+ "owner,closetimer,x,y,z,world,shared,"
-							+ "typeid,connectedto,usecost FROM "
-							+ oldDigilockTable + ";";
-					G333Messages.showInfo("Query:" + query);
+							+ " (x INTEGER, y INTEGER, z INTEGER, world TEXT, owner TEXT, pincode TEXT, "
+							+ " coowners TEXT, closetimer INTEGER, "
+							+ "typeid INTEGER, connectedto TEXT, usecost INTEGER)";
+					insert = "insert into "+digilockTable+" (x, y, z, world, owner, pincode, "
+							+ "coowners, closetimer, usecost, connectedto, typeid) "
+							+ "select x, y, z, world, owner, pincode,"
+							+ "coowners, closetimer, usecost, connectedto, typeid FROM " 
+							+ oldDigilockTable;
+					G333Messages.showInfo("Create Table:" + query);
+					G333Messages.showInfo("Insert:" + insert);
+					manageSQLite.createTable(query);
+					manageSQLite.insertQuery(insert);
 
 				} else {
 					G333Messages.showInfo("Creating table " + digilockTable);
 					query = "CREATE TABLE "
 							+ digilockTable
-							+ " (id INTEGER PRIMARY KEY AUTOINCREMENT, pincode VARCHAR(20), "
-							+ "owner VARCHAR(255), closetimer INT, x INT, y INT, z INT, "
-							+ "world VARCHAR(255), shared VARCHAR(255), coowners VARCHAR(255), "
-							+ "typeid INT, connectedto VARCHAR(20), usecost INT);";
+							+ " (x INTEGER, y INTEGER, z INTEGER, world TEXT, owner TEXT, pincode TEXT, "
+							+ " coowners TEXT, closetimer INTEGER, "
+							+ "typeid INTEGER, connectedto TEXT, usecost INTEGER)";
+					manageSQLite.createTable(query);
 				}
-				manageSQLite.createTable(query);
 			}
 		}
 	}

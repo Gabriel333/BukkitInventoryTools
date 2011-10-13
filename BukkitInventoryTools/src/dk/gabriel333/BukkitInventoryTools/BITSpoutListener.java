@@ -137,7 +137,7 @@ public class BITSpoutListener extends SpoutListener {
 										BIT.owner.get(id).getText(), Integer
 												.valueOf(BIT.closetimer.get(id)
 														.getText()),
-										BIT.coOwners.get(id).getText(), "",
+										BIT.coOwners.get(id).getText(), 
 										sBlock.getTypeId(), "", Integer
 												.valueOf(BIT.useCost.get(id)
 														.getText()));

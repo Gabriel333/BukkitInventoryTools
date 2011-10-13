@@ -29,7 +29,6 @@ public class BITCommandDigiLock implements CommandExecutor {
 			block = BITDigiLock.getDigiLockBlock(block);
 			String pincode = "";
 			String coowners = "";
-			String shared = "";
 			String connectedto = "";
 			String owner = sPlayer.getName();
 			Integer closetimer = 0; // never closes automatically
@@ -94,7 +93,7 @@ public class BITCommandDigiLock implements CommandExecutor {
 								G333Permissions.NOT_QUIET)
 								&& args[0].equalsIgnoreCase("lock")) {
 							BITDigiLock.SaveDigiLock(sPlayer, block, pincode,
-									owner, closetimer, coowners, shared,
+									owner, closetimer, coowners, 
 									block.getTypeId(), connectedto, usecost);
 							return true;
 						} else {
@@ -165,7 +164,7 @@ public class BITCommandDigiLock implements CommandExecutor {
 						BITDigiLock.SaveDigiLock(sPlayer, digilock.getBlock(),
 								digilock.getPincode(), digilock.getOwner(),
 								digilock.getClosetimer(),
-								digilock.getCoOwners(), digilock.getShared(),
+								digilock.getCoOwners(), 
 								digilock.getBlock().getTypeId(),
 								digilock.getConnectedTo(),
 								digilock.getUseCost());
@@ -180,7 +179,7 @@ public class BITCommandDigiLock implements CommandExecutor {
 						BITDigiLock.SaveDigiLock(sPlayer, digilock.getBlock(),
 								digilock.getPincode(), digilock.getOwner(),
 								digilock.getClosetimer(),
-								digilock.getCoOwners(), digilock.getShared(),
+								digilock.getCoOwners(), 
 								digilock.getBlock().getTypeId(),
 								digilock.getConnectedTo(),
 								digilock.getUseCost());
@@ -195,7 +194,7 @@ public class BITCommandDigiLock implements CommandExecutor {
 						BITDigiLock.SaveDigiLock(sPlayer, digilock.getBlock(),
 								digilock.getPincode(), digilock.getOwner(),
 								digilock.getClosetimer(),
-								digilock.getCoOwners(), digilock.getShared(),
+								digilock.getCoOwners(), 
 								digilock.getBlock().getTypeId(),
 								digilock.getConnectedTo(),
 								digilock.getUseCost());
@@ -210,7 +209,7 @@ public class BITCommandDigiLock implements CommandExecutor {
 						BITDigiLock.SaveDigiLock(sPlayer, digilock.getBlock(),
 								digilock.getPincode(), digilock.getOwner(),
 								digilock.getClosetimer(),
-								digilock.getCoOwners(), digilock.getShared(),
+								digilock.getCoOwners(), 
 								digilock.getBlock().getTypeId(),
 								digilock.getConnectedTo(),
 								digilock.getUseCost());
@@ -225,7 +224,7 @@ public class BITCommandDigiLock implements CommandExecutor {
 						BITDigiLock.SaveDigiLock(sPlayer, digilock.getBlock(),
 								digilock.getPincode(), digilock.getOwner(),
 								digilock.getClosetimer(),
-								digilock.getCoOwners(), digilock.getShared(),
+								digilock.getCoOwners(), 
 								digilock.getBlock().getTypeId(),
 								digilock.getConnectedTo(),
 								digilock.getUseCost());

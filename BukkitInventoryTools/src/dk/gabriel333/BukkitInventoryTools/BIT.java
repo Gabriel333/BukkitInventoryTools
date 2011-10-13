@@ -324,7 +324,7 @@ public class BIT extends JavaPlugin {
 							+ "pincode VARCHAR(20), owner VARCHAR(255), closetimer INT, x INT, "
 							+ "y INT, z INT, world VARCHAR(255), shared VARCHAR(255), "
 							+ "coowners VARCHAR(255), typeid INT, connectedto VARCHAR(20),"
-							+ "usecost INT)"
+							+ "usecost INT) "
 							+ "AS SELECT pincode, owner, closetimer, x, y, z, world, shared, "
 							+ "typeid, connectedto, usecost FROM "+oldDigilockTable+";";
 					G333Messages.showInfo("Query:"+query);

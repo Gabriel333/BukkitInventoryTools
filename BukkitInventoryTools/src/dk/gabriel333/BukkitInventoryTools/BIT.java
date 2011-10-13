@@ -53,7 +53,8 @@ public class BIT extends JavaPlugin {
 	public static mysqlCore manageMySQL; // MySQL handler
 	public static sqlCore manageSQLite; // SQLite handler
 	public static Logger log = Logger.getLogger("Minecraft");
-	public static String digilockTable = "BukkitInventoryTools3";
+	public static String digilockTable = "BukkitInventoryTools4";
+	public static String oldDigilockTable = "BukkitInventoryTools3";
 
 	// USERDATA
 	public static int usercounter = 0;
@@ -67,7 +68,9 @@ public class BIT extends JavaPlugin {
 	public static Map<Integer, GenericTextField> useCost = new HashMap<Integer, GenericTextField>();
 	public static Map<Integer, GenericTextField> connectedTo = new HashMap<Integer, GenericTextField>();
 	public static Map<Integer, GenericTextField> shared = new HashMap<Integer, GenericTextField>();
-	//public static Map<Integer, SpoutBlock> clickedBlock = new HashMap<Integer, SpoutBlock>();
+
+	// public static Map<Integer, SpoutBlock> clickedBlock = new
+	// HashMap<Integer, SpoutBlock>();
 
 	@Override
 	public void onEnable() {
@@ -254,29 +257,28 @@ public class BIT extends JavaPlugin {
 					// Check if the Connection was successful
 					String query;
 					G333Messages.showInfo("MySQL connection successful");
-					if (!manageMySQL.checkTable(BIT.digilockTable)) {
-						if (manageMySQL.checkTable("BukkitInventoryTools2")) {
-							// DB Version1 String query =
-							// "CREATE TABLE BukkitInventoryTools (id INT PRIMARY KEY AUTO_INCREMENT, pincode VARCHAR(4), owner VARCHAR(255), closetimer INT, x INT, y INT, z INT, world VARCHAR(255), shared VARCHAR(255), coowners VARCHAR(255));";
+					if (!manageMySQL.checkTable(digilockTable)) {
+						if (manageMySQL.checkTable(oldDigilockTable)) {
+							G333Messages.showInfo("Upgrade " + oldDigilockTable
+									+ " to " + digilockTable + ".");
 							query = "CREATE TABLE "
-									+ BIT.digilockTable
-									+ " (id INT PRIMARY KEY AUTO_INCREMENT, pincode VARCHAR(4),"
+									+ digilockTable
+									+ " (id INT PRIMARY KEY AUTO_INCREMENT, pincode VARCHAR(20),"
 									+ "owner VARCHAR(255), closetimer INT,x INT,y INT,z INT,"
 									+ "world VARCHAR(255),shared VARCHAR(255),coowners VARCHAR(255),"
 									+ "typeid INT,connectedto VARCHAR(20),usecost INT) AS SELECT pincode, "
 									+ "owner,closetimer,x,y,z,world,shared,"
-									+ "typeid,connectedto,0 FROM BukkitInventoryTools1;";
-							G333Messages
-									.showInfo("Upgrade BukkitInventoryTools1 to BukkitInventoryTools2");
+									+ "typeid,connectedto,usecost FROM "
+									+ oldDigilockTable + ";";
 						} else {
+							G333Messages.showInfo("Creating table "
+									+ digilockTable);
 							query = "CREATE TABLE "
-									+ BIT.digilockTable
-									+ " (id INT PRIMARY KEY AUTO_INCREMENT, pincode VARCHAR(4), "
+									+ digilockTable
+									+ " (id INT PRIMARY KEY AUTO_INCREMENT, pincode VARCHAR(20), "
 									+ "owner VARCHAR(255), closetimer INT, x INT, y INT, z INT, "
 									+ "world VARCHAR(255), shared VARCHAR(255), coowners VARCHAR(255), "
-									+ "typeid INT, connectedto VARCHAR(20),usecost INT);";
-							G333Messages.showInfo("Creating table "
-									+ BIT.digilockTable);
+									+ "typeid INT, connectedto VARCHAR(20), usecost INT);";
 						}
 						manageMySQL.createTable(query);
 					}
@@ -301,29 +303,29 @@ public class BIT extends JavaPlugin {
 			manageSQLite.initialize();
 			// Check if the table exists, if it doesn't create it
 			String query = "";
-			if (!manageSQLite.checkTable(BIT.digilockTable)) {
-				if (manageSQLite.checkTable("BukkitInventoryTools")) {
-					G333Messages
-							.showInfo("Upgrade table BukkitInventoryTools2 to BukkitInventoryTools3");
+			if (!manageSQLite.checkTable(digilockTable)) {
+				if (manageSQLite.checkTable(oldDigilockTable)) {
+					G333Messages.showInfo("Upgrade table " + oldDigilockTable
+							+ " to " + digilockTable + ".");
 					query = "CREATE TABLE "
-							+ BIT.digilockTable
-							+ " (id INT AUTO_INCREMENT PRIMARY_KEY, "
-							+ "pincode VARCHAR(4), owner VARCHAR(255), closetimer INT, x INT, "
-							+ "y INT, z INT, world VARCHAR(255), shared VARCHAR(255), "
-							+ "coowners VARCHAR(255), typeid INT, connectedto VARCHAR(20),"
-							+ "usecost INT)"
-							+ "AS SELECT pincode, owner, closetimer, x, y, z, world, shared, "
-							+ "typeid, connectedto, 0 FROM BukkitInventoryTools1;";
+							+ digilockTable
+							+ " (id INT AUTO_INCREMENT PRIMARY_KEY,"
+							+ " pincode VARCHAR(20), owner VARCHAR(255), closetimer INT, x INT,"
+							+ " y INT, z INT, world VARCHAR(255), shared VARCHAR(255),"
+							+ " coowners VARCHAR(255), typeid INT, connectedto VARCHAR(20),"
+							+ " usecost INT) AS (SELECT pincode, owner, closetimer, x, y, z,"
+							+ " world, shared, typeid, connectedto, usecost FROM "
+							+ oldDigilockTable + ");";
 
+				} else {
+					G333Messages.showInfo("Creating table " + digilockTable);
+					query = "CREATE TABLE "
+							+ digilockTable
+							+ " (id INT AUTO_INCREMENT PRIMARY_KEY, pincode VARCHAR(20), "
+							+ "owner VARCHAR(255), closetimer INT, x INT, y INT, z INT, "
+							+ "world VARCHAR(255), shared VARCHAR(255), coowners VARCHAR(255), "
+							+ "typeid INT, connectedto VARCHAR(20), usecost INT);";
 				}
-
-				G333Messages.showInfo("Creating table " + BIT.digilockTable);
-				query = "CREATE TABLE "
-						+ BIT.digilockTable
-						+ " (id INT AUTO_INCREMENT PRIMARY_KEY, pincode VARCHAR(4), "
-						+ "owner VARCHAR(255), closetimer INT, x INT, y INT, z INT, "
-						+ "world VARCHAR(255), shared VARCHAR(255), coowners VARCHAR(255), "
-						+ "typeid INT, connectedto VARCHAR(20), usecost INT);";
 				manageSQLite.createTable(query);
 			}
 		}

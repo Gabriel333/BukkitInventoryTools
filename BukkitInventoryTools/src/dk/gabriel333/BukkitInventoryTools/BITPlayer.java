@@ -87,7 +87,7 @@ public class BITPlayer {
 		
 		BIT.pincode.get(id).setText("");
 		BIT.pincode.get(id).setTooltip("Enter the pincode and press unlock.");
-		BIT.pincode.get(id).setCursorPosition(1).setMaximumCharacters(10);
+		BIT.pincode.get(id).setCursorPosition(1).setMaximumCharacters(20);
 		BIT.pincode.get(id).setX(x).setY(y);
 		BIT.pincode.get(id).setHeight(height).setWidth(width);
 		BIT.pincode.get(id).setPasswordField(true);
@@ -263,7 +263,7 @@ public class BITPlayer {
 		w2 = 80;
 		// pincode3
 		BIT.pincode.get(id).setTooltip("Enter/change the pincode...");
-		BIT.pincode.get(id).setCursorPosition(1).setMaximumCharacters(10);
+		BIT.pincode.get(id).setCursorPosition(1).setMaximumCharacters(20);
 		BIT.pincode.get(id).setX(x).setY(y);
 		BIT.pincode.get(id).setHeight(height).setWidth(w1);
 		BIT.pincode.get(id).setPasswordField(false);

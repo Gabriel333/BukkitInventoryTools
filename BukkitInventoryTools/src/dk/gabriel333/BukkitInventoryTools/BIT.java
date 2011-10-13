@@ -307,7 +307,7 @@ public class BIT extends JavaPlugin {
 				if (manageSQLite.checkTable(oldDigilockTable)) {
 					G333Messages.showInfo("Upgrade table " + oldDigilockTable
 							+ " to " + digilockTable + ".");
-					query = "CREATE TABLE "
+/*					query = "CREATE TABLE "
 							+ digilockTable
 							+ " (id INT AUTO_INCREMENT PRIMARY_KEY,"
 							+ " pincode VARCHAR(20), owner VARCHAR(255), closetimer INT, x INT,"
@@ -316,6 +316,18 @@ public class BIT extends JavaPlugin {
 							+ " usecost INT) AS (SELECT pincode, owner, closetimer, x, y, z,"
 							+ " world, shared, typeid, connectedto, usecost FROM "
 							+ oldDigilockTable + ");";
+*/					
+					
+					query = "CREATE TABLE "
+							+ digilockTable
+							+ " (id INT AUTO_INCREMENT PRIMARY_KEY, "
+							+ "pincode VARCHAR(20), owner VARCHAR(255), closetimer INT, x INT, "
+							+ "y INT, z INT, world VARCHAR(255), shared VARCHAR(255), "
+							+ "coowners VARCHAR(255), typeid INT, connectedto VARCHAR(20),"
+							+ "usecost INT)"
+							+ "AS SELECT pincode, owner, closetimer, x, y, z, world, shared, "
+							+ "typeid, connectedto, usecost FROM "+oldDigilockTable+";";
+					G333Messages.showInfo("Query:"+query);
 
 				} else {
 					G333Messages.showInfo("Creating table " + digilockTable);

@@ -1,11 +1,14 @@
 name: BukkitInventoryTools
 main: dk.gabriel333.BukkitInventoryTools.BIT
-version: 2.5.7
+version: 2.5.9
 author: Gabriel333
-website: https://github.com/BukkitInventoryTools
-dev-url: http://dev.bukkit.org/server-mods/bukkitinventorytools/
-description: Digital lock, sort and stack inventories
+authors: [Rocoloco]
+website: http://dev.bukkit.org/server-mods/bukkitinventorytools/
+dev-url: https://github.com/BukkitInventoryTools
+description: Shop, Digital lock, sort and stack inventories
+database: true
 depend: [Spout]
+softdepend: 
 commands:
     sort:
         description: Rebuild all item stack in your inventory.

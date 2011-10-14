@@ -62,9 +62,6 @@ public class BIT extends JavaPlugin {
 	public static Map<Integer, GenericTextField> connectedTo = new HashMap<Integer, GenericTextField>();
 	public static Map<Integer, GenericTextField> shared = new HashMap<Integer, GenericTextField>();
 
-	// public static Map<Integer, SpoutBlock> clickedBlock = new
-	// HashMap<Integer, SpoutBlock>();
-
 	@Override
 	public void onEnable() {
 		plugin = this;
@@ -263,22 +260,21 @@ public class BIT extends JavaPlugin {
 									+ " to " + digilockTable + ".");
 							query = "CREATE TABLE "
 									+ digilockTable
-									+ " (id INT PRIMARY KEY AUTO_INCREMENT, pincode VARCHAR(20),"
-									+ "owner VARCHAR(255), closetimer INT,x INT,y INT,z INT,"
-									+ "world VARCHAR(255),shared VARCHAR(255),coowners VARCHAR(255),"
-									+ "typeid INT,connectedto VARCHAR(20),usecost INT) AS SELECT pincode, "
-									+ "owner,closetimer,x,y,z,world,shared,"
-									+ "typeid,connectedto,usecost FROM "
+									+ " (x INT, y INT, z INT, world VARCHAR(255), "
+									+ "owner VARCHAR(255), pincode VARCHAR(255), "
+									+" coowners VARCHAR(255), closetimer INT, "
+									+ "typeid INT, connectedto VARCHAR(255), usecost INT) "
+									+ "AS SELECT x, y, z, world, owner, pincode, "
+									+ "coowners, closetimer, typeid, connectedto, usecost FROM "
 									+ oldDigilockTable + ";";
 						} else {
 							G333Messages.showInfo("Creating table "
 									+ digilockTable);
 							query = "CREATE TABLE "
 									+ digilockTable
-									+ " (id INT PRIMARY KEY AUTO_INCREMENT, pincode VARCHAR(20), "
-									+ "owner VARCHAR(255), closetimer INT, x INT, y INT, z INT, "
-									+ "world VARCHAR(255), shared VARCHAR(255), coowners VARCHAR(255), "
-									+ "typeid INT, connectedto VARCHAR(20), usecost INT);";
+									+ " (x INT, y INT, z INT, world VARCHAR(255), owner VARCHAR(255), "
+									+ "pincode VARCHAR(255), coowners VARCHAR(255), closetimer INT, "
+									+ "typeid INT, connectedto VARCHAR(255), usecost INT);";
 						}
 						manageMySQL.createTable(query);
 					}

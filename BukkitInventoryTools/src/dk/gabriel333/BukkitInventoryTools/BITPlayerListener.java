@@ -330,10 +330,6 @@ public class BITPlayerListener extends PlayerListener {
 							}
 						}
 					}
-					// BOOKSHELF
-					else if ((block.getType().equals(Material.BOOKSHELF))) {
-
-					}
 					// HANDLING SIGN and SIGN_POST
 					else if (BITDigiLock.isSign(block)) {
 						if (digilock.getPincode().equals("")
@@ -374,7 +370,43 @@ public class BITPlayerListener extends PlayerListener {
 						sPlayer.sendMessage("ERROR: BITPlayerListener. Cant handle block:"
 								+ block.getType());
 					}
-				} else {
+				} 
+				// BOOKSHELF
+				else if ((block.getType().equals(Material.BOOKSHELF))) {
+					if (digilock.getPincode().equals("")
+							|| digilock.getPincode().equals("fingerprint")) {
+						// USE SIGN BY FINGERPRINT (playername)
+						if (digilock.isOwner(sPlayer)
+								|| digilock.isCoowner(sPlayer)) {
+							G333Messages.sendNotification(sPlayer,
+									"Used with fingerprint");
+							if (sPlayer.isSpoutCraftEnabled()) {
+								// TODO: handle the bookcase
+							} else {
+
+							}
+						} else {
+							event.setCancelled(true);
+							sPlayer.sendMessage("Your fingerprint does not match the DigiLock");
+						}
+					} else {
+						if (sPlayer.isSpoutCraftEnabled()) {
+							bPlayer.getPincode(sPlayer, block);
+							if (digilock.getPincode().equals(
+									BIT.pincode.get(uuid).getText())) {
+								// okay - go on
+							} else {
+								// if (G333Config.config.DEBUG_DOOR)
+								event.setCancelled(true);
+							}
+						} else {
+							sPlayer.sendMessage("Digilock'ed by "
+									+ sPlayer.getName());
+							event.setCancelled(true);
+						}
+					}
+
+				}else {
 					// the player has not digilock.use permission.
 					G333Messages.sendNotification(sPlayer,
 							"Locked with Digilock.");
@@ -415,13 +447,14 @@ public class BITPlayerListener extends PlayerListener {
 					else if (block.getType().equals(Material.STONE_BUTTON)) {
 
 					}
-					// BOOKSHELF
-					else if ((block.getType().equals(Material.BOOKSHELF))) {
-
-					}
+					
 					// HANDLING SIGN and SIGN_POST
 					else if (BITDigiLock.isSign(block)) {
 
+					}
+					// BOOKSHELF
+					else if ((block.getType().equals(Material.BOOKSHELF))) {
+						// TODO: handle the bookcase
 					}
 				}
 

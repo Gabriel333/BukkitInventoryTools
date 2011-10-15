@@ -42,6 +42,7 @@ public class G333Config extends Configuration {
 	
 	public static int BOOKSHELF_COST;
 	public static int BOOKSHELF_SIZE;
+	public static int BOOKSHELF_DESTROYCOST;
 	
 	public Boolean DEBUG_PERMISSIONS;
 	public Boolean DEBUG_SORTINVENTORY;
@@ -91,9 +92,10 @@ public class G333Config extends Configuration {
 		DIGILOCK_USEMAXCOST = getIntParm("DigiLock.UseMaxCost", 0);
 		DIGILOCK_DESTROYCOST = getIntParm("DigiLock.DestroyCost", -10);
 		
-		//Digilock
+		//Bookshelf
 		BOOKSHELF_COST = getIntParm("Bookshelf.Cost", 50);
 		BOOKSHELF_SIZE = getIntParm("Bookshelf.Size", 9);
+		BOOKSHELF_DESTROYCOST = getIntParm("Bookshelf.DestroyCost", 10);
 				
 		//Debug
 		DEBUG_PERMISSIONS = getBooleanParm("Debug.Permissions", false);

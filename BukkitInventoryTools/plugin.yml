@@ -20,6 +20,11 @@ commands:
         usage: /digilock [pincode]|[unlock pincode]|[lock pincode]|[owner playername]|[closetimer seconds]|[usecost cost]|[remove]|[addcoowner name]|[remcoowner name]|[info]
         aliases: /dlock
         permission: bukkitinventorytools.digilock.use
+    bookshelf:
+        description: Create and use a Bookshelf inventory.
+        usage: /bookshelf
+        aliases: /bshelf
+        permission: bukkitinventorytools.bookshelf.use
 permissions:
     bukkitinventorytools.sortinventory.use:
         default: true

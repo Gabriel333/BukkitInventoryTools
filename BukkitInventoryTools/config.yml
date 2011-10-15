@@ -83,11 +83,14 @@ DigiLock:
 # +------------------------------------------------------+ #
 ############################################################
 # Cost:        This the price when a user buys a Bookshelf
-# Size:        Is size of a Bookshelf. 
+# Size:        is size of a Bookshelf. 
 #              Must be 9,18,27,36,45,54
+# DestroyCost  is the cost the player is charged if he 
+#              destroys the Bookshelf.
 Bookshelf:
     Cost: 50
     Size: 9
+    DestroyCost: 10
 
 ############################################################
 # +------------------------------------------------------+ #

@@ -47,8 +47,6 @@ public class BITCommandDigiLock implements CommandExecutor {
 							G333Permissions.NOT_QUIET)
 					|| G333Permissions.hasPerm(sPlayer, "*",
 							G333Permissions.NOT_QUIET)) {
-				// sPlayer.sendMessage("args[0]: " + args[0].toString());
-				// sPlayer.sendMessage("args.length: " + args.length);
 				if (!BITDigiLock.isLocked(block)) {
 					if (args.length == 0) {
 						return false;
@@ -86,6 +84,10 @@ public class BITCommandDigiLock implements CommandExecutor {
 									connectedto = args[n + 1];
 								n++;
 							} else if (action.equalsIgnoreCase("remove")) {
+								sPlayer.sendMessage("No Digilock is created on this bookshelf");
+								return false;
+							} else if (action.equalsIgnoreCase("info")) {
+								sPlayer.sendMessage("No Digilock is created on this bookshelf");
 								return false;
 							}
 						}

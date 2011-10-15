@@ -236,6 +236,10 @@ public class BIT extends JavaPlugin {
 	public static Logger log = Logger.getLogger("Minecraft");
 	public static String digilockTable = "BukkitInventoryTools4";
 	public static String oldDigilockTable = "BukkitInventoryTools3";
+	public static String bitInventoryTable = "Bookshelf";
+	public static String oldBitInventoryTable = "Bookshelf_NONE";
+	public static String booksTable = "Book";
+	public static String oldBooksTable = "Book_NONE";
 
 	private void setupSQL() {
 		if (G333Config.config.STORAGE_TYPE.equals("MYSQL")) {
@@ -254,6 +258,8 @@ public class BIT extends JavaPlugin {
 					// Check if the Connection was successful
 					String query;
 					G333Messages.showInfo("MySQL connection successful");
+
+					// Check DigiLockTable
 					if (!manageMySQL.checkTable(digilockTable)) {
 						if (manageMySQL.checkTable(oldDigilockTable)) {
 							G333Messages.showInfo("Upgrade " + oldDigilockTable
@@ -262,7 +268,7 @@ public class BIT extends JavaPlugin {
 									+ digilockTable
 									+ " (x INT, y INT, z INT, world VARCHAR(255), "
 									+ "owner VARCHAR(255), pincode VARCHAR(255), "
-									+" coowners VARCHAR(255), closetimer INT, "
+									+ " coowners VARCHAR(255), closetimer INT, "
 									+ "typeid INT, connectedto VARCHAR(255), usecost INT) "
 									+ "AS SELECT x, y, z, world, owner, pincode, "
 									+ "coowners, closetimer, typeid, connectedto, usecost FROM "
@@ -278,6 +284,42 @@ public class BIT extends JavaPlugin {
 						}
 						manageMySQL.createTable(query);
 					}
+
+					// Check BookshelfTable
+					if (!manageMySQL.checkTable(bitInventoryTable)) {
+						if (manageMySQL.checkTable(oldBitInventoryTable)) {
+							G333Messages.showInfo("Upgrade "
+									+ oldBitInventoryTable + " to "
+									+ bitInventoryTable + ".");
+							query = "CREATE TABLE "
+									+ bitInventoryTable
+									+ " (x INT, y INT, z INT, world VARCHAR(255), "
+									+ "owner VARCHAR(255), "
+									+ "name VARCHAR(255), "
+									+ "coowners VARCHAR(255), "
+									+ "usecost INT, slotno INT, "
+									+ "itemstack_type INT, itemstack_amount INT, itemstack_durability INT) "
+									+ "AS SELECT x, y, z, world, owner, name, coowners, usecost, "
+									+ "itemstack_type, itemstack_amount, itemstack_durability FROM "
+									+ oldBitInventoryTable + ";";
+						} else {
+							G333Messages.showInfo("Creating table "
+									+ bitInventoryTable);
+							query = "CREATE TABLE "
+									+ bitInventoryTable
+									+ " (x INT, y INT, z INT, world VARCHAR(255), "
+									+ "owner VARCHAR(255), "
+									+ "name VARCHAR(255), "
+									+ "coowners VARCHAR(255), "
+									+ "usecost INT, slotno INT, "
+									+ "itemstack_type INT, itemstack_amount INT, itemstack_durability INT) "
+									+ "AS SELECT x, y, z, world, owner, name, coowners, usecost, "
+									+ "itemstack_type, itemstack_amount, itemstack_durability;";
+						}
+						manageMySQL.createTable(query);
+
+					}
+
 				} else {
 					G333Messages.showError("MySQL connection failed");
 					G333Config.config.STORAGE_HOST = "SQLITE";
@@ -309,13 +351,15 @@ public class BIT extends JavaPlugin {
 							+ " (x INTEGER, y INTEGER, z INTEGER, world TEXT, owner TEXT, pincode TEXT, "
 							+ " coowners TEXT, closetimer INTEGER, "
 							+ "typeid INTEGER, connectedto TEXT, usecost INTEGER)";
-					insert = "insert into "+digilockTable+" (x, y, z, world, owner, pincode, "
+					insert = "insert into "
+							+ digilockTable
+							+ " (x, y, z, world, owner, pincode, "
 							+ "coowners, closetimer, usecost, connectedto, typeid) "
 							+ "select x, y, z, world, owner, pincode,"
-							+ "coowners, closetimer, usecost, connectedto, typeid FROM " 
+							+ "coowners, closetimer, usecost, connectedto, typeid FROM "
 							+ oldDigilockTable;
-					G333Messages.showInfo("Create Table:" + query);
-					G333Messages.showInfo("Insert:" + insert);
+					// G333Messages.showInfo("Create Table:" + query);
+					// G333Messages.showInfo("Insert:" + insert);
 					manageSQLite.createTable(query);
 					manageSQLite.insertQuery(insert);
 
@@ -328,7 +372,56 @@ public class BIT extends JavaPlugin {
 							+ "typeid INTEGER, connectedto TEXT, usecost INTEGER)";
 					manageSQLite.createTable(query);
 				}
+			} else {
+				G333Messages.showInfo(digilockTable + " exists.");
 			}
+
+			// Check BookshelfTable
+			if (!manageSQLite.checkTable(bitInventoryTable)) {
+				if (manageSQLite.checkTable(oldBitInventoryTable)) {
+					G333Messages.showInfo("Upgrade " + oldBitInventoryTable
+							+ " to " + bitInventoryTable + ".");
+					query = "CREATE TABLE "
+							+ bitInventoryTable
+							+ " (x INT, y INT, z INT, world VARCHAR(255), "
+							+ "owner VARCHAR(255), "
+							+ "name VARCHAR(255), "
+							+ "coowners VARCHAR(255), "
+							+ "usecost INT, slotno INT, "
+							+ "itemstack_type INT, itemstack_amount INT, itemstack_durability INT) "
+							+ "AS SELECT x, y, z, world, owner, name, coowners, usecost, "
+							+ "itemstack_type, itemstack_amount, itemstack_durability FROM "
+							+ oldBitInventoryTable + ";";
+					insert = "insert into "
+							+ digilockTable
+							+ " (x, y, z, world, "
+							+ "owner, "
+							+ "name, "
+							+ "coowners, "
+							+ "usecost, slotno, "
+							+ "itemstack_type INT, itemstack_amount INT, itemstack_durability INT) "
+							+ "select x, y, z, world, owner, name,"
+							+ "coowners, usecost, "
+							+ "itemstack_type, itemstack_amount, itemstack_durability FROM "
+							+ oldDigilockTable;
+					manageSQLite.createTable(query);
+					manageSQLite.insertQuery(insert);
+				} else {
+					G333Messages.showInfo("Creating table " + bitInventoryTable);
+					query = "CREATE TABLE "
+							+ bitInventoryTable
+							+ " (x INT, y INT, z INT, world VARCHAR(255), "
+							+ "owner VARCHAR(255), "
+							+ "name VARCHAR(255), "
+							+ "coowners VARCHAR(255), "
+							+ "usecost INT, slotno int, "
+							+ "itemstack_type INT, itemstack_amount NT, itemstack_durability INT);";
+					manageSQLite.createTable(query);
+				}
+			} else {
+				G333Messages.showInfo(bitInventoryTable + " exists.");
+			}
+
 		}
 	}
 

@@ -9,6 +9,7 @@ import org.getspout.spoutapi.player.SpoutPlayer;
 
 public class G333Inventory {
 
+	//TODO: code should be moved to BITInventory
 	public static void sortInventoryItems(SpoutPlayer sPlayer,
 			Inventory inventory) {
 		stackInventoryItems(sPlayer, inventory);

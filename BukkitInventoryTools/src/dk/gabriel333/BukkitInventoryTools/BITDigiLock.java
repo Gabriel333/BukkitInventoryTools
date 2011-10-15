@@ -31,7 +31,7 @@ public class BITDigiLock {
 		plugin = this.plugin;
 	}
 
-	protected SpoutBlock block;
+	protected SpoutBlock sBlock;
 	protected String pincode;
 	protected String owner;
 	protected int closetimer;
@@ -47,7 +47,7 @@ public class BITDigiLock {
 	BITDigiLock(SpoutBlock block, String pincode, String owner, int closetimer,
 			String coowners, int typeId, String connectedTo,
 			int useCost) {
-		this.block = block;
+		this.sBlock = block;
 		this.pincode = pincode;
 		this.owner = owner;
 		this.closetimer = closetimer;
@@ -289,7 +289,7 @@ public class BITDigiLock {
 	}
 
 	public SpoutBlock getBlock() {
-		return block;
+		return sBlock;
 	}
 
 	public int getUseCost() {
@@ -305,7 +305,7 @@ public class BITDigiLock {
 	}
 
 	public void setBlock(SpoutBlock block) {
-		this.block = block;
+		this.sBlock = block;
 	}
 
 	public void setOwner(String owner) {
@@ -331,7 +331,7 @@ public class BITDigiLock {
 	public void setDigiLock(SpoutBlock block, String pincode, String owner,
 			int closetimer, String coowners, String connectedTo,
 			int useCost) {
-		this.block = block;
+		this.sBlock = block;
 		this.pincode = pincode;
 		this.owner = owner;
 		this.closetimer = closetimer;
@@ -407,8 +407,8 @@ public class BITDigiLock {
 			}
 		}
 		String query = "DELETE FROM " + BIT.digilockTable + " WHERE (x = "
-				+ block.getX() + " AND y = " + block.getY() + " AND z = "
-				+ block.getZ() + " AND world='" + block.getWorld().getName()
+				+ sBlock.getX() + " AND y = " + sBlock.getY() + " AND z = "
+				+ sBlock.getZ() + " AND world='" + sBlock.getWorld().getName()
 				+ "');";
 		if (deletelock) {
 			if (G333Config.config.DEBUG_SQL)
@@ -449,6 +449,14 @@ public class BITDigiLock {
 		else if (block.getType().equals(Material.SIGN_POST))
 			return true;
 		return false;
+	}
+	
+	public static boolean isBookshelf(SpoutBlock sBlock) {
+		if (sBlock.getType().equals(Material.BOOKSHELF)) {
+			return true;
+		} else {
+			return false;
+		}
 	}
 
 	public static void playDigiLockSound(SpoutBlock sBlock) {

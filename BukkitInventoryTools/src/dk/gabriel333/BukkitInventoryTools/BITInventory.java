@@ -28,14 +28,9 @@ public class BITInventory {
 	 * Constructs a new BITInventory
 	 * 
 	 */
-	
-	BITInventory(){
-		super();
-	}
-	
 	BITInventory(SpoutBlock sBlock, String owner, String name, String coowners,
 			Inventory inventory, int useCost) {
-		super();
+		//super();
 		this.sBlock = sBlock;
 		this.name = name;
 		this.owner = owner;
@@ -57,7 +52,7 @@ public class BITInventory {
 	public Inventory getInventory() {
 		return this.inventory;
 	}
-	
+
 	public String getOwner() {
 		return this.owner;
 	}
@@ -73,10 +68,10 @@ public class BITInventory {
 	public SpoutBlock getBlock() {
 		return this.sBlock;
 	}
-	
+
 	public static void SaveBitInventory(SpoutPlayer sPlayer, SpoutBlock block,
-			String owner, String name, String coowners,
-			Inventory inventory, int useCost) {
+			String owner, String name, String coowners, Inventory inventory,
+			int useCost) {
 		String query;
 		boolean createBookshelf = true;
 		int cost = G333Config.BOOKSHELF_COST;
@@ -134,37 +129,37 @@ public class BITInventory {
 				}
 			}
 			if (createBookshelf) {
-				sPlayer.sendMessage("Inventorysize:"+inventory.getSize());
+				sPlayer.sendMessage("Inventorysize:" + inventory.getSize());
 				for (int i = 0; i < inventory.getSize(); i++) {
-						query = "INSERT INTO "
-								+ BIT.bitInventoryTable
-								+ " (x, y, z, world, owner, name, coowners, usecost, "
-								+ "slotno, itemstack_type, itemstack_amount, itemstack_durability "
-								+ ") VALUES (" + block.getX() + ", "
-								+ block.getY() + ", " + block.getZ() + ", '"
-								+ block.getWorld().getName() + "', '" + owner
-								+ "', '" + name + "', '" + coowners + "', " + useCost
-								+ ", " + i + ", "
-								+ inventory.getItem(i).getTypeId() + ","
-								+ inventory.getItem(i).getAmount() + ","
-								+ inventory.getItem(i).getDurability() + " );";
-						sPlayer.sendMessage("Insert:"+query);
-						if (G333Config.config.DEBUG_SQL)
-							sPlayer.sendMessage(ChatColor.YELLOW
-									+ "Insert to bookshelf: " + query);
-						if (G333Config.config.STORAGE_TYPE.equals("MYSQL")) {
-							try {
-								BIT.manageMySQL.insertQuery(query);
-							} catch (MalformedURLException e) {
-								e.printStackTrace();
-							} catch (InstantiationException e) {
-								e.printStackTrace();
-							} catch (IllegalAccessException e) {
-								e.printStackTrace();
-							}
-						} else {
-							BIT.manageSQLite.insertQuery(query);
+					query = "INSERT INTO "
+							+ BIT.bitInventoryTable
+							+ " (x, y, z, world, owner, name, coowners, usecost, "
+							+ "slotno, itemstack_type, itemstack_amount, itemstack_durability "
+							+ ") VALUES (" + block.getX() + ", " + block.getY()
+							+ ", " + block.getZ() + ", '"
+							+ block.getWorld().getName() + "', '" + owner
+							+ "', '" + name + "', '" + coowners + "', "
+							+ useCost + ", " + i + ", "
+							+ inventory.getItem(i).getTypeId() + ","
+							+ inventory.getItem(i).getAmount() + ","
+							+ inventory.getItem(i).getDurability() + " );";
+					sPlayer.sendMessage("Insert:" + query);
+					if (G333Config.config.DEBUG_SQL)
+						sPlayer.sendMessage(ChatColor.YELLOW
+								+ "Insert to bookshelf: " + query);
+					if (G333Config.config.STORAGE_TYPE.equals("MYSQL")) {
+						try {
+							BIT.manageMySQL.insertQuery(query);
+						} catch (MalformedURLException e) {
+							e.printStackTrace();
+						} catch (InstantiationException e) {
+							e.printStackTrace();
+						} catch (IllegalAccessException e) {
+							e.printStackTrace();
 						}
+					} else {
+						BIT.manageSQLite.insertQuery(query);
+					}
 				}
 				G333Messages.sendNotification(sPlayer, "Bookshelf created.");
 			} else {
@@ -205,17 +200,21 @@ public class BITInventory {
 		return false;
 	}
 
-	public static BITInventory loadBitInventory(SpoutPlayer sPlayer, SpoutBlock sBlock) {
+	public static BITInventory loadBitInventory(SpoutPlayer sPlayer,
+			SpoutBlock sBlock) {
 		int size = loadBitInventorySize(sBlock);
-		String name="Bookshelf"+sPlayer.getName();
-		Inventory inventory = SpoutManager.getInventoryBuilder().construct(size, name);;
+		String name = "Bookshelf" + sPlayer.getName();
+		Inventory inventory = SpoutManager.getInventoryBuilder().construct(
+				size, name);
+		;
 		String owner = "";
-		String coowners = "";
+		String coOwners = "";
 		int useCost = 0;
 		String query = "SELECT * FROM " + BIT.bitInventoryTable
 				+ " WHERE (x = " + sBlock.getX() + " AND y = " + sBlock.getY()
 				+ " AND z = " + sBlock.getZ() + " AND world='"
 				+ sBlock.getWorld().getName() + "');";
+		sPlayer.sendMessage("select:"+query);
 		ResultSet result = null;
 		for (int i = 0; i < size; i++) {
 			if (G333Config.config.STORAGE_TYPE.equals("MYSQL")) {
@@ -230,15 +229,32 @@ public class BITInventory {
 				}
 			} else { // SQLLITE
 				result = BIT.manageSQLite.sqlQuery(query);
+				sPlayer.sendMessage("Result:"+result.toString());
 			}
 			try {
+				ItemStack itemstack;
+				int itemstack_typeId;
+				int itemstack_amount;
+				short itemstack_durability;
 				if (result != null && result.next()) {
-					int itemstack_type = result.getInt("itemstack_type");
-					int itemstack_amount = result.getInt("itemstack_amount");
-					short itemstack_durability = (short) result
-							.getInt("itemstack_durability");
-					inventory.setItem(i, new ItemStack(itemstack_type,
-							itemstack_amount, itemstack_durability));
+					itemstack_typeId = result.getInt("itemstack_type");
+					itemstack_amount = result.getInt("itemstack_amount");
+					itemstack_durability = (short) result.getInt("itemstack_durability");
+					sPlayer.sendMessage("item:"
+							+ itemstack_typeId + " amt="
+							+ itemstack_amount + " dura="
+							+ itemstack_durability);
+					if (itemstack_amount == 0) {
+						inventory.clear(i);
+					} else {
+						itemstack = new ItemStack(itemstack_typeId,
+								itemstack_amount, itemstack_durability);
+						inventory.setItem(i, itemstack);
+					}
+					sPlayer.sendMessage("item:"
+							+ inventory.getItem(i).getType() + " amt="
+							+ inventory.getItem(i).getAmount() + " dura="
+							+ inventory.getItem(i).getDurability());
 				}
 			} catch (SQLException e) {
 				e.printStackTrace();
@@ -248,18 +264,20 @@ public class BITInventory {
 			if (result != null && result.next()) {
 				name = result.getString("name");
 				owner = result.getString("owner");
-				coowners = result.getString("coowners");
+				coOwners = result.getString("coowners");
 				useCost = result.getInt("usecost");
 			}
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
-		BITInventory bitInventory = new BITInventory(sBlock, owner, name,
-				coowners, inventory, useCost);
-		return bitInventory;
+		BITInventory inv = new BITInventory(sBlock, owner, name,
+				coOwners, inventory, useCost);
+		inv.setBitInventory(sBlock, owner, name, coOwners, inventory, useCost);
+		return inv;
 	}
 
-	public static String loadBitInventoryName(SpoutPlayer sPlayer, SpoutBlock block) {
+	public static String loadBitInventoryName(SpoutPlayer sPlayer,
+			SpoutBlock block) {
 		String name = "";
 		String query = "SELECT * FROM " + BIT.bitInventoryTable
 				+ " WHERE (x = " + block.getX() + " AND y = " + block.getY()
@@ -319,8 +337,8 @@ public class BITInventory {
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
-		G333Messages.showInfo("i:"+i +" res:"+((((i-1)/9)*9)+9));
-		return ((((i-1)/9)*9)+9);
+		G333Messages.showInfo("i:" + i + " res:" + ((((i - 1) / 9) * 9) + 9));
+		return ((((i - 1) / 9) * 9) + 9);
 	}
 
 	public void RemoveBitInventory(SpoutPlayer sPlayer, int destroycost) {
@@ -372,7 +390,7 @@ public class BITInventory {
 		}
 
 	}
-	
+
 	public boolean isCoowner(SpoutPlayer sPlayer) {
 		if (coOwners.toLowerCase().contains(sPlayer.getName().toLowerCase())
 				|| coOwners.toLowerCase().contains("everyone"))
@@ -402,7 +420,7 @@ public class BITInventory {
 	public void setUseCost(int useCost) {
 		this.useCost = useCost;
 	}
-	
+
 	public String getName() {
 		return name;
 	}
@@ -411,6 +429,8 @@ public class BITInventory {
 		return inventory.getSize();
 	}
 
-
+	public void openInventory(SpoutPlayer sPlayer) {
+		sPlayer.openInventoryWindow(inventory);
+	}
 
 }

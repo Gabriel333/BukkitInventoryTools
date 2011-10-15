@@ -84,7 +84,8 @@ public class BITSpoutListener extends SpoutListener {
 							sPlayer.openInventoryWindow(inv);
 
 						} else if (digilock.getBlock().getType() == Material.BOOKSHELF) {
-							// TODO: handle the bookcase
+							Inventory inv = BITInventory.loadBitInventory(sPlayer, sBlock).inventory;
+							sPlayer.openInventoryWindow(inv);
 
 						} else if (BITDigiLock.isTrapdoor(sBlock)) {
 							BITDigiLock.playDigiLockSound(digilock.getBlock());

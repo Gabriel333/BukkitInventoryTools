@@ -366,10 +366,7 @@ public class BITPlayerListener extends PlayerListener {
 								event.setCancelled(true);
 							}
 						}
-					} else {
-						sPlayer.sendMessage("ERROR: BITPlayerListener. Cant handle block:"
-								+ block.getType());
-					}
+					
 				} 
 				// BOOKSHELF
 				else if ((block.getType().equals(Material.BOOKSHELF))) {
@@ -381,7 +378,8 @@ public class BITPlayerListener extends PlayerListener {
 							G333Messages.sendNotification(sPlayer,
 									"Used with fingerprint");
 							if (sPlayer.isSpoutCraftEnabled()) {
-								// TODO: handle the bookshelf
+								Inventory inv = BITInventory.loadBitInventory(sPlayer, block).inventory;
+								sPlayer.openInventoryWindow(inv);
 							} else {
 
 							}
@@ -405,6 +403,10 @@ public class BITPlayerListener extends PlayerListener {
 							event.setCancelled(true);
 						}
 					}
+				} else {
+					sPlayer.sendMessage("ERROR: BITPlayerListener. Cant handle block:"
+							+ block.getType());
+				}
 
 				}else {
 					// the player has not digilock.use permission.

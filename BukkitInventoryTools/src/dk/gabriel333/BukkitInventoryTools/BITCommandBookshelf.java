@@ -4,7 +4,7 @@ import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.inventory.Inventory;
-import org.getspout.spout.inventory.CustomInventory;
+import org.getspout.spoutapi.SpoutManager;
 import org.getspout.spoutapi.block.SpoutBlock;
 import org.getspout.spoutapi.player.SpoutPlayer;
 
@@ -81,8 +81,10 @@ public class BITCommandBookshelf implements CommandExecutor {
 									"bookshelf.create",
 									G333Permissions.NOT_QUIET)
 									&& args[0].equalsIgnoreCase("create")) {
-								CustomInventory inventory = new CustomInventory(
-										G333Config.BOOKSHELF_SIZE, name);
+								Inventory inventory = SpoutManager
+										.getInventoryBuilder()
+										.construct(G333Config.BOOKSHELF_SIZE,
+												name);
 								BITInventory.SaveBitInventory(sPlayer, sBlock,
 										owner, name, coowners, inventory,
 										usecost);
@@ -98,27 +100,34 @@ public class BITCommandBookshelf implements CommandExecutor {
 						BITInventory bitInventory = BITInventory
 								.loadBitInventory(sPlayer, sBlock);
 						sPlayer.sendMessage("bitInventory:"
-								+ bitInventory.toString());
+								+ bitInventory.getInventory().toString());
 						if ((bitInventory.isOwner(sPlayer) || bitInventory
 								.isCoowner(sPlayer)) && args.length == 0) {
 							sPlayer.sendMessage("(1) open the inv name:"
 									+ bitInventory.getName() + " Size:"
 									+ bitInventory.getSize());
-							//sPlayer.openInventoryWindow(bitInventory);
-							//bitInventory.
+							for (int i = 0; i < 9; i++) {
+								G333Messages.showInfo("i:"
+										+ i
+										+ " id:"
+										+ bitInventory.getInventory()
+												.getItem(i).getTypeId());
+							}
+							// sPlayer.openInventoryWindow(bitInventory);
+							// bitInventory.
 							return true;
 						}
 						String action = args[0];
 						// OPEN
 						// *************************************************
 						if (action.equalsIgnoreCase("open")) {
-							Inventory inv=(Inventory) bitInventory.getInventory();
+							//Inventory inv = bitInventory.getInventory();
 							if ((bitInventory.isOwner(sPlayer) || bitInventory
 									.isCoowner(sPlayer)) && args.length == 1) {
 								sPlayer.sendMessage("(2) open the inv name:"
 										+ bitInventory.getName() + " Size:"
 										+ bitInventory.getSize());
-								sPlayer.openInventoryWindow(inv);
+								bitInventory.openInventory(sPlayer);
 								return true;
 							}
 						}
@@ -144,8 +153,8 @@ public class BITCommandBookshelf implements CommandExecutor {
 								&& args.length == 2) {
 							bitInventory.addCoowner(args[1]);
 							BITInventory.SaveBitInventory(sPlayer, sBlock,
-									owner, name, coowners, bitInventory.getInventory(),
-									usecost);
+									owner, name, coowners,
+									bitInventory.getInventory(), usecost);
 							return true;
 						}
 						// remcoowner
@@ -158,8 +167,8 @@ public class BITCommandBookshelf implements CommandExecutor {
 								&& args.length == 2) {
 							bitInventory.removeCoowner(args[1]);
 							BITInventory.SaveBitInventory(sPlayer, sBlock,
-									owner, name, coowners, bitInventory.getInventory(),
-									usecost);
+									owner, name, coowners,
+									bitInventory.getInventory(), usecost);
 							return true;
 						}
 						// usecost ***************************************
@@ -171,8 +180,8 @@ public class BITCommandBookshelf implements CommandExecutor {
 								&& args.length == 2) {
 							bitInventory.setUseCost(Integer.parseInt(args[1]));
 							BITInventory.SaveBitInventory(sPlayer, sBlock,
-									owner, name, coowners, bitInventory.getInventory(),
-									usecost);
+									owner, name, coowners,
+									bitInventory.getInventory(), usecost);
 							return true;
 						}
 						// INFO ***************************************
@@ -186,7 +195,7 @@ public class BITCommandBookshelf implements CommandExecutor {
 							return true;
 						} else if ((bitInventory.isOwner(sPlayer) || bitInventory
 								.isCoowner(sPlayer)) && args.length == 1) {
-							sPlayer.openInventoryWindow(bitInventory.getInventory());
+							bitInventory.openInventory(sPlayer);
 							return true;
 						}
 

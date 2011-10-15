@@ -30,7 +30,6 @@ public class BITSpoutListener extends SpoutListener {
 			BITPlayer bPlayer = new BITPlayer(sPlayer);
 			SpoutBlock sBlock = (SpoutBlock) sPlayer.getTargetBlock(null, 5);
 			int id = sPlayer.getEntityId();
-			//SpoutBlock sBlock = BIT.clickedBlock.get(id);
 			if (BITDigiLock.isLockable(sBlock)) {
 				BITDigiLock digilock = BITDigiLock.loadDigiLock(sBlock);
 				// ************************************
@@ -60,19 +59,19 @@ public class BITSpoutListener extends SpoutListener {
 							BITDigiLock.openDoor(sPlayer, digilock.getBlock(),
 									digilock.getUseCost());
 
-						} else if (digilock.getBlock().getType() == Material.LEVER) {
+						} else if (BITDigiLock.isLever(sBlock)) {
 							BITDigiLock.leverOn(sPlayer, sBlock,
 									digilock.getUseCost());
 							BITDigiLock.playDigiLockSound(sBlock);
 
-						} else if (digilock.getBlock().getType() == Material.STONE_BUTTON) {
+						} else if (BITDigiLock.isButton(sBlock)) {
 							if (!BITDigiLock.isButtonOn(digilock.getBlock())) {
 								BITDigiLock.pressButtonOn(sPlayer,
 										digilock.getBlock(),
 										digilock.getUseCost());
 								BITDigiLock.playDigiLockSound(sBlock);
 							}
-						} else if (digilock.getBlock().getType() == Material.DISPENSER) {
+						} else if (BITDigiLock.isDispenser(sBlock)) {
 							BITDigiLock.playDigiLockSound(digilock.getBlock());
 							Dispenser dispenser = (Dispenser) sBlock.getState();
 							Inventory inv = dispenser.getInventory();
@@ -85,8 +84,9 @@ public class BITSpoutListener extends SpoutListener {
 							sPlayer.openInventoryWindow(inv);
 
 						} else if (digilock.getBlock().getType() == Material.BOOKSHELF) {
+							// TODO: handle the bookcase
 
-						} else if (digilock.getBlock().getType() == Material.TRAP_DOOR) {
+						} else if (BITDigiLock.isTrapdoor(sBlock)) {
 							BITDigiLock.playDigiLockSound(digilock.getBlock());
 							BITDigiLock.openTrapdoor(sPlayer,
 									digilock.getBlock(), digilock.getUseCost());

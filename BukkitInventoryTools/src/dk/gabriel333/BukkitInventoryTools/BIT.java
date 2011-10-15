@@ -155,7 +155,7 @@ public class BIT extends JavaPlugin {
 		// Register commands
 		getCommand("Sort").setExecutor(new BITCommandSort(this));
 		getCommand("Digilock").setExecutor(new BITCommandDigiLock(this));
-
+		getCommand("Bookshelf").setExecutor(new BITCommandBookshelf(this));
 	}
 
 	private void setupSpout() {

@@ -41,3 +41,9 @@ permissions:
         default: true
     bukkitinventorytools.digilock.admin:
         default: op
+    bukkitinventorytools.bookshelf.create:
+        default: true
+    bukkitinventorytools.bookshelf.use:
+        default: true
+    bukkitinventorytools.bookshelf.admin:
+        default: true

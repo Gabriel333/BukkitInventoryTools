@@ -381,7 +381,7 @@ public class BITPlayerListener extends PlayerListener {
 							G333Messages.sendNotification(sPlayer,
 									"Used with fingerprint");
 							if (sPlayer.isSpoutCraftEnabled()) {
-								// TODO: handle the bookcase
+								// TODO: handle the bookshelf
 							} else {
 
 							}
@@ -454,7 +454,7 @@ public class BITPlayerListener extends PlayerListener {
 					}
 					// BOOKSHELF
 					else if ((block.getType().equals(Material.BOOKSHELF))) {
-						// TODO: handle the bookcase
+						// TODO: handle the bookshelf
 					}
 				}
 

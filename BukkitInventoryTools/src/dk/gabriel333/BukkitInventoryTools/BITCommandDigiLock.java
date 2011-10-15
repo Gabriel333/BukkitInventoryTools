@@ -140,7 +140,12 @@ public class BITCommandDigiLock implements CommandExecutor {
 									BITDigiLock.leverOn(sPlayer, block, digilock.getUseCost());
 									}
 								}
+							} else if (digilock.getBlock().getType() == Material.BOOKSHELF) {
+							
+							// TODO: handle the bookshelf
+								
 							}
+							
 						} else {
 							sPlayer.sendMessage("wrong pincode!");
 							sPlayer.damage(5);

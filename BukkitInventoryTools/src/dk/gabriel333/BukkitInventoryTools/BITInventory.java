@@ -152,7 +152,7 @@ public class BITInventory {
 				}
 			}
 			if (createBookshelf) {
-				sPlayer.sendMessage("Inventorysize:" + inventory.getSize());
+				//sPlayer.sendMessage("Inventorysize:" + inventory.getSize());
 				for (int i = 0; i < inventory.getSize(); i++) {
 					query = "INSERT INTO "
 							+ BIT.bitInventoryTable
@@ -166,7 +166,7 @@ public class BITInventory {
 							+ inventory.getItem(i).getTypeId() + ","
 							+ inventory.getItem(i).getAmount() + ","
 							+ inventory.getItem(i).getDurability() + " );";
-					sPlayer.sendMessage("Insert:" + query);
+					//sPlayer.sendMessage("Insert:" + query);
 					if (G333Config.config.DEBUG_SQL)
 						sPlayer.sendMessage(ChatColor.YELLOW
 								+ "Insert to bookshelf: " + query);
@@ -236,7 +236,7 @@ public class BITInventory {
 				+ " WHERE (x = " + sBlock.getX() + " AND y = " + sBlock.getY()
 				+ " AND z = " + sBlock.getZ() + " AND world='"
 				+ sBlock.getWorld().getName() + "');";
-		sPlayer.sendMessage("select:" + query);
+		//sPlayer.sendMessage("select:" + query);
 		ResultSet result = null;
 		if (G333Config.config.STORAGE_TYPE.equals("MYSQL")) {
 			try {
@@ -250,7 +250,7 @@ public class BITInventory {
 			}
 		} else { // SQLLITE
 			result = BIT.manageSQLite.sqlQuery(query);
-			sPlayer.sendMessage("Result:" + result.toString());
+			//sPlayer.sendMessage("Result:" + result.toString());
 		}
 		int i = 0;
 		ItemStack itemstack;
@@ -263,25 +263,24 @@ public class BITInventory {
 				itemstack_amount = result.getInt("itemstack_amount");
 				itemstack_durability = (short) result
 						.getInt("itemstack_durability");
-				sPlayer.sendMessage("i:" + i + " tp:" + itemstack_typeId
-						+ " amt:" + itemstack_amount + "du:"
-						+ itemstack_durability);
+				//sPlayer.sendMessage("i:" + i + " tp:" + itemstack_typeId
+				//		+ " amt:" + itemstack_amount + "du:"
+				//		+ itemstack_durability);
 				if (itemstack_amount == 0) {
 					inventory.clear(i);
 				} else {
 
-					// itemstack = new ItemStack(itemstack_typeId,
-					// itemstack_amount,
-					// itemstack_durability);
-					// inventory.setItem(i, itemstack);
-					itemstack = new ItemStack(47, 10, (short) -1);
+					 itemstack = new ItemStack(itemstack_typeId,
+					 itemstack_amount,
+					 itemstack_durability);
+					 inventory.setItem(i, itemstack);
 					inventory.setItem(i, itemstack);
 
 				}
-				G333Messages.showInfo("i:" + i + " " + "tp:"
-						+ inventory.getItem(i).getType() + " amt:"
-						+ inventory.getItem(i).getAmount() + " du:"
-						+ inventory.getItem(i).getDurability());
+				//G333Messages.showInfo("i:" + i + " " + "tp:"
+				//		+ inventory.getItem(i).getType() + " amt:"
+				//		+ inventory.getItem(i).getAmount() + " du:"
+				//		+ inventory.getItem(i).getDurability());
 				name = result.getString("name");
 				owner = result.getString("owner");
 				coOwners = result.getString("coowners");
@@ -291,9 +290,9 @@ public class BITInventory {
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
-		G333Messages.showInfo("name:" + name + " owner:" + owner + " coowners:"
-				+ coOwners + " usecost:" + useCost);
-		G333Messages.showInfo("inv:" + inventory);
+		//G333Messages.showInfo("name:" + name + " owner:" + owner + " coowners:"
+		//		+ coOwners + " usecost:" + useCost);
+		//G333Messages.showInfo("inv:" + inventory);
 		BITInventory inv = new BITInventory(sBlock, owner, name, coOwners,
 				inventory, useCost);
 		return inv;

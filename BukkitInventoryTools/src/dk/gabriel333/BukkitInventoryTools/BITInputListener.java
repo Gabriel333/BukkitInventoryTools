@@ -78,6 +78,7 @@ public class BITInputListener extends InputListener {
 									bitInventory.getOwner(), bitInventory.getName(), bitInventory.getCoOwners(),
 									inventory, bitInventory.getUseCost());
 							BITInventory.saveBitInventory(sPlayer, bitInventory);
+							BITInventory.openedInventories.remove(id);
 							BITInventory.openedInventories.put(id, bitInventory);
 							if (G333Config.config.SORT_DISPLAYSORTARCHIEVEMENT) {
 								G333Messages.sendNotification(sPlayer,
@@ -153,7 +154,7 @@ public class BITInputListener extends InputListener {
 						} else { // TARGETBLOCK IS NOT LOCKED
 							if (sPlayer.isSpoutCraftEnabled()) {
 								if (G333Permissions.hasPerm(sPlayer,
-										"digilock.use",
+										"digilock.create",
 										G333Permissions.NOT_QUIET)
 										|| G333Permissions.hasPerm(sPlayer,
 												"digilock.admin",
@@ -171,11 +172,19 @@ public class BITInputListener extends InputListener {
 									} else if (BITDigiLock.isDoor(targetblock)) {
 										BITDigiLock.closeDoor(targetblock);
 										bPlayer.setPincode(sPlayer, targetblock);
+									} else if (G333Permissions.hasPerm(sPlayer,
+											"bookshelf.create",
+											G333Permissions.NOT_QUIET)
+											|| G333Permissions.hasPerm(sPlayer,
+													"digilock.admin",
+													G333Permissions.NOT_QUIET)) {
+										
+										
 									} else {
 										bPlayer.setPincode(sPlayer, targetblock);
 									}
 
-								}
+								} 
 							} else {
 								sPlayer.sendMessage("Install SpoutCraft or use command /dlock to create lock.");
 							}

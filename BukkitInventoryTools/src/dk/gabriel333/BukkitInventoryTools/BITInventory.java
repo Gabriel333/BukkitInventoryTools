@@ -6,7 +6,6 @@ import java.sql.SQLException;
 
 import org.bukkit.ChatColor;
 import org.bukkit.inventory.Inventory;
-import org.bukkit.inventory.ItemStack;
 import org.getspout.spoutapi.SpoutManager;
 import org.getspout.spoutapi.block.SpoutBlock;
 import org.getspout.spoutapi.player.SpoutPlayer;
@@ -207,69 +206,15 @@ public class BITInventory {
 		Inventory inventory = SpoutManager.getInventoryBuilder().construct(
 				size, name);
 		;
-		String owner = "";
+		String owner = sPlayer.getName();
 		String coOwners = "";
 		int useCost = 0;
-		String query = "SELECT * FROM " + BIT.bitInventoryTable
-				+ " WHERE (x = " + sBlock.getX() + " AND y = " + sBlock.getY()
-				+ " AND z = " + sBlock.getZ() + " AND world='"
-				+ sBlock.getWorld().getName() + "');";
-		sPlayer.sendMessage("select:"+query);
-		ResultSet result = null;
+		
 		for (int i = 0; i < size; i++) {
-			if (G333Config.config.STORAGE_TYPE.equals("MYSQL")) {
-				try {
-					result = BIT.manageMySQL.sqlQuery(query);
-				} catch (MalformedURLException e) {
-					e.printStackTrace();
-				} catch (InstantiationException e) {
-					e.printStackTrace();
-				} catch (IllegalAccessException e) {
-					e.printStackTrace();
-				}
-			} else { // SQLLITE
-				result = BIT.manageSQLite.sqlQuery(query);
-				sPlayer.sendMessage("Result:"+result.toString());
+			inventory.clear(i);
 			}
-			try {
-				ItemStack itemstack;
-				int itemstack_typeId;
-				int itemstack_amount;
-				short itemstack_durability;
-				if (result != null && result.next()) {
-					itemstack_typeId = result.getInt("itemstack_type");
-					itemstack_amount = result.getInt("itemstack_amount");
-					itemstack_durability = (short) result.getInt("itemstack_durability");
-					sPlayer.sendMessage("item:"
-							+ itemstack_typeId + " amt="
-							+ itemstack_amount + " dura="
-							+ itemstack_durability);
-					if (itemstack_amount == 0) {
-						inventory.clear(i);
-					} else {
-						itemstack = new ItemStack(itemstack_typeId,
-								itemstack_amount, itemstack_durability);
-						inventory.setItem(i, itemstack);
-					}
-					sPlayer.sendMessage("item:"
-							+ inventory.getItem(i).getType() + " amt="
-							+ inventory.getItem(i).getAmount() + " dura="
-							+ inventory.getItem(i).getDurability());
-				}
-			} catch (SQLException e) {
-				e.printStackTrace();
-			}
-		}
-		try {
-			if (result != null && result.next()) {
-				name = result.getString("name");
-				owner = result.getString("owner");
-				coOwners = result.getString("coowners");
-				useCost = result.getInt("usecost");
-			}
-		} catch (SQLException e) {
-			e.printStackTrace();
-		}
+		
+		
 		BITInventory inv = new BITInventory(sBlock, owner, name,
 				coOwners, inventory, useCost);
 		inv.setBitInventory(sBlock, owner, name, coOwners, inventory, useCost);

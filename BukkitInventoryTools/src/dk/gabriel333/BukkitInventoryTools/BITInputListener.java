@@ -191,6 +191,9 @@ public class BITInputListener extends InputListener {
 			else if (screentype == ScreenType.CUSTOM_SCREEN) {
 				if (keypressed.equals("KEY_ESCAPE")) {
 					sPlayer.closeActiveWindow();
+					//Im not sure if the next 2 lines need to be here...
+					bPlayer.cleanupGetPincode(sPlayer);
+					bPlayer.cleanupSetPincode(sPlayer);
 					sPlayer.getMainScreen().removeWidgets(BIT.plugin);
 				}
 			}

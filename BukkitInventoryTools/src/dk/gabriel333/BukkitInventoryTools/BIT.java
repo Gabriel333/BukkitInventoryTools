@@ -1,8 +1,6 @@
 package dk.gabriel333.BukkitInventoryTools;
 
 import java.net.MalformedURLException;
-import java.util.HashMap;
-import java.util.Map;
 import java.util.logging.Logger;
 
 import org.bukkit.command.CommandSender;
@@ -14,10 +12,6 @@ import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.PluginDescriptionFile;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
-//import org.getspout.spoutapi.block.SpoutBlock;
-import org.getspout.spoutapi.gui.GenericTextField;
-import org.getspout.spoutapi.gui.PopupScreen;
-
 import com.alta189.sqlLibrary.MySQL.mysqlCore;
 import com.alta189.sqlLibrary.SQLite.sqlCore;
 import dk.gabriel333.register.payment.Method;
@@ -48,19 +42,6 @@ public class BIT extends JavaPlugin {
 	// Hook into MyWolf
 	public static Boolean mywolf = false;
 	public static MyWolfPlugin myWolfPlugin;
-
-	// USERDATA
-	public static int usercounter = 0;
-	public static Map<Integer, Integer> userno = new HashMap<Integer, Integer>();
-	public static Map<Integer, PopupScreen> popupGetPincode = new HashMap<Integer, PopupScreen>();
-	public static Map<Integer, PopupScreen> popupSetPincode = new HashMap<Integer, PopupScreen>();
-	public static Map<Integer, GenericTextField> pincode = new HashMap<Integer, GenericTextField>();
-	public static Map<Integer, GenericTextField> owner = new HashMap<Integer, GenericTextField>();
-	public static Map<Integer, GenericTextField> closetimer = new HashMap<Integer, GenericTextField>();
-	public static Map<Integer, GenericTextField> coOwners = new HashMap<Integer, GenericTextField>();
-	public static Map<Integer, GenericTextField> useCost = new HashMap<Integer, GenericTextField>();
-	public static Map<Integer, GenericTextField> connectedTo = new HashMap<Integer, GenericTextField>();
-	public static Map<Integer, GenericTextField> shared = new HashMap<Integer, GenericTextField>();
 
 	@Override
 	public void onEnable() {

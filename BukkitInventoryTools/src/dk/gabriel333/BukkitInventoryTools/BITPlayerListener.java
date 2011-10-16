@@ -382,9 +382,11 @@ public class BITPlayerListener extends PlayerListener {
 								G333Messages.sendNotification(sPlayer,
 										"Used with fingerprint");
 								if (sPlayer.isSpoutCraftEnabled()) {
-									Inventory inv = BITInventory
-											.loadBitInventory(sPlayer, block).inventory;
-									sPlayer.openInventoryWindow(inv);
+									BITInventory bitInventory = BITInventory
+											.loadBitInventory(sPlayer, block);
+									bitInventory.openBitInventory(sPlayer, bitInventory);
+									//sPlayer.openInventoryWindow(bitInventory.getInventory());
+									//sPlayer.sendMessage("inv:"+bitInventory.toString());
 								} else {
 
 								}
@@ -399,7 +401,6 @@ public class BITPlayerListener extends PlayerListener {
 										BITPlayer.pincode.get(id).getText())) {
 									// okay - go on
 								} else {
-									// if (G333Config.config.DEBUG_DOOR)
 									event.setCancelled(true);
 								}
 							} else {

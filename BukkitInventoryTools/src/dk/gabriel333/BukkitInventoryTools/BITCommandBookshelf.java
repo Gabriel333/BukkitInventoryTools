@@ -40,7 +40,7 @@ public class BITCommandBookshelf implements CommandExecutor {
 								G333Permissions.NOT_QUIET)
 						|| G333Permissions.hasPerm(sPlayer, "*",
 								G333Permissions.NOT_QUIET)) {
-
+					// BITInventory is not created.
 					if (!BITInventory.isBitInventoryCreated(sBlock)) {
 						if (args.length == 0) {
 							return false;
@@ -85,7 +85,7 @@ public class BITCommandBookshelf implements CommandExecutor {
 										.getInventoryBuilder()
 										.construct(G333Config.BOOKSHELF_SIZE,
 												name);
-								BITInventory.SaveBitInventory(sPlayer, sBlock,
+								BITInventory.saveBitInventory(sPlayer, sBlock,
 										owner, name, coowners, inventory,
 										usecost);
 								sPlayer.sendMessage("Created bookshelf:" + name);
@@ -99,106 +99,102 @@ public class BITCommandBookshelf implements CommandExecutor {
 
 						BITInventory bitInventory = BITInventory
 								.loadBitInventory(sPlayer, sBlock);
-						sPlayer.sendMessage("bitInventory:"
-								+ bitInventory.getInventory().toString());
 						if ((bitInventory.isOwner(sPlayer) || bitInventory
 								.isCoowner(sPlayer)) && args.length == 0) {
-							sPlayer.sendMessage("(1) open the inv name:"
-									+ bitInventory.getName() + " Size:"
-									+ bitInventory.getSize());
-							for (int i = 0; i < 9; i++) {
-								G333Messages.showInfo("i:"
-										+ i
-										+ " id:"
-										+ bitInventory.getInventory()
-												.getItem(i).getTypeId());
-							}
-							// sPlayer.openInventoryWindow(bitInventory);
-							// bitInventory.
+							 bitInventory.openBitInventory(sPlayer, bitInventory);
 							return true;
-						}
-						String action = args[0];
-						// OPEN
-						// *************************************************
-						if (action.equalsIgnoreCase("open")) {
-							//Inventory inv = bitInventory.getInventory();
-							if ((bitInventory.isOwner(sPlayer) || bitInventory
-									.isCoowner(sPlayer)) && args.length == 1) {
-								sPlayer.sendMessage("(2) open the inv name:"
-										+ bitInventory.getName() + " Size:"
-										+ bitInventory.getSize());
-								bitInventory.openInventory(sPlayer);
+						} else {
+							String action = args[0];
+							// OPEN
+							// *************************************************
+							if (action.equalsIgnoreCase("open")) {
+								if ((bitInventory.isOwner(sPlayer) || bitInventory
+										.isCoowner(sPlayer))
+										&& args.length == 1) {
+									bitInventory.openBitInventory(sPlayer,
+											bitInventory);
+									return true;
+								}
+							}
+							// REMOVE
+							// *************************************************
+							else if (action.equalsIgnoreCase("remove")
+									&& (bitInventory
+											.getOwner()
+											.equalsIgnoreCase(sPlayer.getName()) || G333Permissions
+											.hasPerm(sPlayer,
+													"bookshelf.admin",
+													G333Permissions.NOT_QUIET))
+									&& args.length == 1) {
+								bitInventory.RemoveBitInventory(sPlayer,
+										G333Config.BOOKSHELF_DESTROYCOST);
 								return true;
 							}
-						}
-						// REMOVE
-						// *************************************************
-						else if (action.equalsIgnoreCase("remove")
-								&& (bitInventory.getOwner().equalsIgnoreCase(
-										sPlayer.getName()) || G333Permissions
-										.hasPerm(sPlayer, "bookshelf.admin",
-												G333Permissions.NOT_QUIET))
-								&& args.length == 1) {
-							bitInventory.RemoveBitInventory(sPlayer,
-									G333Config.BOOKSHELF_DESTROYCOST);
-							return true;
-						}
-						// addcoowner
-						// ***************************************
-						else if (action.equalsIgnoreCase("addcoowner")
-								&& (bitInventory.getOwner().equalsIgnoreCase(
-										sPlayer.getName()) || G333Permissions
-										.hasPerm(sPlayer, "bookshelf.admin",
-												G333Permissions.NOT_QUIET))
-								&& args.length == 2) {
-							bitInventory.addCoowner(args[1]);
-							BITInventory.SaveBitInventory(sPlayer, sBlock,
-									owner, name, coowners,
-									bitInventory.getInventory(), usecost);
-							return true;
-						}
-						// remcoowner
-						// ***************************************
-						else if (action.equalsIgnoreCase("remcoowner")
-								&& (bitInventory.getOwner().equalsIgnoreCase(
-										sPlayer.getName()) || G333Permissions
-										.hasPerm(sPlayer, "bookshelf.admin",
-												G333Permissions.NOT_QUIET))
-								&& args.length == 2) {
-							bitInventory.removeCoowner(args[1]);
-							BITInventory.SaveBitInventory(sPlayer, sBlock,
-									owner, name, coowners,
-									bitInventory.getInventory(), usecost);
-							return true;
-						}
-						// usecost ***************************************
-						else if (action.equalsIgnoreCase("usecost")
-								&& (bitInventory.getOwner().equalsIgnoreCase(
-										sPlayer.getName()) || G333Permissions
-										.hasPerm(sPlayer, "bookshelf.admin",
-												G333Permissions.NOT_QUIET))
-								&& args.length == 2) {
-							bitInventory.setUseCost(Integer.parseInt(args[1]));
-							BITInventory.SaveBitInventory(sPlayer, sBlock,
-									owner, name, coowners,
-									bitInventory.getInventory(), usecost);
-							return true;
-						}
-						// INFO ***************************************
-						else if (action.equalsIgnoreCase("info")) {
-							sPlayer.sendMessage("The owner of this bookself is: "
-									+ bitInventory.getOwner());
-							sPlayer.sendMessage("The coOwner of this lock is: "
-									+ bitInventory.getCoOwners());
-							sPlayer.sendMessage("useCost is: "
-									+ bitInventory.getUseCost());
-							return true;
-						} else if ((bitInventory.isOwner(sPlayer) || bitInventory
-								.isCoowner(sPlayer)) && args.length == 1) {
-							bitInventory.openInventory(sPlayer);
-							return true;
-						}
+							// addcoowner
+							// ***************************************
+							else if (action.equalsIgnoreCase("addcoowner")
+									&& (bitInventory
+											.getOwner()
+											.equalsIgnoreCase(sPlayer.getName()) || G333Permissions
+											.hasPerm(sPlayer,
+													"bookshelf.admin",
+													G333Permissions.NOT_QUIET))
+									&& args.length == 2) {
+								bitInventory.addCoowner(args[1]);
+								BITInventory.saveBitInventory(sPlayer, sBlock,
+										owner, name, coowners,
+										bitInventory.getInventory(), usecost);
+								return true;
+							}
+							// remcoowner
+							// ***************************************
+							else if (action.equalsIgnoreCase("remcoowner")
+									&& (bitInventory
+											.getOwner()
+											.equalsIgnoreCase(sPlayer.getName()) || G333Permissions
+											.hasPerm(sPlayer,
+													"bookshelf.admin",
+													G333Permissions.NOT_QUIET))
+									&& args.length == 2) {
+								bitInventory.removeCoowner(args[1]);
+								BITInventory.saveBitInventory(sPlayer, sBlock,
+										owner, name, coowners,
+										bitInventory.getInventory(), usecost);
+								return true;
+							}
+							// usecost ***************************************
+							else if (action.equalsIgnoreCase("usecost")
+									&& (bitInventory
+											.getOwner()
+											.equalsIgnoreCase(sPlayer.getName()) || G333Permissions
+											.hasPerm(sPlayer,
+													"bookshelf.admin",
+													G333Permissions.NOT_QUIET))
+									&& args.length == 2) {
+								bitInventory.setUseCost(Integer
+										.parseInt(args[1]));
+								BITInventory.saveBitInventory(sPlayer, sBlock,
+										owner, name, coowners,
+										bitInventory.getInventory(), usecost);
+								return true;
+							}
+							// INFO ***************************************
+							else if (action.equalsIgnoreCase("info")) {
+								sPlayer.sendMessage("The owner of this bookself is: "
+										+ bitInventory.getOwner());
+								sPlayer.sendMessage("The coOwner of this lock is: "
+										+ bitInventory.getCoOwners());
+								sPlayer.sendMessage("useCost is: "
+										+ bitInventory.getUseCost());
+								return true;
+							} else if ((bitInventory.isOwner(sPlayer) || bitInventory
+									.isCoowner(sPlayer)) && args.length == 1) {
+								bitInventory.openBitInventory(sPlayer,
+										bitInventory);
+								return true;
+							}
 
+						}
 					}
 				}
 

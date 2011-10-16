@@ -3,10 +3,13 @@ package dk.gabriel333.BukkitInventoryTools;
 import java.net.MalformedURLException;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.HashMap;
+import java.util.Map;
 
 import org.bukkit.ChatColor;
 import org.bukkit.inventory.Inventory;
-import org.getspout.spout.inventory.CustomInventory;
+import org.bukkit.inventory.ItemStack;
+import org.getspout.spoutapi.SpoutManager;
 import org.getspout.spoutapi.block.SpoutBlock;
 import org.getspout.spoutapi.player.SpoutPlayer;
 
@@ -29,7 +32,7 @@ public class BITInventory {
 	 */
 	BITInventory(SpoutBlock sBlock, String owner, String name, String coowners,
 			Inventory inventory, int useCost) {
-		//super();
+		// super();
 		this.sBlock = sBlock;
 		this.name = name;
 		this.owner = owner;
@@ -38,7 +41,7 @@ public class BITInventory {
 		this.useCost = useCost;
 	}
 
-	public void setBitInventory(SpoutBlock sBlock, String owner, String name,
+	public void setInventory(SpoutBlock sBlock, String owner, String name,
 			String coOwners, Inventory inventory, int useCost) {
 		this.sBlock = sBlock;
 		this.owner = owner;
@@ -68,7 +71,28 @@ public class BITInventory {
 		return this.sBlock;
 	}
 
-	public static void SaveBitInventory(SpoutPlayer sPlayer, SpoutBlock block,
+	public static Map<Integer, BITInventory> openedInventories = new HashMap<Integer, BITInventory>();
+
+	public void openBitInventory(SpoutPlayer sPlayer, BITInventory bitInventory) {
+		int id = sPlayer.getEntityId();
+		openedInventories.put(id, bitInventory);
+		sPlayer.openInventoryWindow(bitInventory.getInventory());
+	}
+
+	public static void closeBitInventory(SpoutPlayer sPlayer) {
+		int id = sPlayer.getEntityId();
+		BITInventory bitInventory = openedInventories.get(id);
+		saveBitInventory(sPlayer, bitInventory);
+		openedInventories.remove(id);
+	}
+
+	public static void saveBitInventory(SpoutPlayer sPlayer, BITInventory inv) {
+		saveBitInventory(sPlayer, inv.getBlock(), inv.getOwner(),
+				inv.getName(), inv.getCoOwners(), inv.getInventory(),
+				inv.getUseCost());
+	}
+
+	public static void saveBitInventory(SpoutPlayer sPlayer, SpoutBlock block,
 			String owner, String name, String coowners, Inventory inventory,
 			int useCost) {
 		String query;
@@ -203,19 +227,75 @@ public class BITInventory {
 			SpoutBlock sBlock) {
 		int size = loadBitInventorySize(sBlock);
 		String name = "Bookshelf";
-		//Inventory inventory = SpoutManager.getInventoryBuilder().construct(size, name);
-		CustomInventory inventory = new CustomInventory(size,name);
+		Inventory inventory = SpoutManager.getInventoryBuilder().construct(
+				size, name);
 		String owner = sPlayer.getName();
 		String coOwners = "";
 		int useCost = 0;
-/*		for (int i = 0; i < size; i++) {
-			inventory.clear(i);
-			}*/
-		// TODO: remove next line
-		sPlayer.openInventoryWindow(inventory);
-		BITInventory inv = new BITInventory(sBlock, owner, name,
-				coOwners, inventory, useCost);
-		inv.setBitInventory(sBlock, owner, name, coOwners, inventory, useCost);
+		String query = "SELECT * FROM " + BIT.bitInventoryTable
+				+ " WHERE (x = " + sBlock.getX() + " AND y = " + sBlock.getY()
+				+ " AND z = " + sBlock.getZ() + " AND world='"
+				+ sBlock.getWorld().getName() + "');";
+		sPlayer.sendMessage("select:" + query);
+		ResultSet result = null;
+		if (G333Config.config.STORAGE_TYPE.equals("MYSQL")) {
+			try {
+				result = BIT.manageMySQL.sqlQuery(query);
+			} catch (MalformedURLException e) {
+				e.printStackTrace();
+			} catch (InstantiationException e) {
+				e.printStackTrace();
+			} catch (IllegalAccessException e) {
+				e.printStackTrace();
+			}
+		} else { // SQLLITE
+			result = BIT.manageSQLite.sqlQuery(query);
+			sPlayer.sendMessage("Result:" + result.toString());
+		}
+		int i = 0;
+		ItemStack itemstack;
+		int itemstack_typeId;
+		int itemstack_amount;
+		short itemstack_durability;
+		try {
+			while (result != null && result.next() && i < size) {
+				itemstack_typeId = result.getInt("itemstack_type");
+				itemstack_amount = result.getInt("itemstack_amount");
+				itemstack_durability = (short) result
+						.getInt("itemstack_durability");
+				sPlayer.sendMessage("i:" + i + " tp:" + itemstack_typeId
+						+ " amt:" + itemstack_amount + "du:"
+						+ itemstack_durability);
+				if (itemstack_amount == 0) {
+					inventory.clear(i);
+				} else {
+
+					// itemstack = new ItemStack(itemstack_typeId,
+					// itemstack_amount,
+					// itemstack_durability);
+					// inventory.setItem(i, itemstack);
+					itemstack = new ItemStack(47, 10, (short) -1);
+					inventory.setItem(i, itemstack);
+
+				}
+				G333Messages.showInfo("i:" + i + " " + "tp:"
+						+ inventory.getItem(i).getType() + " amt:"
+						+ inventory.getItem(i).getAmount() + " du:"
+						+ inventory.getItem(i).getDurability());
+				name = result.getString("name");
+				owner = result.getString("owner");
+				coOwners = result.getString("coowners");
+				useCost = result.getInt("usecost");
+				i++;
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		G333Messages.showInfo("name:" + name + " owner:" + owner + " coowners:"
+				+ coOwners + " usecost:" + useCost);
+		G333Messages.showInfo("inv:" + inventory);
+		BITInventory inv = new BITInventory(sBlock, owner, name, coOwners,
+				inventory, useCost);
 		return inv;
 	}
 
@@ -240,7 +320,6 @@ public class BITInventory {
 		} else { // SQLLITE
 			result = BIT.manageSQLite.sqlQuery(query);
 		}
-
 		try {
 			if (result != null && result.next()) {
 				name = result.getString("name");
@@ -280,7 +359,6 @@ public class BITInventory {
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
-		G333Messages.showInfo("i:" + i + " res:" + ((((i - 1) / 9) * 9) + 9));
 		return ((((i - 1) / 9) * 9) + 9);
 	}
 
@@ -370,10 +448,6 @@ public class BITInventory {
 
 	public int getSize() {
 		return inventory.getSize();
-	}
-
-	public void openInventory(SpoutPlayer sPlayer) {
-		sPlayer.openInventoryWindow(inventory);
 	}
 
 }

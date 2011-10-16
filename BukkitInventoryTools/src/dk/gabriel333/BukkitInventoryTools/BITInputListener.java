@@ -23,6 +23,10 @@ public class BITInputListener extends InputListener {
 		BITPlayer bPlayer = new BITPlayer(sPlayer);
 		ScreenType screentype = event.getScreenType();
 		String keypressed = event.getKey().name();
+		if (G333Config.config.DEBUG_EVENTS) {
+			sPlayer.sendMessage("BITInputListn.key:" + keypressed
+					+ " Screentype:" + screentype);
+		}
 		SpoutBlock targetblock = (SpoutBlock) sPlayer.getTargetBlock(null, 5);
 		if (BITDigiLock.isLockable(targetblock)) {
 			// PLAYER_INVENTORY
@@ -52,15 +56,44 @@ public class BITInputListener extends InputListener {
 								G333Inventory.sortInventoryItems(sPlayer,
 										sChest.getLargestInventory());
 								G333Inventory.sortPlayerInventoryItems(sPlayer);
-							}
-							if (G333Config.config.SORT_DISPLAYSORTARCHIEVEMENT) {
-								G333Messages.sendNotification(sPlayer,
-										"Chest sorted.");
+								if (G333Config.config.SORT_DISPLAYSORTARCHIEVEMENT) {
+									G333Messages.sendNotification(sPlayer,
+											"Chest sorted.");
+								}
 							}
 						}
 					}
+				} else if (BITDigiLock.isBookshelf(targetblock)) {
+					if (keypressed.equals(G333Config.config.LIBRARY_SORTKEY)) {
+						if (G333Permissions.hasPerm(sPlayer,
+								"sortinventory.use", G333Permissions.NOT_QUIET)) {
+							//TODO: sort bookshelf;
+							G333Inventory.sortPlayerInventoryItems(sPlayer);
+							int id = sPlayer.getEntityId();
+							BITInventory bitInventory = BITInventory.openedInventories.get(id);
+							Inventory inventory = bitInventory.getInventory();
+							G333Inventory.sortInventoryItems(sPlayer,
+									inventory);
+							bitInventory.setInventory(targetblock,
+									bitInventory.getOwner(), bitInventory.getName(), bitInventory.getCoOwners(),
+									inventory, bitInventory.getUseCost());
+							BITInventory.saveBitInventory(sPlayer, bitInventory);
+							BITInventory.openedInventories.put(id, bitInventory);
+							if (G333Config.config.SORT_DISPLAYSORTARCHIEVEMENT) {
+								G333Messages.sendNotification(sPlayer,
+										"Bookshelf sorted.");
+							}
+						}
+					} else if (keypressed.equals("KEY_ESCAPE")) {
+						//TODO: save Bookshelf
+						int id = sPlayer.getEntityId();
+						BITInventory bitInventory = BITInventory.openedInventories.get(id);
+						BITInventory.saveBitInventory(sPlayer, bitInventory);
+						BITInventory.openedInventories.remove(id);
+					}
 				} else
-				// targetblock is NOT a chest, so it must be SpoutBackPack
+				// targetblock is NOT a chest/Bookshelf, so it must be
+				// SpoutBackPack
 				{
 					if (keypressed.equals(G333Config.config.LIBRARY_SORTKEY)) {
 						if (G333Config.config.SORT_DISPLAYSORTARCHIEVEMENT) {
@@ -191,7 +224,7 @@ public class BITInputListener extends InputListener {
 			else if (screentype == ScreenType.CUSTOM_SCREEN) {
 				if (keypressed.equals("KEY_ESCAPE")) {
 					sPlayer.closeActiveWindow();
-					//Im not sure if the next 2 lines need to be here...
+					// Im not sure if the next 2 lines need to be here...
 					bPlayer.cleanupPincodePopupScreen(sPlayer);
 					sPlayer.getMainScreen().removeWidgets(BIT.plugin);
 				}
@@ -200,7 +233,7 @@ public class BITInputListener extends InputListener {
 			else {
 				// UNHANDLED SCREENTYPE
 			}
-		} 
+		}
 	}
 
 	@Override

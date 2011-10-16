@@ -6,7 +6,7 @@ import java.sql.SQLException;
 
 import org.bukkit.ChatColor;
 import org.bukkit.inventory.Inventory;
-import org.getspout.spoutapi.SpoutManager;
+import org.getspout.spout.inventory.CustomInventory;
 import org.getspout.spoutapi.block.SpoutBlock;
 import org.getspout.spoutapi.player.SpoutPlayer;
 
@@ -202,19 +202,17 @@ public class BITInventory {
 	public static BITInventory loadBitInventory(SpoutPlayer sPlayer,
 			SpoutBlock sBlock) {
 		int size = loadBitInventorySize(sBlock);
-		String name = "Bookshelf" + sPlayer.getName();
-		Inventory inventory = SpoutManager.getInventoryBuilder().construct(
-				size, name);
-		;
+		String name = "Bookshelf";
+		//Inventory inventory = SpoutManager.getInventoryBuilder().construct(size, name);
+		CustomInventory inventory = new CustomInventory(size,name);
 		String owner = sPlayer.getName();
 		String coOwners = "";
 		int useCost = 0;
-		
-		for (int i = 0; i < size; i++) {
+/*		for (int i = 0; i < size; i++) {
 			inventory.clear(i);
-			}
-		
-		
+			}*/
+		// TODO: remove next line
+		sPlayer.openInventoryWindow(inventory);
 		BITInventory inv = new BITInventory(sBlock, owner, name,
 				coOwners, inventory, useCost);
 		inv.setBitInventory(sBlock, owner, name, coOwners, inventory, useCost);

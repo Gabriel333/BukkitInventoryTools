@@ -37,8 +37,7 @@ public class BITSpoutListener extends SpoutListener {
 				// ************************************
 				if (BITPlayer.BITButtons.get(uuid) == "getPincodeUnlock") {
 					BITPlayer.pincodePopupScreen.get(id).close();
-					bPlayer.cleanupGetPincode(sPlayer);
-					bPlayer.cleanupSetPincode(sPlayer);
+					bPlayer.cleanupPincodePopupScreen(sPlayer);
 					if ((digilock.getPincode().equals(
 							BITPlayer.pincode.get(id).getText()) && G333Permissions
 							.hasPerm(sPlayer, "digilock.use",
@@ -113,19 +112,21 @@ public class BITSpoutListener extends SpoutListener {
 								|| BITDigiLock.isDispenser(sBlock)
 								|| sBlock.getType() == Material.FURNACE) {
 							sPlayer.closeActiveWindow();
-							bPlayer.cleanupGetPincode(sPlayer);
-							bPlayer.cleanupSetPincode(sPlayer);
+							bPlayer.cleanupPincodePopupScreen(sPlayer);
 						} else if (BITDigiLock.isLever(sBlock)) {
 							BITDigiLock.leverOff(sPlayer, sBlock);
 						}
 						sPlayer.damage(5);
 					}
-					//BIT.popupSetPincode.get(id).removeWidgets(BIT.plugin);
-					bPlayer.cleanupGetPincode(sPlayer);
+					bPlayer.cleanupPincodePopupScreen(sPlayer);
+					//BITPlayer.menuButtons.remove(BITPlayer.BITButtons.get(uuid));
+					BITPlayer.BITButtons.remove(uuid);
+
 				} else if (BITPlayer.BITButtons.get(uuid) == "getPincodeCancel") {
 					sPlayer.closeActiveWindow();
-					//BIT.popupSetPincode.get(id).removeWidgets(BIT.plugin);
-					bPlayer.cleanupGetPincode(sPlayer);
+					bPlayer.cleanupPincodePopupScreen(sPlayer);
+					//BITPlayer.menuButtons.remove(BITPlayer.BITButtons.get(uuid));
+					BITPlayer.BITButtons.remove(uuid);
 				}
 
 				// ************************************
@@ -146,16 +147,22 @@ public class BITSpoutListener extends SpoutListener {
 										sBlock.getTypeId(), "", Integer
 												.valueOf(BITPlayer.useCost.get(id)
 														.getText()));
-						bPlayer.cleanupSetPincode(sPlayer);
+						bPlayer.cleanupPincodePopupScreen(sPlayer);
+						//BITPlayer.menuButtons.remove(BITPlayer.BITButtons.get(uuid));
+						BITPlayer.BITButtons.remove(uuid);
 					}
 
 				} else if ((BITPlayer.BITButtons.get(uuid) == "setPincodeCancel")) {
 					sPlayer.closeActiveWindow();
-					bPlayer.cleanupSetPincode(sPlayer);
-
+					bPlayer.cleanupPincodePopupScreen(sPlayer);
+					//BITPlayer.menuButtons.remove(BITPlayer.BITButtons.get(uuid));
+					BITPlayer.BITButtons.remove(uuid);
+					
 				} else if ((BITPlayer.BITButtons.get(uuid) == "setPincodeRemove")) {
 					sPlayer.closeActiveWindow();
-					bPlayer.cleanupSetPincode(sPlayer);
+					bPlayer.cleanupPincodePopupScreen(sPlayer);
+					//BITPlayer.menuButtons.remove(BITPlayer.BITButtons.get(uuid));
+					BITPlayer.BITButtons.remove(uuid);
 
 					if (BITDigiLock.isLocked(sBlock)) {
 						digilock.RemoveDigiLock(sPlayer);

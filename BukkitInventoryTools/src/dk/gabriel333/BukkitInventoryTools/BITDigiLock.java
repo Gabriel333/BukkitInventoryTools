@@ -232,6 +232,16 @@ public class BITDigiLock {
 			return true;
 		return false;
 	}
+	
+	public static boolean isOwner(SpoutPlayer sPlayer, SpoutBlock sBlock) {
+		if (isLocked(sBlock)) {
+		if (BITDigiLock.loadDigiLock(sBlock).getOwner().toLowerCase().equals(sPlayer.getName().toLowerCase()))
+			return true;
+		return false;
+		}
+		return false;
+	}
+	
 
 	public void addCoowner(String name) {
 		this.coOwners = coOwners.concat("," + name);
@@ -541,7 +551,7 @@ public class BITDigiLock {
 							+ nextBlock.getType());
 				}
 				boolean pressButton = true;
-				if (BIT.useEconomy && cost > 0 && doTheWork) {
+				if (BIT.useEconomy && cost > 0 && doTheWork && !isOwner(sPlayer,sBlock)) {
 					if (BIT.plugin.Method.hasAccount(sPlayer.getName())) {
 						if (BIT.plugin.Method.getAccount(sPlayer.getName())
 								.hasEnough(cost)) {
@@ -628,7 +638,7 @@ public class BITDigiLock {
 						+ nextBlock.getType());
 			}
 			boolean setleveron = true;
-			if (BIT.useEconomy && cost > 0 && doTheWork) {
+			if (BIT.useEconomy && cost > 0 && doTheWork && !isOwner(sPlayer,sBlock)) {
 				if (BIT.plugin.Method.hasAccount(sPlayer.getName())) {
 					if (BIT.plugin.Method.getAccount(sPlayer.getName())
 							.hasEnough(cost)) {
@@ -810,9 +820,9 @@ public class BITDigiLock {
 
 	}
 
-	public static void closeDoor(SpoutPlayer sPlayer, SpoutBlock block, int cost) {
+	public static void closeDoor(SpoutPlayer sPlayer, SpoutBlock sBlock, int cost) {
 		boolean closedoor = true;
-		if (BIT.useEconomy && cost > 0) {
+		if (BIT.useEconomy && cost > 0 && !isOwner(sPlayer,sBlock)) {
 			if (BIT.plugin.Method.hasAccount(sPlayer.getName())) {
 				if (BIT.plugin.Method.getAccount(sPlayer.getName()).hasEnough(
 						cost)) {
@@ -831,17 +841,17 @@ public class BITDigiLock {
 			}
 		}
 		if (closedoor) {
-			if (isDoorOpen(block)) {
-				playDigiLockSound(block);
-				Door door = (Door) block.getState().getData();
+			if (isDoorOpen(sBlock)) {
+				playDigiLockSound(sBlock);
+				Door door = (Door) sBlock.getState().getData();
 				SpoutBlock nextBlock;
-				block.setData((byte) ((block.getState().getData().getData() | 4) ^ 4));
+				sBlock.setData((byte) ((sBlock.getState().getData().getData() | 4) ^ 4));
 				if (door.isTopHalf()) {
-					nextBlock = block.getRelative(BlockFace.DOWN);
+					nextBlock = sBlock.getRelative(BlockFace.DOWN);
 					nextBlock.setData((byte) ((nextBlock.getState().getData()
 							.getData() | 4) ^ 4));
 				} else {
-					nextBlock = block.getRelative(BlockFace.UP);
+					nextBlock = sBlock.getRelative(BlockFace.UP);
 					nextBlock.setData((byte) ((nextBlock.getState().getData()
 							.getData() | 4) ^ 4));
 				}
@@ -931,7 +941,7 @@ public class BITDigiLock {
 	public static void openTrapdoor(SpoutPlayer sPlayer, SpoutBlock sBlock,
 			int cost) {
 		boolean opentrapdoor = true;
-		if (BIT.useEconomy && cost > 0) {
+		if (BIT.useEconomy && cost > 0 && !isOwner(sPlayer,sBlock)) {
 			if (BIT.plugin.Method.hasAccount(sPlayer.getName())) {
 				if (BIT.plugin.Method.getAccount(sPlayer.getName()).hasEnough(
 						cost)) {
@@ -953,8 +963,8 @@ public class BITDigiLock {
 			if (!isTrapdoorOpen(sPlayer, sBlock)) {
 				sBlock.setData((byte) (sBlock.getState().getData().getData() | 4));
 				if (BITDigiLock.isLocked(sBlock)) {
-					playDigiLockSound(sBlock);
 					BITDigiLock digilock = loadDigiLock(sBlock);
+					playDigiLockSound(sBlock);
 					if (digilock.getClosetimer() > 0) {
 						scheduleCloseTrapdoor(sPlayer, sBlock,
 								digilock.getClosetimer());

@@ -4,6 +4,7 @@ import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.block.Dispenser;
 import org.bukkit.inventory.Inventory;
+import org.getspout.spoutapi.SpoutManager;
 import org.getspout.spoutapi.block.SpoutBlock;
 import org.getspout.spoutapi.block.SpoutChest;
 import org.getspout.spoutapi.event.input.InputListener;
@@ -67,7 +68,6 @@ public class BITInputListener extends InputListener {
 					if (keypressed.equals(G333Config.config.LIBRARY_SORTKEY)) {
 						if (G333Permissions.hasPerm(sPlayer,
 								"sortinventory.use", G333Permissions.NOT_QUIET)) {
-							//TODO: sort bookshelf;
 							G333Inventory.sortPlayerInventoryItems(sPlayer);
 							int id = sPlayer.getEntityId();
 							BITInventory bitInventory = BITInventory.openedInventories.get(id);
@@ -86,7 +86,6 @@ public class BITInputListener extends InputListener {
 							}
 						}
 					} else if (keypressed.equals("KEY_ESCAPE")) {
-						//TODO: save Bookshelf
 						int id = sPlayer.getEntityId();
 						BITInventory bitInventory = BITInventory.openedInventories.get(id);
 						BITInventory.saveBitInventory(sPlayer, bitInventory);
@@ -154,6 +153,29 @@ public class BITInputListener extends InputListener {
 						} else { // TARGETBLOCK IS NOT LOCKED
 							if (sPlayer.isSpoutCraftEnabled()) {
 								if (G333Permissions.hasPerm(sPlayer,
+										"bookshelf.create",
+										G333Permissions.NOT_QUIET)
+										|| G333Permissions.hasPerm(sPlayer,
+												"digilock.admin",
+												G333Permissions.NOT_QUIET)) {
+									if (BITDigiLock.isBookshelf(targetblock)) {
+										if (!BITInventory.isBitInventoryCreated(targetblock) ){
+											String coowners = "";
+											String name = "";
+											String owner = sPlayer.getName();
+											int usecost = 0;
+											Inventory inventory = SpoutManager
+													.getInventoryBuilder()
+													.construct(G333Config.BOOKSHELF_SIZE,
+															name);
+											BITInventory.saveBitInventory(sPlayer, targetblock,
+													owner, name, coowners, inventory,
+													usecost);
+										}
+									}
+									
+								}
+								if (G333Permissions.hasPerm(sPlayer,
 										"digilock.create",
 										G333Permissions.NOT_QUIET)
 										|| G333Permissions.hasPerm(sPlayer,
@@ -172,15 +194,7 @@ public class BITInputListener extends InputListener {
 									} else if (BITDigiLock.isDoor(targetblock)) {
 										BITDigiLock.closeDoor(targetblock);
 										bPlayer.setPincode(sPlayer, targetblock);
-									} else if (G333Permissions.hasPerm(sPlayer,
-											"bookshelf.create",
-											G333Permissions.NOT_QUIET)
-											|| G333Permissions.hasPerm(sPlayer,
-													"digilock.admin",
-													G333Permissions.NOT_QUIET)) {
-										
-										
-									} else {
+									} else  {
 										bPlayer.setPincode(sPlayer, targetblock);
 									}
 

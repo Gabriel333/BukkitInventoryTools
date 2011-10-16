@@ -16,6 +16,7 @@ import org.bukkit.inventory.Inventory;
 import org.bukkit.material.Button;
 import org.bukkit.material.Lever;
 
+import org.getspout.spoutapi.SpoutManager;
 import org.getspout.spoutapi.block.SpoutBlock;
 import org.getspout.spoutapi.block.SpoutChest;
 import org.getspout.spoutapi.gui.GenericPopup;
@@ -32,7 +33,8 @@ public class BITPlayerListener extends PlayerListener {
 		if (event.isCancelled())
 			return;
 		if (event.getAction().equals(Action.RIGHT_CLICK_BLOCK)
-				|| event.getAction().equals(Action.LEFT_CLICK_BLOCK)) {
+		// || event.getAction().equals(Action.LEFT_CLICK_BLOCK)
+		) {
 			SpoutPlayer sPlayer = (SpoutPlayer) event.getPlayer();
 			BITPlayer bPlayer = new BITPlayer(sPlayer);
 			SpoutBlock block = (SpoutBlock) event.getClickedBlock();
@@ -381,15 +383,14 @@ public class BITPlayerListener extends PlayerListener {
 									|| digilock.isCoowner(sPlayer)) {
 								G333Messages.sendNotification(sPlayer,
 										"Used with fingerprint");
-								if (sPlayer.isSpoutCraftEnabled()) {
-									BITInventory bitInventory = BITInventory
-											.loadBitInventory(sPlayer, block);
-									bitInventory.openBitInventory(sPlayer, bitInventory);
-									//sPlayer.openInventoryWindow(bitInventory.getInventory());
-									//sPlayer.sendMessage("inv:"+bitInventory.toString());
-								} else {
+								// if (sPlayer.isSpoutCraftEnabled()) {
+								BITInventory bitInventory = BITInventory
+										.loadBitInventory(sPlayer, block);
+								bitInventory.openBitInventory(sPlayer,
+										bitInventory);
+								// } else {
 
-								}
+								// }
 							} else {
 								event.setCancelled(true);
 								sPlayer.sendMessage("Your fingerprint does not match the DigiLock");
@@ -424,48 +425,72 @@ public class BITPlayerListener extends PlayerListener {
 			} else {
 				if (G333Config.config.DEBUG_GUI) {
 					sPlayer.sendMessage("There is no digilock on this block");
-					if (BITDigiLock.isChest(block)) {
+				}
+				if (BITDigiLock.isChest(block)) {
 
-					}
-					// HANDLING THE DOUBLEDOOR
-					else if (BITDigiLock.isDoubleDoor(block)) {
+				}
+				// HANDLING THE DOUBLEDOOR
+				else if (BITDigiLock.isDoubleDoor(block)) {
 
-					}
-					// HANDLING THE DOOR
-					else if (BITDigiLock.isDoor(block)) {
+				}
+				// HANDLING THE DOOR
+				else if (BITDigiLock.isDoor(block)) {
 
-					}
-					// HANDLING TRAP_DOOR
-					else if (block.getType().equals(Material.TRAP_DOOR)) {
+				}
+				// HANDLING TRAP_DOOR
+				else if (block.getType().equals(Material.TRAP_DOOR)) {
 
-					}
-					// HANDLING DISPENCER
-					else if (block.getType().equals(Material.DISPENSER)) {
+				}
+				// HANDLING DISPENCER
+				else if (block.getType().equals(Material.DISPENSER)) {
 
-					}
-					// HANDLING FURNACE
-					else if (block.getType().equals(Material.FURNACE)) {
+				}
+				// HANDLING FURNACE
+				else if (block.getType().equals(Material.FURNACE)) {
 
-					}
-					// HANDLING LEVER
-					else if (block.getType().equals(Material.LEVER)) {
+				}
+				// HANDLING LEVER
+				else if (block.getType().equals(Material.LEVER)) {
 
-					}
-					// HANDLING STONE_BUTTON
-					else if (block.getType().equals(Material.STONE_BUTTON)) {
+				}
+				// HANDLING STONE_BUTTON
+				else if (block.getType().equals(Material.STONE_BUTTON)) {
 
-					}
-
-					// HANDLING SIGN and SIGN_POST
-					else if (BITDigiLock.isSign(block)) {
-
-					}
-					// BOOKSHELF
-					else if ((block.getType().equals(Material.BOOKSHELF))) {
-
-					}
 				}
 
+				// HANDLING SIGN and SIGN_POST
+				else if (BITDigiLock.isSign(block)) {
+
+				}
+				// BOOKSHELF
+				else if ((block.getType().equals(Material.BOOKSHELF))) {
+					//G333Messages.sendNotification(sPlayer, "bookshelf(1).");
+					if (BITInventory.isBitInventoryCreated(block)
+							&& G333Permissions.hasPerm(sPlayer,
+									"bookshelf.use", G333Permissions.NOT_QUIET)) {
+						//G333Messages.sendNotification(sPlayer, "bookshelf(2).");
+
+						BITInventory bitInventory = BITInventory
+								.loadBitInventory(sPlayer, block);
+						bitInventory.openBitInventory(sPlayer, bitInventory);
+					} else if (!BITInventory.isBitInventoryCreated(block)
+							&& G333Permissions.hasPerm(sPlayer,
+									"bookshelf.create",
+									G333Permissions.NOT_QUIET)) {
+						//G333Messages.sendNotification(sPlayer, "bookshelf(3).");
+
+						String coowners = "";
+						String name = "";
+						String owner = sPlayer.getName();
+						int usecost = 0;
+						Inventory inventory = SpoutManager
+								.getInventoryBuilder().construct(
+										G333Config.BOOKSHELF_SIZE, name);
+						BITInventory.saveBitInventory(sPlayer, block, owner,
+								name, coowners, inventory, usecost);
+					}
+
+				}
 			}
 		} // else the action was LEFT_CLICK_AIR or RIGHT_CLICK_AIR
 	}
@@ -480,17 +505,17 @@ public class BITPlayerListener extends PlayerListener {
 
 	public void onPlayerLogin(PlayerLoginEvent event) {
 		int id = event.getPlayer().getEntityId();
-			addUserData(id);
+		addUserData(id);
 	}
 
 	public void onPlayerKick(PlayerKickEvent event) {
 		int id = event.getPlayer().getEntityId();
-			removeUserData(id);
+		removeUserData(id);
 	}
 
 	public void onPlayerJoin(PlayerJoinEvent event) {
 		int id = event.getPlayer().getEntityId();
-			addUserData(id);
+		addUserData(id);
 	}
 
 	public void onPlayerQuit(PlayerQuitEvent event) {
@@ -500,14 +525,14 @@ public class BITPlayerListener extends PlayerListener {
 
 	private void removeUserData(int id) {
 		if (BITPlayer.userno.containsKey(id)) {
-		BITPlayer.userno.remove(id);
-		BITPlayer.pincodePopupScreen.remove(id);
-		BITPlayer.pincode.remove(id);
-		BITPlayer.owner.remove(id);
-		BITPlayer.coOwners.remove(id);
-		BITPlayer.closetimer.remove(id);
-		BITPlayer.useCost.remove(id);
-		BITPlayer.connectedTo.remove(id);
+			BITPlayer.userno.remove(id);
+			BITPlayer.pincodePopupScreen.remove(id);
+			BITPlayer.pincode.remove(id);
+			BITPlayer.owner.remove(id);
+			BITPlayer.coOwners.remove(id);
+			BITPlayer.closetimer.remove(id);
+			BITPlayer.useCost.remove(id);
+			BITPlayer.connectedTo.remove(id);
 		}
 	}
 

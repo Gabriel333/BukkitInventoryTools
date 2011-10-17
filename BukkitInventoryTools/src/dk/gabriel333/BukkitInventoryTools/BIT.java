@@ -85,8 +85,8 @@ public class BIT extends JavaPlugin {
 				Priority.Normal, this);
 		pm.registerEvent(Event.Type.BLOCK_DAMAGE, new BITBlockListener(),
 				Priority.Normal, this);
-		pm.registerEvent(Type.REDSTONE_CHANGE, new BITBlockListener(),
-				Priority.Normal, this);
+		//pm.registerEvent(Type.REDSTONE_CHANGE, new BITBlockListener(),
+		//		Priority.Normal, this);
 		pm.registerEvent(Type.BLOCK_PHYSICS, new BITBlockListener(),
 				Priority.Normal, this);
 		pm.registerEvent(Type.BLOCK_FROMTO, new BITBlockListener(),

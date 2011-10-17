@@ -142,7 +142,7 @@ public class G333Config {
 				"###########################################################");
 */
 		if (dosave) {
-			G333Messages.showWarning("YOUR CONFIG.YML IS NOT UPTODATE");
+			G333Messages.showWarning("YOUR CONFIG.YML IS NOT UP TO DATE");
 			try {
 				config.save(configfile);
 			} catch (IOException e) {

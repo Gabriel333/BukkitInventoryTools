@@ -50,7 +50,7 @@ public class BIT extends JavaPlugin {
 
 		if (!isSortInventoryInstalled()) {
 			G333Plugin.setupPlugin(this);
-			G333Config.setupConfig(this);
+			G333Config.bitSetupConfig();
 			setupSpout();
 			setupSQL();
 			setupRegister();
@@ -223,14 +223,14 @@ public class BIT extends JavaPlugin {
 	public static String oldBooksTable = "Book_NONE";
 
 	private void setupSQL() {
-		if (G333Config.config.STORAGE_TYPE.equals("MYSQL")) {
+		if (G333Config.STORAGE_TYPE.equals("MYSQL")) {
 			// Declare MySQL Handler
 			manageMySQL = new mysqlCore(log,
 					"[" + G333Plugin.PLUGIN_NAME + "]",
-					G333Config.config.STORAGE_HOST,
-					G333Config.config.STORAGE_DATABASE,
-					G333Config.config.STORAGE_USERNAME,
-					G333Config.config.STORAGE_PASSWORD);
+					G333Config.STORAGE_HOST,
+					G333Config.STORAGE_DATABASE,
+					G333Config.STORAGE_USERNAME,
+					G333Config.STORAGE_PASSWORD);
 			G333Messages.showInfo("MySQL Initializing");
 			// Initialize MySQL Handler
 			manageMySQL.initialize();
@@ -303,7 +303,7 @@ public class BIT extends JavaPlugin {
 
 				} else {
 					G333Messages.showError("MySQL connection failed");
-					G333Config.config.STORAGE_HOST = "SQLITE";
+					G333Config.STORAGE_HOST = "SQLITE";
 				}
 			} catch (MalformedURLException e) {
 				e.printStackTrace();

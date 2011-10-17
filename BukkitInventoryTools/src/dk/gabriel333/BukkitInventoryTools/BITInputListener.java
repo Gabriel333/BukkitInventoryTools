@@ -24,7 +24,7 @@ public class BITInputListener extends InputListener {
 		BITPlayer bPlayer = new BITPlayer(sPlayer);
 		ScreenType screentype = event.getScreenType();
 		String keypressed = event.getKey().name();
-		if (G333Config.config.DEBUG_EVENTS) {
+		if (G333Config.DEBUG_EVENTS) {
 			sPlayer.sendMessage("BITInputListn.key:" + keypressed
 					+ " Screentype:" + screentype);
 		}
@@ -32,11 +32,11 @@ public class BITInputListener extends InputListener {
 		if (BITDigiLock.isLockable(targetblock)) {
 			// PLAYER_INVENTORY
 			if (screentype == ScreenType.PLAYER_INVENTORY) {
-				if (keypressed.equals(G333Config.config.LIBRARY_SORTKEY)) {
+				if (keypressed.equals(G333Config.LIBRARY_SORTKEY)) {
 					if (G333Permissions.hasPerm(sPlayer, "sortinventory.use",
 							G333Permissions.NOT_QUIET)) {
 						bPlayer.sortinventory(sPlayer, event.getScreenType());
-						if (G333Config.config.SORT_DISPLAYSORTARCHIEVEMENT) {
+						if (G333Config.SORT_DISPLAYSORTARCHIEVEMENT) {
 							G333Messages.sendNotification(sPlayer,
 									"Items sorted.");
 						}
@@ -49,7 +49,7 @@ public class BITInputListener extends InputListener {
 				// CHEST or DOUBLECHEST
 				if (BITDigiLock.isChest(targetblock)) {
 					SpoutChest sChest = (SpoutChest) targetblock.getState();
-					if (keypressed.equals(G333Config.config.LIBRARY_SORTKEY)) {
+					if (keypressed.equals(G333Config.LIBRARY_SORTKEY)) {
 						if (targetblock.getType() == Material.CHEST) {
 							if (G333Permissions.hasPerm(sPlayer,
 									"sortinventory.use",
@@ -57,7 +57,7 @@ public class BITInputListener extends InputListener {
 								G333Inventory.sortInventoryItems(sPlayer,
 										sChest.getLargestInventory());
 								G333Inventory.sortPlayerInventoryItems(sPlayer);
-								if (G333Config.config.SORT_DISPLAYSORTARCHIEVEMENT) {
+								if (G333Config.SORT_DISPLAYSORTARCHIEVEMENT) {
 									G333Messages.sendNotification(sPlayer,
 											"Chest sorted.");
 								}
@@ -65,7 +65,7 @@ public class BITInputListener extends InputListener {
 						}
 					}
 				} else if (BITDigiLock.isBookshelf(targetblock)) {
-					if (keypressed.equals(G333Config.config.LIBRARY_SORTKEY)) {
+					if (keypressed.equals(G333Config.LIBRARY_SORTKEY)) {
 						if (G333Permissions.hasPerm(sPlayer,
 								"sortinventory.use", G333Permissions.NOT_QUIET)) {
 							G333Inventory.sortPlayerInventoryItems(sPlayer);
@@ -80,7 +80,7 @@ public class BITInputListener extends InputListener {
 							BITInventory.saveBitInventory(sPlayer, bitInventory);
 							BITInventory.openedInventories.remove(id);
 							BITInventory.openedInventories.put(id, bitInventory);
-							if (G333Config.config.SORT_DISPLAYSORTARCHIEVEMENT) {
+							if (G333Config.SORT_DISPLAYSORTARCHIEVEMENT) {
 								G333Messages.sendNotification(sPlayer,
 										"Bookshelf sorted.");
 							}
@@ -95,8 +95,8 @@ public class BITInputListener extends InputListener {
 				// targetblock is NOT a chest/Bookshelf, so it must be
 				// SpoutBackPack
 				{
-					if (keypressed.equals(G333Config.config.LIBRARY_SORTKEY)) {
-						if (G333Config.config.SORT_DISPLAYSORTARCHIEVEMENT) {
+					if (keypressed.equals(G333Config.LIBRARY_SORTKEY)) {
+						if (G333Config.SORT_DISPLAYSORTARCHIEVEMENT) {
 							G333Messages.sendNotification(sPlayer,
 									"Items sorted.");
 						}
@@ -108,7 +108,7 @@ public class BITInputListener extends InputListener {
 
 			// GAME_SCREEN
 			else if (screentype == ScreenType.GAME_SCREEN) {
-				if (keypressed.equals(G333Config.config.LIBRARY_LOCKKEY)) {
+				if (keypressed.equals(G333Config.LIBRARY_LOCKKEY)) {
 					if (BITDigiLock.isLocked(targetblock)
 							&& !BITDigiLock.isLockable(targetblock)) {
 						BITDigiLock digilock = BITDigiLock
@@ -136,7 +136,7 @@ public class BITInputListener extends InputListener {
 									|| G333Permissions.hasPerm(sPlayer,
 											"digilock.admin",
 											G333Permissions.NOT_QUIET)) {
-								if (G333Config.config.DEBUG_PERMISSIONS)
+								if (G333Config.DEBUG_PERMISSIONS)
 									sPlayer.sendMessage(ChatColor.GREEN
 											+ "1) BITInputlistener: You have permission to open a locked door/chest");
 								G333Messages.sendNotification(sPlayer,
@@ -145,7 +145,7 @@ public class BITInputListener extends InputListener {
 							} else {
 								G333Messages.sendNotification(sPlayer,
 										"Locked with Digilock");
-								if (G333Config.config.DEBUG_PERMISSIONS) {
+								if (G333Config.DEBUG_PERMISSIONS) {
 									sPlayer.sendMessage(ChatColor.GREEN
 											+ "2) BITInputlistener: You DONT have permission to open a locked door/chest");
 								}
@@ -181,7 +181,7 @@ public class BITInputListener extends InputListener {
 										|| G333Permissions.hasPerm(sPlayer,
 												"digilock.admin",
 												G333Permissions.NOT_QUIET)) {
-									if (G333Config.config.DEBUG_PERMISSIONS) {
+									if (G333Config.DEBUG_PERMISSIONS) {
 										sPlayer.sendMessage(ChatColor.GREEN
 												+ "3) BITInputlistener: You have permission to open a locked door/chest");
 									}
@@ -210,12 +210,12 @@ public class BITInputListener extends InputListener {
 
 			// FURNACE_INVENTORY SCREEN
 			else if (screentype == ScreenType.FURNACE_INVENTORY) {
-				if (keypressed.equals(G333Config.config.LIBRARY_SORTKEY)) {
+				if (keypressed.equals(G333Config.LIBRARY_SORTKEY)) {
 					if (G333Permissions.hasPerm(sPlayer, "sortinventory.use",
 							G333Permissions.NOT_QUIET)) {
 						G333Inventory.sortPlayerInventoryItems(sPlayer);
 					}
-					if (G333Config.config.SORT_DISPLAYSORTARCHIEVEMENT) {
+					if (G333Config.SORT_DISPLAYSORTARCHIEVEMENT) {
 						G333Messages.sendNotification(sPlayer,
 								"Inventory sorted.");
 					}
@@ -224,7 +224,7 @@ public class BITInputListener extends InputListener {
 
 			// DISPENCER_INVENTORY SCREEN
 			else if (screentype == ScreenType.DISPENSER_INVENTORY) {
-				if (keypressed.equals(G333Config.config.LIBRARY_SORTKEY)) {
+				if (keypressed.equals(G333Config.LIBRARY_SORTKEY)) {
 					if (G333Permissions.hasPerm(sPlayer, "sortinventory.use",
 							G333Permissions.NOT_QUIET)) {
 						if (targetblock.getType() == Material.DISPENSER) {
@@ -236,7 +236,7 @@ public class BITInputListener extends InputListener {
 							G333Inventory.sortPlayerInventoryItems(sPlayer);
 						}
 					}
-					if (G333Config.config.SORT_DISPLAYSORTARCHIEVEMENT) {
+					if (G333Config.SORT_DISPLAYSORTARCHIEVEMENT) {
 						G333Messages.sendNotification(sPlayer,
 								"Inventory sorted.");
 					}

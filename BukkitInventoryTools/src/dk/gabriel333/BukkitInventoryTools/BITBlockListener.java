@@ -32,7 +32,7 @@ public class BITBlockListener extends BlockListener {
 		if (!BITDigiLock.isLockable(block))
 			return;
 		if (BITDigiLock.isLocked(block)) {
-			if (G333Config.config.DEBUG_EVENTS)
+			if (G333Config.DEBUG_EVENTS)
 				G333Messages.showInfo("BlockRedstoneEvt:"
 						+ event.getBlock().getType() + " getOC:"
 						+ event.getOldCurrent() + " getNC:"
@@ -56,7 +56,7 @@ public class BITBlockListener extends BlockListener {
 			return;
 		if (BITDigiLock.isLocked(block)) {
 			event.setCancelled(true);
-			if (G333Config.config.DEBUG_EVENTS) {
+			if (G333Config.DEBUG_EVENTS) {
 				G333Messages.showInfo("BlockPhysicsEvt:"
 						+ event.getBlock().getType() + " getCT:"
 						+ event.getChangedType());
@@ -74,7 +74,7 @@ public class BITBlockListener extends BlockListener {
 			return;
 		if (BITDigiLock.isLocked(block)) {
 			event.setCancelled(true);
-			if (G333Config.config.DEBUG_EVENTS) {
+			if (G333Config.DEBUG_EVENTS) {
 				G333Messages.showInfo("BlockFromTo:"
 						+ event.getBlock().getType() + " ToBlk:"
 						+ event.getToBlock().getType());
@@ -98,9 +98,6 @@ public class BITBlockListener extends BlockListener {
 			if (BITDigiLock.isBookshelf(sBlock)) {
 				if (BITInventory.isBitInventoryCreated(sBlock)) {
 					World world = event.getBlock().getWorld();
-					// TODO: drop items from the inventory if it is a BookShelf
-					// and
-					// delete the inventory
 					BITInventory bitInventory = BITInventory.loadBitInventory(
 							sPlayer, sBlock);
 					if (bitInventory != null) {

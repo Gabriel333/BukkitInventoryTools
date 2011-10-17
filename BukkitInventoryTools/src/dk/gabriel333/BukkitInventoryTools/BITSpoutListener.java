@@ -190,7 +190,7 @@ public class BITSpoutListener extends SpoutListener {
 				// This only happens if I have forgot to handle a button
 				// ************************************
 				else {
-					if (G333Config.config.DEBUG_GUI)
+					if (G333Config.DEBUG_GUI)
 						sPlayer.sendMessage("BITSpoutListener: Unknow button:"
 								+ BITPlayer.BITButtons.get(uuid));
 				}

@@ -114,10 +114,10 @@ public class BITInventory {
 						+ " AND z = " + block.getZ() + " AND world='"
 						+ block.getWorld().getName() + "' AND slotno=" + i
 						+ ";";
-				if (G333Config.config.DEBUG_SQL)
+				if (G333Config.DEBUG_SQL)
 					sPlayer.sendMessage(ChatColor.YELLOW + "Updating lock: "
 							+ query);
-				if (G333Config.config.STORAGE_TYPE.equals("MYSQL")) {
+				if (G333Config.STORAGE_TYPE.equals("MYSQL")) {
 					try {
 						BIT.manageMySQL.insertQuery(query);
 					} catch (MalformedURLException e) {
@@ -169,10 +169,10 @@ public class BITInventory {
 							+ inventory.getItem(i).getAmount() + ","
 							+ inventory.getItem(i).getDurability() + " );";
 					//sPlayer.sendMessage("Insert:" + query);
-					if (G333Config.config.DEBUG_SQL)
+					if (G333Config.DEBUG_SQL)
 						sPlayer.sendMessage(ChatColor.YELLOW
 								+ "Insert to bookshelf: " + query);
-					if (G333Config.config.STORAGE_TYPE.equals("MYSQL")) {
+					if (G333Config.STORAGE_TYPE.equals("MYSQL")) {
 						try {
 							BIT.manageMySQL.insertQuery(query);
 						} catch (MalformedURLException e) {
@@ -200,7 +200,7 @@ public class BITInventory {
 				+ " AND z = " + block.getZ() + " AND world='"
 				+ block.getWorld().getName() + "');";
 		ResultSet result = null;
-		if (G333Config.config.STORAGE_TYPE.equals("MYSQL")) {
+		if (G333Config.STORAGE_TYPE.equals("MYSQL")) {
 			try {
 				result = BIT.manageMySQL.sqlQuery(query);
 			} catch (MalformedURLException e) {
@@ -240,7 +240,7 @@ public class BITInventory {
 				+ sBlock.getWorld().getName() + "');";
 		//sPlayer.sendMessage("select:" + query);
 		ResultSet result = null;
-		if (G333Config.config.STORAGE_TYPE.equals("MYSQL")) {
+		if (G333Config.STORAGE_TYPE.equals("MYSQL")) {
 			try {
 				result = BIT.manageMySQL.sqlQuery(query);
 			} catch (MalformedURLException e) {
@@ -308,7 +308,7 @@ public class BITInventory {
 				+ " AND z = " + block.getZ() + " AND world='"
 				+ block.getWorld().getName() + "');";
 		ResultSet result = null;
-		if (G333Config.config.STORAGE_TYPE.equals("MYSQL")) {
+		if (G333Config.STORAGE_TYPE.equals("MYSQL")) {
 			try {
 				result = BIT.manageMySQL.sqlQuery(query);
 			} catch (MalformedURLException e) {
@@ -339,7 +339,7 @@ public class BITInventory {
 				+ " AND z = " + block.getZ() + " AND world='"
 				+ block.getWorld().getName() + "');";
 		ResultSet result = null;
-		if (G333Config.config.STORAGE_TYPE.equals("MYSQL")) {
+		if (G333Config.STORAGE_TYPE.equals("MYSQL")) {
 			try {
 				result = BIT.manageMySQL.sqlQuery(query);
 			} catch (MalformedURLException e) {
@@ -389,10 +389,10 @@ public class BITInventory {
 				+ sBlock.getZ() + " AND world='" + sBlock.getWorld().getName()
 				+ "');";
 		if (deletelock) {
-			if (G333Config.config.DEBUG_SQL)
+			if (G333Config.DEBUG_SQL)
 				sPlayer.sendMessage(ChatColor.YELLOW + "Removeing lock: "
 						+ query);
-			if (G333Config.config.STORAGE_TYPE.equals("MYSQL")) {
+			if (G333Config.STORAGE_TYPE.equals("MYSQL")) {
 				try {
 					BIT.manageMySQL.deleteQuery(query);
 				} catch (MalformedURLException e) {

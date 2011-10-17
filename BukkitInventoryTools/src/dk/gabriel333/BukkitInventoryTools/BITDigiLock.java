@@ -128,10 +128,10 @@ public class BITDigiLock {
 			}
 		}
 		if (createlock) {
-			if (G333Config.config.DEBUG_SQL)
+			if (G333Config.DEBUG_SQL)
 				sPlayer.sendMessage(ChatColor.YELLOW + "Updating lock: "
 						+ query);
-			if (G333Config.config.STORAGE_TYPE.equals("MYSQL")) {
+			if (G333Config.STORAGE_TYPE.equals("MYSQL")) {
 				try {
 					BIT.manageMySQL.insertQuery(query);
 				} catch (MalformedURLException e) {
@@ -164,7 +164,7 @@ public class BITDigiLock {
 					+ block.getY() + " AND z = " + block.getZ()
 					+ " AND world='" + block.getWorld().getName() + "');";
 			ResultSet result = null;
-			if (G333Config.config.STORAGE_TYPE.equals("MYSQL")) {
+			if (G333Config.STORAGE_TYPE.equals("MYSQL")) {
 				try {
 					result = BIT.manageMySQL.sqlQuery(query);
 				} catch (MalformedURLException e) {
@@ -360,7 +360,7 @@ public class BITDigiLock {
 				+ block.getZ() + " AND world='" + block.getWorld().getName()
 				+ "');";
 		ResultSet result = null;
-		if (G333Config.config.STORAGE_TYPE.equals("MYSQL")) {
+		if (G333Config.STORAGE_TYPE.equals("MYSQL")) {
 			try {
 				result = BIT.manageMySQL.sqlQuery(query);
 			} catch (MalformedURLException e) {
@@ -422,10 +422,10 @@ public class BITDigiLock {
 				+ sBlock.getZ() + " AND world='" + sBlock.getWorld().getName()
 				+ "');";
 		if (deletelock) {
-			if (G333Config.config.DEBUG_SQL)
+			if (G333Config.DEBUG_SQL)
 				sPlayer.sendMessage(ChatColor.YELLOW + "Removeing lock: "
 						+ query);
-			if (G333Config.config.STORAGE_TYPE.equals("MYSQL")) {
+			if (G333Config.STORAGE_TYPE.equals("MYSQL")) {
 				try {
 					BIT.manageMySQL.deleteQuery(query);
 				} catch (MalformedURLException e) {
@@ -723,7 +723,7 @@ public class BITDigiLock {
 					public void run() {
 						SpoutBlock sb = sBlock;
 						SpoutPlayer sp = sPlayer;
-						if (G333Config.config.DEBUG_DOOR)
+						if (G333Config.DEBUG_DOOR)
 							sp.sendMessage("Turning lever off in " + closetimer
 									+ " seconds");
 						if (BITDigiLock.isLeverOn(sBlock))
@@ -892,7 +892,7 @@ public class BITDigiLock {
 						SpoutBlock sb = sBlock;
 						SpoutPlayer sp = sPlayer;
 						int c = cost;
-						if (G333Config.config.DEBUG_DOOR)
+						if (G333Config.DEBUG_DOOR)
 							sp.sendMessage("Autoclosing the door in "
 									+ closetimer + " seconds");
 						if (isDoor(sb) && !isDoubleDoor(sb)) {
@@ -967,7 +967,7 @@ public class BITDigiLock {
 
 	public static void closeTrapdoor(SpoutPlayer sPlayer, SpoutBlock sBlock) {
 		sBlock.setData((byte) ((sBlock.getState().getData().getData() | 4) ^ 4));
-		if (G333Config.config.DEBUG_DOOR)
+		if (G333Config.DEBUG_DOOR)
 			sPlayer.sendMessage("Close the door.");
 	}
 
@@ -984,7 +984,7 @@ public class BITDigiLock {
 					public void run() {
 						SpoutBlock sb = sBlock;
 						SpoutPlayer sp = sPlayer;
-						if (G333Config.config.DEBUG_DOOR)
+						if (G333Config.DEBUG_DOOR)
 							sp.sendMessage("Autoclosing the trapdoor in "
 									+ closetimer + " seconds");
 						if (sBlock.getType() == Material.TRAP_DOOR) {
@@ -1167,7 +1167,7 @@ public class BITDigiLock {
 						SpoutBlock sb = sBlock;
 						SpoutPlayer sp = sPlayer;
 						int c = cost;
-						if (G333Config.config.DEBUG_DOOR)
+						if (G333Config.DEBUG_DOOR)
 							sp.sendMessage("Autoclosing the DoubleDoor in "
 									+ closetimer + " seconds");
 						if (isDoubleDoor(sBlock)) {

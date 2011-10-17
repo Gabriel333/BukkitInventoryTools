@@ -47,7 +47,7 @@ public class BITPlayerListener extends PlayerListener {
 		SpoutPlayer sPlayer = (SpoutPlayer) event.getPlayer();
 		BITPlayer bPlayer = new BITPlayer(sPlayer);
 		int id = sPlayer.getEntityId();
-		if (G333Config.config.DEBUG_GUI)
+		if (G333Config.DEBUG_GUI)
 			sPlayer.sendMessage("BITPlayerListener:Event:"
 					+ event.getEventName() + " action:" + event.getAction()
 					+ " Block:" + event.getClickedBlock());
@@ -445,7 +445,7 @@ public class BITPlayerListener extends PlayerListener {
 			}
 			// ELSE - IT WAS NOT A LOCKED BLOCK
 		} else {
-			if (G333Config.config.DEBUG_GUI) {
+			if (G333Config.DEBUG_GUI) {
 				sPlayer.sendMessage("There is no digilock on this block");
 			}
 			if (BITDigiLock.isChest(block)) {
@@ -521,7 +521,7 @@ public class BITPlayerListener extends PlayerListener {
 	}
 
 	public void onItemHeldChange(PlayerItemHeldEvent event) {
-		if (G333Config.config.DEBUG_GUI) {
+		if (G333Config.DEBUG_GUI) {
 			SpoutPlayer sPlayer = (SpoutPlayer) event.getPlayer();
 			sPlayer.sendMessage("Event:" + event.getEventName() + " type:"
 					+ event.getType());

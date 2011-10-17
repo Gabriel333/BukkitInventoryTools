@@ -1,6 +1,6 @@
 name: BukkitInventoryTools
 main: dk.gabriel333.BukkitInventoryTools.BIT
-version: 2.6.0
+version: 2.6.1
 author: Gabriel333
 authors: [Rocoloco]
 website: http://dev.bukkit.org/server-mods/bukkitinventorytools/
@@ -22,7 +22,7 @@ commands:
         permission: bukkitinventorytools.digilock.use
     bookshelf:
         description: Create and use a Bookshelf inventory.
-        usage: /bookshelf
+        usage: /bookshelf []|[create inventoryname]|[owner playername]|[usecost cost]|[remove]|[addcoowner name]|[remcoowner name]|[info]
         aliases: /bshelf
         permission: bukkitinventorytools.bookshelf.use
 permissions:

@@ -101,8 +101,8 @@ public class BIT extends JavaPlugin {
 				Priority.Normal, this);
 		pm.registerEvent(Type.BLOCK_IGNITE, new BITBlockListener(),
 				Priority.Normal, this);
-		pm.registerEvent(Type.SIGN_CHANGE, new BITBlockListener(),
-				Priority.Normal, this);
+		//pm.registerEvent(Type.SIGN_CHANGE, new BITBlockListener(),
+		//		Priority.Normal, this);
 		pm.registerEvent(Type.BLOCK_PISTON_EXTEND, new BITBlockListener(),
 				Priority.Normal, this);
 		pm.registerEvent(Type.BLOCK_PISTON_RETRACT, new BITBlockListener(),

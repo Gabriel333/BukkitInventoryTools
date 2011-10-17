@@ -157,6 +157,8 @@ public class BITDigiLock {
 	}
 
 	public static Boolean isLocked(SpoutBlock block) {
+		// TODO: Implement a HASHMAP for testing if the block is locked.
+		//G333Messages.showInfo("isLocked was called");
 		block = getDigiLockBlock(block);
 		String query = "SELECT * FROM " + BIT.digilockTable + " WHERE (x = "
 				+ block.getX() + " AND y = " + block.getY() + " AND z = "
@@ -234,12 +236,13 @@ public class BITDigiLock {
 	}
 	
 	public static boolean isOwner(SpoutPlayer sPlayer, SpoutBlock sBlock) {
-		if (isLocked(sBlock)) {
+		//TODO: check if this can be optimized.
+		//if (isLocked(sBlock)) {
 		if (BITDigiLock.loadDigiLock(sBlock).getOwner().toLowerCase().equals(sPlayer.getName().toLowerCase()))
 			return true;
 		return false;
-		}
-		return false;
+		//}
+		//return false;
 	}
 	
 
@@ -790,18 +793,21 @@ public class BITDigiLock {
 					nextBlock.setData((byte) (nextBlock.getState().getData()
 							.getData() | 4));
 				}
-				if (BITDigiLock.isLocked(block)) {
+				//TODO: Cleanup after testing.
+				//if (BITDigiLock.isLocked(block)) {
 					BITDigiLock digilock = loadDigiLock(block);
+					if (digilock!=null) {
 					if (digilock.getClosetimer() > 0 && !isDoubleDoor(block)) {
 						scheduleCloseDoor(sPlayer, block,
 								digilock.getClosetimer(), 0);
-					}
-				}
+					}}
+				//}
 			}
 		}
 	}
 
-	public static void openDoor(SpoutBlock block) {
+	// TODO: CAN BE REMOVED.
+	public static void openDoorXXX(SpoutBlock block) {
 		Door door = (Door) block.getState().getData();
 		SpoutBlock nextBlock;
 		if (!isDoorOpen(block)) {
@@ -962,14 +968,15 @@ public class BITDigiLock {
 		if (opentrapdoor) {
 			if (!isTrapdoorOpen(sPlayer, sBlock)) {
 				sBlock.setData((byte) (sBlock.getState().getData().getData() | 4));
-				if (BITDigiLock.isLocked(sBlock)) {
+				//if (BITDigiLock.isLocked(sBlock)) {
 					BITDigiLock digilock = loadDigiLock(sBlock);
+					if (digilock!=null) {
 					playDigiLockSound(sBlock);
 					if (digilock.getClosetimer() > 0) {
 						scheduleCloseTrapdoor(sPlayer, sBlock,
 								digilock.getClosetimer());
-					}
-				}
+					}}
+				//}
 			}
 		}
 	}
@@ -1052,13 +1059,14 @@ public class BITDigiLock {
 				openDoor(sPlayer, getLeftDoubleDoor(sBlock), cost);
 			}
 		}
-		if (BITDigiLock.isLocked(sBlock)) {
+		//if (BITDigiLock.isLocked(sBlock)) {
 			BITDigiLock digilock = loadDigiLock(sBlock);
+			if (digilock!=null){
 			if (digilock.getClosetimer() > 0) {
 				scheduleCloseDoubleDoor(sPlayer, sBlock,
 						digilock.getClosetimer(), 0);
-			}
-		}
+			}}
+		//}
 	}
 
 	public static boolean isLeftDoubleDoor(SpoutBlock block) {

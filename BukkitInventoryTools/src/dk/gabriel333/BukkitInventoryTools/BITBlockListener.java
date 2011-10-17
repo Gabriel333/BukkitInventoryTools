@@ -1,9 +1,11 @@
 package dk.gabriel333.BukkitInventoryTools;
 
-import org.bukkit.event.block.BlockListener;
-
-import org.bukkit.block.BlockFace;
+import org.bukkit.Location;
+import org.bukkit.World;
 import org.bukkit.event.block.BlockBreakEvent;
+import org.bukkit.event.block.BlockListener;
+import org.bukkit.inventory.ItemStack;
+import org.bukkit.block.BlockFace;
 import org.bukkit.event.block.BlockBurnEvent;
 import org.bukkit.event.block.BlockDamageEvent;
 import org.bukkit.event.block.BlockFadeEvent;
@@ -83,17 +85,37 @@ public class BITBlockListener extends BlockListener {
 	public void onBlockBreak(BlockBreakEvent event) {
 		if (event.isCancelled())
 			return;
-		SpoutBlock block = (SpoutBlock) event.getBlock();
+		SpoutBlock sBlock = (SpoutBlock) event.getBlock();
 		SpoutPlayer sPlayer = (SpoutPlayer) event.getPlayer();
-		SpoutBlock blockOnTop = block.getRelative(BlockFace.UP);
-		if (!BITDigiLock.isLockable(block))
+		SpoutBlock blockOnTop = sBlock.getRelative(BlockFace.UP);
+		if (!BITDigiLock.isLockable(sBlock))
 			return;
-		if (BITDigiLock.isLocked(block) || BITDigiLock.isLocked(blockOnTop)) {
+		if (BITDigiLock.isLocked(sBlock) || BITDigiLock.isLocked(blockOnTop)) {
 			sPlayer.damage(5);
 			event.setCancelled(true);
 		} else {
-			// TODO: drop items from the inventory if it is a BookShelf and
-			// delete the inventory
+			Location location = event.getBlock().getLocation();
+			if (BITDigiLock.isBookshelf(sBlock)) {
+				if (BITInventory.isBitInventoryCreated(sBlock)) {
+					World world = event.getBlock().getWorld();
+					// TODO: drop items from the inventory if it is a BookShelf
+					// and
+					// delete the inventory
+					BITInventory bitInventory = BITInventory.loadBitInventory(
+							sPlayer, sBlock);
+					if (bitInventory != null) {
+						for (int i = 0; i < bitInventory.getSize(); i++) {
+							ItemStack itemstack = bitInventory.getInventory()
+									.getItem(i);
+							if (itemstack.getAmount() != 0) {
+								world.dropItemNaturally(location, itemstack);
+							}
+						}
+						bitInventory.RemoveBitInventory(sPlayer,
+								G333Config.BOOKSHELF_DESTROYCOST);
+					}
+				}
+			}
 		}
 
 	}
@@ -183,7 +205,7 @@ public class BITBlockListener extends BlockListener {
 		if (!BITDigiLock.isLockable(block))
 			return;
 		if (BITDigiLock.isLocked(block)) {
-			//event.setCancelled(true);
+			// event.setCancelled(true);
 		}
 	}
 

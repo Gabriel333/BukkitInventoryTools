@@ -54,7 +54,7 @@ public class BITInventory {
 	public Inventory getInventory() {
 		return this.inventory;
 	}
-
+	
 	public String getOwner() {
 		return this.owner;
 	}
@@ -87,6 +87,8 @@ public class BITInventory {
 	}
 
 	public static void saveBitInventory(SpoutPlayer sPlayer, BITInventory inv) {
+		//sPlayer.sendMessage("block:"+inv.getBlock().getType()+"own:"+
+	    //      " name:"+inv.getName()+" coo:"+inv.getCoOwners()+" usecost:"+inv.getUseCost());
 		saveBitInventory(sPlayer, inv.getBlock(), inv.getOwner(),
 				inv.getName(), inv.getCoOwners(), inv.getInventory(),
 				inv.getUseCost());

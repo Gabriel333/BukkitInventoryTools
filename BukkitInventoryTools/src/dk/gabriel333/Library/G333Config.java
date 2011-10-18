@@ -144,6 +144,10 @@ public class G333Config {
 				"#                                                         #",
 				"###########################################################");
 */
+		
+		//G333Messages.showInfo("versions:"+LATEST_VERSION+" > "+LIBRARY_VERSION);
+		//G333Messages.showInfo("DigiLock.Cost is "+String.valueOf(config.contains("DigiLock.Cost")));
+		//G333Messages.showInfo("DigiLock.Cost is "+String.valueOf(config.isSet("DigiLock.Cost")));
 		if (dosave || LATEST_VERSION>LIBRARY_VERSION) {
 			G333Messages.showWarning("YOUR CONFIG.YML IS NOT UP TO DATE : "+dosave);
 			try {

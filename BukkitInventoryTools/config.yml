@@ -13,6 +13,9 @@
 # +------------------------------------------------------+ #
 ############################################################
 Library:
+    # Configuration file version. Do not change the version
+    # number.
+    Version: 1
     # Set Language. Currently supported: EN
     Language: EN
 

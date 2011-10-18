@@ -236,14 +236,10 @@ public class BITDigiLock {
 	}
 
 	public static boolean isOwner(SpoutPlayer sPlayer, SpoutBlock sBlock) {
-		// TODO: check if this can be optimized.
-		// if (isLocked(sBlock)) {
 		if (BITDigiLock.loadDigiLock(sBlock).getOwner().toLowerCase()
 				.equals(sPlayer.getName().toLowerCase()))
 			return true;
 		return false;
-		// }
-		// return false;
 	}
 
 	public void addCoowner(String name) {
@@ -447,19 +443,20 @@ public class BITDigiLock {
 	}
 
 	public static boolean isChest(Block block) {
-		if (block.getType().equals(Material.CHEST))
+		if (block.getType().equals(Material.CHEST)
+				|| block.getType().equals(Material.LOCKED_CHEST))
 			return true;
-		else if (block.getType().equals(Material.LOCKED_CHEST))
-			return true;
-		return false;
+		else
+			return false;
 	}
 
 	public static boolean isSign(Block block) {
-		if (block.getType().equals(Material.SIGN))
+		if (block.getType().equals(Material.SIGN)
+				|| block.getType().equals(Material.WALL_SIGN)
+				|| block.getType().equals(Material.SIGN_POST))
 			return true;
-		else if (block.getType().equals(Material.SIGN_POST))
-			return true;
-		return false;
+		else
+			return false;
 	}
 
 	public static boolean isBookshelf(SpoutBlock sBlock) {
@@ -794,8 +791,6 @@ public class BITDigiLock {
 					nextBlock.setData((byte) (nextBlock.getState().getData()
 							.getData() | 4));
 				}
-				// TODO: Cleanup after testing.
-				// if (BITDigiLock.isLocked(block)) {
 				BITDigiLock digilock = loadDigiLock(block);
 				if (digilock != null) {
 					if (digilock.getClosetimer() > 0 && !isDoubleDoor(block)) {
@@ -803,7 +798,6 @@ public class BITDigiLock {
 								digilock.getClosetimer(), 0);
 					}
 				}
-				// }
 			}
 		}
 	}

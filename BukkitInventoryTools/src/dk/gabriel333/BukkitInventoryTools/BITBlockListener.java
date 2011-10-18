@@ -28,7 +28,7 @@ import dk.gabriel333.Library.G333Messages;
 public class BITBlockListener extends BlockListener {
 
 	public void onBlockRedstoneChange(BlockRedstoneEvent event) {
-		// TODO: MAYBE THERE IS AN MEMORY LEAK HERE???
+		// TODO: THERE IS AN MEMORY LEAK HERE!!!
 		SpoutBlock block = (SpoutBlock) event.getBlock();
 		if (!BITDigiLock.isLockable(block))
 			return;

@@ -6,7 +6,6 @@ authors: [Rocoloco]
 website: http://dev.bukkit.org/server-mods/bukkitinventorytools/
 dev-url: https://github.com/BukkitInventoryTools
 description: Shop, Digital lock, sort and stack inventories
-database: true
 depend: [Spout]
 softdepend: 
 commands:

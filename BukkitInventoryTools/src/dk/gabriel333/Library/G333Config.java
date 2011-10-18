@@ -7,11 +7,14 @@ import java.io.IOException;
 import java.io.InputStream;
 
 import org.bukkit.configuration.InvalidConfigurationException;
-import org.bukkit.configuration.file.FileConfiguration;
+import org.bukkit.configuration.file.YamlConfiguration;
 import dk.gabriel333.BukkitInventoryTools.BIT;
 
 public class G333Config {
 	
+	final static int LATEST_VERSION=1;
+	
+	public static int LIBRARY_VERSION;
 	public static String LIBRARY_LANGUAGE;
 	public static String LIBRARY_SORTKEY;
 	public static String LIBRARY_MENUKEY;
@@ -57,7 +60,7 @@ public class G333Config {
 	public static Boolean DEBUG_EVENTS;
 	
 	public static String CONFIG_FILE = "config.yml";
-	public static FileConfiguration config;
+	public static YamlConfiguration config;
 	
 	public static void bitSetupConfig() {
 		if (!BIT.plugin.getDataFolder().exists())
@@ -66,7 +69,7 @@ public class G333Config {
 				CONFIG_FILE);
 		if (!configfile.exists())
 			loadFileFromJar(CONFIG_FILE);
-		config = BIT.plugin.getConfig();
+		config = (YamlConfiguration) BIT.plugin.getConfig();
 		try {
 			//config.load(new File(BIT.plugin.getDataFolder(), "config.yml"));
 			config.load(configfile);
@@ -81,7 +84,7 @@ public class G333Config {
 			e.printStackTrace();
 		}
 		//General
-		LIBRARY_LANGUAGE = getStringParm("Library.Language", "EN");
+		LIBRARY_VERSION = getIntParm("Library.Version", 0);
 		LIBRARY_LANGUAGE = getStringParm("Library.Language", "EN");
 		LIBRARY_SORTKEY = getStringParm("Library.SortKey", "KEY_S");
 		LIBRARY_MENUKEY = getStringParm("Library.MenuKey", "KEY_M");
@@ -141,8 +144,8 @@ public class G333Config {
 				"#                                                         #",
 				"###########################################################");
 */
-		if (dosave) {
-			G333Messages.showWarning("YOUR CONFIG.YML IS NOT UP TO DATE");
+		if (dosave || LATEST_VERSION>LIBRARY_VERSION) {
+			G333Messages.showWarning("YOUR CONFIG.YML IS NOT UP TO DATE : "+dosave);
 			try {
 				config.save(configfile);
 			} catch (IOException e) {
@@ -156,7 +159,7 @@ public class G333Config {
 	private static Boolean dosave = false;
 	
 	private static int getIntParm(String path, int def) {
-		if (!config.isInt(path)) {
+		if (!config.contains(path)) {
 			dosave=true;
 			G333Messages.showWarning("Missing parameter:" +path);
 		} 
@@ -164,7 +167,7 @@ public class G333Config {
 	}
 
 	private static String getStringParm(String path, String def) {
-		if (!config.isString(path)) {
+		if (!config.contains(path)) {
 			dosave=true;
 			G333Messages.showWarning("Missing parameter:" +path);
 		} 
@@ -172,7 +175,7 @@ public class G333Config {
 	}
 
 	private static Boolean getBooleanParm(String path, Boolean def) {
-		if (!config.isBoolean(path)) {
+		if (!config.contains(path)) {
 			dosave=true;
 			G333Messages.showWarning("Missing parameter:" +path);
 		} 

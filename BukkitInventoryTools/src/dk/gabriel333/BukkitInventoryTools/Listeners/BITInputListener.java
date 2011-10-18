@@ -1,4 +1,4 @@
-package dk.gabriel333.BukkitInventoryTools;
+package dk.gabriel333.BukkitInventoryTools.Listeners;
 
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
@@ -14,6 +14,10 @@ import org.getspout.spoutapi.event.input.RenderDistanceChangeEvent;
 import org.getspout.spoutapi.gui.ScreenType;
 import org.getspout.spoutapi.player.SpoutPlayer;
 
+import dk.gabriel333.BukkitInventoryTools.BIT;
+import dk.gabriel333.BukkitInventoryTools.BITDigiLock;
+import dk.gabriel333.BukkitInventoryTools.Inventory.BITInventory;
+import dk.gabriel333.BukkitInventoryTools.Player.BITPlayer;
 import dk.gabriel333.Library.*;
 
 public class BITInputListener extends InputListener {

@@ -1,4 +1,4 @@
-package dk.gabriel333.BukkitInventoryTools;
+package dk.gabriel333.BukkitInventoryTools.Listeners;
 
 import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.block.BlockListener;
@@ -19,6 +19,8 @@ import org.bukkit.material.Door;
 import org.getspout.spoutapi.block.SpoutBlock;
 import org.getspout.spoutapi.player.SpoutPlayer;
 
+import dk.gabriel333.BukkitInventoryTools.BITDigiLock;
+import dk.gabriel333.BukkitInventoryTools.Inventory.BITInventory;
 import dk.gabriel333.Library.G333Config;
 import dk.gabriel333.Library.G333Messages;
 

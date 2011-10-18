@@ -1,4 +1,4 @@
-package dk.gabriel333.BukkitInventoryTools;
+package dk.gabriel333.BukkitInventoryTools.Commands;
 
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
@@ -8,6 +8,9 @@ import org.getspout.spoutapi.SpoutManager;
 import org.getspout.spoutapi.block.SpoutBlock;
 import org.getspout.spoutapi.player.SpoutPlayer;
 
+import dk.gabriel333.BukkitInventoryTools.BIT;
+import dk.gabriel333.BukkitInventoryTools.BITDigiLock;
+import dk.gabriel333.BukkitInventoryTools.Inventory.BITInventory;
 import dk.gabriel333.Library.*;
 
 public class BITCommandBookshelf implements CommandExecutor {

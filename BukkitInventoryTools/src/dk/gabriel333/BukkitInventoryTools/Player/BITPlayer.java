@@ -1,4 +1,4 @@
-package dk.gabriel333.BukkitInventoryTools;
+package dk.gabriel333.BukkitInventoryTools.Player;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -6,6 +6,7 @@ import java.util.UUID;
 
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.plugin.Plugin;
 import org.getspout.spout.inventory.CustomMCInventory;
 import org.getspout.spoutapi.block.SpoutBlock;
 import org.getspout.spoutapi.gui.GenericButton;
@@ -18,10 +19,19 @@ import org.getspout.spoutapi.gui.ScreenType;
 import org.getspout.spoutapi.player.SpoutPlayer;
 
 import de.Keyle.MyWolf.MyWolfPlugin;
+import dk.gabriel333.BukkitInventoryTools.BIT;
+import dk.gabriel333.BukkitInventoryTools.BITDigiLock;
+import dk.gabriel333.BukkitInventoryTools.Inventory.BITInventory;
 import dk.gabriel333.Library.G333Config;
 import dk.gabriel333.Library.G333Inventory;
 
 public class BITPlayer {
+	
+	private BIT plugin;
+	
+	public BITPlayer(Plugin plugin) {
+		plugin = this.plugin;
+	}
 
 	protected SpoutPlayer sPlayer;
 
@@ -127,9 +137,13 @@ public class BITPlayer {
 			return 61; // Furnace - looks nice.
 		case 62:
 			return 62; // Burning Furnace
+		case 63:
+			return 63; //SIGN_POST
 		case 64:
 			// return 324; // Wooden door
 			return 95;
+		case 68:
+		    return 68;
 		case 69:
 			// return 69; // Lever
 			return 95;

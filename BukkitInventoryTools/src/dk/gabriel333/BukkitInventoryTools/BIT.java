@@ -18,6 +18,15 @@ import dk.gabriel333.register.payment.Method;
 import dk.gabriel333.register.payment.Methods;
 
 import de.Keyle.MyWolf.MyWolfPlugin;
+import dk.gabriel333.BukkitInventoryTools.Commands.BITCommandBookshelf;
+import dk.gabriel333.BukkitInventoryTools.Commands.BITCommandDigiLock;
+import dk.gabriel333.BukkitInventoryTools.Commands.BITCommandSort;
+import dk.gabriel333.BukkitInventoryTools.Listeners.BITBlockListener;
+import dk.gabriel333.BukkitInventoryTools.Listeners.BITInputListener;
+import dk.gabriel333.BukkitInventoryTools.Listeners.BITInventoryListener;
+import dk.gabriel333.BukkitInventoryTools.Listeners.BITPlayerListener;
+import dk.gabriel333.BukkitInventoryTools.Listeners.BITServerListener;
+import dk.gabriel333.BukkitInventoryTools.Listeners.BITSpoutListener;
 import dk.gabriel333.Library.G333Config;
 import dk.gabriel333.Library.G333Messages;
 import dk.gabriel333.Library.G333Plugin;

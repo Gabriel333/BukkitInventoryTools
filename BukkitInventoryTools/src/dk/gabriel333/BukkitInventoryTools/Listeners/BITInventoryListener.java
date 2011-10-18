@@ -1,4 +1,4 @@
-package dk.gabriel333.BukkitInventoryTools;
+package dk.gabriel333.BukkitInventoryTools.Listeners;
 
 import org.bukkit.event.Event;
 import org.getspout.spoutapi.event.inventory.InventoryClickEvent;
@@ -8,6 +8,7 @@ import org.getspout.spoutapi.event.inventory.InventoryListener;
 import org.getspout.spoutapi.event.inventory.InventoryOpenEvent;
 import org.getspout.spoutapi.player.SpoutPlayer;
 
+import dk.gabriel333.BukkitInventoryTools.BIT;
 import dk.gabriel333.Library.G333Config;
 import dk.gabriel333.Library.G333Messages;
 

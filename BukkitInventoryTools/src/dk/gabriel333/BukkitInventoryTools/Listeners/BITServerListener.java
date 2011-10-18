@@ -1,10 +1,11 @@
-package dk.gabriel333.BukkitInventoryTools;
+package dk.gabriel333.BukkitInventoryTools.Listeners;
 
 import org.bukkit.event.server.PluginDisableEvent;
 import org.bukkit.event.server.PluginEnableEvent;
 import org.bukkit.event.server.ServerListener;
 import dk.gabriel333.register.payment.Methods;
 
+import dk.gabriel333.BukkitInventoryTools.BIT;
 import dk.gabriel333.Library.G333Messages;
 
 public class BITServerListener extends ServerListener {

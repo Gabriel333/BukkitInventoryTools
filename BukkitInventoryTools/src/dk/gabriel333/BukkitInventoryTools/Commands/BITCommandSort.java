@@ -1,4 +1,4 @@
-package dk.gabriel333.BukkitInventoryTools;
+package dk.gabriel333.BukkitInventoryTools.Commands;
 
 import org.bukkit.Material;
 import org.bukkit.block.Block;
@@ -13,6 +13,8 @@ import org.getspout.spoutapi.block.SpoutChest;
 import org.getspout.spoutapi.gui.ScreenType;
 import org.getspout.spoutapi.player.SpoutPlayer;
 
+import dk.gabriel333.BukkitInventoryTools.BIT;
+import dk.gabriel333.BukkitInventoryTools.Player.BITPlayer;
 import dk.gabriel333.Library.*;
 
 public class BITCommandSort implements CommandExecutor {

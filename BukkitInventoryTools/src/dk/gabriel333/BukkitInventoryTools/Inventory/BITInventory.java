@@ -1,4 +1,4 @@
-package dk.gabriel333.BukkitInventoryTools;
+package dk.gabriel333.BukkitInventoryTools.Inventory;
 
 import java.net.MalformedURLException;
 import java.sql.ResultSet;
@@ -11,6 +11,7 @@ import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.plugin.Plugin;
 import org.getspout.spoutapi.SpoutManager;
 import org.getspout.spoutapi.block.SpoutBlock;
 import org.getspout.spoutapi.player.SpoutPlayer;
@@ -20,6 +21,12 @@ import dk.gabriel333.Library.G333Config;
 import dk.gabriel333.Library.G333Messages;
 
 public class BITInventory {
+	
+	private BIT plugin;
+	
+	public BITInventory(Plugin plugin) {
+		plugin = this.plugin;
+	}
 
 	protected SpoutBlock sBlock;
 	protected String name;
@@ -53,6 +60,9 @@ public class BITInventory {
 		this.useCost = useCost;
 	}
 
+	public static Map<Integer, BITInventory> openedInventories = new HashMap<Integer, BITInventory>();
+	//public static Map<Integer, Boolean> isBookshelfCreated = new HashMap<Integer, Boolean>();
+
 	public Inventory getInventory() {
 		return this.inventory;
 	}
@@ -72,9 +82,7 @@ public class BITInventory {
 	public SpoutBlock getBlock() {
 		return this.sBlock;
 	}
-
-	public static Map<Integer, BITInventory> openedInventories = new HashMap<Integer, BITInventory>();
-
+	
 	public void openBitInventory(SpoutPlayer sPlayer, BITInventory bitInventory) {
 		int id = sPlayer.getEntityId();
 		openedInventories.put(id, bitInventory);
@@ -201,6 +209,8 @@ public class BITInventory {
 	}
 
 	public static Boolean isBitInventoryCreated(SpoutBlock block) {
+		// TODO: Implement a HASHMAP for testing if the Inventory is created.
+		// G333Messages.showInfo("isLocked was called");
 		String query = "SELECT * FROM " + BIT.bitInventoryTable
 				+ " WHERE (x = " + block.getX() + " AND y = " + block.getY()
 				+ " AND z = " + block.getZ() + " AND world='"

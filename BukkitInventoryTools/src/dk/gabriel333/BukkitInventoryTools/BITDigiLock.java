@@ -19,7 +19,6 @@ import org.getspout.spoutapi.block.SpoutBlock;
 import org.getspout.spoutapi.block.SpoutChest;
 import org.getspout.spoutapi.player.SpoutPlayer;
 
-import dk.gabriel333.BukkitInventoryTools.BIT;
 import dk.gabriel333.Library.G333Config;
 import dk.gabriel333.Library.G333Messages;
 
@@ -63,6 +62,9 @@ public class BITDigiLock {
 		this.connectedTo = connectedTo;
 		this.useCost = useCost;
 	}
+	
+	//public static Map<Integer, Boolean> isLocked = new HashMap<Integer, Boolean>();
+
 
 	/**
 	 * Saves the DigiLock to the database.
@@ -303,7 +305,7 @@ public class BITDigiLock {
 	 * @param block
 	 * @return true or false
 	 */
-	static boolean isLockable(Block block) {
+	public static boolean isLockable(Block block) {
 		for (Material i : lockablematerials) {
 			if (i == block.getType())
 				return true;

@@ -7,6 +7,8 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.bukkit.ChatColor;
+import org.bukkit.Location;
+import org.bukkit.World;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.getspout.spoutapi.SpoutManager;
@@ -54,7 +56,7 @@ public class BITInventory {
 	public Inventory getInventory() {
 		return this.inventory;
 	}
-	
+
 	public String getOwner() {
 		return this.owner;
 	}
@@ -87,11 +89,15 @@ public class BITInventory {
 	}
 
 	public static void saveBitInventory(SpoutPlayer sPlayer, BITInventory inv) {
-		//sPlayer.sendMessage("block:"+inv.getBlock().getType()+"own:"+
-	    //      " name:"+inv.getName()+" coo:"+inv.getCoOwners()+" usecost:"+inv.getUseCost());
-		saveBitInventory(sPlayer, inv.getBlock(), inv.getOwner(),
-				inv.getName(), inv.getCoOwners(), inv.getInventory(),
-				inv.getUseCost());
+		// sPlayer.sendMessage("block:"+inv.getBlock().getType()+"own:"+
+		// " name:"+inv.getName()+" coo:"+inv.getCoOwners()+" usecost:"+inv.getUseCost());
+		if (inv != null) {
+			saveBitInventory(sPlayer, inv.getBlock(), inv.getOwner(),
+					inv.getName(), inv.getCoOwners(), inv.getInventory(),
+					inv.getUseCost());
+		} else {
+			sPlayer.sendMessage("BITInventory error: Inventory is null in SaveBitInventory!");
+		}
 	}
 
 	public static void saveBitInventory(SpoutPlayer sPlayer, SpoutBlock block,
@@ -154,7 +160,7 @@ public class BITInventory {
 				}
 			}
 			if (createBookshelf) {
-				//sPlayer.sendMessage("Inventorysize:" + inventory.getSize());
+				// sPlayer.sendMessage("Inventorysize:" + inventory.getSize());
 				for (int i = 0; i < inventory.getSize(); i++) {
 					query = "INSERT INTO "
 							+ BIT.bitInventoryTable
@@ -168,7 +174,7 @@ public class BITInventory {
 							+ inventory.getItem(i).getTypeId() + ","
 							+ inventory.getItem(i).getAmount() + ","
 							+ inventory.getItem(i).getDurability() + " );";
-					//sPlayer.sendMessage("Insert:" + query);
+					// sPlayer.sendMessage("Insert:" + query);
 					if (G333Config.DEBUG_SQL)
 						sPlayer.sendMessage(ChatColor.YELLOW
 								+ "Insert to bookshelf: " + query);
@@ -238,7 +244,7 @@ public class BITInventory {
 				+ " WHERE (x = " + sBlock.getX() + " AND y = " + sBlock.getY()
 				+ " AND z = " + sBlock.getZ() + " AND world='"
 				+ sBlock.getWorld().getName() + "');";
-		//sPlayer.sendMessage("select:" + query);
+		// sPlayer.sendMessage("select:" + query);
 		ResultSet result = null;
 		if (G333Config.STORAGE_TYPE.equals("MYSQL")) {
 			try {
@@ -252,7 +258,7 @@ public class BITInventory {
 			}
 		} else { // SQLLITE
 			result = BIT.manageSQLite.sqlQuery(query);
-			//sPlayer.sendMessage("Result:" + result.toString());
+			// sPlayer.sendMessage("Result:" + result.toString());
 		}
 		int i = 0;
 		ItemStack itemstack;
@@ -265,24 +271,23 @@ public class BITInventory {
 				itemstack_amount = result.getInt("itemstack_amount");
 				itemstack_durability = (short) result
 						.getInt("itemstack_durability");
-				//sPlayer.sendMessage("i:" + i + " tp:" + itemstack_typeId
-				//		+ " amt:" + itemstack_amount + "du:"
-				//		+ itemstack_durability);
+				// sPlayer.sendMessage("i:" + i + " tp:" + itemstack_typeId
+				// + " amt:" + itemstack_amount + "du:"
+				// + itemstack_durability);
 				if (itemstack_amount == 0) {
 					inventory.clear(i);
 				} else {
 
-					 itemstack = new ItemStack(itemstack_typeId,
-					 itemstack_amount,
-					 itemstack_durability);
-					 inventory.setItem(i, itemstack);
+					itemstack = new ItemStack(itemstack_typeId,
+							itemstack_amount, itemstack_durability);
+					inventory.setItem(i, itemstack);
 					inventory.setItem(i, itemstack);
 
 				}
-				//G333Messages.showInfo("i:" + i + " " + "tp:"
-				//		+ inventory.getItem(i).getType() + " amt:"
-				//		+ inventory.getItem(i).getAmount() + " du:"
-				//		+ inventory.getItem(i).getDurability());
+				// G333Messages.showInfo("i:" + i + " " + "tp:"
+				// + inventory.getItem(i).getType() + " amt:"
+				// + inventory.getItem(i).getAmount() + " du:"
+				// + inventory.getItem(i).getDurability());
 				name = result.getString("name");
 				owner = result.getString("owner");
 				coOwners = result.getString("coowners");
@@ -292,9 +297,10 @@ public class BITInventory {
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
-		//G333Messages.showInfo("name:" + name + " owner:" + owner + " coowners:"
-		//		+ coOwners + " usecost:" + useCost);
-		//G333Messages.showInfo("inv:" + inventory);
+		// G333Messages.showInfo("name:" + name + " owner:" + owner +
+		// " coowners:"
+		// + coOwners + " usecost:" + useCost);
+		// G333Messages.showInfo("inv:" + inventory);
 		BITInventory inv = new BITInventory(sBlock, owner, name, coOwners,
 				inventory, useCost);
 		return inv;
@@ -449,6 +455,26 @@ public class BITInventory {
 
 	public int getSize() {
 		return inventory.getSize();
+	}
+	
+	public static void removeBookshelfAndDropItems(SpoutPlayer sPlayer, SpoutBlock sBlock){
+		//World world = sBlock.getBlock().getWorld();
+		World world = sBlock.getWorld();
+		Location location = sBlock.getLocation();
+		BITInventory bitInventory = BITInventory.loadBitInventory(
+				sPlayer, sBlock);
+		if (bitInventory != null) {
+			for (int i = 0; i < bitInventory.getSize(); i++) {
+				ItemStack itemstack = bitInventory.getInventory()
+						.getItem(i);
+				if (itemstack.getAmount() != 0) {
+					world.dropItemNaturally(location, itemstack);
+				}
+			}
+			bitInventory.RemoveBitInventory(sPlayer,
+					G333Config.BOOKSHELF_DESTROYCOST);
+			
+		}
 	}
 
 }

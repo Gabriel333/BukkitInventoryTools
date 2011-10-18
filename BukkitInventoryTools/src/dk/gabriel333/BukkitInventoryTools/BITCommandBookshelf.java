@@ -126,8 +126,7 @@ public class BITCommandBookshelf implements CommandExecutor {
 													"bookshelf.admin",
 													G333Permissions.NOT_QUIET))
 									&& args.length == 1) {
-								bitInventory.RemoveBitInventory(sPlayer,
-										G333Config.BOOKSHELF_DESTROYCOST);
+									BITInventory.removeBookshelfAndDropItems(sPlayer, sBlock);
 								return true;
 							}
 							// addcoowner

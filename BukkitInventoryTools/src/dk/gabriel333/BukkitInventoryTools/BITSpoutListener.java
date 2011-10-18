@@ -9,6 +9,7 @@ import org.bukkit.block.Sign;
 import org.bukkit.event.Event;
 import org.bukkit.inventory.Inventory;
 
+import org.getspout.spoutapi.SpoutManager;
 import org.getspout.spoutapi.block.SpoutBlock;
 import org.getspout.spoutapi.block.SpoutChest;
 import org.getspout.spoutapi.event.screen.ButtonClickEvent;
@@ -36,8 +37,8 @@ public class BITSpoutListener extends SpoutListener {
 				// Buttons in getPincodeWindow
 				// ************************************
 				if (BITPlayer.BITButtons.get(uuid) == "getPincodeUnlock") {
-					BITPlayer.pincodePopupScreen.get(id).close();
-					bPlayer.cleanupPincodePopupScreen(sPlayer);
+					BITPlayer.popupScreen.get(id).close();
+					bPlayer.cleanupPopupScreen(sPlayer);
 					if ((digilock.getPincode().equals(
 							BITPlayer.pincode.get(id).getText()) && G333Permissions
 							.hasPerm(sPlayer, "digilock.use",
@@ -85,8 +86,10 @@ public class BITSpoutListener extends SpoutListener {
 							sPlayer.openInventoryWindow(inv);
 
 						} else if (digilock.getBlock().getType() == Material.BOOKSHELF) {
-							Inventory inv = BITInventory.loadBitInventory(sPlayer, sBlock).inventory;
-							sPlayer.openInventoryWindow(inv);
+							BITInventory bitInventory = BITInventory.loadBitInventory(sPlayer, sBlock);
+							bitInventory.openBitInventory(sPlayer,bitInventory);
+							//Inventory inv = BITInventory.loadBitInventory(sPlayer, sBlock).inventory;
+							//sPlayer.openInventoryWindow(inv);
 
 						} else if (BITDigiLock.isTrapdoor(sBlock)) {
 							BITDigiLock.playDigiLockSound(digilock.getBlock());
@@ -112,19 +115,20 @@ public class BITSpoutListener extends SpoutListener {
 								|| BITDigiLock.isDispenser(sBlock)
 								|| sBlock.getType() == Material.FURNACE) {
 							sPlayer.closeActiveWindow();
-							bPlayer.cleanupPincodePopupScreen(sPlayer);
+							bPlayer.cleanupPopupScreen(sPlayer);
+							BITPlayer.BITButtons.remove(uuid);
 						} else if (BITDigiLock.isLever(sBlock)) {
 							BITDigiLock.leverOff(sPlayer, sBlock);
 						}
 						sPlayer.damage(5);
 					}
-					bPlayer.cleanupPincodePopupScreen(sPlayer);
+					bPlayer.cleanupPopupScreen(sPlayer);
 					//BITPlayer.menuButtons.remove(BITPlayer.BITButtons.get(uuid));
 					BITPlayer.BITButtons.remove(uuid);
 
 				} else if (BITPlayer.BITButtons.get(uuid) == "getPincodeCancel") {
 					sPlayer.closeActiveWindow();
-					bPlayer.cleanupPincodePopupScreen(sPlayer);
+					bPlayer.cleanupPopupScreen(sPlayer);
 					//BITPlayer.menuButtons.remove(BITPlayer.BITButtons.get(uuid));
 					BITPlayer.BITButtons.remove(uuid);
 				}
@@ -147,20 +151,20 @@ public class BITSpoutListener extends SpoutListener {
 										sBlock.getTypeId(), "", Integer
 												.valueOf(BITPlayer.useCost.get(id)
 														.getText()));
-						bPlayer.cleanupPincodePopupScreen(sPlayer);
+						bPlayer.cleanupPopupScreen(sPlayer);
 						//BITPlayer.menuButtons.remove(BITPlayer.BITButtons.get(uuid));
 						BITPlayer.BITButtons.remove(uuid);
 					}
 
 				} else if ((BITPlayer.BITButtons.get(uuid) == "setPincodeCancel")) {
 					sPlayer.closeActiveWindow();
-					bPlayer.cleanupPincodePopupScreen(sPlayer);
+					bPlayer.cleanupPopupScreen(sPlayer);
 					//BITPlayer.menuButtons.remove(BITPlayer.BITButtons.get(uuid));
 					BITPlayer.BITButtons.remove(uuid);
 					
 				} else if ((BITPlayer.BITButtons.get(uuid) == "setPincodeRemove")) {
 					sPlayer.closeActiveWindow();
-					bPlayer.cleanupPincodePopupScreen(sPlayer);
+					bPlayer.cleanupPopupScreen(sPlayer);
 					//BITPlayer.menuButtons.remove(BITPlayer.BITButtons.get(uuid));
 					BITPlayer.BITButtons.remove(uuid);
 
@@ -185,6 +189,28 @@ public class BITSpoutListener extends SpoutListener {
 					}
 
 				}
+				
+				else if ((BITPlayer.BITButtons.get(uuid) == "CreateBookshelfButton")) {
+					if (validateSetPincodeFields(sPlayer)) {
+						String coowners = "";
+						String name = "";
+						String owner = sPlayer.getName();
+						int usecost = 0;
+						Inventory inventory = SpoutManager.getInventoryBuilder()
+								.construct(G333Config.BOOKSHELF_SIZE, name);
+						BITInventory.saveBitInventory(sPlayer, sBlock, owner, name,
+								coowners, inventory, usecost);
+						sPlayer.closeActiveWindow();
+						bPlayer.cleanupPopupScreen(sPlayer);
+					}
+
+				}
+				
+				else if ((BITPlayer.BITButtons.get(uuid) == "removeBookshelfButton")) {
+					if (validateSetPincodeFields(sPlayer)) {
+					}
+
+				}
 
 				// ************************************
 				// This only happens if I have forgot to handle a button
@@ -202,35 +228,35 @@ public class BITSpoutListener extends SpoutListener {
 		int id = sPlayer.getEntityId();
 		if (BITPlayer.closetimer.get(id).getText().equals("")) {
 			BITPlayer.closetimer.get(id).setText("0");
-			BITPlayer.pincodePopupScreen.get(id).setDirty(true);
+			BITPlayer.popupScreen.get(id).setDirty(true);
 		}
 		if (BITPlayer.useCost.get(id).getText().equals("")) {
 			BITPlayer.useCost.get(id).setText("0");
-			BITPlayer.pincodePopupScreen.get(id).setDirty(true);
+			BITPlayer.popupScreen.get(id).setDirty(true);
 		}
 		int closetimer = Integer.valueOf(BITPlayer.closetimer.get(id).getText());
 		int useCost = Integer.valueOf(BITPlayer.useCost.get(id).getText());
 		if (closetimer < 0) {
 			G333Messages.sendNotification(sPlayer, "Closetimer must be > 0");
 			BITPlayer.closetimer.get(id).setText("0");
-			BITPlayer.pincodePopupScreen.get(id).setDirty(true);
+			BITPlayer.popupScreen.get(id).setDirty(true);
 			return false;
 		} else if (closetimer > 3600) {
 			G333Messages.sendNotification(sPlayer, "Closetim. must be<3600");
 			BITPlayer.closetimer.get(id).setText("3600");
-			BITPlayer.pincodePopupScreen.get(id).setDirty(true);
+			BITPlayer.popupScreen.get(id).setDirty(true);
 			return false;
 		} else if (useCost > G333Config.DIGILOCK_USEMAXCOST) {
 			G333Messages.sendNotification(sPlayer, "Cost must be less "
 					+ G333Config.DIGILOCK_USEMAXCOST);
 			BITPlayer.useCost.get(id).setText(
 					String.valueOf(G333Config.DIGILOCK_USEMAXCOST));
-			BITPlayer.pincodePopupScreen.get(id).setDirty(true);
+			BITPlayer.popupScreen.get(id).setDirty(true);
 			return false;
 		} else if (useCost < 0) {
 			G333Messages.sendNotification(sPlayer, "Cost must be > 0");
 			BITPlayer.useCost.get(id).setText("0");
-			BITPlayer.pincodePopupScreen.get(id).setDirty(true);
+			BITPlayer.popupScreen.get(id).setDirty(true);
 			return false;
 		}
 

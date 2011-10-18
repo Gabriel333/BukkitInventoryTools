@@ -43,6 +43,14 @@ public class BITDigiLock {
 	/**
 	 * Constructs a new BITDigiLock
 	 * 
+	 * @param block
+	 * @param pincode
+	 * @param owner
+	 * @param closetimer
+	 * @param coowners
+	 * @param typeId
+	 * @param connectedTo
+	 * @param useCost
 	 */
 	BITDigiLock(SpoutBlock block, String pincode, String owner, int closetimer,
 			String coowners, int typeId, String connectedTo, int useCost) {
@@ -190,6 +198,14 @@ public class BITDigiLock {
 		return false;
 	}
 
+	/**
+	 * Method to find the the next block which is connected to a lever or a
+	 * stonebutton.
+	 * 
+	 * @param sBlock
+	 *            SpoutBlock
+	 * @return SpoutBlock
+	 */
 	public static SpoutBlock getDigiLockBlock(SpoutBlock sBlock) {
 		if (isDoor(sBlock)) {
 			if (isDoubleDoor(sBlock)) {
@@ -222,6 +238,12 @@ public class BITDigiLock {
 		return sBlock;
 	}
 
+	/**
+	 * Checks if sPlayer is co Owner of the DigiLock.
+	 * 
+	 * @param sPlayer
+	 * @return true or false
+	 */
 	public boolean isCoowner(SpoutPlayer sPlayer) {
 		if (coOwners.toLowerCase().contains(sPlayer.getName().toLowerCase())
 				|| coOwners.toLowerCase().contains("everyone"))
@@ -229,12 +251,24 @@ public class BITDigiLock {
 		return false;
 	}
 
+	/**
+	 * Checks if sPlayer is Owner of the DigiLock.
+	 * 
+	 * @param sPlayer
+	 * @return true or false
+	 */
 	public boolean isOwner(SpoutPlayer sPlayer) {
 		if (owner.toLowerCase().equals(sPlayer.getName().toLowerCase()))
 			return true;
 		return false;
 	}
 
+	/**
+	 * Checks if sPlayer is Owner of the DigiLock placed on sBlock.
+	 * 
+	 * @param sPlayer
+	 * @return true or false
+	 */
 	public static boolean isOwner(SpoutPlayer sPlayer, SpoutBlock sBlock) {
 		if (BITDigiLock.loadDigiLock(sBlock).getOwner().toLowerCase()
 				.equals(sPlayer.getName().toLowerCase()))
@@ -262,9 +296,13 @@ public class BITDigiLock {
 			Material.STONE_BUTTON, Material.BOOKSHELF, Material.TRAP_DOOR,
 			Material.SIGN, Material.SIGN_POST, Material.WALL_SIGN };
 
-	// Material.STORAGE_MINECART, , Material.REDSTONE_WIRE
-
 	// check if material is a lockable block
+	/**
+	 * Check if the Block is made of a lockable material.
+	 * 
+	 * @param block
+	 * @return true or false
+	 */
 	static boolean isLockable(Block block) {
 		for (Material i : lockablematerials) {
 			if (i == block.getType())
@@ -523,6 +561,12 @@ public class BITDigiLock {
 	// STONE_BUTTON
 	//
 	// *******************************************************
+	/**
+	 * Check if sBlock is a STONE_BUTTON
+	 * 
+	 * @param sBlock
+	 * @return true or false
+	 */
 	public static boolean isButton(SpoutBlock sBlock) {
 		if (sBlock.getType().equals(Material.STONE_BUTTON)) {
 			return true;
@@ -531,11 +575,24 @@ public class BITDigiLock {
 		}
 	}
 
+	/**
+	 * Check if the STONE_BUTTON is on.
+	 * 
+	 * @param block
+	 * @return
+	 */
 	public static boolean isButtonOn(SpoutBlock block) {
 		Button button = (Button) block.getState().getData();
 		return button.isPowered();
 	}
 
+	/**
+	 * Handle the actions when a player presses the STONE_BUTTON
+	 * 
+	 * @param sPlayer SpoutPlayer
+	 * @param sBlock SpoutBlock
+	 * @param cost the cost the player is charged when the button is pressed.
+	 */
 	public static void pressButtonOn(SpoutPlayer sPlayer, SpoutBlock sBlock,
 			int cost) {
 		boolean doTheWork = false;
@@ -543,7 +600,6 @@ public class BITDigiLock {
 		SpoutBlock nextBlock = digilock.getNextLockedBlock(sPlayer, sBlock);
 		if (nextBlock != null) {
 			BITDigiLock nextDigilock = BITDigiLock.loadDigiLock(nextBlock);
-			sPlayer.sendMessage("nextBlock:" + nextBlock.getType());
 			if (digilock.getOwner().equalsIgnoreCase(nextDigilock.getOwner())) {
 				doTheWork = true;
 			} else {
@@ -580,10 +636,13 @@ public class BITDigiLock {
 				// sBlock.setData((byte) ((lever.getData() | 8) ^ 8));
 				if (BITDigiLock.isDoubleDoor(nextBlock)) {
 					BITDigiLock.openDoubleDoor(sPlayer, nextBlock, 0);
+					BITDigiLock.scheduleCloseDoubleDoor(sPlayer, nextBlock, 5, 0);
 				} else if (BITDigiLock.isDoor(nextBlock)) {
 					BITDigiLock.openDoor(sPlayer, nextBlock, 0);
+					BITDigiLock.scheduleCloseDoor(sPlayer, nextBlock, 5, 0);
 				} else if (BITDigiLock.isTrapdoor(nextBlock)) {
 					BITDigiLock.openTrapdoor(sPlayer, nextBlock, 0);
+					BITDigiLock.scheduleCloseTrapdoor(sPlayer, nextBlock,5);
 				} else if (BITDigiLock.isDispenser(nextBlock)) {
 					Dispenser dispenser = (Dispenser) nextBlock.getState();
 					dispenser.dispense();
@@ -593,11 +652,13 @@ public class BITDigiLock {
 		}
 	}
 
-	// *******************************************************
-	//
-	// DISPENSER
-	//
-	// *******************************************************
+
+	/**
+	 * Check if sBlock is a DISPENSER.
+	 * 
+	 * @param sBlock
+	 * @return
+	 */
 	public static boolean isDispenser(SpoutBlock sBlock) {
 		if (sBlock.getType().equals(Material.DISPENSER)) {
 			return true;
@@ -606,11 +667,12 @@ public class BITDigiLock {
 		}
 	}
 
-	// *******************************************************
-	//
-	// LEVERS
-	//
-	// *******************************************************
+	/**
+	 * Check if sBlock is a LEVER.
+	 * 
+	 * @param sBlock
+	 * @return
+	 */
 	public static boolean isLever(SpoutBlock sBlock) {
 		if (sBlock.getType().equals(Material.LEVER)) {
 			return true;
@@ -619,8 +681,14 @@ public class BITDigiLock {
 		}
 	}
 
-	public static boolean isLeverOn(SpoutBlock block) {
-		Lever lever = (Lever) block.getState().getData();
+	/**
+	 * Set the LEVER on - on sBlock.
+	 * 
+	 * @param sBlock
+	 * @return
+	 */
+	public static boolean isLeverOn(SpoutBlock sBlock) {
+		Lever lever = (Lever) sBlock.getState().getData();
 		return lever.isPowered();
 	}
 
@@ -748,15 +816,15 @@ public class BITDigiLock {
 		return false;
 	}
 
-	public static boolean isDoorOpen(SpoutBlock block) {
-		if ((block.getState().getData().getData() & 4) == 4) {
+	public static boolean isDoorOpen(SpoutBlock sBlock) {
+		if ((sBlock.getState().getData().getData() & 4) == 4) {
 			return true;
 		} else {
 			return false;
 		}
 	}
 
-	public static void openDoor(SpoutPlayer sPlayer, SpoutBlock block, int cost) {
+	public static void openDoor(SpoutPlayer sPlayer, SpoutBlock sBlock, int cost) {
 		boolean opendoor = true;
 		if (BIT.useEconomy && cost > 0) {
 			if (BIT.plugin.Method.hasAccount(sPlayer.getName())) {
@@ -776,25 +844,25 @@ public class BITDigiLock {
 				}
 			}
 		}
-		Door door = (Door) block.getState().getData();
+		Door door = (Door) sBlock.getState().getData();
 		SpoutBlock nextBlock;
 		if (opendoor) {
-			if (!isDoorOpen(block)) {
-				playDigiLockSound(block);
-				block.setData((byte) (block.getState().getData().getData() | 4));
+			if (!isDoorOpen(sBlock)) {
+				playDigiLockSound(sBlock);
+				sBlock.setData((byte) (sBlock.getState().getData().getData() | 4));
 				if (door.isTopHalf()) {
-					nextBlock = block.getRelative(BlockFace.DOWN);
+					nextBlock = sBlock.getRelative(BlockFace.DOWN);
 					nextBlock.setData((byte) (nextBlock.getState().getData()
 							.getData() | 4));
 				} else {
-					nextBlock = block.getRelative(BlockFace.UP);
+					nextBlock = sBlock.getRelative(BlockFace.UP);
 					nextBlock.setData((byte) (nextBlock.getState().getData()
 							.getData() | 4));
 				}
-				BITDigiLock digilock = loadDigiLock(block);
+				BITDigiLock digilock = loadDigiLock(sBlock);
 				if (digilock != null) {
-					if (digilock.getClosetimer() > 0 && !isDoubleDoor(block)) {
-						scheduleCloseDoor(sPlayer, block,
+					if (digilock.getClosetimer() > 0 && !isDoubleDoor(sBlock)) {
+						scheduleCloseDoor(sPlayer, sBlock,
 								digilock.getClosetimer(), 0);
 					}
 				}
@@ -842,35 +910,35 @@ public class BITDigiLock {
 		}
 	}
 
-	public static void closeDoor(SpoutBlock block) {
-		if (isDoorOpen(block)) {
-			playDigiLockSound(block);
-			Door door = (Door) block.getState().getData();
+	public static void closeDoor(SpoutBlock sBlock) {
+		if (isDoorOpen(sBlock)) {
+			playDigiLockSound(sBlock);
+			Door door = (Door) sBlock.getState().getData();
 			SpoutBlock nextBlock;
-			block.setData((byte) ((block.getState().getData().getData() | 4) ^ 4));
+			sBlock.setData((byte) ((sBlock.getState().getData().getData() | 4) ^ 4));
 			if (door.isTopHalf()) {
-				nextBlock = block.getRelative(BlockFace.DOWN);
+				nextBlock = sBlock.getRelative(BlockFace.DOWN);
 				nextBlock.setData((byte) ((nextBlock.getState().getData()
 						.getData() | 4) ^ 4));
 			} else {
-				nextBlock = block.getRelative(BlockFace.UP);
+				nextBlock = sBlock.getRelative(BlockFace.UP);
 				nextBlock.setData((byte) ((nextBlock.getState().getData()
 						.getData() | 4) ^ 4));
 			}
 		}
 	}
 
-	public static void toggleDoor(SpoutBlock block) {
-		playDigiLockSound(block);
-		Door door = (Door) block.getState().getData();
+	public static void toggleDoor(SpoutBlock sBlock) {
+		playDigiLockSound(sBlock);
+		Door door = (Door) sBlock.getState().getData();
 		SpoutBlock nextBlock;
-		block.setData((byte) (block.getState().getData().getData() ^ 4));
+		sBlock.setData((byte) (sBlock.getState().getData().getData() ^ 4));
 		if (door.isTopHalf()) {
-			nextBlock = block.getRelative(BlockFace.DOWN);
+			nextBlock = sBlock.getRelative(BlockFace.DOWN);
 			nextBlock
 					.setData((byte) (nextBlock.getState().getData().getData() ^ 4));
 		} else {
-			nextBlock = block.getRelative(BlockFace.UP);
+			nextBlock = sBlock.getRelative(BlockFace.UP);
 			nextBlock
 					.setData((byte) (nextBlock.getState().getData().getData() ^ 4));
 		}
@@ -913,8 +981,8 @@ public class BITDigiLock {
 		return false;
 	}
 
-	public static boolean isTrapdoorOpen(SpoutPlayer sPlayer, SpoutBlock block) {
-		if ((block.getState().getData().getData() & 4) == 4) {
+	public static boolean isTrapdoorOpen(SpoutPlayer sPlayer, SpoutBlock sBlock) {
+		if ((sBlock.getState().getData().getData() & 4) == 4) {
 			return true;
 		} else {
 			return false;
@@ -997,20 +1065,20 @@ public class BITDigiLock {
 	// DOUBLEDOORS
 	//
 	// *******************************************************
-	public static boolean isDoubleDoor(SpoutBlock block) {
-		if (isDoor(block)) {
-			if (isDoor(block.getFace(BlockFace.EAST))
-					|| isDoor(block.getFace(BlockFace.NORTH))
-					|| isDoor(block.getFace(BlockFace.SOUTH))
-					|| isDoor(block.getFace(BlockFace.WEST))) {
+	public static boolean isDoubleDoor(SpoutBlock sBlock) {
+		if (isDoor(sBlock)) {
+			if (isDoor(sBlock.getFace(BlockFace.EAST))
+					|| isDoor(sBlock.getFace(BlockFace.NORTH))
+					|| isDoor(sBlock.getFace(BlockFace.SOUTH))
+					|| isDoor(sBlock.getFace(BlockFace.WEST))) {
 				return true;
 			}
 		}
 		return false;
 	}
 
-	public static boolean isDoubleDoorOpen(SpoutBlock block) {
-		return (isDoorOpen(getLeftDoubleDoor(block)) || !isDoorOpen(getRightDoubleDoor(block)));
+	public static boolean isDoubleDoorOpen(SpoutBlock sBlock) {
+		return (isDoorOpen(getLeftDoubleDoor(sBlock)) || !isDoorOpen(getRightDoubleDoor(sBlock)));
 	}
 
 	public static void closeDoubleDoor(SpoutPlayer sPlayer, SpoutBlock sBlock,
@@ -1037,7 +1105,6 @@ public class BITDigiLock {
 				openDoor(sPlayer, getLeftDoubleDoor(sBlock), cost);
 			}
 		}
-		// if (BITDigiLock.isLocked(sBlock)) {
 		BITDigiLock digilock = loadDigiLock(sBlock);
 		if (digilock != null) {
 			if (digilock.getClosetimer() > 0) {
@@ -1045,40 +1112,39 @@ public class BITDigiLock {
 						digilock.getClosetimer(), 0);
 			}
 		}
-		// }
 	}
 
-	public static boolean isLeftDoubleDoor(SpoutBlock block) {
-		if (isDoubleDoor(block)) {
-			Door door = (Door) block.getState().getData();
+	public static boolean isLeftDoubleDoor(SpoutBlock sBlock) {
+		if (isDoubleDoor(sBlock)) {
+			Door door = (Door) sBlock.getState().getData();
 			// left door:NORTH,NORTH_EAST Right door:WEST,NORTH_WEST
 			// left door:WEST,NORTH_WEST Right door:SOUTH,SOUTH_WEST
 			// left door:SOUTH,SOUTH_WEST Right door:EAST,SOUTH_EAST
 			// left door:EAST,SOUTH_EAST Right door:NORTH,NORTH_EAST
 			if (door.getFacing() == BlockFace.NORTH
 					&& door.getHingeCorner() == BlockFace.NORTH_EAST) {
-				if (isDoor(block.getRelative(BlockFace.WEST))) {
+				if (isDoor(sBlock.getRelative(BlockFace.WEST))) {
 					return true;
 				} else {
 					return false;
 				}
 			} else if (door.getFacing() == BlockFace.WEST
 					&& door.getHingeCorner() == BlockFace.NORTH_WEST) {
-				if (isDoor(block.getRelative(BlockFace.SOUTH))) {
+				if (isDoor(sBlock.getRelative(BlockFace.SOUTH))) {
 					return true;
 				} else {
 					return false;
 				}
 			} else if (door.getFacing() == BlockFace.EAST
 					&& door.getHingeCorner() == BlockFace.SOUTH_EAST) {
-				if (isDoor(block.getRelative(BlockFace.NORTH))) {
+				if (isDoor(sBlock.getRelative(BlockFace.NORTH))) {
 					return true;
 				} else {
 					return false;
 				}
 			} else if (door.getFacing() == BlockFace.SOUTH
 					&& door.getHingeCorner() == BlockFace.SOUTH_WEST) {
-				if (isDoor(block.getRelative(BlockFace.EAST))) {
+				if (isDoor(sBlock.getRelative(BlockFace.EAST))) {
 					return true;
 				} else {
 					return false;
@@ -1088,35 +1154,35 @@ public class BITDigiLock {
 		return false;
 	}
 
-	public static SpoutBlock getLeftDoubleDoor(SpoutBlock block) {
-		if (isLeftDoubleDoor(block)) {
-			return block;
+	public static SpoutBlock getLeftDoubleDoor(SpoutBlock sBlock) {
+		if (isLeftDoubleDoor(sBlock)) {
+			return sBlock;
 		} else {
-			Door door = (Door) block.getState().getData();
+			Door door = (Door) sBlock.getState().getData();
 			// left door:NORTH,NORTH_EAST Right door:WEST,NORTH_WEST
 			// left door:WEST,NORTH_WEST Right door:SOUTH,SOUTH_WEST
 			// left door:EAST,SOUTH_EAST Right door:NORTH,NORTH_EAST
 			// left door:SOUTH,SOUTH_WEST Right door:EAST,SOUTH_EAST
 			if (door.getFacing() == BlockFace.NORTH
 					&& door.getHingeCorner() == BlockFace.NORTH_EAST) {
-				return block.getRelative(BlockFace.SOUTH);
+				return sBlock.getRelative(BlockFace.SOUTH);
 			} else if (door.getFacing() == BlockFace.WEST
 					&& door.getHingeCorner() == BlockFace.NORTH_WEST) {
-				return block.getRelative(BlockFace.EAST);
+				return sBlock.getRelative(BlockFace.EAST);
 			} else if (door.getFacing() == BlockFace.EAST
 					&& door.getHingeCorner() == BlockFace.SOUTH_EAST) {
-				return block.getRelative(BlockFace.WEST);
+				return sBlock.getRelative(BlockFace.WEST);
 			} else {
 				// if (door.getFacing() == BlockFace.SOUTH
 				// && door.getHingeCorner() == BlockFace.SOUTH_WEST) {
-				return block.getRelative(BlockFace.NORTH);
+				return sBlock.getRelative(BlockFace.NORTH);
 			}
 		}
 	}
 
-	public static boolean isRightDoubleDoor(SpoutBlock block) {
-		if (isDoubleDoor(block)) {
-			if (isLeftDoubleDoor(block)) {
+	public static boolean isRightDoubleDoor(SpoutBlock sBlock) {
+		if (isDoubleDoor(sBlock)) {
+			if (isLeftDoubleDoor(sBlock)) {
 				return false;
 			} else {
 				return true;
@@ -1125,28 +1191,28 @@ public class BITDigiLock {
 		return false;
 	}
 
-	public static SpoutBlock getRightDoubleDoor(SpoutBlock block) {
-		if (isRightDoubleDoor(block)) {
-			return block;
+	public static SpoutBlock getRightDoubleDoor(SpoutBlock sBlock) {
+		if (isRightDoubleDoor(sBlock)) {
+			return sBlock;
 		} else {
-			Door door = (Door) block.getState().getData();
+			Door door = (Door) sBlock.getState().getData();
 			// left door:NORTH,NORTH_EAST Right door:WEST,NORTH_WEST
 			// left door:WEST,NORTH_WEST Right door:SOUTH,SOUTH_WEST
 			// left door:EAST,SOUTH_EAST Right door:NORTH,NORTH_EAST
 			// left door:SOUTH,SOUTH_WEST Right door:EAST,SOUTH_EAST
 			if (door.getFacing() == BlockFace.NORTH
 					&& door.getHingeCorner() == BlockFace.NORTH_EAST) {
-				return block.getRelative(BlockFace.WEST);
+				return sBlock.getRelative(BlockFace.WEST);
 			} else if (door.getFacing() == BlockFace.WEST
 					&& door.getHingeCorner() == BlockFace.NORTH_WEST) {
-				return block.getRelative(BlockFace.SOUTH);
+				return sBlock.getRelative(BlockFace.SOUTH);
 			} else if (door.getFacing() == BlockFace.EAST
 					&& door.getHingeCorner() == BlockFace.SOUTH_EAST) {
-				return block.getRelative(BlockFace.NORTH);
+				return sBlock.getRelative(BlockFace.NORTH);
 			} else {
 				// (door.getFacing() == BlockFace.SOUTH
 				// && door.getHingeCorner() == BlockFace.SOUTH_WEST) {
-				return block.getRelative(BlockFace.EAST);
+				return sBlock.getRelative(BlockFace.EAST);
 			}
 		}
 	}

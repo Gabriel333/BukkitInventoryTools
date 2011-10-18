@@ -16,7 +16,6 @@ import org.bukkit.inventory.Inventory;
 import org.bukkit.material.Button;
 import org.bukkit.material.Lever;
 
-import org.getspout.spoutapi.SpoutManager;
 import org.getspout.spoutapi.block.SpoutBlock;
 import org.getspout.spoutapi.block.SpoutChest;
 import org.getspout.spoutapi.gui.GenericPopup;
@@ -506,14 +505,9 @@ public class BITPlayerListener extends PlayerListener {
 				} else if (!BITInventory.isBitInventoryCreated(block)
 						&& G333Permissions.hasPerm(sPlayer, "bookshelf.create",
 								G333Permissions.NOT_QUIET)) {
-					String coowners = "";
-					String name = "";
-					String owner = sPlayer.getName();
-					int usecost = 0;
-					Inventory inventory = SpoutManager.getInventoryBuilder()
-							.construct(G333Config.BOOKSHELF_SIZE, name);
-					BITInventory.saveBitInventory(sPlayer, block, owner, name,
-							coowners, inventory, usecost);
+		
+					bPlayer.setBookshelfInventory(sPlayer,block);
+					
 				}
 
 			}
@@ -551,7 +545,7 @@ public class BITPlayerListener extends PlayerListener {
 	private void removeUserData(int id) {
 		if (BITPlayer.userno.containsKey(id)) {
 			BITPlayer.userno.remove(id);
-			BITPlayer.pincodePopupScreen.remove(id);
+			BITPlayer.popupScreen.remove(id);
 			BITPlayer.pincode.remove(id);
 			BITPlayer.owner.remove(id);
 			BITPlayer.coOwners.remove(id);
@@ -563,8 +557,8 @@ public class BITPlayerListener extends PlayerListener {
 
 	private void addUserData(int id) {
 		if (!BITPlayer.userno.containsKey(id)) {
-			BITPlayer.userno.put(id, new Integer(0));
-			BITPlayer.pincodePopupScreen.put(id, new GenericPopup());
+			BITPlayer.userno.put(id, new Integer(id));
+			BITPlayer.popupScreen.put(id, new GenericPopup());
 			BITPlayer.pincode.put(id, new GenericTextField());
 			BITPlayer.owner.put(id, new GenericTextField());
 			BITPlayer.coOwners.put(id, new GenericTextField());

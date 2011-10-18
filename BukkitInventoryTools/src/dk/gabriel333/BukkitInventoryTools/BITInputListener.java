@@ -281,7 +281,7 @@ public class BITInputListener extends InputListener {
 				if (keypressed.equals("KEY_ESCAPE")) {
 					sPlayer.closeActiveWindow();
 					// Im not sure if the next 2 lines need to be here...
-					bPlayer.cleanupPincodePopupScreen(sPlayer);
+					bPlayer.cleanupPopupScreen(sPlayer);
 					sPlayer.getMainScreen().removeWidgets(BIT.plugin);
 				}
 			}

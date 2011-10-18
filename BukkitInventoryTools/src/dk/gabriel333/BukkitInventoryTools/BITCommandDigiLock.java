@@ -143,9 +143,9 @@ public class BITCommandDigiLock implements CommandExecutor {
 									}
 								}
 							} else if (digilock.getBlock().getType() == Material.BOOKSHELF) {
-							
-							// TODO: handle the bookshelf
-								
+								BITInventory bitInventory = BITInventory
+										.loadBitInventory(sPlayer, block);
+								bitInventory.openBitInventory(sPlayer,bitInventory);
 							}
 							
 						} else {

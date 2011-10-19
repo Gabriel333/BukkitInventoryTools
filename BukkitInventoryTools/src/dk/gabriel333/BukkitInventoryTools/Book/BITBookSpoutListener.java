@@ -26,14 +26,15 @@ public class BITBookSpoutListener extends SpoutListener {
 				//TODO: get actual book from BITBooks(bookId)
 				bitBook.loadBook();
 				
+				sPlayer.sendMessage("Button:"+BITBook.BITButtons.get(uuid));
 				// ************************************
 				// Buttons in BITBook
 				// ************************************
 				if (BITBook.BITButtons.get(uuid) == "saveBookButton") {
-					//TODO: Save Book
 					BITBook.popupScreen.get(id).close();
 					bitBook.cleanupPopupScreen(sPlayer);
 					BITBook.BITButtons.remove(uuid);
+					//TODO: save BITBook
 
 				} else if (BITBook.BITButtons.get(uuid) == "cancelBookButton") {
 					BITBook.popupScreen.get(id).close();
@@ -45,6 +46,14 @@ public class BITBookSpoutListener extends SpoutListener {
 						
 					}
 				} else if ((BITBook.BITButtons.get(uuid) == "CoAuthorButton")) {
+					if (validateFields(sPlayer)){
+						
+					}
+				} else if ((BITBook.BITButtons.get(uuid) == "nextPageButton")) {
+					if (validateFields(sPlayer)){
+						
+					}
+				} else if ((BITBook.BITButtons.get(uuid) == "previousPageButton")) {
 					if (validateFields(sPlayer)){
 						
 					}

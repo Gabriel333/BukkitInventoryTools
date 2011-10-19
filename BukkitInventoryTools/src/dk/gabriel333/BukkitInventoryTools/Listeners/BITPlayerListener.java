@@ -59,7 +59,7 @@ public class BITPlayerListener extends PlayerListener {
 			BITDigiLock digilock = BITDigiLock.loadDigiLock(block);
 			if (G333Permissions.hasPerm(sPlayer, "digilock.use",
 					G333Permissions.NOT_QUIET)) {
-				
+
 				// HANDLING A LOCKED CHEST AND DOUBLECHEST
 				if (BITDigiLock.isChest(block)) {
 					if ((digilock.getPincode().equals("") || digilock
@@ -509,9 +509,9 @@ public class BITPlayerListener extends PlayerListener {
 				} else if (!BITInventory.isBitInventoryCreated(block)
 						&& G333Permissions.hasPerm(sPlayer, "bookshelf.create",
 								G333Permissions.NOT_QUIET)) {
-		
-					bPlayer.setBookshelfInventory(sPlayer,block);
-					
+
+					bPlayer.setBookshelfInventory(sPlayer, block);
+
 				}
 
 			}
@@ -548,6 +548,7 @@ public class BITPlayerListener extends PlayerListener {
 
 	private void removeUserData(int id) {
 		if (BITPlayer.userno.containsKey(id)) {
+			// DigiLock
 			BITPlayer.userno.remove(id);
 			BITPlayer.popupScreen.remove(id);
 			BITPlayer.pincode.remove(id);
@@ -556,13 +557,22 @@ public class BITPlayerListener extends PlayerListener {
 			BITPlayer.closetimer.remove(id);
 			BITPlayer.useCost.remove(id);
 			BITPlayer.connectedTo.remove(id);
-			// BOOK
+			// BITBook
 			BITBook.popupScreen.remove(id);
+			BITBook.titleGUI.remove(id);
+			BITBook.authorGUI.remove(id);
+			BITBook.coAuthorsGUI.remove(id);
+			BITBook.masterCopyGUI.remove(id);
+			BITBook.forceBookToPlayerInventoryGUI.remove(id);
+			BITBook.canBeMovedFromInventoryGUI.remove(id);
+			BITBook.copyTheBookWhenMovedGUI.remove(id);
+			BITBook.useCostGUI.remove(id);
 		}
 	}
 
 	private void addUserData(int id) {
 		if (!BITPlayer.userno.containsKey(id)) {
+			//DigiLock
 			BITPlayer.userno.put(id, new Integer(id));
 			BITPlayer.popupScreen.put(id, new GenericPopup());
 			BITPlayer.pincode.put(id, new GenericTextField());
@@ -571,8 +581,16 @@ public class BITPlayerListener extends PlayerListener {
 			BITPlayer.closetimer.put(id, new GenericTextField());
 			BITPlayer.useCost.put(id, new GenericTextField());
 			BITPlayer.connectedTo.put(id, new GenericTextField());
-			//BOOK
+			// BITBook
 			BITBook.popupScreen.put(id, new GenericPopup());
+			BITBook.titleGUI.put(id, new GenericTextField());
+			BITBook.authorGUI.put(id, new GenericTextField());
+			BITBook.coAuthorsGUI.put(id, new GenericTextField());
+			BITBook.masterCopyGUI.put(id, new GenericTextField());
+			BITBook.forceBookToPlayerInventoryGUI.put(id, new GenericTextField());
+			BITBook.canBeMovedFromInventoryGUI.put(id, new GenericTextField());
+			BITBook.copyTheBookWhenMovedGUI.put(id, new GenericTextField());
+			BITBook.useCostGUI.put(id, new GenericTextField());
 		}
 	}
 

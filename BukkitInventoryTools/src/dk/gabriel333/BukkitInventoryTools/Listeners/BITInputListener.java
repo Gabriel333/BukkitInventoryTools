@@ -28,10 +28,6 @@ public class BITInputListener extends InputListener {
 		BITPlayer bPlayer = new BITPlayer(sPlayer);
 		ScreenType screentype = event.getScreenType();
 		String keypressed = event.getKey().name();
-		//if (G333Config.DEBUG_EVENTS) {
-		//	sPlayer.sendMessage("BITInputListn.key:" + keypressed
-		//			+ " Screentype:" + screentype);
-		//}
 		if (!(keypressed.equals(G333Config.LIBRARY_SORTKEY)
 				|| keypressed.equals(G333Config.LIBRARY_LOCKKEY)
 				|| keypressed.equals("KEY_ESCAPE") || keypressed

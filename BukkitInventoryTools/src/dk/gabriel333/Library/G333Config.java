@@ -48,10 +48,12 @@ public class G333Config {
 	public static int DIGILOCK_DESTROYCOST;
 	
 	public static int BOOKSHELF_COST;
+	public static int BOOKSHELF_USEMAXCOST;
 	public static int BOOKSHELF_SIZE;
 	public static int BOOKSHELF_DESTROYCOST;
 	
 	public static int BOOK_COST;
+	public static int BOOK_USEMAXCOST;
 	public static int BOOK_DESTROYCOST;
 	
 	public static Boolean DEBUG_PERMISSIONS;
@@ -119,17 +121,19 @@ public class G333Config {
 		buckets = SORT_BUCKETS.split(",");
 		
 		//Digilock
-		DIGILOCK_COST = getIntParm("DigiLock.Cost", 100);
-		DIGILOCK_USEMAXCOST = getIntParm("DigiLock.UseMaxCost", 0);
+		DIGILOCK_COST = getIntParm("DigiLock.Cost", 50);
+		DIGILOCK_USEMAXCOST = getIntParm("DigiLock.UseMaxCost", 100);
 		DIGILOCK_DESTROYCOST = getIntParm("DigiLock.DestroyCost", -10);
 		
 		//Bookshelf
 		BOOKSHELF_COST = getIntParm("Bookshelf.Cost", 50);
+		BOOKSHELF_USEMAXCOST = getIntParm("Bookshelf.UseMaxCost", 100);
 		BOOKSHELF_SIZE = getIntParm("Bookshelf.Size", 9);
 		BOOKSHELF_DESTROYCOST = getIntParm("Bookshelf.DestroyCost", 10);
 		
 		//Book
 		BOOK_COST = getIntParm("Book.Cost", 10);
+		BOOK_USEMAXCOST = getIntParm("Book.UseMaxCost", 50);
 		BOOK_DESTROYCOST = getIntParm("Book.DestroyCost", 0);
 		
 				

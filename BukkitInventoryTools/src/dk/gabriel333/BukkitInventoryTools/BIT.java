@@ -27,7 +27,7 @@ import dk.gabriel333.BukkitInventoryTools.Listeners.BITInventoryListener;
 import dk.gabriel333.BukkitInventoryTools.Listeners.BITPlayerListener;
 import dk.gabriel333.BukkitInventoryTools.Listeners.BITServerListener;
 import dk.gabriel333.BukkitInventoryTools.Listeners.BITSpoutListener;
-import dk.gabriel333.BukkitInventoryTools.Book.BITBookInputListener;
+import dk.gabriel333.BukkitInventoryTools.Book.*;
 import dk.gabriel333.Library.G333Config;
 import dk.gabriel333.Library.G333Messages;
 import dk.gabriel333.Library.G333Plugin;
@@ -135,6 +135,8 @@ public class BIT extends JavaPlugin {
 				Priority.Normal, this);
 		// BOOK Listeners
 		pm.registerEvent(Event.Type.CUSTOM_EVENT, new BITBookInputListener(),
+				Event.Priority.Normal, this);
+		pm.registerEvent(Event.Type.CUSTOM_EVENT, new BITBookSpoutListener(),
 				Event.Priority.Normal, this);
 	}
 

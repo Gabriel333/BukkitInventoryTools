@@ -73,11 +73,11 @@ public class BITBookInputListener extends InputListener {
 
 				//}
 			} else if (keypressed.equals("KEY_ESCAPE")) {
-				bitBook.closeBook(sPlayer);
+				bitBook.cleanupPopupScreen(sPlayer);
 
 			} else if (keypressed.equals("KEY_RETURN")) {
 				//TODO: save book
-				bitBook.closeBook(sPlayer);
+				bitBook.cleanupPopupScreen(sPlayer);
 
 			}
 
@@ -159,7 +159,7 @@ public class BITBookInputListener extends InputListener {
 				if (keypressed.equals(G333Config.LIBRARY_READKEY)) {
 
 					// IS BOOK CREATED
-					if (BITBook.isBookCreated()) {
+					if (BITBook.isWritten()) {
 						if ((G333Permissions.hasPerm(sPlayer, "book.use",
 								G333Permissions.NOT_QUIET))
 								|| G333Permissions

@@ -93,6 +93,7 @@ DigiLock:
 #              destroys the Bookshelf.
 Bookshelf:
     Cost: 50
+    UseMaxCost: 100
     Size: 9
     DestroyCost: 10
 
@@ -106,6 +107,7 @@ Bookshelf:
 #              destroys the Book.
 Book:
     Cost: 10
+    UseMaxCost: 50
     DestroyCost: 0
 
 ############################################################

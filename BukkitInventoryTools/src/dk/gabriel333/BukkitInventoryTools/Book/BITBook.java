@@ -48,7 +48,7 @@ public class BITBook {
 	/**
 	 * Contructs a new BITBook
 	 * 
-	 * @param id
+	 * @param bookId
 	 * @param sBlock
 	 * @param slotNo
 	 * @param title
@@ -88,6 +88,17 @@ public class BITBook {
 	protected Map<Integer, BITBook> bitBooks = new HashMap<Integer,BITBook>();
 	public static Map<Integer, PopupScreen> popupScreen = new HashMap<Integer, PopupScreen>();
 	public static Map<UUID, String> BITButtons = new HashMap<UUID, String>();
+	
+	// Parameters for the book
+	public static Map<Integer, GenericTextField> titleGUI = new HashMap<Integer, GenericTextField>();
+	public static Map<Integer, GenericTextField> authorGUI = new HashMap<Integer, GenericTextField>();
+	public static Map<Integer, GenericTextField> coAuthorsGUI = new HashMap<Integer, GenericTextField>();
+	public static Map<Integer, GenericTextField> masterCopyGUI = new HashMap<Integer, GenericTextField>();
+	public static Map<Integer, GenericTextField> forceBookToPlayerInventoryGUI = new HashMap<Integer, GenericTextField>();
+	public static Map<Integer, GenericTextField> canBeMovedFromInventoryGUI = new HashMap<Integer, GenericTextField>();
+	public static Map<Integer, GenericTextField> copyTheBookWhenMovedGUI = new HashMap<Integer, GenericTextField>();
+    public static Map<Integer, GenericTextField> useCostGUI = new HashMap<Integer, GenericTextField>();
+	
 
 	public void setBitBook(int bookId, SpoutBlock sBlock, int slotNo,
 			String title, String author, String coAuthors, int numberOfPages,
@@ -141,9 +152,9 @@ public class BITBook {
 		this.title = title;
 	}
 
-	public static boolean isBookCreated() {
-		// TODO: check if the book is created (true) or if it is empty
-		return false;
+	public static boolean isWritten() {
+		// TODO: check if the book is written (true) or if it is empty
+		return true;
 	}
 
 	public void read(Player player, int page) {
@@ -204,9 +215,9 @@ public class BITBook {
 
 	public void openBook(SpoutPlayer sPlayer) {
 		// open BookGUI
-		int y = 40, itemHeight = 20;
+		int y = 30, itemHeight = 20;
 		int x = 100;
-		int textFieldHeight = 60, textFieldWidth = 300;
+		int textFieldHeight = 100, textFieldWidth = 320;
 		int buttonHeight = 20, buttonWidth = 80;
 		int id = sPlayer.getEntityId();
 
@@ -225,10 +236,12 @@ public class BITBook {
 
 		page.setText("");
 		page.setTooltip("Enter the text in the book.");
-		page.setCursorPosition(1).setMaximumCharacters(500);
-		page.setMaximumLines(10);
 		page.setX(x).setY(y);
 		page.setHeight(textFieldHeight).setWidth(textFieldWidth);
+		//page.setMarginLeft(20).setMarginBottom(20);
+		page.setCursorPosition(1).setMaximumCharacters(1000);
+		page.setMaximumLines(8);
+		
 		page.setFocus(true);
 		popupScreen.get(id).attachWidget(BIT.plugin, page);
 		y = y + textFieldHeight + 10;
@@ -248,9 +261,10 @@ public class BITBook {
 		// Open Window
 		popupScreen.get(id).setTransparent(true);
 		sPlayer.getMainScreen().attachPopupScreen(popupScreen.get(id));
+		
 	}
 
-	public void closeBook(SpoutPlayer sPlayer) {
+	public void cleanupPopupScreen(SpoutPlayer sPlayer) {
 		int playerId = sPlayer.getEntityId();
 		popupScreen.get(playerId).removeWidgets(BIT.plugin);
 		popupScreen.get(playerId).setDirty(true);

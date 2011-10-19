@@ -28,13 +28,14 @@ public class BITInputListener extends InputListener {
 		BITPlayer bPlayer = new BITPlayer(sPlayer);
 		ScreenType screentype = event.getScreenType();
 		String keypressed = event.getKey().name();
-		if (G333Config.DEBUG_EVENTS) {
-			sPlayer.sendMessage("BITInputListn.key:" + keypressed
-					+ " Screentype:" + screentype);
-		}
+		//if (G333Config.DEBUG_EVENTS) {
+		//	sPlayer.sendMessage("BITInputListn.key:" + keypressed
+		//			+ " Screentype:" + screentype);
+		//}
 		if (!(keypressed.equals(G333Config.LIBRARY_SORTKEY)
-				|| keypressed.equals(G333Config.LIBRARY_LOCKKEY) || keypressed
-					.equals("KEY_ESCAPE")))
+				|| keypressed.equals(G333Config.LIBRARY_LOCKKEY)
+				|| keypressed.equals("KEY_ESCAPE") || keypressed
+					.equals("KEY_RETURN")))
 			return;
 		SpoutBlock targetblock = (SpoutBlock) sPlayer.getTargetBlock(null, 5);
 
@@ -56,7 +57,7 @@ public class BITInputListener extends InputListener {
 					if (G333Config.SORT_DISPLAYSORTARCHIEVEMENT) {
 						G333Messages.sendNotification(sPlayer, "Items sorted.");
 					}
-				}
+				} 
 			}
 		} else
 
@@ -70,8 +71,7 @@ public class BITInputListener extends InputListener {
 						G333Messages.sendNotification(sPlayer, "Items sorted.");
 					}
 				}
-			}
-
+			} 
 			// Inventories connected to a block
 		} else if (BITDigiLock.isLockable(targetblock)) {
 
@@ -95,7 +95,7 @@ public class BITInputListener extends InputListener {
 								}
 							}
 						}
-					}
+					} 
 
 				} else if (BITDigiLock.isBookshelf(targetblock)) {
 
@@ -256,7 +256,7 @@ public class BITInputListener extends InputListener {
 						G333Messages.sendNotification(sPlayer,
 								"Inventory sorted.");
 					}
-				}
+				} 
 			}
 
 			// DISPENCER_INVENTORY SCREEN
@@ -277,17 +277,18 @@ public class BITInputListener extends InputListener {
 						G333Messages.sendNotification(sPlayer,
 								"Dispenser sorted.");
 					}
-				}
+				} 
 			}
 
 			// CUSTOM_SCREEN
 			else if (screentype == ScreenType.CUSTOM_SCREEN) {
 				if (keypressed.equals("KEY_ESCAPE")) {
 					sPlayer.closeActiveWindow();
-					// Im not sure if the next 2 lines need to be here...
 					bPlayer.cleanupPopupScreen(sPlayer);
-					sPlayer.getMainScreen().removeWidgets(BIT.plugin);
-				}
+
+				} else if (keypressed.equals("KEY_RETURN")) {
+					
+				} 
 			}
 		}
 

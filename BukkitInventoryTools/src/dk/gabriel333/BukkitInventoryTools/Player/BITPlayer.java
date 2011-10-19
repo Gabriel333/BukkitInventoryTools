@@ -29,6 +29,10 @@ public class BITPlayer {
 	
 	private BIT plugin;
 	
+	public BITPlayer(){
+		super();
+	}
+	
 	public BITPlayer(Plugin plugin) {
 		plugin = this.plugin;
 	}
@@ -118,6 +122,7 @@ public class BITPlayer {
 		int id = sPlayer.getEntityId();
 		popupScreen.get(id).removeWidgets(BIT.plugin);
 		popupScreen.get(id).setDirty(true);
+		sPlayer.getMainScreen().removeWidgets(BIT.plugin);
 	}
 
 	/**

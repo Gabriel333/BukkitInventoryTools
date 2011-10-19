@@ -23,6 +23,7 @@ import org.getspout.spoutapi.gui.GenericTextField;
 import org.getspout.spoutapi.player.SpoutPlayer;
 
 import dk.gabriel333.BukkitInventoryTools.BITDigiLock;
+import dk.gabriel333.BukkitInventoryTools.Book.BITBook;
 import dk.gabriel333.BukkitInventoryTools.Inventory.BITInventory;
 import dk.gabriel333.BukkitInventoryTools.Player.BITPlayer;
 import dk.gabriel333.Library.G333Config;
@@ -555,6 +556,8 @@ public class BITPlayerListener extends PlayerListener {
 			BITPlayer.closetimer.remove(id);
 			BITPlayer.useCost.remove(id);
 			BITPlayer.connectedTo.remove(id);
+			// BOOK
+			BITBook.popupScreen.remove(id);
 		}
 	}
 
@@ -568,6 +571,8 @@ public class BITPlayerListener extends PlayerListener {
 			BITPlayer.closetimer.put(id, new GenericTextField());
 			BITPlayer.useCost.put(id, new GenericTextField());
 			BITPlayer.connectedTo.put(id, new GenericTextField());
+			//BOOK
+			BITBook.popupScreen.put(id, new GenericPopup());
 		}
 	}
 

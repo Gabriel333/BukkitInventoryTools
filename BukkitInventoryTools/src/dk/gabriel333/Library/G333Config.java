@@ -19,6 +19,7 @@ public class G333Config {
 	public static String LIBRARY_SORTKEY;
 	public static String LIBRARY_MENUKEY;
 	public static String LIBRARY_LOCKKEY;
+	public static String LIBRARY_READKEY;
 	
 	public static String STORAGE_TYPE;
 	public static String STORAGE_HOST;
@@ -49,6 +50,9 @@ public class G333Config {
 	public static int BOOKSHELF_COST;
 	public static int BOOKSHELF_SIZE;
 	public static int BOOKSHELF_DESTROYCOST;
+	
+	public static int BOOK_COST;
+	public static int BOOK_DESTROYCOST;
 	
 	public static Boolean DEBUG_PERMISSIONS;
 	public static Boolean DEBUG_SORTINVENTORY;
@@ -88,6 +92,8 @@ public class G333Config {
 		LIBRARY_SORTKEY = getStringParm("Library.SortKey", "KEY_S");
 		LIBRARY_MENUKEY = getStringParm("Library.MenuKey", "KEY_M");
 		LIBRARY_LOCKKEY = getStringParm("Library.LockKey", "KEY_L");
+		LIBRARY_READKEY = getStringParm("Library.ReadKey", "KEY_R");
+
 		//SQL
 		STORAGE_TYPE=getStringParm("Storage.Type", "SQLite");
 		STORAGE_HOST=getStringParm("Storage.Host", "SQLite");
@@ -121,6 +127,11 @@ public class G333Config {
 		BOOKSHELF_COST = getIntParm("Bookshelf.Cost", 50);
 		BOOKSHELF_SIZE = getIntParm("Bookshelf.Size", 9);
 		BOOKSHELF_DESTROYCOST = getIntParm("Bookshelf.DestroyCost", 10);
+		
+		//Book
+		BOOK_COST = getIntParm("Book.Cost", 10);
+		BOOK_DESTROYCOST = getIntParm("Book.DestroyCost", 0);
+		
 				
 		//Debug
 		DEBUG_PERMISSIONS = getBooleanParm("Debug.Permissions", false);

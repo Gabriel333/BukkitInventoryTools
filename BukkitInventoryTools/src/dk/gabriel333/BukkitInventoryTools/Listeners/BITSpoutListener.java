@@ -91,9 +91,7 @@ public class BITSpoutListener extends SpoutListener {
 						} else if (digilock.getBlock().getType() == Material.BOOKSHELF) {
 							BITInventory bitInventory = BITInventory.loadBitInventory(sPlayer, sBlock);
 							bitInventory.openBitInventory(sPlayer,bitInventory);
-							//Inventory inv = BITInventory.loadBitInventory(sPlayer, sBlock).inventory;
-							//sPlayer.openInventoryWindow(inv);
-
+						
 						} else if (BITDigiLock.isTrapdoor(sBlock)) {
 							BITDigiLock.playDigiLockSound(digilock.getBlock());
 							BITDigiLock.openTrapdoor(sPlayer,
@@ -126,13 +124,11 @@ public class BITSpoutListener extends SpoutListener {
 						sPlayer.damage(5);
 					}
 					bPlayer.cleanupPopupScreen(sPlayer);
-					//BITPlayer.menuButtons.remove(BITPlayer.BITButtons.get(uuid));
 					BITPlayer.BITButtons.remove(uuid);
 
 				} else if (BITPlayer.BITButtons.get(uuid) == "getPincodeCancel") {
 					sPlayer.closeActiveWindow();
 					bPlayer.cleanupPopupScreen(sPlayer);
-					//BITPlayer.menuButtons.remove(BITPlayer.BITButtons.get(uuid));
 					BITPlayer.BITButtons.remove(uuid);
 				}
 
@@ -155,20 +151,17 @@ public class BITSpoutListener extends SpoutListener {
 												.valueOf(BITPlayer.useCost.get(id)
 														.getText()));
 						bPlayer.cleanupPopupScreen(sPlayer);
-						//BITPlayer.menuButtons.remove(BITPlayer.BITButtons.get(uuid));
 						BITPlayer.BITButtons.remove(uuid);
 					}
 
 				} else if ((BITPlayer.BITButtons.get(uuid) == "setPincodeCancel")) {
 					sPlayer.closeActiveWindow();
 					bPlayer.cleanupPopupScreen(sPlayer);
-					//BITPlayer.menuButtons.remove(BITPlayer.BITButtons.get(uuid));
 					BITPlayer.BITButtons.remove(uuid);
 					
 				} else if ((BITPlayer.BITButtons.get(uuid) == "setPincodeRemove")) {
 					sPlayer.closeActiveWindow();
 					bPlayer.cleanupPopupScreen(sPlayer);
-					//BITPlayer.menuButtons.remove(BITPlayer.BITButtons.get(uuid));
 					BITPlayer.BITButtons.remove(uuid);
 
 					if (BITDigiLock.isLocked(sBlock)) {

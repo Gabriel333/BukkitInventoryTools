@@ -50,5 +50,11 @@ permissions:
     bukkitinventorytools.bookshelf.use:
         default: true
     bukkitinventorytools.bookshelf.admin:
+        default: op
+    bukkitinventorytools.book.create:
         default: true
+    bukkitinventorytools.book.use:
+        default: true
+    bukkitinventorytools.book.admin:
+        default: op
 

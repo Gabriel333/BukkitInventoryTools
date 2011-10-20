@@ -12,6 +12,7 @@ import org.getspout.spoutapi.block.SpoutBlock;
 import org.getspout.spoutapi.gui.GenericButton;
 import org.getspout.spoutapi.gui.GenericItemWidget;
 import org.getspout.spoutapi.gui.GenericLabel;
+import org.getspout.spoutapi.gui.GenericPopup;
 import org.getspout.spoutapi.gui.GenericTextField;
 import org.getspout.spoutapi.gui.GenericTexture;
 import org.getspout.spoutapi.gui.PopupScreen;
@@ -224,6 +225,7 @@ public class BITPlayer {
 		int y = 50, height = 20, width = 100;
 		int x = 170;
 		int id = sPlayer.getEntityId();
+		addUserData(id);
 
 		GenericItemWidget itemwidget = new GenericItemWidget(new ItemStack(
 				getPincodeBlock(sBlock)));
@@ -271,9 +273,11 @@ public class BITPlayer {
 		int id = sPlayer.getEntityId();
 		int height = 20;
 		int x, y, w1, w2, w3, w4;
-
+		addUserData(id);
 		if (BITDigiLock.isLocked(sBlock)) {
 			BITDigiLock digilock = BITDigiLock.loadDigiLock(sBlock);
+			// TODO: remove this before release
+			sPlayer.sendMessage("Playerid is: "+id);
 			pincode.get(id).setText(digilock.getPincode());
 			owner.get(id).setText(digilock.getOwner());
 			coOwners.get(id).setText(digilock.getCoOwners());
@@ -438,7 +442,7 @@ public class BITPlayer {
 		int id = sPlayer.getEntityId();
 		int height = 20;
 		int x, y, w1, w2, w3, w4;
-
+		addUserData(id);
 		if (BITInventory.isBitInventoryCreated(sBlock)) {
 			BITDigiLock digilock = BITDigiLock.loadDigiLock(sBlock);
 			owner.get(id).setText(digilock.getOwner());
@@ -570,5 +574,56 @@ public class BITPlayer {
 		sPlayer.getMainScreen().attachPopupScreen(popupScreen.get(id));
 
 	}
+	
+	public static void removeUserData(int id) {
+		if (BITPlayer.userno.containsKey(id)) {
+			// DigiLock
+			userno.remove(id);
+			popupScreen.remove(id);
+			pincode.remove(id);
+			owner.remove(id);
+			coOwners.remove(id);
+			closetimer.remove(id);
+			useCost.remove(id);
+			connectedTo.remove(id);
+		}
+	}
+
+	public static void addUserData(int id) {
+		if (!BITPlayer.userno.containsKey(id)) {
+			//DigiLock
+			userno.put(id, new Integer(id));
+			popupScreen.put(id, new GenericPopup());
+			pincode.put(id, new GenericTextField());
+			owner.put(id, new GenericTextField());
+			coOwners.put(id, new GenericTextField());
+			closetimer.put(id, new GenericTextField());
+			useCost.put(id, new GenericTextField());
+			connectedTo.put(id, new GenericTextField());
+		}
+	}
+	
+/*	public static void clearAllUserData() {
+			// DigiLock
+			BITPlayer.userno.clear();
+			BITPlayer.popupScreen.clear();
+			BITPlayer.pincode.clear();
+			BITPlayer.owner.clear();
+			BITPlayer.coOwners.clear();
+			BITPlayer.closetimer.clear();
+			BITPlayer.useCost.clear();
+			BITPlayer.connectedTo.clear();
+			// BITBook
+			BITBook.popupScreen.clear();
+			BITBook.titleGUI.clear();
+			BITBook.authorGUI.clear();
+			BITBook.coAuthorsGUI.clear();
+			BITBook.masterCopyGUI.clear();
+			BITBook.forceBookToPlayerInventoryGUI.clear();
+			BITBook.canBeMovedFromInventoryGUI.clear();
+			BITBook.copyTheBookWhenMovedGUI.clear();
+			BITBook.useCostGUI.clear();
+			G333Messages.showInfo("Userdata has been cleared");
+	}*/
 
 }

@@ -12,11 +12,13 @@ import org.bukkit.plugin.Plugin;
 import org.getspout.spoutapi.block.SpoutBlock;
 import org.getspout.spoutapi.gui.GenericButton;
 import org.getspout.spoutapi.gui.GenericItemWidget;
+import org.getspout.spoutapi.gui.GenericPopup;
 import org.getspout.spoutapi.gui.GenericTextField;
 import org.getspout.spoutapi.gui.PopupScreen;
 import org.getspout.spoutapi.player.SpoutPlayer;
 
 import dk.gabriel333.BukkitInventoryTools.BIT;
+import dk.gabriel333.BukkitInventoryTools.Player.BITPlayer;
 
 public class BITBook {
 
@@ -395,5 +397,59 @@ public class BITBook {
 		else
 			return "No";
 	}
+	
+	public static void removeUserData(int id) {
+		if (BITPlayer.userno.containsKey(id)) {
+			// BITBook
+			popupScreen.remove(id);
+			titleGUI.remove(id);
+			authorGUI.remove(id);
+			coAuthorsGUI.remove(id);
+			masterCopyGUI.remove(id);
+			forceBookToPlayerInventoryGUI.remove(id);
+			canBeMovedFromInventoryGUI.remove(id);
+			copyTheBookWhenMovedGUI.remove(id);
+			useCostGUI.remove(id);
+		}
+	}
+
+	public static void addUserData(int id) {
+		if (!BITPlayer.userno.containsKey(id)) {
+			// BITBook
+			popupScreen.put(id, new GenericPopup());
+			titleGUI.put(id, new GenericTextField());
+			authorGUI.put(id, new GenericTextField());
+			coAuthorsGUI.put(id, new GenericTextField());
+			masterCopyGUI.put(id, new GenericTextField());
+			forceBookToPlayerInventoryGUI.put(id, new GenericTextField());
+			canBeMovedFromInventoryGUI.put(id, new GenericTextField());
+			copyTheBookWhenMovedGUI.put(id, new GenericTextField());
+			useCostGUI.put(id, new GenericTextField());
+		}
+	}
+/*	
+	public static void clearAllUserData() {
+			// DigiLock
+			BITPlayer.userno.clear();
+			BITPlayer.popupScreen.clear();
+			BITPlayer.pincode.clear();
+			BITPlayer.owner.clear();
+			BITPlayer.coOwners.clear();
+			BITPlayer.closetimer.clear();
+			BITPlayer.useCost.clear();
+			BITPlayer.connectedTo.clear();
+			// BITBook
+			BITBook.popupScreen.clear();
+			BITBook.titleGUI.clear();
+			BITBook.authorGUI.clear();
+			BITBook.coAuthorsGUI.clear();
+			BITBook.masterCopyGUI.clear();
+			BITBook.forceBookToPlayerInventoryGUI.clear();
+			BITBook.canBeMovedFromInventoryGUI.clear();
+			BITBook.copyTheBookWhenMovedGUI.clear();
+			BITBook.useCostGUI.clear();
+			G333Messages.showInfo("Userdata has been cleared");
+	}
+*/
 
 }

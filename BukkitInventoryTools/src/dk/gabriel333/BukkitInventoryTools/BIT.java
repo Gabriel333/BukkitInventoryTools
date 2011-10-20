@@ -68,6 +68,7 @@ public class BIT extends JavaPlugin {
 			setupMyWolf();
 			registerEvents();
 			addCommands();
+			//BITPlayer.clearAllUserData();
 			G333Messages.showInfo("BIT version " + pdfFile.getVersion()
 					+ " is enabled!");
 		} else {

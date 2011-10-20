@@ -18,12 +18,9 @@ import org.bukkit.material.Lever;
 
 import org.getspout.spoutapi.block.SpoutBlock;
 import org.getspout.spoutapi.block.SpoutChest;
-import org.getspout.spoutapi.gui.GenericPopup;
-import org.getspout.spoutapi.gui.GenericTextField;
 import org.getspout.spoutapi.player.SpoutPlayer;
 
 import dk.gabriel333.BukkitInventoryTools.BITDigiLock;
-import dk.gabriel333.BukkitInventoryTools.Book.BITBook;
 import dk.gabriel333.BukkitInventoryTools.Inventory.BITInventory;
 import dk.gabriel333.BukkitInventoryTools.Player.BITPlayer;
 import dk.gabriel333.Library.G333Config;
@@ -528,70 +525,24 @@ public class BITPlayerListener extends PlayerListener {
 
 	public void onPlayerLogin(PlayerLoginEvent event) {
 		int id = event.getPlayer().getEntityId();
-		addUserData(id);
+		BITPlayer.addUserData(id);
 	}
 
 	public void onPlayerKick(PlayerKickEvent event) {
 		int id = event.getPlayer().getEntityId();
-		removeUserData(id);
+		BITPlayer.removeUserData(id);
 	}
 
 	public void onPlayerJoin(PlayerJoinEvent event) {
 		int id = event.getPlayer().getEntityId();
-		addUserData(id);
+		BITPlayer.addUserData(id);
 	}
 
 	public void onPlayerQuit(PlayerQuitEvent event) {
 		int id = event.getPlayer().getEntityId();
-		removeUserData(id);
+		BITPlayer.removeUserData(id);
 	}
 
-	private void removeUserData(int id) {
-		if (BITPlayer.userno.containsKey(id)) {
-			// DigiLock
-			BITPlayer.userno.remove(id);
-			BITPlayer.popupScreen.remove(id);
-			BITPlayer.pincode.remove(id);
-			BITPlayer.owner.remove(id);
-			BITPlayer.coOwners.remove(id);
-			BITPlayer.closetimer.remove(id);
-			BITPlayer.useCost.remove(id);
-			BITPlayer.connectedTo.remove(id);
-			// BITBook
-			BITBook.popupScreen.remove(id);
-			BITBook.titleGUI.remove(id);
-			BITBook.authorGUI.remove(id);
-			BITBook.coAuthorsGUI.remove(id);
-			BITBook.masterCopyGUI.remove(id);
-			BITBook.forceBookToPlayerInventoryGUI.remove(id);
-			BITBook.canBeMovedFromInventoryGUI.remove(id);
-			BITBook.copyTheBookWhenMovedGUI.remove(id);
-			BITBook.useCostGUI.remove(id);
-		}
-	}
 
-	private void addUserData(int id) {
-		if (!BITPlayer.userno.containsKey(id)) {
-			//DigiLock
-			BITPlayer.userno.put(id, new Integer(id));
-			BITPlayer.popupScreen.put(id, new GenericPopup());
-			BITPlayer.pincode.put(id, new GenericTextField());
-			BITPlayer.owner.put(id, new GenericTextField());
-			BITPlayer.coOwners.put(id, new GenericTextField());
-			BITPlayer.closetimer.put(id, new GenericTextField());
-			BITPlayer.useCost.put(id, new GenericTextField());
-			BITPlayer.connectedTo.put(id, new GenericTextField());
-			// BITBook
-			BITBook.popupScreen.put(id, new GenericPopup());
-			BITBook.titleGUI.put(id, new GenericTextField());
-			BITBook.authorGUI.put(id, new GenericTextField());
-			BITBook.coAuthorsGUI.put(id, new GenericTextField());
-			BITBook.masterCopyGUI.put(id, new GenericTextField());
-			BITBook.forceBookToPlayerInventoryGUI.put(id, new GenericTextField());
-			BITBook.canBeMovedFromInventoryGUI.put(id, new GenericTextField());
-			BITBook.copyTheBookWhenMovedGUI.put(id, new GenericTextField());
-			BITBook.useCostGUI.put(id, new GenericTextField());
-		}
-	}
 
 }

@@ -1,4 +1,4 @@
-package dk.gabriel333.BukkitInventoryTools.Listeners;
+package dk.gabriel333.BukkitInventoryTools.DigiLock;
 
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
@@ -15,18 +15,15 @@ import org.getspout.spoutapi.gui.ScreenType;
 import org.getspout.spoutapi.player.SpoutPlayer;
 
 import dk.gabriel333.BukkitInventoryTools.BIT;
-import dk.gabriel333.BukkitInventoryTools.BITDigiLock;
 import dk.gabriel333.BukkitInventoryTools.Inventory.BITInventory;
-import dk.gabriel333.BukkitInventoryTools.Player.BITPlayer;
-import dk.gabriel333.BukkitInventoryTools.Sort.G333Inventory;
+import dk.gabriel333.BukkitInventoryTools.Sort.BITSortInventory;
 import dk.gabriel333.Library.*;
 
-public class BITInputListener extends InputListener {
+public class BITDigiLockInputListener extends InputListener {
 
 	@Override
 	public void onKeyPressedEvent(KeyPressedEvent event) {
 		SpoutPlayer sPlayer = event.getPlayer();
-		BITPlayer bPlayer = new BITPlayer(sPlayer);
 		ScreenType screentype = event.getScreenType();
 		String keypressed = event.getKey().name();
 		if (!(keypressed.equals(G333Config.LIBRARY_SORTKEY)
@@ -47,9 +44,9 @@ public class BITInputListener extends InputListener {
 				inventory = BIT.spoutBackpackHandler
 						.getOpenedSpoutBackpack(sPlayer);
 				if (inventory != null) {
-					G333Inventory.sortInventoryItems(sPlayer, inventory);
+					BITSortInventory.sortInventoryItems(sPlayer, inventory);
 				}
-				G333Inventory.sortPlayerInventoryItems(sPlayer);
+				BITSortInventory.sortPlayerInventoryItems(sPlayer);
 				if (keypressed.equals(G333Config.LIBRARY_SORTKEY)) {
 					if (G333Config.SORT_DISPLAYSORTARCHIEVEMENT) {
 						G333Messages.sendNotification(sPlayer, "Items sorted.");
@@ -63,7 +60,7 @@ public class BITInputListener extends InputListener {
 			if (keypressed.equals(G333Config.LIBRARY_SORTKEY)) {
 				if (G333Permissions.hasPerm(sPlayer, "sortinventory.use",
 						G333Permissions.NOT_QUIET)) {
-					G333Inventory.sortPlayerInventoryItems(sPlayer);
+					BITSortInventory.sortPlayerInventoryItems(sPlayer);
 					if (G333Config.SORT_DISPLAYSORTARCHIEVEMENT) {
 						G333Messages.sendNotification(sPlayer, "Items sorted.");
 					}
@@ -83,9 +80,9 @@ public class BITInputListener extends InputListener {
 							if (G333Permissions.hasPerm(sPlayer,
 									"sortinventory.use",
 									G333Permissions.NOT_QUIET)) {
-								G333Inventory.sortInventoryItems(sPlayer,
+								BITSortInventory.sortInventoryItems(sPlayer,
 										sChest.getLargestInventory());
-								G333Inventory.sortPlayerInventoryItems(sPlayer);
+								BITSortInventory.sortPlayerInventoryItems(sPlayer);
 								if (G333Config.SORT_DISPLAYSORTARCHIEVEMENT) {
 									G333Messages.sendNotification(sPlayer,
 											"Chest sorted.");
@@ -100,12 +97,12 @@ public class BITInputListener extends InputListener {
 					if (keypressed.equals(G333Config.LIBRARY_SORTKEY)) {
 						if (G333Permissions.hasPerm(sPlayer,
 								"sortinventory.use", G333Permissions.NOT_QUIET)) {
-							G333Inventory.sortPlayerInventoryItems(sPlayer);
+							BITSortInventory.sortPlayerInventoryItems(sPlayer);
 							int id = sPlayer.getEntityId();
 							BITInventory bitInventory = BITInventory.openedInventories
 									.get(id);
 							Inventory inventory = bitInventory.getInventory();
-							G333Inventory
+							BITSortInventory
 									.sortInventoryItems(sPlayer, inventory);
 							bitInventory.setInventory(targetblock,
 									bitInventory.getOwner(),
@@ -172,7 +169,7 @@ public class BITInputListener extends InputListener {
 											+ "1) BITInputlistener: You have permission to open a locked door/chest");
 								G333Messages.sendNotification(sPlayer,
 										"You are the owner");
-								bPlayer.setPincode(sPlayer, targetblock);
+								BITDigiLock.setPincode(sPlayer, targetblock);
 							} else {
 								G333Messages.sendNotification(sPlayer,
 										"Locked with Digilock");
@@ -224,12 +221,12 @@ public class BITInputListener extends InputListener {
 												.getLeftDoubleDoor(targetblock);
 										BITDigiLock.closeDoubleDoor(sPlayer,
 												leftdoor, 0);
-										bPlayer.setPincode(sPlayer, leftdoor);
+										BITDigiLock.setPincode(sPlayer, leftdoor);
 									} else if (BITDigiLock.isDoor(targetblock)) {
 										BITDigiLock.closeDoor(targetblock);
-										bPlayer.setPincode(sPlayer, targetblock);
+										BITDigiLock.setPincode(sPlayer, targetblock);
 									} else {
-										bPlayer.setPincode(sPlayer, targetblock);
+										BITDigiLock.setPincode(sPlayer, targetblock);
 									}
 
 								}
@@ -247,7 +244,7 @@ public class BITInputListener extends InputListener {
 				if (keypressed.equals(G333Config.LIBRARY_SORTKEY)) {
 					if (G333Permissions.hasPerm(sPlayer, "sortinventory.use",
 							G333Permissions.NOT_QUIET)) {
-						G333Inventory.sortPlayerInventoryItems(sPlayer);
+						BITSortInventory.sortPlayerInventoryItems(sPlayer);
 					}
 					if (G333Config.SORT_DISPLAYSORTARCHIEVEMENT) {
 						G333Messages.sendNotification(sPlayer,
@@ -265,9 +262,9 @@ public class BITInputListener extends InputListener {
 							Dispenser dispenser = (Dispenser) targetblock
 									.getState();
 							Inventory inventory = dispenser.getInventory();
-							G333Inventory
+							BITSortInventory
 									.sortInventoryItems(sPlayer, inventory);
-							G333Inventory.sortPlayerInventoryItems(sPlayer);
+							BITSortInventory.sortPlayerInventoryItems(sPlayer);
 						}
 					}
 					if (G333Config.SORT_DISPLAYSORTARCHIEVEMENT) {
@@ -281,7 +278,7 @@ public class BITInputListener extends InputListener {
 			else if (screentype == ScreenType.CUSTOM_SCREEN) {
 				if (keypressed.equals("KEY_ESCAPE")) {
 					sPlayer.closeActiveWindow();
-					bPlayer.cleanupPopupScreen(sPlayer);
+					BITDigiLock.cleanupPopupScreen(sPlayer);
 
 				} else if (keypressed.equals("KEY_RETURN")) {
 					
@@ -307,26 +304,5 @@ public class BITInputListener extends InputListener {
 	public void onRenderDistanceChange(RenderDistanceChangeEvent event) {
 
 	}
-
-	// The two key events pass the type of screen, the player, and the key.
-	// The screen types are:
-	// GAME_SCREEN
-	// CHAT_SCREEN
-	// CUSTOM_SCREEN
-	// PLAYER_INVENTORY
-	// CHEST_INVENTORY
-	// DISPENSER_INVENTORY
-	// FURNACE_INVENTORY
-	// INGAME_MENU
-	// OPTIONS_MENU
-	// VIDEO_SETTINGS_MENU
-	// CONTROLS_MENU
-	// ACHIEVEMENTS_SCREEN
-	// STATISTICS_SCREEN
-	// WORKBENCH_INVENTORY
-	// SIGN_SCREEN
-	// GAME_OVER_SCREEN
-	// SLEEP_SCREEN
-	// UNKNOWN
 
 }

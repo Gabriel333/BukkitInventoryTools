@@ -22,6 +22,7 @@ import dk.gabriel333.BukkitInventoryTools.Commands.*;
 import dk.gabriel333.BukkitInventoryTools.Listeners.*;
 import dk.gabriel333.BukkitInventoryTools.Inventory.*;
 import dk.gabriel333.BukkitInventoryTools.Book.*;
+import dk.gabriel333.BukkitInventoryTools.DigiLock.*;
 import dk.gabriel333.Library.G333Config;
 import dk.gabriel333.Library.G333Messages;
 import dk.gabriel333.Library.G333Plugin;
@@ -112,10 +113,6 @@ public class BIT extends JavaPlugin {
 				Priority.Normal, this);
 		pm.registerEvent(Type.BLOCK_PISTON_RETRACT, new BITBlockListener(),
 				Priority.Normal, this);
-		pm.registerEvent(Event.Type.CUSTOM_EVENT, new BITInputListener(),
-				Event.Priority.Normal, this);
-		pm.registerEvent(Event.Type.CUSTOM_EVENT, new BITSpoutListener(),
-				Event.Priority.Normal, this);
 		pm.registerEvent(Event.Type.CUSTOM_EVENT,
 				new BITInventoryListener(this), Event.Priority.Low, this);
 		pm.registerEvent(Event.Type.PLAYER_INTERACT, new BITPlayerListener(),
@@ -128,10 +125,15 @@ public class BIT extends JavaPlugin {
 				Priority.Normal, this);
 		pm.registerEvent(Event.Type.PLAYER_KICK, new BITPlayerListener(),
 				Priority.Normal, this);
-		// BITIventory Listsner
+		// BITDigiLock Listeners
+		pm.registerEvent(Event.Type.CUSTOM_EVENT, new BITDigiLockInputListener(),
+				Event.Priority.Normal, this);
+		pm.registerEvent(Event.Type.CUSTOM_EVENT, new BITDigiLockSpoutListener(),
+				Event.Priority.Normal, this);
+		// BITIventory Listeners
 		pm.registerEvent(Event.Type.CUSTOM_EVENT, new BITInventorySpoutListener(),
 				Event.Priority.Normal, this);
-		// BOOK Listeners
+		// BITBook Listeners
 		pm.registerEvent(Event.Type.CUSTOM_EVENT, new BITBookInputListener(),
 				Event.Priority.Normal, this);
 		pm.registerEvent(Event.Type.CUSTOM_EVENT, new BITBookSpoutListener(),
@@ -367,7 +369,7 @@ public class BIT extends JavaPlugin {
 					manageSQLite.createTable(query);
 				}
 			} else {
-				G333Messages.showInfo(digilockTable + " exists.");
+				//G333Messages.showInfo(digilockTable + " exists.");
 			}
 
 			// Check BookshelfTable
@@ -413,7 +415,7 @@ public class BIT extends JavaPlugin {
 					manageSQLite.createTable(query);
 				}
 			} else {
-				G333Messages.showInfo(bitInventoryTable + " exists.");
+				//G333Messages.showInfo(bitInventoryTable + " exists.");
 			}
 
 		}

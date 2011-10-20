@@ -13,7 +13,6 @@ import org.getspout.spoutapi.gui.Button;
 import org.getspout.spoutapi.player.SpoutPlayer;
 
 import dk.gabriel333.BukkitInventoryTools.Inventory.BITInventory;
-import dk.gabriel333.BukkitInventoryTools.Player.BITPlayer;
 import dk.gabriel333.Library.G333Config;
 import dk.gabriel333.Library.G333Messages;
 
@@ -24,29 +23,28 @@ public class BITInventorySpoutListener extends SpoutListener {
 			Button button = ((ButtonClickEvent) event).getButton();
 			UUID uuid = button.getId();
 			SpoutPlayer sPlayer = ((ButtonClickEvent) event).getPlayer();
-			BITPlayer bPlayer = new BITPlayer(sPlayer);
 			SpoutBlock sBlock = (SpoutBlock) sPlayer.getTargetBlock(null, 5);
 
-			if ((BITPlayer.BITButtons.get(uuid) == "setPincodeCancel")) {
+			if ((BITInventory.BITBookButtons.get(uuid) == "setPincodeCancel")) {
 				sPlayer.closeActiveWindow();
-				bPlayer.cleanupPopupScreen(sPlayer);
-				BITPlayer.BITButtons.remove(uuid);
+				BITInventory.cleanupPopupScreen(sPlayer);
+				BITInventory.BITBookButtons.remove(uuid);
 
-			} else if ((BITPlayer.BITButtons.get(uuid) == "OwnerButton")) {
+			} else if ((BITInventory.BITBookButtons.get(uuid) == "OwnerButton")) {
 				if (validateSetPincodeFields(sPlayer)) {
 				}
 
-			} else if ((BITPlayer.BITButtons.get(uuid) == "CoOwnerButton")) {
+			} else if ((BITInventory.BITBookButtons.get(uuid) == "CoOwnerButton")) {
 				if (validateSetPincodeFields(sPlayer)) {
 				}
 
-			} else if ((BITPlayer.BITButtons.get(uuid) == "UseCostButton")) {
+			} else if ((BITInventory.BITBookButtons.get(uuid) == "UseCostButton")) {
 				if (validateSetPincodeFields(sPlayer)) {
 				}
 
 			}
 
-			else if ((BITPlayer.BITButtons.get(uuid) == "CreateBookshelfButton")) {
+			else if ((BITInventory.BITBookButtons.get(uuid) == "CreateBookshelfButton")) {
 				if (validateSetPincodeFields(sPlayer)) {
 					String coowners = "";
 					String name = "";
@@ -57,11 +55,11 @@ public class BITInventorySpoutListener extends SpoutListener {
 					BITInventory.saveBitInventory(sPlayer, sBlock, owner, name,
 							coowners, inventory, usecost);
 					sPlayer.closeActiveWindow();
-					bPlayer.cleanupPopupScreen(sPlayer);
+					BITInventory.cleanupPopupScreen(sPlayer);
 				}
 			}
 
-			else if ((BITPlayer.BITButtons.get(uuid) == "removeBookshelfButton")) {
+			else if ((BITInventory.BITBookButtons.get(uuid) == "removeBookshelfButton")) {
 				if (validateSetPincodeFields(sPlayer)) {
 				}
 			}
@@ -72,45 +70,31 @@ public class BITInventorySpoutListener extends SpoutListener {
 			else {
 				if (G333Config.DEBUG_GUI)
 					sPlayer.sendMessage("BITSpoutListener: Unknow button:"
-							+ BITPlayer.BITButtons.get(uuid));
+							+ BITInventory.BITBookButtons.get(uuid));
 			}
 		}
 	}
 
 	private boolean validateSetPincodeFields(SpoutPlayer sPlayer) {
 		int id = sPlayer.getEntityId();
-		if (BITPlayer.closetimer.get(id).getText().equals("")) {
-			BITPlayer.closetimer.get(id).setText("0");
-			BITPlayer.popupScreen.get(id).setDirty(true);
+
+		if (BITInventory.useCostGUI.get(id).getText().equals("")) {
+			BITInventory.useCostGUI.get(id).setText("0");
+			BITInventory.popupScreen.get(id).setDirty(true);
 		}
-		if (BITPlayer.useCost.get(id).getText().equals("")) {
-			BITPlayer.useCost.get(id).setText("0");
-			BITPlayer.popupScreen.get(id).setDirty(true);
-		}
-		int closetimer = Integer
-				.valueOf(BITPlayer.closetimer.get(id).getText());
-		int useCost = Integer.valueOf(BITPlayer.useCost.get(id).getText());
-		if (closetimer < 0) {
-			G333Messages.sendNotification(sPlayer, "Closetimer must be > 0");
-			BITPlayer.closetimer.get(id).setText("0");
-			BITPlayer.popupScreen.get(id).setDirty(true);
-			return false;
-		} else if (closetimer > 3600) {
-			G333Messages.sendNotification(sPlayer, "Closetim. must be<3600");
-			BITPlayer.closetimer.get(id).setText("3600");
-			BITPlayer.popupScreen.get(id).setDirty(true);
-			return false;
-		} else if (useCost > G333Config.DIGILOCK_USEMAXCOST) {
+
+		int useCost = Integer.valueOf(BITInventory.useCostGUI.get(id).getText());
+		if (useCost > G333Config.DIGILOCK_USEMAXCOST) {
 			G333Messages.sendNotification(sPlayer, "Cost must be less "
 					+ G333Config.DIGILOCK_USEMAXCOST);
-			BITPlayer.useCost.get(id).setText(
+			BITInventory.useCostGUI.get(id).setText(
 					String.valueOf(G333Config.DIGILOCK_USEMAXCOST));
-			BITPlayer.popupScreen.get(id).setDirty(true);
+			BITInventory.popupScreen.get(id).setDirty(true);
 			return false;
 		} else if (useCost < 0) {
 			G333Messages.sendNotification(sPlayer, "Cost must be > 0");
-			BITPlayer.useCost.get(id).setText("0");
-			BITPlayer.popupScreen.get(id).setDirty(true);
+			BITInventory.useCostGUI.get(id).setText("0");
+			BITInventory.popupScreen.get(id).setDirty(true);
 			return false;
 		}
 

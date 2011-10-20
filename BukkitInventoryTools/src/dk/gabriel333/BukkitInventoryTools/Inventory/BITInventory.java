@@ -25,8 +25,7 @@ import org.getspout.spoutapi.gui.PopupScreen;
 import org.getspout.spoutapi.player.SpoutPlayer;
 
 import dk.gabriel333.BukkitInventoryTools.BIT;
-import dk.gabriel333.BukkitInventoryTools.BITDigiLock;
-import dk.gabriel333.BukkitInventoryTools.Player.BITPlayer;
+import dk.gabriel333.BukkitInventoryTools.DigiLock.BITDigiLock;
 import dk.gabriel333.Library.G333Config;
 import dk.gabriel333.Library.G333Messages;
 
@@ -545,7 +544,7 @@ public class BITInventory {
 		x = 170;
 		y = 50;
 		GenericItemWidget itemwidget = new GenericItemWidget(new ItemStack(
-				BITPlayer.getPincodeBlock(sBlock)));
+				BITDigiLock.getPincodeBlock(sBlock)));
 		itemwidget.setX(x + 2 * height).setY(y);
 		itemwidget.setHeight(height * 2).setWidth(height * 2)
 				.setDepth(height * 2);
@@ -693,7 +692,7 @@ public class BITInventory {
 
 	
 	public static void removeUserData(int id) {
-		if (BITPlayer.userno.containsKey(id)) {
+		if (userno.containsKey(id)) {
 			// BITInventory
 			userno.remove(id);
 			popupScreen.remove(id);
@@ -704,7 +703,7 @@ public class BITInventory {
 	}
 
 	public static void addUserData(int id) {
-		if (!BITPlayer.userno.containsKey(id)) {
+		if (!userno.containsKey(id)) {
 			//BITInventory
 			userno.put(id, new Integer(id));
 			popupScreen.put(id, new GenericPopup());
@@ -712,6 +711,13 @@ public class BITInventory {
 			coOwnersGUI.put(id, new GenericTextField());
 			useCostGUI.put(id, new GenericTextField());
 		}
+	}
+	
+	public static void cleanupPopupScreen(SpoutPlayer sPlayer) {
+		int id = sPlayer.getEntityId();
+		popupScreen.get(id).removeWidgets(BIT.plugin);
+		popupScreen.get(id).setDirty(true);
+		sPlayer.getMainScreen().removeWidgets(BIT.plugin);
 	}
 
 

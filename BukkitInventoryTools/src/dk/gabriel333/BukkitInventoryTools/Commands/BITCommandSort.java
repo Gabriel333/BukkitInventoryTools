@@ -14,8 +14,7 @@ import org.getspout.spoutapi.gui.ScreenType;
 import org.getspout.spoutapi.player.SpoutPlayer;
 
 import dk.gabriel333.BukkitInventoryTools.BIT;
-import dk.gabriel333.BukkitInventoryTools.Player.BITPlayer;
-import dk.gabriel333.BukkitInventoryTools.Sort.G333Inventory;
+import dk.gabriel333.BukkitInventoryTools.Sort.BITSortInventory;
 import dk.gabriel333.Library.*;
 
 public class BITCommandSort implements CommandExecutor {
@@ -27,7 +26,7 @@ public class BITCommandSort implements CommandExecutor {
 	public boolean onCommand(CommandSender sender, Command command,
 			String label, String[] args) {
 		SpoutPlayer sPlayer =  (SpoutPlayer) sender;
-		BITPlayer bPlayer = new BITPlayer(sPlayer);
+		//BITPlayer bPlayer = new BITPlayer(sPlayer);
 		Block targetblock = sPlayer.getTargetBlock(null, 5);
 		if (BIT.isPlayer(sender)) {
 			if (G333Permissions.hasPerm(sender, "sortinventory.use",
@@ -35,24 +34,24 @@ public class BITCommandSort implements CommandExecutor {
 				
 				if (targetblock.getType() == Material.CHEST) {
 					SpoutChest sChest = (SpoutChest) targetblock.getState();
-					G333Inventory.sortInventoryItems(sPlayer,
+					BITSortInventory.sortInventoryItems(sPlayer,
 							sChest.getLargestInventory());
 					G333Messages.sendNotification(sPlayer, "Chest sorted.");
 
 				} else if (targetblock.getType() == Material.DISPENSER) {
 					Dispenser dispenser = (Dispenser) targetblock.getState();
 					Inventory inventory = dispenser.getInventory();
-					G333Inventory.sortInventoryItems(sPlayer, inventory);
-					G333Inventory.sortPlayerInventoryItems(sPlayer);
+					BITSortInventory.sortInventoryItems(sPlayer, inventory);
+					BITSortInventory.sortPlayerInventoryItems(sPlayer);
 					G333Messages.sendNotification(sPlayer, "Items sorted.");
 
 				} else if (targetblock.getType() == Material.FURNACE) {
-					G333Inventory.sortPlayerInventoryItems(sPlayer);
+					BITSortInventory.sortPlayerInventoryItems(sPlayer);
 					G333Messages.sendNotification(sPlayer, "Items sorted.");
                 
 				} else {
 					//player inventory
-					bPlayer.sortinventory(sPlayer, ScreenType.CHAT_SCREEN);
+					BITSortInventory.sortinventory(sPlayer, ScreenType.CHAT_SCREEN);
 					G333Messages.sendNotification(sPlayer, "Items sorted.");
 				}
 			}

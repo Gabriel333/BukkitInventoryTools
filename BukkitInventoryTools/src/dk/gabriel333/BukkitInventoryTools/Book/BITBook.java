@@ -18,7 +18,6 @@ import org.getspout.spoutapi.gui.PopupScreen;
 import org.getspout.spoutapi.player.SpoutPlayer;
 
 import dk.gabriel333.BukkitInventoryTools.BIT;
-import dk.gabriel333.BukkitInventoryTools.Player.BITPlayer;
 
 public class BITBook {
 
@@ -90,6 +89,8 @@ public class BITBook {
 	protected Map<Integer, BITBook> bitBooks = new HashMap<Integer, BITBook>();
 	public static Map<Integer, PopupScreen> popupScreen = new HashMap<Integer, PopupScreen>();
 	public static Map<UUID, String> BITButtons = new HashMap<UUID, String>();
+	public static Map<Integer, Integer> userno = new HashMap<Integer, Integer>();
+
 
 	// Parameters for the bookPopupScreen
 	public static Map<Integer, GenericTextField> titleGUI = new HashMap<Integer, GenericTextField>();
@@ -221,7 +222,8 @@ public class BITBook {
 		int textFieldHeight2 = 15, textFieldWidth2 = 76;
 
 		int id = sPlayer.getEntityId();
-
+        addUserData(id);
+		
 		titleGUI.get(id).setText(title);
 		authorGUI.get(id).setText(author);
 		coAuthorsGUI.get(id).setText(coAuthors);
@@ -399,7 +401,7 @@ public class BITBook {
 	}
 	
 	public static void removeUserData(int id) {
-		if (BITPlayer.userno.containsKey(id)) {
+		if (userno.containsKey(id)) {
 			// BITBook
 			popupScreen.remove(id);
 			titleGUI.remove(id);
@@ -414,7 +416,7 @@ public class BITBook {
 	}
 
 	public static void addUserData(int id) {
-		if (!BITPlayer.userno.containsKey(id)) {
+		if (!userno.containsKey(id)) {
 			// BITBook
 			popupScreen.put(id, new GenericPopup());
 			titleGUI.put(id, new GenericTextField());

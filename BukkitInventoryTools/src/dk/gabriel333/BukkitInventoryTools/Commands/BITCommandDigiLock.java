@@ -12,7 +12,7 @@ import org.getspout.spoutapi.block.SpoutChest;
 import org.getspout.spoutapi.player.SpoutPlayer;
 
 import dk.gabriel333.BukkitInventoryTools.BIT;
-import dk.gabriel333.BukkitInventoryTools.BITDigiLock;
+import dk.gabriel333.BukkitInventoryTools.DigiLock.BITDigiLock;
 import dk.gabriel333.BukkitInventoryTools.Inventory.BITInventory;
 import dk.gabriel333.Library.G333Messages;
 import dk.gabriel333.Library.G333Permissions;

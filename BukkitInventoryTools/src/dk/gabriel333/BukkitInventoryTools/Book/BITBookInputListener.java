@@ -11,9 +11,9 @@ import org.getspout.spoutapi.gui.ScreenType;
 import org.getspout.spoutapi.player.SpoutPlayer;
 
 import dk.gabriel333.BukkitInventoryTools.BIT;
-import dk.gabriel333.BukkitInventoryTools.BITDigiLock;
-import dk.gabriel333.BukkitInventoryTools.Sort.G333Inventory;
+import dk.gabriel333.BukkitInventoryTools.DigiLock.BITDigiLock;
 import dk.gabriel333.BukkitInventoryTools.Inventory.BITInventory;
+import dk.gabriel333.BukkitInventoryTools.Sort.BITSortInventory;
 import dk.gabriel333.Library.*;
 
 public class BITBookInputListener extends InputListener {
@@ -131,11 +131,11 @@ public class BITBookInputListener extends InputListener {
 					if (keypressed.equals(G333Config.LIBRARY_READKEY)) {
 						if (G333Permissions.hasPerm(sPlayer, "book.use",
 								G333Permissions.NOT_QUIET)) {
-							G333Inventory.sortPlayerInventoryItems(sPlayer);
+							BITSortInventory.sortPlayerInventoryItems(sPlayer);
 							BITInventory bitInventory = BITInventory.openedInventories
 									.get(id);
 							Inventory inventory = bitInventory.getInventory();
-							G333Inventory
+							BITSortInventory
 									.sortInventoryItems(sPlayer, inventory);
 							bitInventory.setInventory(sBlock,
 									bitInventory.getOwner(),

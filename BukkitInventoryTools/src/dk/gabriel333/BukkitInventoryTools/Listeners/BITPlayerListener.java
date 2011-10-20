@@ -20,9 +20,8 @@ import org.getspout.spoutapi.block.SpoutBlock;
 import org.getspout.spoutapi.block.SpoutChest;
 import org.getspout.spoutapi.player.SpoutPlayer;
 
-import dk.gabriel333.BukkitInventoryTools.BITDigiLock;
+import dk.gabriel333.BukkitInventoryTools.DigiLock.BITDigiLock;
 import dk.gabriel333.BukkitInventoryTools.Inventory.BITInventory;
-import dk.gabriel333.BukkitInventoryTools.Player.BITPlayer;
 import dk.gabriel333.Library.G333Config;
 import dk.gabriel333.Library.G333Messages;
 import dk.gabriel333.Library.G333Permissions;
@@ -45,7 +44,6 @@ public class BITPlayerListener extends PlayerListener {
 			return;
 		}
 		SpoutPlayer sPlayer = (SpoutPlayer) event.getPlayer();
-		BITPlayer bPlayer = new BITPlayer(sPlayer);
 		int id = sPlayer.getEntityId();
 		if (G333Config.DEBUG_GUI)
 			sPlayer.sendMessage("BITPlayerListener:Event:"
@@ -81,7 +79,7 @@ public class BITPlayerListener extends PlayerListener {
 						if (sPlayer.isSpoutCraftEnabled()
 								&& event.getAction().equals(
 										Action.RIGHT_CLICK_BLOCK)) {
-							bPlayer.getPincode(sPlayer, block);
+							BITDigiLock.getPincode(sPlayer, block);
 						} else {
 							sPlayer.sendMessage("Locked with Digilock.");
 						}
@@ -117,7 +115,7 @@ public class BITPlayerListener extends PlayerListener {
 						// ASK FOR PINCODE
 						if (!BITDigiLock.isDoubleDoorOpen(block)) {
 							if (sPlayer.isSpoutCraftEnabled()) {
-								bPlayer.getPincode(sPlayer,
+								BITDigiLock.getPincode(sPlayer,
 										BITDigiLock.getLeftDoubleDoor(block));
 							} else {
 								sPlayer.sendMessage("Digilock'ed by "
@@ -159,7 +157,7 @@ public class BITPlayerListener extends PlayerListener {
 						// ASK FOR PINCODE
 						if (!BITDigiLock.isDoorOpen(block)) {
 							if (sPlayer.isSpoutCraftEnabled()) {
-								bPlayer.getPincode(sPlayer, block);
+								BITDigiLock.getPincode(sPlayer, block);
 							} else {
 								sPlayer.sendMessage("Digilock'ed by "
 										+ sPlayer.getName());
@@ -200,7 +198,7 @@ public class BITPlayerListener extends PlayerListener {
 						// ASK FOR PINCODE
 						if (!BITDigiLock.isTrapdoorOpen(sPlayer, block)) {
 							if (sPlayer.isSpoutCraftEnabled()) {
-								bPlayer.getPincode(sPlayer, block);
+								BITDigiLock.getPincode(sPlayer, block);
 							} else {
 								sPlayer.sendMessage("Digilock'ed by "
 										+ sPlayer.getName());
@@ -236,7 +234,7 @@ public class BITPlayerListener extends PlayerListener {
 						if (sPlayer.isSpoutCraftEnabled()
 								&& event.getAction().equals(
 										Action.RIGHT_CLICK_BLOCK)) {
-							bPlayer.getPincode(sPlayer, block);
+							BITDigiLock.getPincode(sPlayer, block);
 						} else {
 							sPlayer.sendMessage("Digilock'ed by "
 									+ sPlayer.getName());
@@ -268,7 +266,7 @@ public class BITPlayerListener extends PlayerListener {
 						if (sPlayer.isSpoutCraftEnabled()
 								&& event.getAction().equals(
 										Action.RIGHT_CLICK_BLOCK)) {
-							bPlayer.getPincode(sPlayer, block);
+							BITDigiLock.getPincode(sPlayer, block);
 						} else {
 							sPlayer.sendMessage("Digilock'ed by "
 									+ sPlayer.getName());
@@ -305,7 +303,7 @@ public class BITPlayerListener extends PlayerListener {
 							BITDigiLock.leverOff(sPlayer, block);
 						} else {
 							if (sPlayer.isSpoutCraftEnabled()) {
-								bPlayer.getPincode(sPlayer, block);
+								BITDigiLock.getPincode(sPlayer, block);
 							} else {
 								sPlayer.sendMessage("Digilock'ed by "
 										+ sPlayer.getName());
@@ -339,9 +337,9 @@ public class BITPlayerListener extends PlayerListener {
 					} else {
 						event.setCancelled(true);
 						if (sPlayer.isSpoutCraftEnabled()) {
-							bPlayer.getPincode(sPlayer, block);
+							BITDigiLock.getPincode(sPlayer, block);
 							if (digilock.getPincode().equals(
-									BITPlayer.pincode.get(id).getText())) {
+									BITDigiLock.pincodeGUI.get(id).getText())) {
 								// okay - go on
 							} else {
 								// event.setCancelled(true);
@@ -377,9 +375,9 @@ public class BITPlayerListener extends PlayerListener {
 						if (sPlayer.isSpoutCraftEnabled()
 								&& event.getAction().equals(
 										Action.RIGHT_CLICK_BLOCK)) {
-							bPlayer.getPincode(sPlayer, block);
+							BITDigiLock.getPincode(sPlayer, block);
 							if (digilock.getPincode().equals(
-									BITPlayer.pincode.get(id).getText())) {
+									BITDigiLock.pincodeGUI.get(id).getText())) {
 								// okay - go on
 							} else {
 								// if (G333Config.config.DEBUG_DOOR)
@@ -420,9 +418,9 @@ public class BITPlayerListener extends PlayerListener {
 						if (sPlayer.isSpoutCraftEnabled()
 								&& event.getAction().equals(
 										Action.RIGHT_CLICK_BLOCK)) {
-							bPlayer.getPincode(sPlayer, block);
+							BITDigiLock.getPincode(sPlayer, block);
 							if (digilock.getPincode().equals(
-									BITPlayer.pincode.get(id).getText())) {
+									BITDigiLock.pincodeGUI.get(id).getText())) {
 								// okay - go on
 							} else {
 								event.setCancelled(true);
@@ -526,23 +524,23 @@ public class BITPlayerListener extends PlayerListener {
 	}
 
 	public void onPlayerLogin(PlayerLoginEvent event) {
-		int id = event.getPlayer().getEntityId();
-		BITPlayer.addUserData(id);
+		//int id = event.getPlayer().getEntityId();
+		//BITPlayer.addUserData(id);
 	}
 
 	public void onPlayerKick(PlayerKickEvent event) {
-		int id = event.getPlayer().getEntityId();
-		BITPlayer.removeUserData(id);
+		//int id = event.getPlayer().getEntityId();
+		//BITPlayer.removeUserData(id);
 	}
 
 	public void onPlayerJoin(PlayerJoinEvent event) {
-		int id = event.getPlayer().getEntityId();
-		BITPlayer.addUserData(id);
+		//int id = event.getPlayer().getEntityId();
+		//BITPlayer.addUserData(id);
 	}
 
 	public void onPlayerQuit(PlayerQuitEvent event) {
-		int id = event.getPlayer().getEntityId();
-		BITPlayer.removeUserData(id);
+		//int id = event.getPlayer().getEntityId();
+		//BITPlayer.removeUserData(id);
 	}
 
 

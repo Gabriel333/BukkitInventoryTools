@@ -5,13 +5,17 @@ import org.bukkit.Material;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 
+import org.getspout.spout.inventory.CustomMCInventory;
+import org.getspout.spoutapi.gui.ScreenType;
 import org.getspout.spoutapi.player.SpoutPlayer;
 
+import de.Keyle.MyWolf.MyWolfPlugin;
+import dk.gabriel333.BukkitInventoryTools.BIT;
 import dk.gabriel333.Library.G333Config;
 import dk.gabriel333.Library.G333Messages;
 import dk.gabriel333.Library.G333Permissions;
 
-public class G333Inventory {
+public class BITSortInventory {
 
 	//TODO: code should be moved to BITInventory
 	public static void sortInventoryItems(SpoutPlayer sPlayer,
@@ -28,21 +32,59 @@ public class G333Inventory {
 			if ((item1.getAmount() == 64)
 			// Food must be alone in slot 0-8 so you can eat it.
 					|| (i < 9 && (item1.getAmount() == 0
-							|| G333Inventory.isTool(item1)
-							|| G333Inventory.isWeapon(item1)
-							|| G333Inventory.isArmor(item1)
-							|| G333Inventory.isFood(item1)
-							|| G333Inventory.isBucket(item1)
-							|| G333Inventory.isVehicle(item1)))) {
+							|| isTool(item1)
+							|| isWeapon(item1)
+							|| isArmor(item1)
+							||  isFood(item1)
+							|| isBucket(item1)
+							|| isVehicle(item1)))) {
 				continue;
 			} else {
 				for (j = i + 1; j < inventory.getSize(); j++) {
-					G333Inventory.moveitemInventory(sPlayer, inventory, j, i);
+					moveitemInventory(sPlayer, inventory, j, i);
 				}
 			}
 		}
-		G333Inventory.orderInventoryItems(inventory, 9);
+		orderInventoryItems(inventory, 9);
 	}
+	
+	/**
+	 * Method to sort the players inventory, his backpack or wolfs pack
+	 * 
+	 * @param sPlayer
+	 * @param screentype
+	 */
+	public static void sortinventory(SpoutPlayer sPlayer, ScreenType screentype) {
+		// sort the ordinary player inventory
+		Inventory inventory = sPlayer.getInventory();
+		BITSortInventory.sortPlayerInventoryItems(sPlayer);
+
+		// sort the SpoutBackpack if it exists and if it is opened.
+		if (BIT.spoutbackpack
+				&& BIT.spoutBackpackHandler.isOpenSpoutBackpack(sPlayer)) {
+			inventory = BIT.spoutBackpackHandler
+					.getOpenedSpoutBackpack(sPlayer);
+			if (inventory != null) {
+				BITSortInventory.sortInventoryItems(sPlayer, inventory);
+			}
+		}
+
+		// sort the players MyWolfInventory if exists and if is open.
+		if (BIT.mywolf) {
+			// if the wolf inventory is open then {
+
+			CustomMCInventory inv = MyWolfPlugin.getMyWolf(sPlayer).inv;
+
+			if (inv != null) {
+				// test if myWolfInventory is opened and open it
+				// this on fails... can not be cast to ... Inventory
+
+				// BITSortInventory.sortInventoryItems(sPlayer, (Inventory) inv);
+
+			}
+		}
+	}
+
 
 	private static void stackInventoryItems(SpoutPlayer sPlayer,
 			Inventory inventory) {

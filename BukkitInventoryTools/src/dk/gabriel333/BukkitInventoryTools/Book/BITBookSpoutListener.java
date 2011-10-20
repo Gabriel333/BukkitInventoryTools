@@ -3,6 +3,7 @@ package dk.gabriel333.BukkitInventoryTools.Book;
 import java.util.UUID;
 
 import org.bukkit.event.Event;
+import org.bukkit.inventory.ItemStack;
 import org.getspout.spoutapi.block.SpoutBlock;
 import org.getspout.spoutapi.event.screen.ButtonClickEvent;
 import org.getspout.spoutapi.event.spout.SpoutListener;
@@ -19,14 +20,21 @@ public class BITBookSpoutListener extends SpoutListener {
 			Button button = ((ButtonClickEvent) event).getButton();
 			UUID uuid = button.getId();
 			SpoutPlayer sPlayer = ((ButtonClickEvent) event).getPlayer();
+			// sPlayer.sendMessage("(1)BITBookSpoutListener");
 			SpoutBlock sBlock = (SpoutBlock) sPlayer.getTargetBlock(null, 5);
+			ItemStack itemInHand = sPlayer.getInventory().getItemInHand();
 			int id = sPlayer.getEntityId();
-			if (BITBook.isWriteable(sBlock)) {
+
+			// TODO : this command is wrong! The user does not point at any
+			// specific block
+
+			if (BITBook.isWriteable(sBlock)
+					|| BITBook.isWriteable(itemInHand.getType())) {
 				BITBook bitBook = new BITBook();
-				//TODO: get actual book from BITBooks(bookId)
+				// TODO: get actual book from BITBooks(bookId)
 				bitBook.loadBook();
-				
-				sPlayer.sendMessage("Button:"+BITBook.BITButtons.get(uuid));
+
+				//sPlayer.sendMessage("Button:" + BITBook.BITButtons.get(uuid));
 				// ************************************
 				// Buttons in BITBook
 				// ************************************
@@ -34,51 +42,51 @@ public class BITBookSpoutListener extends SpoutListener {
 					BITBook.popupScreen.get(id).close();
 					bitBook.cleanupPopupScreen(sPlayer);
 					BITBook.BITButtons.remove(uuid);
-					//TODO: save BITBook
+					// TODO: save BITBook
 
 				} else if (BITBook.BITButtons.get(uuid) == "cancelBookButton") {
 					BITBook.popupScreen.get(id).close();
 					bitBook.cleanupPopupScreen(sPlayer);
 					BITBook.BITButtons.remove(uuid);
-								
+
 				} else if ((BITBook.BITButtons.get(uuid) == "AuthorButton")) {
-					if (validateFields(sPlayer)){
-						
+					if (validateFields(sPlayer)) {
+
 					}
 				} else if ((BITBook.BITButtons.get(uuid) == "CoAuthorButton")) {
-					if (validateFields(sPlayer)){
-						
+					if (validateFields(sPlayer)) {
+
 					}
 				} else if ((BITBook.BITButtons.get(uuid) == "nextPageButton")) {
-					if (validateFields(sPlayer)){
-						
+					if (validateFields(sPlayer)) {
+
 					}
 				} else if ((BITBook.BITButtons.get(uuid) == "previousPageButton")) {
-					if (validateFields(sPlayer)){
-						
+					if (validateFields(sPlayer)) {
+
 					}
 				} else if ((BITBook.BITButtons.get(uuid) == "MasterCopyButton")) {
-					if (validateFields(sPlayer)){
-						
+					if (validateFields(sPlayer)) {
+
 					}
 				} else if ((BITBook.BITButtons.get(uuid) == "forceBookToPlayerInventoryButton")) {
-					if (validateFields(sPlayer)){
-						
+					if (validateFields(sPlayer)) {
+
 					}
 				} else if ((BITBook.BITButtons.get(uuid) == "canBeMovedFromInventoryButton")) {
-					if (validateFields(sPlayer)){
-						
+					if (validateFields(sPlayer)) {
+
 					}
 				} else if ((BITBook.BITButtons.get(uuid) == "copyTheBookWhenMovedButton")) {
-					if (validateFields(sPlayer)){
-						
+					if (validateFields(sPlayer)) {
+
 					}
 				} else if ((BITBook.BITButtons.get(uuid) == "UseCostButton")) {
-					if (validateFields(sPlayer)){
-						
+					if (validateFields(sPlayer)) {
+
 					}
-				} 
-				
+				}
+
 				// ************************************
 				// This only happens if I have forgot to handle a button
 				// ************************************

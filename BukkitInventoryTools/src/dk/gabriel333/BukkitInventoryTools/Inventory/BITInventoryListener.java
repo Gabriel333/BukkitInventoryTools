@@ -1,4 +1,4 @@
-package dk.gabriel333.BukkitInventoryTools.Listeners;
+package dk.gabriel333.BukkitInventoryTools.Inventory;
 
 import org.bukkit.event.Event;
 import org.getspout.spoutapi.event.inventory.InventoryClickEvent;

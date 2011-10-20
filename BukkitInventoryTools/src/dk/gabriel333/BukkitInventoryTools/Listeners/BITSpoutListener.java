@@ -9,7 +9,6 @@ import org.bukkit.block.Sign;
 import org.bukkit.event.Event;
 import org.bukkit.inventory.Inventory;
 
-import org.getspout.spoutapi.SpoutManager;
 import org.getspout.spoutapi.block.SpoutBlock;
 import org.getspout.spoutapi.block.SpoutChest;
 import org.getspout.spoutapi.event.screen.ButtonClickEvent;
@@ -186,7 +185,7 @@ public class BITSpoutListener extends SpoutListener {
 
 				}
 				
-				else if ((BITPlayer.BITButtons.get(uuid) == "CreateBookshelfButton")) {
+/*				else if ((BITPlayer.BITButtons.get(uuid) == "CreateBookshelfButton")) {
 					if (validateSetPincodeFields(sPlayer)) {
 						String coowners = "";
 						String name = "";
@@ -206,7 +205,7 @@ public class BITSpoutListener extends SpoutListener {
 					if (validateSetPincodeFields(sPlayer)) {
 					}
 
-				}
+				}*/
 
 				// ************************************
 				// This only happens if I have forgot to handle a button

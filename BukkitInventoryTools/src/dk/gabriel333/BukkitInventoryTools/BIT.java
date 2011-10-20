@@ -18,15 +18,9 @@ import dk.gabriel333.register.payment.Method;
 import dk.gabriel333.register.payment.Methods;
 
 import de.Keyle.MyWolf.MyWolfPlugin;
-import dk.gabriel333.BukkitInventoryTools.Commands.BITCommandBookshelf;
-import dk.gabriel333.BukkitInventoryTools.Commands.BITCommandDigiLock;
-import dk.gabriel333.BukkitInventoryTools.Commands.BITCommandSort;
-import dk.gabriel333.BukkitInventoryTools.Listeners.BITBlockListener;
-import dk.gabriel333.BukkitInventoryTools.Listeners.BITInputListener;
-import dk.gabriel333.BukkitInventoryTools.Listeners.BITInventoryListener;
-import dk.gabriel333.BukkitInventoryTools.Listeners.BITPlayerListener;
-import dk.gabriel333.BukkitInventoryTools.Listeners.BITServerListener;
-import dk.gabriel333.BukkitInventoryTools.Listeners.BITSpoutListener;
+import dk.gabriel333.BukkitInventoryTools.Commands.*;
+import dk.gabriel333.BukkitInventoryTools.Listeners.*;
+import dk.gabriel333.BukkitInventoryTools.Inventory.*;
 import dk.gabriel333.BukkitInventoryTools.Book.*;
 import dk.gabriel333.Library.G333Config;
 import dk.gabriel333.Library.G333Messages;
@@ -134,6 +128,9 @@ public class BIT extends JavaPlugin {
 				Priority.Normal, this);
 		pm.registerEvent(Event.Type.PLAYER_KICK, new BITPlayerListener(),
 				Priority.Normal, this);
+		// BITIventory Listsner
+		pm.registerEvent(Event.Type.CUSTOM_EVENT, new BITInventorySpoutListener(),
+				Event.Priority.Normal, this);
 		// BOOK Listeners
 		pm.registerEvent(Event.Type.CUSTOM_EVENT, new BITBookInputListener(),
 				Event.Priority.Normal, this);

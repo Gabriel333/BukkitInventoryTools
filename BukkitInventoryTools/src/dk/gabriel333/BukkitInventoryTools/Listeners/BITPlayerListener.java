@@ -506,8 +506,10 @@ public class BITPlayerListener extends PlayerListener {
 				} else if (!BITInventory.isBitInventoryCreated(block)
 						&& G333Permissions.hasPerm(sPlayer, "bookshelf.create",
 								G333Permissions.NOT_QUIET)) {
+					
+					//BITInventory bitInventory = new BITInventory(BIT.plugin);
 
-					bPlayer.setBookshelfInventory(sPlayer, block);
+					BITInventory.setBookshelfInventory(sPlayer, block);
 
 				}
 

@@ -18,6 +18,7 @@ import dk.gabriel333.BukkitInventoryTools.BIT;
 import dk.gabriel333.BukkitInventoryTools.BITDigiLock;
 import dk.gabriel333.BukkitInventoryTools.Inventory.BITInventory;
 import dk.gabriel333.BukkitInventoryTools.Player.BITPlayer;
+import dk.gabriel333.BukkitInventoryTools.Sort.G333Inventory;
 import dk.gabriel333.Library.*;
 
 public class BITInputListener extends InputListener {

@@ -14,7 +14,6 @@ import org.getspout.spoutapi.gui.GenericItemWidget;
 import org.getspout.spoutapi.gui.GenericLabel;
 import org.getspout.spoutapi.gui.GenericPopup;
 import org.getspout.spoutapi.gui.GenericTextField;
-import org.getspout.spoutapi.gui.GenericTexture;
 import org.getspout.spoutapi.gui.PopupScreen;
 import org.getspout.spoutapi.gui.ScreenType;
 import org.getspout.spoutapi.player.SpoutPlayer;
@@ -22,9 +21,9 @@ import org.getspout.spoutapi.player.SpoutPlayer;
 import de.Keyle.MyWolf.MyWolfPlugin;
 import dk.gabriel333.BukkitInventoryTools.BIT;
 import dk.gabriel333.BukkitInventoryTools.BITDigiLock;
-import dk.gabriel333.BukkitInventoryTools.Inventory.BITInventory;
+import dk.gabriel333.BukkitInventoryTools.Sort.G333Inventory;
 import dk.gabriel333.Library.G333Config;
-import dk.gabriel333.Library.G333Inventory;
+
 
 public class BITPlayer {
 	
@@ -102,10 +101,9 @@ public class BITPlayer {
 		}
 	}
 
-	// USERDATA FOR THE PINCODEPOPUP
-	public static Map<Integer, Integer> userno = new HashMap<Integer, Integer>();
+	// USERDATA DigiLock
 	public static Map<Integer, PopupScreen> popupScreen = new HashMap<Integer, PopupScreen>();
-	// Parameters for getPincode & setPincode
+	public static Map<Integer, Integer> userno = new HashMap<Integer, Integer>();
 	public static Map<Integer, GenericTextField> pincode = new HashMap<Integer, GenericTextField>();
 	public static Map<Integer, GenericTextField> owner = new HashMap<Integer, GenericTextField>();
 	public static Map<Integer, GenericTextField> closetimer = new HashMap<Integer, GenericTextField>();
@@ -113,6 +111,7 @@ public class BITPlayer {
 	public static Map<Integer, GenericTextField> useCost = new HashMap<Integer, GenericTextField>();
 	public static Map<Integer, GenericTextField> connectedTo = new HashMap<Integer, GenericTextField>();
 
+    // Buttons for DigiLock
 	public static HashMap<UUID, String> BITButtons = new HashMap<UUID, String>();
 
 	/**
@@ -131,7 +130,7 @@ public class BITPlayer {
 	 * @param sBlock
 	 * @return
 	 */
-	private int getPincodeBlock(SpoutBlock sBlock) {
+	public static int getPincodeBlock(SpoutBlock sBlock) {
 		switch (sBlock.getTypeId()) {
 		case 23:
 			return 23; // Dispenser - looks nice.
@@ -170,41 +169,6 @@ public class BITPlayer {
 	 * @param sBlock
 	 * @return
 	 */
-	private String getTextureUrl(SpoutBlock sBlock) {
-		switch (sBlock.getTypeId()) {
-		case 23:
-			return "http://dl.dropbox.com/u/36067670/BukkitInventoryTools/Textures/Dispenser.png";
-			// Dispenser - looks nice.
-		case 47:
-			return "http://dl.dropbox.com/u/36067670/BukkitInventoryTools/Textures/Bookshelf.png";
-			// Bookshelf - looks nice.
-		case 54:
-			return "http://dl.dropbox.com/u/36067670/BukkitInventoryTools/Textures/Chest.png";
-			// Chest - looks nice.
-		case 61:
-			return "http://dl.dropbox.com/u/36067670/BukkitInventoryTools/Textures/Furnace.png";
-			// Furnace - looks nice.
-		case 62:
-			return "http://dl.dropbox.com/u/36067670/BukkitInventoryTools/Textures/Furnace_%28Active%29.png";
-			// Burning Furnace
-		case 64:
-			// return 324; // Wooden door
-			return "http://dl.dropbox.com/u/36067670/BukkitInventoryTools/Textures/Wooden_Door.png";
-		case 69:
-			// return 69; // Lever
-			return "http://dl.dropbox.com/u/36067670/BukkitInventoryTools/Textures/Lever.png";
-		case 71:
-			// return 330; // Iron door
-			return "http://dl.dropbox.com/u/36067670/BukkitInventoryTools/Textures/Iron_Door.png";
-		case 77:
-			// return 77; // Stone button
-			return "http://dl.dropbox.com/u/36067670/BukkitInventoryTools/Textures/Stone_Button.png";
-		case 96:
-			return "http://dl.dropbox.com/u/36067670/BukkitInventoryTools/Textures/Trapdoor.png";
-			// Trap_door
-		}
-		return "http://dl.dropbox.com/u/36067670/BukkitInventoryTools/Textures/Chest.png";
-	}
 
 	// ***************************************************************
 	//
@@ -276,8 +240,6 @@ public class BITPlayer {
 		addUserData(id);
 		if (BITDigiLock.isLocked(sBlock)) {
 			BITDigiLock digilock = BITDigiLock.loadDigiLock(sBlock);
-			// TODO: remove this before release
-			sPlayer.sendMessage("Playerid is: "+id);
 			pincode.get(id).setText(digilock.getPincode());
 			owner.get(id).setText(digilock.getOwner());
 			coOwners.get(id).setText(digilock.getCoOwners());
@@ -429,151 +391,6 @@ public class BITPlayer {
 
 	}
 
-	/**
-	 * CreateBookshelf: Open GenericPopup and enter a ask if the Bookshelf
-	 * inventory is going to be created - showing the price.
-	 * 
-	 * @param sPlayer
-	 *            SpoutPlayer
-	 * @param sBlock
-	 *            SpoutBlock
-	 */
-	public void setBookshelfInventory(SpoutPlayer sPlayer, SpoutBlock sBlock) {
-		int id = sPlayer.getEntityId();
-		int height = 20;
-		int x, y, w1, w2, w3, w4;
-		addUserData(id);
-		if (BITInventory.isBitInventoryCreated(sBlock)) {
-			BITDigiLock digilock = BITDigiLock.loadDigiLock(sBlock);
-			owner.get(id).setText(digilock.getOwner());
-			coOwners.get(id).setText(digilock.getCoOwners());
-			useCost.get(id).setText(Integer.toString(digilock.getUseCost()));
-		} else {
-			owner.get(id).setText(sPlayer.getName());
-			coOwners.get(id).setText("");
-			useCost.get(id).setText("0");
-		}
-
-		// GenericTexture
-		GenericTexture genericTexture = new GenericTexture();
-		genericTexture.setUrl(getTextureUrl(sBlock));
-		genericTexture.setHeight(150).setWidth(150).setX(1).setY(1);
-		genericTexture.setMaxHeight(40).setMaxWidth(40);
-		popupScreen.get(id).attachWidget(BIT.plugin, genericTexture);
-
-		// itemwidget
-		x = 170;
-		y = 50;
-		GenericItemWidget itemwidget = new GenericItemWidget(new ItemStack(
-				getPincodeBlock(sBlock)));
-		itemwidget.setX(x + 2 * height).setY(y);
-		itemwidget.setHeight(height * 2).setWidth(height * 2)
-				.setDepth(height * 2);
-		popupScreen.get(id).attachWidget(BIT.plugin, itemwidget);
-		y = y + 3 * height;
-
-		// costToCreateLabel
-		GenericLabel costToCreate = new GenericLabel("CostToCreate: "
-				+ String.valueOf(G333Config.BOOKSHELF_COST));
-		costToCreate.setAuto(true).setX(175).setY(y).setHeight(10)
-				.setWidth(140);
-		costToCreate.setTooltip("The cost to create a new Bookshelf");
-		popupScreen.get(id).attachWidget(BIT.plugin, costToCreate);
-
-		// first row -------- x=20-170-------------------------------------
-		x = 10;
-		w1 = 60;
-		w2 = 80;
-		w3 = 50;
-		w4 = 50;
-
-		y = 170;
-		// ownerButton
-		GenericButton ownerButton = new GenericButton("Owner");
-		ownerButton.setAuto(false).setX(x).setY(y).setHeight(height)
-				.setWidth(w1);
-		ownerButton.setTooltip("Set Owner");
-		popupScreen.get(id).attachWidget(BIT.plugin, ownerButton);
-		BITButtons.put(ownerButton.getId(), "OwnerButton");
-		// owner1
-		owner.get(id).setTooltip("Owner of the Bookshelf");
-		owner.get(id).setCursorPosition(1).setMaximumCharacters(20);
-		owner.get(id).setX(x + w1 + 1).setY(y);
-		owner.get(id).setHeight(height).setWidth(w2);
-		popupScreen.get(id).attachWidget(BIT.plugin, owner.get(id));
-
-		// useCostButton
-		GenericButton useCostButton = new GenericButton("Use cost");
-		useCostButton.setAuto(false).setX(x + w1 + w2 + 10 + w1 + w3 + 10)
-				.setY(y).setHeight(height).setWidth(w1);
-		useCostButton.setTooltip("Set cost");
-		popupScreen.get(id).attachWidget(BIT.plugin, useCostButton);
-		BITButtons.put(useCostButton.getId(), "UseCostButton");
-		// useCost1
-		useCost.get(id).setTooltip("This is the cost to use the Bookshelf");
-		useCost.get(id).setCursorPosition(1).setMaximumCharacters(4);
-		useCost.get(id).setX(x + w1 + w2 + 10 + w1 + w3 + 10 + w1 + 1).setY(y);
-		useCost.get(id).setHeight(height).setWidth(w4);
-		popupScreen.get(id).attachWidget(BIT.plugin, useCost.get(id));
-		y = y + height + 1;
-
-		// setCoOwnerButton
-		GenericButton CoOwnerButton = new GenericButton("CoOwners");
-		CoOwnerButton.setAuto(false).setX(x).setY(y).setHeight(height)
-				.setWidth(w1);
-		CoOwnerButton.setTooltip("CoOwners must be seperated by a comma.");
-		popupScreen.get(id).attachWidget(BIT.plugin, CoOwnerButton);
-		BITButtons.put(CoOwnerButton.getId(), "CoOwnerButton");
-		// listOfCoOwners
-		coOwners.get(id).setX(x + w1 + 1).setY(y).setWidth(340)
-				.setHeight(height);
-		coOwners.get(id).setMaximumCharacters(200);
-		coOwners.get(id).setText(coOwners.get(id).getText());
-		popupScreen.get(id).attachWidget(BIT.plugin, coOwners.get(id));
-		y = y + height;
-
-		// Second row ------------X=170-270-370------------------------------
-		y = 110;
-		x = 180;
-		w1 = 80;
-		w2 = 80;
-		y = y + height;
-
-		// CreateBookshelfButton
-		GenericButton CreateBookshelfButton = new GenericButton("Create");
-		CreateBookshelfButton.setAuto(false).setX(x).setY(y).setHeight(height)
-				.setWidth(w1);
-		CreateBookshelfButton
-				.setTooltip("Press Create to create the Bookshelf.");
-		popupScreen.get(id).attachWidget(BIT.plugin, CreateBookshelfButton);
-		BITButtons.put(CreateBookshelfButton.getId(), "CreateBookshelfButton");
-
-		// cancelButton
-		GenericButton cancelButton2 = new GenericButton("Cancel");
-		cancelButton2.setAuto(false).setX(x + w1 + 10).setY(y)
-				.setHeight(height).setWidth(w1);
-		popupScreen.get(id).attachWidget(BIT.plugin, cancelButton2);
-		BITButtons.put(cancelButton2.getId(), "setPincodeCancel");
-
-		// removeBookshelfButton
-		if (BITInventory.isBitInventoryCreated(sBlock)) {
-			GenericButton removeBookshelfButton = new GenericButton("Remove");
-			removeBookshelfButton.setAuto(false).setX(x - w1 - 10).setY(y)
-					.setHeight(height).setWidth(w1);
-			removeBookshelfButton
-					.setTooltip("Press Remove to remove the BookshelfInventory.");
-			removeBookshelfButton.setEnabled(true);
-			BITButtons.put(removeBookshelfButton.getId(),
-					"removeBookshelfButton");
-			popupScreen.get(id).attachWidget(BIT.plugin, removeBookshelfButton);
-		}
-
-		// Open Window
-		// popupScreen.get(id).setDirty(true);
-		popupScreen.get(id).setTransparent(true);
-		sPlayer.getMainScreen().attachPopupScreen(popupScreen.get(id));
-
-	}
 	
 	public static void removeUserData(int id) {
 		if (BITPlayer.userno.containsKey(id)) {

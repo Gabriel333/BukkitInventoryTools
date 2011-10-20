@@ -1,4 +1,4 @@
-package dk.gabriel333.Library;
+package dk.gabriel333.BukkitInventoryTools.Sort;
 
 import org.bukkit.Material;
 
@@ -6,6 +6,10 @@ import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 
 import org.getspout.spoutapi.player.SpoutPlayer;
+
+import dk.gabriel333.Library.G333Config;
+import dk.gabriel333.Library.G333Messages;
+import dk.gabriel333.Library.G333Permissions;
 
 public class G333Inventory {
 

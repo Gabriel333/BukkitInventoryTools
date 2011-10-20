@@ -555,7 +555,31 @@ public class BITDigiLock {
 				for (int k = -1; k < +1; k++) {
 					if (!(i == 0 && j == 0 && k == 0)) {
 						SpoutBlock sb = sBlock.getRelative(i, j, k);
-						if (BITDigiLock.isLocked(sb)
+						if (
+						// BITDigiLock.isLockable(sb)
+						BITDigiLock.isLocked(sb)
+								&& (BITDigiLock.isDoubleDoor(sb)
+										|| BITDigiLock.isDoor(sb)
+										|| BITDigiLock.isTrapdoor(sb) || BITDigiLock
+											.isDispenser(sb))) {
+							return sb;
+						}
+					}
+				}
+			}
+		}
+		return null;
+	}
+
+	public SpoutBlock getNextLockableBlock(SpoutPlayer sPlayer,
+			SpoutBlock sBlock) {
+		for (int i = -1; i < 1 + 1; i++) {
+			for (int j = -1; j < +1; j++) {
+				for (int k = -1; k < +1; k++) {
+					if (!(i == 0 && j == 0 && k == 0)) {
+						SpoutBlock sb = sBlock.getRelative(i, j, k);
+						if (BITDigiLock.isLockable(sb)
+						// BITDigiLock.isLocked(sb)
 								&& (BITDigiLock.isDoubleDoor(sb)
 										|| BITDigiLock.isDoor(sb)
 										|| BITDigiLock.isTrapdoor(sb) || BITDigiLock
@@ -683,6 +707,12 @@ public class BITDigiLock {
 		}
 	}
 
+	// *******************************************************
+	//
+	// DOORS
+	//
+	// *******************************************************
+
 	/**
 	 * Check if sBlock is a LEVER.
 	 * 
@@ -745,7 +775,7 @@ public class BITDigiLock {
 				}
 			}
 			if (setleveron && doTheWork) {
-				playDigiLockSound(sBlock);
+
 				Lever lever = (Lever) sBlock.getState().getData();
 				lever.setPowered(true);
 				// x | 8 ^ 8 = 0
@@ -765,7 +795,7 @@ public class BITDigiLock {
 					scheduleLeverOff(sPlayer, sBlock, digilock.getClosetimer());
 				}
 			}
-		}
+		} 
 	}
 
 	public static void leverOff(SpoutPlayer sPlayer, SpoutBlock sBlock) {

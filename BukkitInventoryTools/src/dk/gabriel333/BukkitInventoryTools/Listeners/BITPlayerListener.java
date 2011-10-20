@@ -33,8 +33,7 @@ public class BITPlayerListener extends PlayerListener {
 		if (event.isCancelled())
 			return;
 		// DOORS, DOUBLEDOORS, TRAPDOORS LEVERS, BUTTON can be handled with both
-		// mousebuttons, the
-		// rest is only with RIGHT_CLICK
+		// mousebuttons, the rest is only with RIGHT_CLICK
 		if (!(event.getAction().equals(Action.RIGHT_CLICK_BLOCK) || event
 				.getAction().equals(Action.LEFT_CLICK_BLOCK))) {
 			return;
@@ -56,6 +55,7 @@ public class BITPlayerListener extends PlayerListener {
 			sPlayer.sendMessage("BITPlayerListener:Event:"
 					+ event.getEventName() + " action:" + event.getAction()
 					+ " Block:" + event.getClickedBlock());
+
 		// HANDLING THAT PLAYER CLICK ON A BLOCK WITH A DIGILOCK
 		if (BITDigiLock.isLocked(block)) {
 			BITDigiLock digilock = BITDigiLock.loadDigiLock(block);
@@ -284,38 +284,105 @@ public class BITPlayerListener extends PlayerListener {
 				// HANDLING LEVER
 				else if (block.getType().equals(Material.LEVER)) {
 					Lever lever = (Lever) block.getState().getData();
+					SpoutBlock nextLockableBlock = digilock
+							.getNextLockableBlock(sPlayer, block);
+					// SpoutBlock nextLockedBlock = digilock.getNextLockedBlock(
+					// sPlayer, block);
 					if (digilock.getPincode().equals("")
 							|| digilock.getPincode().equalsIgnoreCase(
 									"fingerprint")) {
 						// USE LEVER BY FINGERPRINT
 						if (digilock.isOwner(sPlayer)
 								|| digilock.isCoowner(sPlayer)) {
-							G333Messages.sendNotification(sPlayer,
-									"Used with fingerprint");
-							BITDigiLock.playDigiLockSound(block);
-							if (lever.isPowered()) {
-								BITDigiLock.leverOff(sPlayer, block);
+							if (nextLockableBlock != null) {
+								if (BITDigiLock.isLocked(nextLockableBlock)) {
+									G333Messages.sendNotification(sPlayer,
+											"Used with fingerprint");
+									BITDigiLock.playDigiLockSound(block);
+									if (lever.isPowered()) {
+										BITDigiLock.leverOff(sPlayer, block);
+									} else {
+										BITDigiLock.leverOn(sPlayer, block,
+												digilock.getUseCost());
+									}
+									BITDigiLock.playDigiLockSound(block);
+								} else {
+									sPlayer.sendMessage("The connected block "
+											+ nextLockableBlock.getType()
+											+ " is not locked. Please lock it.");
+									if (BITDigiLock
+											.isDoubleDoor(nextLockableBlock)) {
+										BITDigiLock.closeDoubleDoor(sPlayer,
+												nextLockableBlock, 0);
+									} else if (BITDigiLock
+											.isDoor(nextLockableBlock)) {
+										BITDigiLock.closeDoor(sPlayer,
+												nextLockableBlock, 0);
+									} else if (BITDigiLock
+											.isTrapdoor(nextLockableBlock)) {
+										BITDigiLock.closeTrapdoor(sPlayer,
+												nextLockableBlock);
+									}
+									BITDigiLock.leverOff(sPlayer, block);
+									event.setCancelled(true);
+
+								}
 							} else {
-								BITDigiLock.leverOn(sPlayer, block,
-										digilock.getUseCost());
+								sPlayer.sendMessage("The lever is not connected to anything.");
 							}
-							BITDigiLock.playDigiLockSound(block);
 						} else {
 							sPlayer.sendMessage("Your fingerprint does not match the DigiLock");
 							event.setCancelled(true);
 							BITDigiLock.leverOff(sPlayer, block);
 						}
-					} else {
-						if (lever.isPowered()) {
-							BITDigiLock.leverOff(sPlayer, block);
-						} else {
-							if (sPlayer.isSpoutCraftEnabled()) {
-								BITDigiLock.getPincode(sPlayer, block);
+					} else { // LEVER with pincode
+						if (nextLockableBlock != null) {
+							if (BITDigiLock.isLocked(nextLockableBlock)) {
+								if (!BITDigiLock.isLeverOn(block)) {
+									if (sPlayer.isSpoutCraftEnabled()) {
+										BITDigiLock.getPincode(sPlayer, block);
+									} else {
+										sPlayer.sendMessage("Digilock'ed by "
+												+ sPlayer.getName());
+										event.setCancelled(true);
+									}
+								} else {
+									if (BITDigiLock.isDoubleDoor(nextLockableBlock)) {
+										BITDigiLock.closeDoubleDoor(sPlayer,
+												nextLockableBlock, 0);
+									} else if (BITDigiLock
+											.isDoor(nextLockableBlock)) {
+										BITDigiLock.closeDoor(sPlayer,
+												nextLockableBlock, 0);
+									} else if (BITDigiLock
+											.isTrapdoor(nextLockableBlock)) {
+										BITDigiLock.closeTrapdoor(sPlayer,
+												nextLockableBlock);
+									}
+									BITDigiLock.leverOff(sPlayer, block);
+								}
 							} else {
-								sPlayer.sendMessage("Digilock'ed by "
-										+ sPlayer.getName());
+								sPlayer.sendMessage("The connected block "
+										+ nextLockableBlock.getType()
+										+ " is not locked. Please lock it.");
+								if (BITDigiLock.isDoubleDoor(nextLockableBlock)) {
+									BITDigiLock.closeDoubleDoor(sPlayer,
+											nextLockableBlock, 0);
+								} else if (BITDigiLock
+										.isDoor(nextLockableBlock)) {
+									BITDigiLock.closeDoor(sPlayer,
+											nextLockableBlock, 0);
+								} else if (BITDigiLock
+										.isTrapdoor(nextLockableBlock)) {
+									BITDigiLock.closeTrapdoor(sPlayer,
+											nextLockableBlock);
+								}
+								BITDigiLock.leverOff(sPlayer, block);
 								event.setCancelled(true);
+
 							}
+						} else {
+							sPlayer.sendMessage("The lever is not connected to anything.");
 						}
 					}
 				}
@@ -484,6 +551,13 @@ public class BITPlayerListener extends PlayerListener {
 			}
 			// HANDLING LEVER
 			else if (block.getType().equals(Material.LEVER)) {
+				Lever lever = (Lever) block.getState().getData();
+				if (lever.isPowered()) {
+
+					BITDigiLock.leverOff(sPlayer, block);
+				} else {
+					BITDigiLock.leverOn(sPlayer, block, 0);
+				}
 
 			}
 			// HANDLING STONE_BUTTON

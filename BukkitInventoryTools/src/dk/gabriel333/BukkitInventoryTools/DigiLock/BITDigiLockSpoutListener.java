@@ -85,9 +85,11 @@ public class BITDigiLockSpoutListener extends SpoutListener {
 							sPlayer.openInventoryWindow(inv);
 
 						} else if (digilock.getBlock().getType() == Material.BOOKSHELF) {
-							BITInventory bitInventory = BITInventory.loadBitInventory(sPlayer, sBlock);
-							bitInventory.openBitInventory(sPlayer,bitInventory);
-						
+							BITInventory bitInventory = BITInventory
+									.loadBitInventory(sPlayer, sBlock);
+							bitInventory
+									.openBitInventory(sPlayer, bitInventory);
+
 						} else if (BITDigiLock.isTrapdoor(sBlock)) {
 							BITDigiLock.playDigiLockSound(digilock.getBlock());
 							BITDigiLock.openTrapdoor(sPlayer,
@@ -105,9 +107,14 @@ public class BITDigiLockSpoutListener extends SpoutListener {
 					} else {
 						G333Messages
 								.sendNotification(sPlayer, "Wrong pincode!");
-						if (BITDigiLock.isDoor(digilock.getBlock())) {
+						if (BITDigiLock.isDoubleDoor(digilock.getBlock())) {
+							BITDigiLock.closeDoubleDoor(sPlayer, digilock.getBlock(),
+									0);
+						} else if (BITDigiLock.isDoor(digilock.getBlock())) {
 							BITDigiLock.closeDoor(sPlayer, digilock.getBlock(),
 									0);
+						} else if (BITDigiLock.isTrapdoor(digilock.getBlock())) {
+							BITDigiLock.closeTrapdoor(sPlayer, digilock.getBlock());
 						} else if (BITDigiLock.isChest(sBlock)
 								|| BITDigiLock.isDispenser(sBlock)
 								|| sBlock.getType() == Material.FURNACE) {
@@ -136,16 +143,15 @@ public class BITDigiLockSpoutListener extends SpoutListener {
 								G333Permissions.QUIET)) {
 					if (validateSetPincodeFields(sPlayer)) {
 						sPlayer.closeActiveWindow();
-						BITDigiLock
-								.SaveDigiLock(sPlayer, sBlock,
-										BITDigiLock.pincodeGUI.get(id).getText(),
-										BITDigiLock.ownerGUI.get(id).getText(), Integer
-												.valueOf(BITDigiLock.closetimerGUI.get(id)
-														.getText()),
-										BITDigiLock.coOwnersGUI.get(id).getText(), 
-										sBlock.getTypeId(), "", Integer
-												.valueOf(BITDigiLock.useCostGUI.get(id)
-														.getText()));
+						BITDigiLock.SaveDigiLock(sPlayer, sBlock,
+								BITDigiLock.pincodeGUI.get(id).getText(),
+								BITDigiLock.ownerGUI.get(id).getText(), Integer
+										.valueOf(BITDigiLock.closetimerGUI.get(
+												id).getText()),
+								BITDigiLock.coOwnersGUI.get(id).getText(),
+								sBlock.getTypeId(), "", Integer
+										.valueOf(BITDigiLock.useCostGUI.get(id)
+												.getText()));
 						BITDigiLock.cleanupPopupScreen(sPlayer);
 						BITDigiLock.BITDigiLockButtons.remove(uuid);
 					}
@@ -154,7 +160,7 @@ public class BITDigiLockSpoutListener extends SpoutListener {
 					sPlayer.closeActiveWindow();
 					BITDigiLock.cleanupPopupScreen(sPlayer);
 					BITDigiLock.BITDigiLockButtons.remove(uuid);
-					
+
 				} else if ((BITDigiLock.BITDigiLockButtons.get(uuid) == "setPincodeRemove")) {
 					sPlayer.closeActiveWindow();
 					BITDigiLock.cleanupPopupScreen(sPlayer);
@@ -181,7 +187,7 @@ public class BITDigiLockSpoutListener extends SpoutListener {
 					}
 
 				}
-				
+
 				// ************************************
 				// This only happens if I have forgot to handle a button
 				// ************************************
@@ -204,7 +210,8 @@ public class BITDigiLockSpoutListener extends SpoutListener {
 			BITDigiLock.useCostGUI.get(id).setText("0");
 			BITDigiLock.popupScreen.get(id).setDirty(true);
 		}
-		int closetimer = Integer.valueOf(BITDigiLock.closetimerGUI.get(id).getText());
+		int closetimer = Integer.valueOf(BITDigiLock.closetimerGUI.get(id)
+				.getText());
 		int useCost = Integer.valueOf(BITDigiLock.useCostGUI.get(id).getText());
 		if (closetimer < 0) {
 			G333Messages.sendNotification(sPlayer, "Closetimer must be > 0");

@@ -38,22 +38,10 @@ public class BITBookInputListener extends InputListener {
 		// PLAYER_INVENTORY
 		if (screentype == ScreenType.PLAYER_INVENTORY) {
 			if (keypressed.equals(G333Config.LIBRARY_READKEY)) {
-				if (BITBook.isWriteable(itemInHand.getType())
-						&& itemInHand.getAmount() == 1) {
-					
-					sBlock=null;
-					handleItemInHand(sPlayer,bitBook,sBlock,itemInHand);
-					
-				} else {
-					if (BITBook.isWriteable(itemInHand.getType())) {
-						if (itemInHand.getAmount() != 1) {
-							sPlayer.sendMessage("There must only be one item in the slot");
-						}
-					} else {
-						sPlayer.sendMessage("You cant write in a :"
-								+ itemInHand.getType());
-					}
-				}
+				
+				sBlock=null;
+				handleItemInHand(sPlayer,bitBook,sBlock,itemInHand);
+				
 			} else if (keypressed.equals("KEY_ESCAPE")) {
 				bitBook.cleanupPopupScreen(sPlayer);
 
@@ -223,6 +211,9 @@ public class BITBookInputListener extends InputListener {
 				String coAuthors = "";
 				int numberOfPages = 3;
 				GenericTextField[] pages = new GenericTextField[numberOfPages];
+				pages[0].setText("This page number 1");
+				pages[1].setText("This page number 2");
+				pages[2].setText("This page number 3");
 				Boolean masterCopy = false;
 				int masterCopyId = 0;
 				Boolean forceBookToPlayerInventory = false;
@@ -236,7 +227,7 @@ public class BITBookInputListener extends InputListener {
 						forceBookToPlayerInventory,
 						canBeMovedFromInventory,
 						copyTheBookWhenMoved, useCost);
-
+				BITBook.bitBooks.put(bookId, bitBook);
 				bitBook.openBook(sPlayer, sPlayer.getInventory()
 						.getHeldItemSlot());
 

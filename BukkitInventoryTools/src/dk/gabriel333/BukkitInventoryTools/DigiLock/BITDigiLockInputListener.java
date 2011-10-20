@@ -51,7 +51,7 @@ public class BITDigiLockInputListener extends InputListener {
 					if (G333Config.SORT_DISPLAYSORTARCHIEVEMENT) {
 						G333Messages.sendNotification(sPlayer, "Items sorted.");
 					}
-				} 
+				}
 			}
 		} else
 
@@ -65,7 +65,7 @@ public class BITDigiLockInputListener extends InputListener {
 						G333Messages.sendNotification(sPlayer, "Items sorted.");
 					}
 				}
-			} 
+			}
 			// Inventories connected to a block
 		} else if (BITDigiLock.isLockable(targetblock)) {
 
@@ -82,14 +82,15 @@ public class BITDigiLockInputListener extends InputListener {
 									G333Permissions.NOT_QUIET)) {
 								BITSortInventory.sortInventoryItems(sPlayer,
 										sChest.getLargestInventory());
-								BITSortInventory.sortPlayerInventoryItems(sPlayer);
+								BITSortInventory
+										.sortPlayerInventoryItems(sPlayer);
 								if (G333Config.SORT_DISPLAYSORTARCHIEVEMENT) {
 									G333Messages.sendNotification(sPlayer,
 											"Chest sorted.");
 								}
 							}
 						}
-					} 
+					}
 
 				} else if (BITDigiLock.isBookshelf(targetblock)) {
 
@@ -102,8 +103,8 @@ public class BITDigiLockInputListener extends InputListener {
 							BITInventory bitInventory = BITInventory.openedInventories
 									.get(id);
 							Inventory inventory = bitInventory.getInventory();
-							BITSortInventory
-									.sortInventoryItems(sPlayer, inventory);
+							BITSortInventory.sortInventoryItems(sPlayer,
+									inventory);
 							bitInventory.setInventory(targetblock,
 									bitInventory.getOwner(),
 									bitInventory.getName(),
@@ -221,12 +222,15 @@ public class BITDigiLockInputListener extends InputListener {
 												.getLeftDoubleDoor(targetblock);
 										BITDigiLock.closeDoubleDoor(sPlayer,
 												leftdoor, 0);
-										BITDigiLock.setPincode(sPlayer, leftdoor);
+										BITDigiLock.setPincode(sPlayer,
+												leftdoor);
 									} else if (BITDigiLock.isDoor(targetblock)) {
 										BITDigiLock.closeDoor(targetblock);
-										BITDigiLock.setPincode(sPlayer, targetblock);
+										BITDigiLock.setPincode(sPlayer,
+												targetblock);
 									} else {
-										BITDigiLock.setPincode(sPlayer, targetblock);
+										BITDigiLock.setPincode(sPlayer,
+												targetblock);
 									}
 
 								}
@@ -250,7 +254,7 @@ public class BITDigiLockInputListener extends InputListener {
 						G333Messages.sendNotification(sPlayer,
 								"Inventory sorted.");
 					}
-				} 
+				}
 			}
 
 			// DISPENCER_INVENTORY SCREEN
@@ -262,8 +266,8 @@ public class BITDigiLockInputListener extends InputListener {
 							Dispenser dispenser = (Dispenser) targetblock
 									.getState();
 							Inventory inventory = dispenser.getInventory();
-							BITSortInventory
-									.sortInventoryItems(sPlayer, inventory);
+							BITSortInventory.sortInventoryItems(sPlayer,
+									inventory);
 							BITSortInventory.sortPlayerInventoryItems(sPlayer);
 						}
 					}
@@ -271,18 +275,30 @@ public class BITDigiLockInputListener extends InputListener {
 						G333Messages.sendNotification(sPlayer,
 								"Dispenser sorted.");
 					}
-				} 
+				}
 			}
 
 			// CUSTOM_SCREEN
 			else if (screentype == ScreenType.CUSTOM_SCREEN) {
 				if (keypressed.equals("KEY_ESCAPE")) {
+					// TODO: the lever must swing back to off, when the
+					// player press ESC. Next lines does not work. :-(
+					//if (BITDigiLock.isLever(targetblock)) {
+					//	if ( BITDigiLock.isLeverOn(targetblock)) {
+					//		BITDigiLock.leverOff(sPlayer, targetblock);
+					//	} else {
+					//		BITDigiLock.leverOn(sPlayer, targetblock,0);
+					//	}
+					//	sPlayer.sendMessage("setting lever to off");
+					//	Lever lever = (Lever) targetblock.getState().getData();
+					//	lever.setPowered(false);
+					//}
 					sPlayer.closeActiveWindow();
 					BITDigiLock.cleanupPopupScreen(sPlayer);
 
 				} else if (keypressed.equals("KEY_RETURN")) {
-					
-				} 
+
+				}
 			}
 		}
 

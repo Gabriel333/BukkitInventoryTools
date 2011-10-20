@@ -86,7 +86,7 @@ public class BITBook {
 		this.useCost = useCost;
 	}
 
-	protected Map<Integer, BITBook> bitBooks = new HashMap<Integer, BITBook>();
+	public static Map<Integer, BITBook> bitBooks = new HashMap<Integer, BITBook>();
 	public static Map<Integer, PopupScreen> popupScreen = new HashMap<Integer, PopupScreen>();
 	public static Map<UUID, String> BITButtons = new HashMap<UUID, String>();
 	public static Map<Integer, Integer> userno = new HashMap<Integer, Integer>();
@@ -385,6 +385,8 @@ public class BITBook {
 		sPlayer.getMainScreen().attachPopupScreen(popupScreen.get(id));
 
 	}
+	
+	
 
 	public void cleanupPopupScreen(SpoutPlayer sPlayer) {
 		int playerId = sPlayer.getEntityId();

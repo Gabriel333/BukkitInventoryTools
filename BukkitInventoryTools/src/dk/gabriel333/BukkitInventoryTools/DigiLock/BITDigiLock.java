@@ -73,9 +73,9 @@ public class BITDigiLock {
 		this.connectedTo = connectedTo;
 		this.useCost = useCost;
 	}
-	
-	//public static Map<Integer, Boolean> isLocked = new HashMap<Integer, Boolean>();
 
+	// public static Map<Integer, Boolean> isLocked = new HashMap<Integer,
+	// Boolean>();
 
 	/**
 	 * Saves the DigiLock to the database.
@@ -602,9 +602,12 @@ public class BITDigiLock {
 	/**
 	 * Handle the actions when a player presses the STONE_BUTTON
 	 * 
-	 * @param sPlayer SpoutPlayer
-	 * @param sBlock SpoutBlock
-	 * @param cost the cost the player is charged when the button is pressed.
+	 * @param sPlayer
+	 *            SpoutPlayer
+	 * @param sBlock
+	 *            SpoutBlock
+	 * @param cost
+	 *            the cost the player is charged when the button is pressed.
 	 */
 	public static void pressButtonOn(SpoutPlayer sPlayer, SpoutBlock sBlock,
 			int cost) {
@@ -649,13 +652,14 @@ public class BITDigiLock {
 				// sBlock.setData((byte) ((lever.getData() | 8) ^ 8));
 				if (BITDigiLock.isDoubleDoor(nextBlock)) {
 					BITDigiLock.openDoubleDoor(sPlayer, nextBlock, 0);
-					BITDigiLock.scheduleCloseDoubleDoor(sPlayer, nextBlock, 5, 0);
+					BITDigiLock.scheduleCloseDoubleDoor(sPlayer, nextBlock, 5,
+							0);
 				} else if (BITDigiLock.isDoor(nextBlock)) {
 					BITDigiLock.openDoor(sPlayer, nextBlock, 0);
 					BITDigiLock.scheduleCloseDoor(sPlayer, nextBlock, 5, 0);
 				} else if (BITDigiLock.isTrapdoor(nextBlock)) {
 					BITDigiLock.openTrapdoor(sPlayer, nextBlock, 0);
-					BITDigiLock.scheduleCloseTrapdoor(sPlayer, nextBlock,5);
+					BITDigiLock.scheduleCloseTrapdoor(sPlayer, nextBlock, 5);
 				} else if (BITDigiLock.isDispenser(nextBlock)) {
 					Dispenser dispenser = (Dispenser) nextBlock.getState();
 					dispenser.dispense();
@@ -664,7 +668,6 @@ public class BITDigiLock {
 			}
 		}
 	}
-
 
 	/**
 	 * Check if sBlock is a DISPENSER.
@@ -1253,7 +1256,6 @@ public class BITDigiLock {
 				}, fs);
 		return taskID;
 	}
-	
 
 	// USERDATA DigiLock
 	public static Map<Integer, PopupScreen> popupScreen = new HashMap<Integer, PopupScreen>();
@@ -1265,7 +1267,7 @@ public class BITDigiLock {
 	public static Map<Integer, GenericTextField> useCostGUI = new HashMap<Integer, GenericTextField>();
 	public static Map<Integer, GenericTextField> connectedToGUI = new HashMap<Integer, GenericTextField>();
 
-    // Buttons for DigiLock
+	// Buttons for DigiLock
 	public static HashMap<UUID, String> BITDigiLockButtons = new HashMap<UUID, String>();
 
 	/**
@@ -1273,10 +1275,12 @@ public class BITDigiLock {
 	 * @param sPlayer
 	 */
 	public static void cleanupPopupScreen(SpoutPlayer sPlayer) {
-		int id = sPlayer.getEntityId();
-		popupScreen.get(id).removeWidgets(BIT.plugin);
-		popupScreen.get(id).setDirty(true);
-		sPlayer.getMainScreen().removeWidgets(BIT.plugin);
+		int playerId = sPlayer.getEntityId();
+		if (popupScreen.containsKey(playerId)) {
+			popupScreen.get(playerId).removeWidgets(BIT.plugin);
+			popupScreen.get(playerId).setDirty(true);
+			sPlayer.getMainScreen().removeWidgets(BIT.plugin);
+		}
 	}
 
 	/**
@@ -1297,12 +1301,12 @@ public class BITDigiLock {
 		case 62:
 			return 62; // Burning Furnace
 		case 63:
-			return 63; //SIGN_POST
+			return 63; // SIGN_POST
 		case 64:
 			// return 324; // Wooden door
 			return 95;
 		case 68:
-		    return 68;
+			return 68;
 		case 69:
 			// return 69; // Lever
 			return 95;
@@ -1426,7 +1430,7 @@ public class BITDigiLock {
 
 		GenericLabel costToCreate = new GenericLabel("CostToCreate: "
 				+ String.valueOf(G333Config.DIGILOCK_COST));
-		costToCreate.setAuto(true).setX(175).setY(y-10).setHeight(10)
+		costToCreate.setAuto(true).setX(175).setY(y - 10).setHeight(10)
 				.setWidth(140);
 		costToCreate.setTooltip("The cost to create a new DigiLock");
 		popupScreen.get(id).attachWidget(BIT.plugin, costToCreate);
@@ -1477,7 +1481,8 @@ public class BITDigiLock {
 		// useCost1
 		useCostGUI.get(id).setTooltip("This is the cost to use the DigiLock");
 		useCostGUI.get(id).setCursorPosition(1).setMaximumCharacters(4);
-		useCostGUI.get(id).setX(x + w1 + w2 + 10 + w1 + w3 + 10 + w1 + 1).setY(y);
+		useCostGUI.get(id).setX(x + w1 + w2 + 10 + w1 + w3 + 10 + w1 + 1)
+				.setY(y);
 		useCostGUI.get(id).setHeight(height).setWidth(w4);
 		popupScreen.get(id).attachWidget(BIT.plugin, useCostGUI.get(id));
 		y = y + height + 1;
@@ -1545,7 +1550,6 @@ public class BITDigiLock {
 
 	}
 
-	
 	public static void removeUserData(int id) {
 		if (userno.containsKey(id)) {
 			// DigiLock
@@ -1562,7 +1566,7 @@ public class BITDigiLock {
 
 	public static void addUserData(int id) {
 		if (!userno.containsKey(id)) {
-			//DigiLock
+			// DigiLock
 			userno.put(id, new Integer(id));
 			popupScreen.put(id, new GenericPopup());
 			pincodeGUI.put(id, new GenericTextField());

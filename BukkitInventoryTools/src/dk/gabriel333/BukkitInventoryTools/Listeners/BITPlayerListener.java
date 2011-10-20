@@ -13,6 +13,7 @@ import org.bukkit.event.player.PlayerListener;
 import org.bukkit.event.player.PlayerLoginEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.inventory.Inventory;
+import org.bukkit.inventory.ItemStack;
 import org.bukkit.material.Button;
 import org.bukkit.material.Lever;
 
@@ -44,6 +45,12 @@ public class BITPlayerListener extends PlayerListener {
 			return;
 		}
 		SpoutPlayer sPlayer = (SpoutPlayer) event.getPlayer();
+		ItemStack itemInHand = sPlayer.getInventory().getItemInHand();
+		if (itemInHand.getType().equals(block.getType())) {
+			// This allows the user to place a new Bookshelf on a Bookshelf
+			// where the Inventory is created.
+			return;
+		}
 		int id = sPlayer.getEntityId();
 		if (G333Config.DEBUG_GUI)
 			sPlayer.sendMessage("BITPlayerListener:Event:"
@@ -504,8 +511,8 @@ public class BITPlayerListener extends PlayerListener {
 				} else if (!BITInventory.isBitInventoryCreated(block)
 						&& G333Permissions.hasPerm(sPlayer, "bookshelf.create",
 								G333Permissions.NOT_QUIET)) {
-					
-					//BITInventory bitInventory = new BITInventory(BIT.plugin);
+
+					// BITInventory bitInventory = new BITInventory(BIT.plugin);
 
 					BITInventory.setBookshelfInventory(sPlayer, block);
 
@@ -524,25 +531,23 @@ public class BITPlayerListener extends PlayerListener {
 	}
 
 	public void onPlayerLogin(PlayerLoginEvent event) {
-		//int id = event.getPlayer().getEntityId();
-		//BITPlayer.addUserData(id);
+		// int id = event.getPlayer().getEntityId();
+		// BITPlayer.addUserData(id);
 	}
 
 	public void onPlayerKick(PlayerKickEvent event) {
-		//int id = event.getPlayer().getEntityId();
-		//BITPlayer.removeUserData(id);
+		// int id = event.getPlayer().getEntityId();
+		// BITPlayer.removeUserData(id);
 	}
 
 	public void onPlayerJoin(PlayerJoinEvent event) {
-		//int id = event.getPlayer().getEntityId();
-		//BITPlayer.addUserData(id);
+		// int id = event.getPlayer().getEntityId();
+		// BITPlayer.addUserData(id);
 	}
 
 	public void onPlayerQuit(PlayerQuitEvent event) {
-		//int id = event.getPlayer().getEntityId();
-		//BITPlayer.removeUserData(id);
+		// int id = event.getPlayer().getEntityId();
+		// BITPlayer.removeUserData(id);
 	}
-
-
 
 }

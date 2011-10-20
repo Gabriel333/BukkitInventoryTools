@@ -30,9 +30,9 @@ import dk.gabriel333.Library.G333Config;
 import dk.gabriel333.Library.G333Messages;
 
 public class BITInventory {
-	
+
 	private BIT plugin;
-	
+
 	public BITInventory(Plugin plugin) {
 		plugin = this.plugin;
 	}
@@ -70,7 +70,8 @@ public class BITInventory {
 	}
 
 	public static Map<Integer, BITInventory> openedInventories = new HashMap<Integer, BITInventory>();
-	//public static Map<Integer, Boolean> isBookshelfCreated = new HashMap<Integer, Boolean>();
+	// public static Map<Integer, Boolean> isBookshelfCreated = new
+	// HashMap<Integer, Boolean>();
 
 	// USERDATA FOR THE PINCODEPOPUP
 	public static Map<Integer, Integer> userno = new HashMap<Integer, Integer>();
@@ -82,8 +83,6 @@ public class BITInventory {
 
 	public static HashMap<UUID, String> BITBookButtons = new HashMap<UUID, String>();
 
-	
-	
 	public Inventory getInventory() {
 		return this.inventory;
 	}
@@ -103,7 +102,7 @@ public class BITInventory {
 	public SpoutBlock getBlock() {
 		return this.sBlock;
 	}
-	
+
 	public void openBitInventory(SpoutPlayer sPlayer, BITInventory bitInventory) {
 		int id = sPlayer.getEntityId();
 		openedInventories.put(id, bitInventory);
@@ -487,27 +486,27 @@ public class BITInventory {
 	public int getSize() {
 		return inventory.getSize();
 	}
-	
-	public static void removeBookshelfAndDropItems(SpoutPlayer sPlayer, SpoutBlock sBlock){
-		//World world = sBlock.getBlock().getWorld();
+
+	public static void removeBookshelfAndDropItems(SpoutPlayer sPlayer,
+			SpoutBlock sBlock) {
+		// World world = sBlock.getBlock().getWorld();
 		World world = sBlock.getWorld();
 		Location location = sBlock.getLocation();
-		BITInventory bitInventory = BITInventory.loadBitInventory(
-				sPlayer, sBlock);
+		BITInventory bitInventory = BITInventory.loadBitInventory(sPlayer,
+				sBlock);
 		if (bitInventory != null) {
 			for (int i = 0; i < bitInventory.getSize(); i++) {
-				ItemStack itemstack = bitInventory.getInventory()
-						.getItem(i);
+				ItemStack itemstack = bitInventory.getInventory().getItem(i);
 				if (itemstack.getAmount() != 0) {
 					world.dropItemNaturally(location, itemstack);
 				}
 			}
 			bitInventory.RemoveBitInventory(sPlayer,
 					G333Config.BOOKSHELF_DESTROYCOST);
-			
+
 		}
 	}
-	
+
 	/**
 	 * CreateBookshelf: Open GenericPopup and enter a ask if the Bookshelf
 	 * inventory is going to be created - showing the price.
@@ -517,7 +516,8 @@ public class BITInventory {
 	 * @param sBlock
 	 *            SpoutBlock
 	 */
-	public static void setBookshelfInventory(SpoutPlayer sPlayer, SpoutBlock sBlock) {
+	public static void setBookshelfInventory(SpoutPlayer sPlayer,
+			SpoutBlock sBlock) {
 		int id = sPlayer.getEntityId();
 		int height = 20;
 		int x, y, w1, w2, w3, w4;
@@ -591,7 +591,8 @@ public class BITInventory {
 		// useCost1
 		useCostGUI.get(id).setTooltip("This is the cost to use the Bookshelf");
 		useCostGUI.get(id).setCursorPosition(1).setMaximumCharacters(4);
-		useCostGUI.get(id).setX(x + w1 + w2 + 10 + w1 + w3 + 10 + w1 + 1).setY(y);
+		useCostGUI.get(id).setX(x + w1 + w2 + 10 + w1 + w3 + 10 + w1 + 1)
+				.setY(y);
 		useCostGUI.get(id).setHeight(height).setWidth(w4);
 		popupScreen.get(id).attachWidget(BIT.plugin, useCostGUI.get(id));
 		y = y + height + 1;
@@ -625,7 +626,8 @@ public class BITInventory {
 		CreateBookshelfButton
 				.setTooltip("Press Create to create the Bookshelf.");
 		popupScreen.get(id).attachWidget(BIT.plugin, CreateBookshelfButton);
-		BITBookButtons.put(CreateBookshelfButton.getId(), "CreateBookshelfButton");
+		BITBookButtons.put(CreateBookshelfButton.getId(),
+				"CreateBookshelfButton");
 
 		// cancelButton
 		GenericButton cancelButton2 = new GenericButton("Cancel");
@@ -653,7 +655,7 @@ public class BITInventory {
 		sPlayer.getMainScreen().attachPopupScreen(popupScreen.get(id));
 
 	}
-	
+
 	private static String getTextureUrl(SpoutBlock sBlock) {
 		switch (sBlock.getTypeId()) {
 		case 23:
@@ -690,7 +692,6 @@ public class BITInventory {
 		return "http://dl.dropbox.com/u/36067670/BukkitInventoryTools/Textures/Chest.png";
 	}
 
-	
 	public static void removeUserData(int id) {
 		if (userno.containsKey(id)) {
 			// BITInventory
@@ -704,7 +705,7 @@ public class BITInventory {
 
 	public static void addUserData(int id) {
 		if (!userno.containsKey(id)) {
-			//BITInventory
+			// BITInventory
 			userno.put(id, new Integer(id));
 			popupScreen.put(id, new GenericPopup());
 			ownerGUI.put(id, new GenericTextField());
@@ -712,13 +713,14 @@ public class BITInventory {
 			useCostGUI.put(id, new GenericTextField());
 		}
 	}
-	
-	public static void cleanupPopupScreen(SpoutPlayer sPlayer) {
-		int id = sPlayer.getEntityId();
-		popupScreen.get(id).removeWidgets(BIT.plugin);
-		popupScreen.get(id).setDirty(true);
-		sPlayer.getMainScreen().removeWidgets(BIT.plugin);
-	}
 
+	public static void cleanupPopupScreen(SpoutPlayer sPlayer) {
+		int playerId = sPlayer.getEntityId();
+		if (popupScreen.containsKey(playerId)) {
+			popupScreen.get(playerId).removeWidgets(BIT.plugin);
+			popupScreen.get(playerId).setDirty(true);
+			sPlayer.getMainScreen().removeWidgets(BIT.plugin);
+		}
+	}
 
 }

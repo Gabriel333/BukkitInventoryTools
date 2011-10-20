@@ -91,7 +91,6 @@ public class BITBook {
 	public static Map<UUID, String> BITButtons = new HashMap<UUID, String>();
 	public static Map<Integer, Integer> userno = new HashMap<Integer, Integer>();
 
-
 	// Parameters for the bookPopupScreen
 	public static Map<Integer, GenericTextField> titleGUI = new HashMap<Integer, GenericTextField>();
 	public static Map<Integer, GenericTextField> authorGUI = new HashMap<Integer, GenericTextField>();
@@ -222,11 +221,12 @@ public class BITBook {
 		int textFieldHeight2 = 15, textFieldWidth2 = 76;
 
 		int id = sPlayer.getEntityId();
-        addUserData(id);
-		
+		addUserData(id);
+
 		titleGUI.get(id).setText(title);
 		authorGUI.get(id).setText(author);
 		coAuthorsGUI.get(id).setText(coAuthors);
+		// TODO: Should I use yesNo(masterCopy) here?
 		masterCopyGUI.get(id).setText(masterCopy.toString());
 		forceBookToPlayerInventoryGUI.get(id).setText(
 				forceBookToPlayerInventory.toString());
@@ -250,7 +250,7 @@ public class BITBook {
 				.setX(x + textFieldWidth - 2 * buttonHeight - 5)
 				.setY(y + 2 * itemHeight + 10 - buttonHeight - 1)
 				.setHeight(buttonHeight).setWidth(buttonHeight);
-		nextPageBookButton.setTooltip("Page "+String.valueOf(pageNo));
+		nextPageBookButton.setTooltip("Page " + String.valueOf(pageNo));
 		popupScreen.get(id).attachWidget(BIT.plugin, nextPageBookButton);
 		BITButtons.put(nextPageBookButton.getId(), "nextPageButton");
 
@@ -260,7 +260,7 @@ public class BITBook {
 				.setX(x + textFieldWidth - buttonHeight)
 				.setY(y + 2 * itemHeight + 10 - buttonHeight - 1)
 				.setHeight(buttonHeight).setWidth(buttonHeight);
-		previousPageBookButton.setTooltip("Page "+String.valueOf(pageNo));
+		previousPageBookButton.setTooltip("Page " + String.valueOf(pageNo));
 		popupScreen.get(id).attachWidget(BIT.plugin, previousPageBookButton);
 		BITButtons.put(previousPageBookButton.getId(), "previousPageButton");
 
@@ -270,7 +270,7 @@ public class BITBook {
 		titleGUI.get(id).setCursorPosition(1).setMaximumCharacters(30);
 		titleGUI.get(id).setX(x).setY(y + 2 * itemHeight + 7 - buttonHeight);
 		titleGUI.get(id).setHeight(textFieldHeight2)
-				.setWidth(textFieldWidth2*2);
+				.setWidth(textFieldWidth2 * 2);
 		popupScreen.get(id).attachWidget(BIT.plugin, titleGUI.get(id));
 
 		y = y + 2 * itemHeight + 10;
@@ -388,9 +388,11 @@ public class BITBook {
 
 	public void cleanupPopupScreen(SpoutPlayer sPlayer) {
 		int playerId = sPlayer.getEntityId();
-		popupScreen.get(playerId).removeWidgets(BIT.plugin);
-		popupScreen.get(playerId).setDirty(true);
-		sPlayer.getMainScreen().removeWidgets(BIT.plugin);
+		if (popupScreen.containsKey(playerId)) {
+			popupScreen.get(playerId).removeWidgets(BIT.plugin);
+			popupScreen.get(playerId).setDirty(true);
+			sPlayer.getMainScreen().removeWidgets(BIT.plugin);
+		}
 	}
 
 	private String yesNo(Boolean b) {
@@ -399,7 +401,7 @@ public class BITBook {
 		else
 			return "No";
 	}
-	
+
 	public static void removeUserData(int id) {
 		if (userno.containsKey(id)) {
 			// BITBook
@@ -429,29 +431,5 @@ public class BITBook {
 			useCostGUI.put(id, new GenericTextField());
 		}
 	}
-/*	
-	public static void clearAllUserData() {
-			// DigiLock
-			BITPlayer.userno.clear();
-			BITPlayer.popupScreen.clear();
-			BITPlayer.pincode.clear();
-			BITPlayer.owner.clear();
-			BITPlayer.coOwners.clear();
-			BITPlayer.closetimer.clear();
-			BITPlayer.useCost.clear();
-			BITPlayer.connectedTo.clear();
-			// BITBook
-			BITBook.popupScreen.clear();
-			BITBook.titleGUI.clear();
-			BITBook.authorGUI.clear();
-			BITBook.coAuthorsGUI.clear();
-			BITBook.masterCopyGUI.clear();
-			BITBook.forceBookToPlayerInventoryGUI.clear();
-			BITBook.canBeMovedFromInventoryGUI.clear();
-			BITBook.copyTheBookWhenMovedGUI.clear();
-			BITBook.useCostGUI.clear();
-			G333Messages.showInfo("Userdata has been cleared");
-	}
-*/
 
 }

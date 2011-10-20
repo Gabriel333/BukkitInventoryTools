@@ -25,19 +25,13 @@ public class BITBookSpoutListener extends SpoutListener {
 			ItemStack itemInHand = sPlayer.getInventory().getItemInHand();
 			int id = sPlayer.getEntityId();
 
-			// TODO : this command is wrong! The user does not point at any
-			// specific block
-
 			if (BITBook.isWriteable(sBlock)
 					|| BITBook.isWriteable(itemInHand.getType())) {
 				BITBook bitBook = new BITBook();
 				// TODO: get actual book from BITBooks(bookId)
 				bitBook.loadBook();
 
-				//sPlayer.sendMessage("Button:" + BITBook.BITButtons.get(uuid));
-				// ************************************
-				// Buttons in BITBook
-				// ************************************
+
 				if (BITBook.BITButtons.get(uuid) == "saveBookButton") {
 					BITBook.popupScreen.get(id).close();
 					bitBook.cleanupPopupScreen(sPlayer);
@@ -67,18 +61,40 @@ public class BITBookSpoutListener extends SpoutListener {
 					}
 				} else if ((BITBook.BITButtons.get(uuid) == "MasterCopyButton")) {
 					if (validateFields(sPlayer)) {
+						if (bitBook.masterCopy) {
+							bitBook.masterCopy = false;
+							bitBook.masterCopyId=0;
+						} else {
+							bitBook.masterCopy = true;
+							bitBook.masterCopyId = bitBook.bookId;
+						}
 
 					}
 				} else if ((BITBook.BITButtons.get(uuid) == "forceBookToPlayerInventoryButton")) {
 					if (validateFields(sPlayer)) {
+						if (bitBook.forceBookToPlayerInventory){
+							bitBook.forceBookToPlayerInventory= false;
+						} else {
+							bitBook.forceBookToPlayerInventory = true;
+						}
 
 					}
 				} else if ((BITBook.BITButtons.get(uuid) == "canBeMovedFromInventoryButton")) {
 					if (validateFields(sPlayer)) {
+						if (bitBook.canBeMovedFromInventory){
+							bitBook.canBeMovedFromInventory=false;
+						} else {
+							bitBook.canBeMovedFromInventory=true;
+						}
 
 					}
 				} else if ((BITBook.BITButtons.get(uuid) == "copyTheBookWhenMovedButton")) {
 					if (validateFields(sPlayer)) {
+						if (bitBook.copyTheBookWhenMoved){
+							bitBook.copyTheBookWhenMoved=false;
+						} else {
+							bitBook.copyTheBookWhenMoved=true;
+						}
 
 					}
 				} else if ((BITBook.BITButtons.get(uuid) == "UseCostButton")) {

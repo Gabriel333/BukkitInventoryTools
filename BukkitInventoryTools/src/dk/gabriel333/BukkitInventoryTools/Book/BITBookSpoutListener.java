@@ -12,6 +12,7 @@ import org.getspout.spoutapi.player.SpoutPlayer;
 
 import dk.gabriel333.Library.G333Config;
 import dk.gabriel333.Library.G333Messages;
+import dk.gabriel333.BukkitInventoryTools.BITEnums.BITInventoryType;
 
 public class BITBookSpoutListener extends SpoutListener {
 
@@ -37,7 +38,7 @@ public class BITBookSpoutListener extends SpoutListener {
 					sPlayer.sendMessage("bookId="
 							+ BITBook.currentBookId.get(id) + " title="
 							+ BITBook.titleGUI.get(id).getText());
-					BITBook.saveBook(sPlayer, BITBook.currentBookId.get(id));
+					BITBook.saveBook(sPlayer, sBlock, BITBook.currentBookId.get(id), BITInventoryType.PLAYER_INVENTORY);
 
 				} else if (BITBook.BITButtons.get(uuid) == "cancelBookButton") {
 					BITBook.popupScreen.get(id).close();

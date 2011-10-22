@@ -63,7 +63,7 @@ public class BIT extends JavaPlugin {
 			setupMyWolf();
 			registerEvents();
 			addCommands();
-			//BITPlayer.clearAllUserData();
+			// BITPlayer.clearAllUserData();
 			G333Messages.showInfo("BIT version " + pdfFile.getVersion()
 					+ " is enabled!");
 		} else {
@@ -91,8 +91,8 @@ public class BIT extends JavaPlugin {
 				Priority.Normal, this);
 		pm.registerEvent(Event.Type.BLOCK_DAMAGE, new BITBlockListener(),
 				Priority.Normal, this);
-		//pm.registerEvent(Type.REDSTONE_CHANGE, new BITBlockListener(),
-		//		Priority.Normal, this);
+		// pm.registerEvent(Type.REDSTONE_CHANGE, new BITBlockListener(),
+		// Priority.Normal, this);
 		pm.registerEvent(Type.BLOCK_PHYSICS, new BITBlockListener(),
 				Priority.Normal, this);
 		pm.registerEvent(Type.BLOCK_FROMTO, new BITBlockListener(),
@@ -107,8 +107,8 @@ public class BIT extends JavaPlugin {
 				Priority.Normal, this);
 		pm.registerEvent(Type.BLOCK_IGNITE, new BITBlockListener(),
 				Priority.Normal, this);
-		//pm.registerEvent(Type.SIGN_CHANGE, new BITBlockListener(),
-		//		Priority.Normal, this);
+		// pm.registerEvent(Type.SIGN_CHANGE, new BITBlockListener(),
+		// Priority.Normal, this);
 		pm.registerEvent(Type.BLOCK_PISTON_EXTEND, new BITBlockListener(),
 				Priority.Normal, this);
 		pm.registerEvent(Type.BLOCK_PISTON_RETRACT, new BITBlockListener(),
@@ -126,13 +126,13 @@ public class BIT extends JavaPlugin {
 		pm.registerEvent(Event.Type.PLAYER_KICK, new BITPlayerListener(),
 				Priority.Normal, this);
 		// BITDigiLock Listeners
-		pm.registerEvent(Event.Type.CUSTOM_EVENT, new BITDigiLockInputListener(),
-				Event.Priority.Normal, this);
-		pm.registerEvent(Event.Type.CUSTOM_EVENT, new BITDigiLockSpoutListener(),
-				Event.Priority.Normal, this);
+		pm.registerEvent(Event.Type.CUSTOM_EVENT,
+				new BITDigiLockInputListener(), Event.Priority.Normal, this);
+		pm.registerEvent(Event.Type.CUSTOM_EVENT,
+				new BITDigiLockSpoutListener(), Event.Priority.Normal, this);
 		// BITIventory Listeners
-		pm.registerEvent(Event.Type.CUSTOM_EVENT, new BITInventorySpoutListener(),
-				Event.Priority.Normal, this);
+		pm.registerEvent(Event.Type.CUSTOM_EVENT,
+				new BITInventorySpoutListener(), Event.Priority.Normal, this);
 		// BITBook Listeners
 		pm.registerEvent(Event.Type.CUSTOM_EVENT, new BITBookInputListener(),
 				Event.Priority.Normal, this);
@@ -242,10 +242,8 @@ public class BIT extends JavaPlugin {
 			// Declare MySQL Handler
 			manageMySQL = new mysqlCore(log,
 					"[" + G333Plugin.PLUGIN_NAME + "]",
-					G333Config.STORAGE_HOST,
-					G333Config.STORAGE_DATABASE,
-					G333Config.STORAGE_USERNAME,
-					G333Config.STORAGE_PASSWORD);
+					G333Config.STORAGE_HOST, G333Config.STORAGE_DATABASE,
+					G333Config.STORAGE_USERNAME, G333Config.STORAGE_PASSWORD);
 			G333Messages.showInfo("MySQL Initializing");
 			// Initialize MySQL Handler
 			manageMySQL.initialize();
@@ -308,14 +306,44 @@ public class BIT extends JavaPlugin {
 									+ "name VARCHAR(255), "
 									+ "coowners VARCHAR(255), "
 									+ "usecost INT, slotno INT, "
-									+ "itemstack_type INT, itemstack_amount INT, itemstack_durability INT) "
-									+ "AS SELECT x, y, z, world, owner, name, coowners, usecost, "
-									+ "itemstack_type, itemstack_amount, itemstack_durability;";
+									+ "itemstack_type INT, itemstack_amount INT, "
+									+ "itemstack_durability INT); ";
 						}
 						manageMySQL.createTable(query);
-
 					}
 
+					// Check BooksTable
+					if (!manageMySQL.checkTable(booksTable)) {
+						if (manageMySQL.checkTable(oldBooksTable)) {
+							G333Messages.showInfo("Upgrade " + oldBooksTable
+									+ " to " + bitInventoryTable + ".");
+							// TODO: choose the right fields
+							query = "CREATE TABLE "
+									+ booksTable
+									+ " (x INT, y INT, z INT, world VARCHAR(255), "
+									+ "owner VARCHAR(255), "
+									+ "name VARCHAR(255), "
+									+ "coowners VARCHAR(255), "
+									+ "usecost INT, slotno INT, "
+									+ "itemstack_type INT, itemstack_amount INT, itemstack_durability INT) "
+									+ "AS SELECT x, y, z, world, owner, name, coowners, usecost, "
+									+ "itemstack_type, itemstack_amount, itemstack_durability FROM "
+									+ oldBooksTable + ";";
+						} else {
+							G333Messages.showInfo("Creating table "
+									+ booksTable);
+							// TODO: choose the right fields
+							query = "CREATE TABLE "
+									+ booksTable
+									+ " (x INT, y INT, z INT, world VARCHAR(255), "
+									+ "owner VARCHAR(255), "
+									+ "name VARCHAR(255), "
+									+ "coowners VARCHAR(255), "
+									+ "usecost INT, slotno INT, "
+									+ "itemstack_type INT, itemstack_amount INT, itemstack_durability INT); ";
+						}
+						manageMySQL.createTable(query);
+					}
 				} else {
 					G333Messages.showError("MySQL connection failed");
 					G333Config.STORAGE_HOST = "SQLITE";
@@ -353,7 +381,7 @@ public class BIT extends JavaPlugin {
 							+ "coowners, closetimer, usecost, connectedto, typeid) "
 							+ "select x, y, z, world, owner, pincode,"
 							+ "coowners, closetimer, usecost, connectedto, typeid FROM "
-							+ oldDigilockTable;
+							+ oldDigilockTable + ";";
 					// G333Messages.showInfo("Create Table:" + query);
 					// G333Messages.showInfo("Insert:" + insert);
 					manageSQLite.createTable(query);
@@ -369,7 +397,7 @@ public class BIT extends JavaPlugin {
 					manageSQLite.createTable(query);
 				}
 			} else {
-				//G333Messages.showInfo(digilockTable + " exists.");
+				// G333Messages.showInfo(digilockTable + " exists.");
 			}
 
 			// Check BookshelfTable
@@ -384,12 +412,9 @@ public class BIT extends JavaPlugin {
 							+ "name VARCHAR(255), "
 							+ "coowners VARCHAR(255), "
 							+ "usecost INT, slotno INT, "
-							+ "itemstack_type INT, itemstack_amount INT, itemstack_durability INT) "
-							+ "AS SELECT x, y, z, world, owner, name, coowners, usecost, "
-							+ "itemstack_type, itemstack_amount, itemstack_durability FROM "
-							+ oldBitInventoryTable + ";";
+							+ "itemstack_type INT, itemstack_amount INT, itemstack_durability INT); ";
 					insert = "insert into "
-							+ digilockTable
+							+ bitInventoryTable
 							+ " (x, y, z, world, "
 							+ "owner, "
 							+ "name, "
@@ -399,11 +424,12 @@ public class BIT extends JavaPlugin {
 							+ "select x, y, z, world, owner, name,"
 							+ "coowners, usecost, "
 							+ "itemstack_type, itemstack_amount, itemstack_durability FROM "
-							+ oldDigilockTable;
+							+ oldDigilockTable + ";";
 					manageSQLite.createTable(query);
 					manageSQLite.insertQuery(insert);
 				} else {
-					G333Messages.showInfo("Creating table " + bitInventoryTable);
+					G333Messages
+							.showInfo("Creating table " + bitInventoryTable);
 					query = "CREATE TABLE "
 							+ bitInventoryTable
 							+ " (x INT, y INT, z INT, world VARCHAR(255), "
@@ -415,12 +441,57 @@ public class BIT extends JavaPlugin {
 					manageSQLite.createTable(query);
 				}
 			} else {
-				//G333Messages.showInfo(bitInventoryTable + " exists.");
+				// G333Messages.showInfo(bitInventoryTable + " exists.");
 			}
 
+			// Check BooksTable
+			if (!manageSQLite.checkTable(booksTable)) {
+				if (manageSQLite.checkTable(oldBooksTable)) {
+					G333Messages.showInfo("Upgrade " + oldBooksTable + " to "
+							+ booksTable + ".");
+					query = "CREATE TABLE "
+							+ booksTable
+							+ " ( bookid INT, world VARCHAR(255), inventorytype INT,"
+							+ " x INT, y INT, z INT, slotno INT, title VARCHAR(255),"
+							+ " author VARCHAR(255), coauthor VARCHAR(255), "
+							+ " numberofpages INT, pageno INT, page TEXT,"
+							+ " mastercopy BOOLEAN, mastercopyid INT,"
+							+ " force BOOLEAN, moved BOOLEAN, copy BOOLEAN, usecost INT);";
+					insert = "insert into "
+							+ booksTable
+							+ " ( bookid INT, world VARCHAR(255), inventorytype INT,"
+							+ " x INT, y INT, z INT, slotno INT, title VARCHAR(255),"
+							+ " author VARCHAR(255), coauthor VARCHAR(255), "
+							+ " numberofpages INT, pageno INT, page TEXT,"
+							+ " mastercopy BOOLEAN, mastercopyid INT,"
+							+ " force BOOLEAN, moved BOOLEAN, copy BOOLEAN, usecost INT) "
+							+ "select bookid, world, inventorytype,"
+							+ " x, y, z, slotno, title,"
+							+ " author, coauthor, "
+							+ " numberofpages, pageno, page,"
+							+ " mastercopy, mastercopyid,"
+							+ " force, moved, copy, usecost FROM "
+							+ oldBooksTable + ";";
+					manageSQLite.createTable(query);
+					manageSQLite.insertQuery(insert);
+				} else {
+					G333Messages.showInfo("Creating table " + booksTable);
+					// TODO: choose the right fields
+					query = "CREATE TABLE "
+							+ booksTable
+							+ " ( bookid INT, world VARCHAR(255), inventorytype INT,"
+							+ " x INT, y INT, z INT, slotno INT, title VARCHAR(255),"
+							+ " author VARCHAR(255), coauthor VARCHAR(255), "
+							+ " numberofpages INT, pageno INT, page TEXT,"
+							+ " mastercopy BOOLEAN, mastercopyid INT,"
+							+ " force BOOLEAN, moved BOOLEAN, copy BOOLEAN, usecost INT);";
+
+					manageSQLite.createTable(query);
+				}
+			} else {
+				// G333Messages.showInfo(bitInventoryTable + " exists.");
+			}
 		}
 	}
-	
-	
 
 }

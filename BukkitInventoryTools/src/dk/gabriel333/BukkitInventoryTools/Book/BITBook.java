@@ -1,9 +1,14 @@
 package dk.gabriel333.BukkitInventoryTools.Book;
 
+import java.net.MalformedURLException;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
 
+import org.bukkit.ChatColor;
+import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.inventory.ItemStack;
@@ -18,6 +23,8 @@ import org.getspout.spoutapi.player.SpoutPlayer;
 
 import dk.gabriel333.BukkitInventoryTools.BIT;
 import dk.gabriel333.BukkitInventoryTools.BITEnums.BITInventoryType;
+import dk.gabriel333.Library.G333Config;
+import dk.gabriel333.Library.G333Messages;
 
 public class BITBook {
 
@@ -65,13 +72,14 @@ public class BITBook {
 	 * @param copyTheBookWhenMoved
 	 * @param useCost
 	 */
-	BITBook(int bookId, SpoutBlock sBlock, int slotNo, String title,
-			String author, String coAuthors, int numberOfPages, String[] pages,
-			Boolean masterCopy, int masterCopyId,
-			Boolean forceBookToPlayerInventory,
+	BITBook(int bookId, BITInventoryType inventoryType, SpoutBlock sBlock,
+			int slotNo, String title, String author, String coAuthors,
+			int numberOfPages, String[] pages, Boolean masterCopy,
+			int masterCopyId, Boolean forceBookToPlayerInventory,
 			Boolean canBeMovedFromInventory, Boolean copyTheBookWhenMoved,
 			int useCost) {
 		this.bookId = bookId;
+		this.inventoryType = inventoryType;
 		this.sBlock = sBlock;
 		this.slotNo = slotNo;
 		this.title = title;
@@ -139,6 +147,10 @@ public class BITBook {
 		return bookId;
 	}
 
+	public BITInventoryType getInventoryType() {
+		return inventoryType;
+	}
+
 	public int getNextBookId() {
 		int nextId = 1;
 		if (!bitBooks.isEmpty()) {
@@ -167,87 +179,6 @@ public class BITBook {
 
 	public void setTitle(String title) {
 		this.title = title;
-	}
-
-	protected final static Material writeableMaterials[] = { Material.BOOK,
-			Material.PAINTING, Material.PAPER, Material.MAP, Material.SIGN,
-			Material.SIGN_POST, Material.WALL_SIGN };
-
-	/**
-	 * Check if the Block is made of a writeable material.
-	 * 
-	 * @param block
-	 * @return true or false
-	 */
-	public static boolean isWriteable(Block block) {
-		for (Material i : writeableMaterials) {
-			if (i == block.getType())
-				return true;
-		}
-		return false;
-	}
-
-	public static boolean isWriteable(Material material) {
-		for (Material i : writeableMaterials) {
-			if (i == material)
-				return true;
-		}
-		return false;
-	}
-
-	public static boolean isWritten(BITInventoryType inventoryType, int SlotNo) {
-		
-			// TODO: test if bookId is stored in SQL database
-			// if yes load the book into bitBooks and return true
-		
-
-		return true;
-	}
-
-	public static void saveBook(SpoutPlayer sPlayer, int bookId) {
-		int id = sPlayer.getEntityId();
-
-		// for (int i = 0; i < numberOfPagesGUI.get(id); i++) {
-		// pagesGUI2.get(id)[i] = getPages(i);
-		// pagesGUI.get(id).setText(pagesGUI2.get(id)[i]);
-		// }
-
-		bitBooks.put(
-				bookId,
-				new BITBook(bookId, bitBooks.get(bookId).getBlock(), bitBooks
-						.get(bookId).getSlotNo(), titleGUI.get(id).getText(),
-						authorGUI.get(id).getText(), coAuthorsGUI.get(id)
-								.getText(), numberOfPagesGUI.get(id), pagesGUI2
-								.get(id), masterCopyGUI.get(id),
-						masterCopyIdGUI.get(id), forceBookToPlayerInventoryGUI
-								.get(id), canBeMovedFromInventoryGUI.get(id),
-						copyTheBookWhenMovedGUI.get(id), Integer
-								.valueOf(useCostGUI.get(id).getText())));
-		// TODO: save the Book to SQL
-	}
-
-	public void loadBook(int bookId) {
-		if (bitBooks.containsKey(bookId)) {
-			this.bookId = bitBooks.get(bookId).getBookId();
-			this.sBlock = bitBooks.get(bookId).getBlock();
-			this.slotNo = bitBooks.get(bookId).getSlotNo();
-			this.title = bitBooks.get(bookId).getTitle();
-			this.author = bitBooks.get(bookId).getAuthor();
-			this.coAuthors = bitBooks.get(bookId).getCoAuthors();
-			this.numberOfPages = bitBooks.get(bookId).getNumberOfPages();
-			this.pages = bitBooks.get(bookId).getPages();
-			this.masterCopy = bitBooks.get(bookId).getMasterCopy();
-			this.masterCopyId = bitBooks.get(bookId).getMasterCopyId();
-			this.forceBookToPlayerInventory = bitBooks.get(bookId)
-					.getForceBookToPlayerInventory();
-			this.canBeMovedFromInventory = bitBooks.get(bookId)
-					.getCanBeMovedFromInventory();
-			this.copyTheBookWhenMoved = bitBooks.get(bookId)
-					.getCopyTheBookWhenMoved();
-			this.useCost = bitBooks.get(bookId).getUseCost();
-		} else {
-			// TODO: Load the book from SQL
-		}
 	}
 
 	private int getUseCost() {
@@ -290,8 +221,431 @@ public class BITBook {
 		return sBlock;
 	}
 
-	public void removeBook() {
-		// TODO: remove the book from SQL
+	protected final static Material writeableMaterials[] = { Material.BOOK,
+			Material.PAINTING, Material.PAPER, Material.MAP, Material.SIGN,
+			Material.SIGN_POST, Material.WALL_SIGN };
+
+	/**
+	 * Check if the Block is made of a writeable material.
+	 * 
+	 * @param block
+	 * @return true or false
+	 */
+	public static boolean isWriteable(Block block) {
+		for (Material i : writeableMaterials) {
+			if (i == block.getType())
+				return true;
+		}
+		return false;
+	}
+
+	public static boolean isWriteable(Material material) {
+		for (Material i : writeableMaterials) {
+			if (i == material)
+				return true;
+		}
+		return false;
+	}
+
+	public static boolean isWritten(SpoutPlayer sPlayer, SpoutBlock sBlock,
+			BITInventoryType inventoryType, int slotNo) {
+
+		// TODO: test if bookId is stored in SQL database
+		// if yes load the book into bitBooks and return true
+		String query = "SELECT * FROM " + BIT.booksTable + " WHERE (slotno = "
+				+ slotNo + " AND world='" + sPlayer.getWorld()
+				+ "' AND inventorytype = " + inventoryType + " AND x= "
+				+ sBlock.getX() + " AND y= " + sBlock.getY() + " AND z= "
+				+ sBlock.getZ() + ");";
+		ResultSet result = null;
+		if (G333Config.STORAGE_TYPE.equals("MYSQL")) {
+			try {
+				result = BIT.manageMySQL.sqlQuery(query);
+			} catch (MalformedURLException e) {
+				e.printStackTrace();
+			} catch (InstantiationException e) {
+				e.printStackTrace();
+			} catch (IllegalAccessException e) {
+				e.printStackTrace();
+			}
+		} else { // SQLLITE
+			result = BIT.manageSQLite.sqlQuery(query);
+		}
+		try {
+			if (result != null && result.next()) {
+				return true;
+			} else {
+				return false;
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return false;
+	}
+
+	public static void saveBook(SpoutPlayer sPlayer, SpoutBlock sBlock, int bookId,
+			BITInventoryType inventoryType) {
+		int id = sPlayer.getEntityId();
+
+		// for (int i = 0; i < numberOfPagesGUI.get(id); i++) {
+		// pagesGUI2.get(id)[i] = getPages(i);
+		// pagesGUI.get(id).setText(pagesGUI2.get(id)[i]);
+		// }
+
+		bitBooks.put(
+				bookId,
+				new BITBook(bookId, inventoryType, bitBooks.get(bookId)
+						.getBlock(), bitBooks.get(bookId).getSlotNo(), titleGUI
+						.get(id).getText(), authorGUI.get(id).getText(),
+						coAuthorsGUI.get(id).getText(), numberOfPagesGUI
+								.get(id), pagesGUI2.get(id), masterCopyGUI
+								.get(id), masterCopyIdGUI.get(id),
+						forceBookToPlayerInventoryGUI.get(id),
+						canBeMovedFromInventoryGUI.get(id),
+						copyTheBookWhenMovedGUI.get(id), Integer
+								.valueOf(useCostGUI.get(id).getText())));
+		String query;
+		boolean createBook = true;
+		int cost = G333Config.BOOK_COST;
+		if (BITBook.isWritten(sPlayer, sBlock,BITInventoryType.PLAYER_INVENTORY, bitBooks.get(bookId).getSlotNo())) {
+			for (int i = 0; i < bitBooks.get(bookId).getNumberOfPages(); i++) {
+				// TODO: decide what to do when block is null?
+				query = "UPDATE " + BIT.booksTable + " SET bookid=" + bookId
+						+ ", world='" + sPlayer.getWorld()
+						+ "', inventorytype="
+						+ bitBooks.get(bookId).getInventoryType() + ", x="
+						+ bitBooks.get(bookId).getBlock().getX() + ", y="
+						+ bitBooks.get(bookId).getBlock().getY() + ", z="
+						+ bitBooks.get(bookId).getBlock().getZ() + ", slotno="
+						+ bitBooks.get(bookId).getSlotNo() + ", title='"
+						+ bitBooks.get(bookId).getTitle() + "', author="
+						+ bitBooks.get(bookId).getAuthor() + "', coauthor='"
+						+ bitBooks.get(bookId).getCoAuthors()
+						+ "', numberofpages="
+						+ bitBooks.get(bookId).getNumberOfPages() + ", pageno="
+						+ i + ", page='" + bitBooks.get(bookId).getPages(i)
+						+ ", mastercopy='"
+						+ bitBooks.get(bookId).getMasterCopy()
+						+ "', mastercopyid=" + bitBooks.get(bookId)
+						+ ", force='"
+						+ bitBooks.get(bookId).getForceBookToPlayerInventory()
+						+ "', moved='"
+						+ bitBooks.get(bookId).getCanBeMovedFromInventory()
+						+ "', copy='"
+						+ bitBooks.get(bookId).getCopyTheBookWhenMoved()
+						+ "' WHERE bookid=" + bookId + " AND world="
+						+ sPlayer.getWorld() + " AND x= "
+						+ bitBooks.get(bookId).getBlock().getX() + " AND y= "
+						+ bitBooks.get(bookId).getBlock().getY() + " AND z= "
+						+ bitBooks.get(bookId).getBlock().getZ()
+						+ " AND pageno=" + i + " AND slotno="
+						+ bitBooks.get(bookId).getSlotNo() + ";";
+
+				if (G333Config.DEBUG_SQL)
+					sPlayer.sendMessage(ChatColor.YELLOW + "Updating book: "
+							+ query);
+				if (G333Config.STORAGE_TYPE.equals("MYSQL")) {
+					try {
+						BIT.manageMySQL.insertQuery(query);
+					} catch (MalformedURLException e) {
+						e.printStackTrace();
+					} catch (InstantiationException e) {
+						e.printStackTrace();
+					} catch (IllegalAccessException e) {
+						e.printStackTrace();
+					}
+				} else {
+					BIT.manageSQLite.insertQuery(query);
+				}
+			}
+			G333Messages.sendNotification(sPlayer, "Book updated.");
+		} else {
+			// NEW BOOK
+			if (BIT.useEconomy) {
+				if (BIT.plugin.Method.hasAccount(sPlayer.getName()) && cost > 0) {
+					if (BIT.plugin.Method.getAccount(sPlayer.getName())
+							.hasEnough(cost)) {
+						BIT.plugin.Method.getAccount(sPlayer.getName())
+								.subtract(cost);
+						sPlayer.sendMessage("Your account ("
+								+ BIT.plugin.Method.getAccount(
+										sPlayer.getName()).balance()
+								+ ") has been deducted " + cost + " bucks");
+					} else {
+						sPlayer.sendMessage("You dont have enough money ("
+								+ BIT.plugin.Method.getAccount(
+										sPlayer.getName()).balance()
+								+ "). Cost is:" + cost);
+						createBook = false;
+					}
+				}
+			}
+			if (createBook) {
+				// sPlayer.sendMessage("Inventorysize:" + inventory.getSize());
+				for (int i = 0; i < bitBooks.get(bookId).getNumberOfPages(); i++) {
+					query = "INSERT INTO "
+							+ BIT.booksTable
+							+ "( bookid="
+							+ bookId
+							+ ", world='"
+							+ sPlayer.getWorld()
+							+ "', inventorytype="
+							+ bitBooks.get(bookId).getInventoryType()
+							+ ", x="
+							+ bitBooks.get(bookId).getBlock().getX()
+							+ ", y="
+							+ bitBooks.get(bookId).getBlock().getY()
+							+ ", z="
+							+ bitBooks.get(bookId).getBlock().getZ()
+							+ ", slotno="
+							+ bitBooks.get(bookId).getSlotNo()
+							+ ", title='"
+							+ bitBooks.get(bookId).getTitle()
+							+ "', author='"
+							+ bitBooks.get(bookId).getAuthor()
+							+ "', coauthor='"
+							+ bitBooks.get(bookId).getCoAuthors()
+							+ "', numberofpages="
+							+ bitBooks.get(bookId).getNumberOfPages()
+							+ ", pageno="
+							+ i
+							+ ", page='"
+							+ bitBooks.get(bookId).getPages(i)
+							+ "', mastercopy='"
+							+ bitBooks.get(bookId).getMasterCopy()
+							+ "', mastercopyid="
+							+ bitBooks.get(bookId)
+							+ ", force='"
+							+ bitBooks.get(bookId)
+									.getForceBookToPlayerInventory()
+							+ "', moved='"
+							+ bitBooks.get(bookId).getCanBeMovedFromInventory()
+							+ "', copy='"
+							+ bitBooks.get(bookId).getCopyTheBookWhenMoved()
+							+ "') VALUES ( "
+							+ bookId
+							+ ", '"
+							+ sPlayer.getWorld()
+							+ "', "
+							+ bitBooks.get(bookId).getInventoryType()
+							+ ", "
+							+ bitBooks.get(bookId).getBlock().getX()
+							+ ", "
+							+ bitBooks.get(bookId).getBlock().getY()
+							+ ", "
+							+ bitBooks.get(bookId).getBlock().getZ()
+							+ ", "
+							+ bitBooks.get(bookId).getSlotNo()
+							+ ", '"
+							+ bitBooks.get(bookId).getTitle()
+							+ "', '"
+							+ bitBooks.get(bookId).getAuthor()
+							+ "', '"
+							+ bitBooks.get(bookId).getCoAuthors()
+							+ "', "
+							+ bitBooks.get(bookId).getNumberOfPages()
+							+ ", "
+							+ i
+							+ ", '"
+							+ bitBooks.get(bookId).getPages(i)
+							+ "', '"
+							+ bitBooks.get(bookId).getMasterCopy()
+							+ "', "
+							+ bitBooks.get(bookId)
+							+ ", '"
+							+ bitBooks.get(bookId)
+									.getForceBookToPlayerInventory() + "', '"
+							+ bitBooks.get(bookId).getCanBeMovedFromInventory()
+							+ "', '"
+							+ bitBooks.get(bookId).getCopyTheBookWhenMoved()
+							+ "' );";
+					// sPlayer.sendMessage("Insert:" + query);
+					if (G333Config.DEBUG_SQL)
+						sPlayer.sendMessage(ChatColor.YELLOW
+								+ "Insert to booksTable: " + query);
+					if (G333Config.STORAGE_TYPE.equals("MYSQL")) {
+						try {
+							BIT.manageMySQL.insertQuery(query);
+						} catch (MalformedURLException e) {
+							e.printStackTrace();
+						} catch (InstantiationException e) {
+							e.printStackTrace();
+						} catch (IllegalAccessException e) {
+							e.printStackTrace();
+						}
+					} else {
+						BIT.manageSQLite.insertQuery(query);
+					}
+				}
+				G333Messages.sendNotification(sPlayer, "Bookshelf created.");
+			} else {
+				sPlayer.sendMessage("You dont have enough money. Cost is:"
+						+ cost);
+			}
+		}
+
+	}
+
+	public BITBook loadBook(SpoutPlayer sPlayer, int bookId) {
+		if (bitBooks.containsKey(bookId)) {
+			this.bookId = bitBooks.get(bookId).getBookId();
+			this.inventoryType = bitBooks.get(bookId).getInventoryType();
+			this.sBlock = bitBooks.get(bookId).getBlock();
+			this.slotNo = bitBooks.get(bookId).getSlotNo();
+			this.title = bitBooks.get(bookId).getTitle();
+			this.author = bitBooks.get(bookId).getAuthor();
+			this.coAuthors = bitBooks.get(bookId).getCoAuthors();
+			this.numberOfPages = bitBooks.get(bookId).getNumberOfPages();
+			this.pages = bitBooks.get(bookId).getPages();
+			this.masterCopy = bitBooks.get(bookId).getMasterCopy();
+			this.masterCopyId = bitBooks.get(bookId).getMasterCopyId();
+			this.forceBookToPlayerInventory = bitBooks.get(bookId)
+					.getForceBookToPlayerInventory();
+			this.canBeMovedFromInventory = bitBooks.get(bookId)
+					.getCanBeMovedFromInventory();
+			this.copyTheBookWhenMoved = bitBooks.get(bookId)
+					.getCopyTheBookWhenMoved();
+			this.useCost = bitBooks.get(bookId).getUseCost();
+		} else {
+			// TODO: Load the book from SQL
+			int resBookId = 0;
+			int resInventoryType;
+			int resX = 0, resY = 0, resZ = 0;
+			int resSlotNo = 0;
+			String resTitle = "";
+			String resAuthor = "";
+			String resCoAuthors = "";
+			int resNumberOfPages = 0;
+			String resPages[] = new String[10];
+			int resPageno;
+			Boolean resMasterCopy = false;
+			int resMasterCopyId = 0;
+			Boolean resForceBookToPlayerInventory = false;
+			Boolean resCanBeMovedFromInventory = true;
+			Boolean resCopyTheBookWhenMoved = false;
+			int resUseCost = 0;
+			String query = "select * FROM " + BIT.oldBooksTable
+					+ " WHERE bookid=" + bookId + " world="
+					+ sPlayer.getWorld() + ";";
+			ResultSet result = null;
+			if (G333Config.STORAGE_TYPE.equals("MYSQL")) {
+				try {
+					result = BIT.manageMySQL.sqlQuery(query);
+				} catch (MalformedURLException e) {
+					e.printStackTrace();
+				} catch (InstantiationException e) {
+					e.printStackTrace();
+				} catch (IllegalAccessException e) {
+					e.printStackTrace();
+				}
+			} else { // SQLLITE
+				result = BIT.manageSQLite.sqlQuery(query);
+				// sPlayer.sendMessage("Result:" + result.toString());
+			}
+			int i = 0;
+
+			try {
+				while (result != null && result.next()) {
+					// && i < size
+					resBookId = result.getInt("bookid");
+					resInventoryType = result.getInt("inventorytype");
+					resX = result.getInt("x");
+					resY = result.getInt("y");
+					resZ = result.getInt("z");
+					resSlotNo = result.getInt("slotno");
+					resTitle = result.getString("title");
+					resAuthor = result.getString("author");
+					resCoAuthors = result.getString("coauthors");
+					resNumberOfPages = result.getInt("numberofpages");
+					resPageno = result.getInt("pageno");
+					resPages[resPageno] = result.getString("pages");
+					resMasterCopy = result.getBoolean("mastercopy");
+					resMasterCopyId = result.getInt("mastercopyid");
+					resForceBookToPlayerInventory = result.getBoolean("force");
+					resCanBeMovedFromInventory = result.getBoolean("moved");
+					resCopyTheBookWhenMoved = result.getBoolean("copy");
+					;
+					resUseCost = result.getInt("usecost");
+					// sPlayer.sendMessage("i:" + i + ");
+					if (sBlock == null) {
+
+					} else {
+
+					}
+					G333Messages.showInfo("i:" + i + " inv_type="
+							+ resInventoryType);
+					i++;
+				}
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
+			// G333Messages.showInfo("name:" + name + " owner:" + owner +
+			// " coowners:"
+			// + coOwners + " usecost:" + useCost);
+			// G333Messages.showInfo("inv:" + inventory);
+
+			Location loc = new Location(sPlayer.getWorld(), resX, resY, resZ);
+			SpoutBlock sBlock = (SpoutBlock) loc.getBlock();
+
+			bitBooks.put(bookId, new BITBook(resBookId,
+					BITInventoryType.PLAYER_INVENTORY, sBlock, resSlotNo,
+					resTitle, resAuthor, resCoAuthors, resNumberOfPages,
+					resPages, resMasterCopy, resMasterCopyId,
+					resForceBookToPlayerInventory, resCanBeMovedFromInventory,
+					resCopyTheBookWhenMoved, resUseCost));
+
+			return bitBooks.get(bookId);
+		}
+		return null;
+
+	}
+
+	public void removeBook(SpoutPlayer sPlayer, int bookId, int destroycost) {
+		boolean deleteBook = true;
+		if (BIT.useEconomy) {
+			if (BIT.plugin.Method.hasAccount(sPlayer.getName())) {
+				if (BIT.plugin.Method.getAccount(sPlayer.getName()).hasEnough(
+						destroycost)
+						|| destroycost < 0) {
+					BIT.plugin.Method.getAccount(sPlayer.getName()).subtract(
+							destroycost);
+					sPlayer.sendMessage("Your account ("
+							+ BIT.plugin.Method.getAccount(sPlayer.getName())
+									.balance() + ") has been deducted "
+							+ destroycost + " bucks");
+				} else {
+					sPlayer.sendMessage("You dont have enough money ("
+							+ BIT.plugin.Method.getAccount(sPlayer.getName())
+									.balance() + "). Cost is:" + destroycost);
+					deleteBook = false;
+				}
+			}
+		}
+		String query = "DELETE FROM " + BIT.booksTable + " WHERE (bookid = "
+				+ bitBooks.get(bookId).getBookId() + ");";
+		if (deleteBook) {
+			if (G333Config.DEBUG_SQL)
+				sPlayer.sendMessage(ChatColor.YELLOW + "Removing book: "
+						+ query);
+			if (G333Config.STORAGE_TYPE.equals("MYSQL")) {
+				try {
+					BIT.manageMySQL.deleteQuery(query);
+				} catch (MalformedURLException e) {
+					e.printStackTrace();
+				} catch (InstantiationException e) {
+					e.printStackTrace();
+				} catch (IllegalAccessException e) {
+					e.printStackTrace();
+				}
+			} else { // SQLLITE
+				BIT.manageSQLite.deleteQuery(query);
+			}
+			bitBooks.remove(bookId);
+			G333Messages.sendNotification(sPlayer, "Book removed.");
+		} else {
+			G333Messages.sendNotification(sPlayer, "You need more money ("
+					+ destroycost + ")");
+		}
 	}
 
 	public void openBook(SpoutPlayer sPlayer, int bookId) {
@@ -399,10 +753,10 @@ public class BITBook {
 		// forceBookToPlayerInventoryButton
 		forceBookToPlayerInventoryButtonGUI.get(id).setText(
 				"Force:" + forceBookToPlayerInventoryGUI.get(id));
-		forceBookToPlayerInventoryButtonGUI.get(id).setAuto(false).setX(x).setY(y)
-				.setHeight(buttonHeight).setWidth(buttonWidth);
-		forceBookToPlayerInventoryButtonGUI.get(id)
-				.setTooltip("Force this book in to all players inventory.");
+		forceBookToPlayerInventoryButtonGUI.get(id).setAuto(false).setX(x)
+				.setY(y).setHeight(buttonHeight).setWidth(buttonWidth);
+		forceBookToPlayerInventoryButtonGUI.get(id).setTooltip(
+				"Force this book in to all players inventory.");
 		popupScreen.get(id).attachWidget(BIT.plugin,
 				forceBookToPlayerInventoryButtonGUI.get(id));
 		BITButtons.put(forceBookToPlayerInventoryButtonGUI.get(id).getId(),
@@ -410,11 +764,12 @@ public class BITBook {
 		y = y + buttonHeight + 1;
 
 		// canBeMovedFromInventoryButton
-		canBeMovedFromInventoryButtonGUI.get(id).setText("Moved:" + canBeMovedFromInventoryGUI.get(id));
+		canBeMovedFromInventoryButtonGUI.get(id).setText(
+				"Moved:" + canBeMovedFromInventoryGUI.get(id));
 		canBeMovedFromInventoryButtonGUI.get(id).setAuto(false).setX(x).setY(y)
 				.setHeight(buttonHeight).setWidth(buttonWidth);
-		canBeMovedFromInventoryButtonGUI.get(id)
-				.setTooltip("If this is 'No', the user cant take a copy.");
+		canBeMovedFromInventoryButtonGUI.get(id).setTooltip(
+				"If this is 'No', the user cant take a copy.");
 		popupScreen.get(id).attachWidget(BIT.plugin,
 				canBeMovedFromInventoryButtonGUI.get(id));
 		BITButtons.put(canBeMovedFromInventoryButtonGUI.get(id).getId(),
@@ -422,14 +777,16 @@ public class BITBook {
 		y = y + buttonHeight + 1;
 
 		// copyTheBookWhenMovedButton
-		copyTheBookWhenMovedButtonGUI.get(id).setText("Copy:"
-				+ copyTheBookWhenMovedGUI.get(id));
+		copyTheBookWhenMovedButtonGUI.get(id).setText(
+				"Copy:" + copyTheBookWhenMovedGUI.get(id));
 		copyTheBookWhenMovedButtonGUI.get(id).setAuto(false).setX(x).setY(y)
 				.setHeight(buttonHeight).setWidth(buttonWidth);
-		copyTheBookWhenMovedButtonGUI.get(id)
-				.setTooltip("Specifies if the book is being copied or moved if the player moves the book.");
-		popupScreen.get(id)
-				.attachWidget(BIT.plugin, copyTheBookWhenMovedButtonGUI.get(id));
+		copyTheBookWhenMovedButtonGUI
+				.get(id)
+				.setTooltip(
+						"Specifies if the book is being copied or moved if the player moves the book.");
+		popupScreen.get(id).attachWidget(BIT.plugin,
+				copyTheBookWhenMovedButtonGUI.get(id));
 		BITButtons.put(copyTheBookWhenMovedButtonGUI.get(id).getId(),
 				"copyTheBookWhenMovedButton");
 		y = y + buttonHeight + 1;

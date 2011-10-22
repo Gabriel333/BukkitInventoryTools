@@ -184,7 +184,7 @@ public class BITBookInputListener extends InputListener {
 			int slotNo = sPlayer.getInventory().getHeldItemSlot();
 			BITBook bitBook = new BITBook();
 			
-			if (BITBook.isWritten(BITInventoryType.PLAYER_INVENTORY,slotNo)) {
+			if (BITBook.isWritten(sPlayer, sBlock, BITInventoryType.PLAYER_INVENTORY,slotNo)) {
 				if (G333Permissions.hasPerm(sPlayer, "book.use",
 						G333Permissions.NOT_QUIET)
 						|| G333Permissions.hasPerm(sPlayer, "book.admin",
@@ -192,7 +192,7 @@ public class BITBookInputListener extends InputListener {
 					// TODO: get the bookId.
 					sPlayer.sendMessage("Open existing book");
 					int bookId=1;
-					bitBook.loadBook(bookId);
+					bitBook.loadBook(sPlayer,bookId);
 					bitBook.openBook(sPlayer,bookId);
 				}
 			} else {

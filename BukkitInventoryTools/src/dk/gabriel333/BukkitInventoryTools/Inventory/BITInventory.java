@@ -50,7 +50,6 @@ public class BITInventory {
 	 */
 	BITInventory(SpoutBlock sBlock, String owner, String name, String coowners,
 			Inventory inventory, int useCost) {
-		// super();
 		this.sBlock = sBlock;
 		this.name = name;
 		this.owner = owner;
@@ -149,7 +148,7 @@ public class BITInventory {
 						+ block.getWorld().getName() + "' AND slotno=" + i
 						+ ";";
 				if (G333Config.DEBUG_SQL)
-					sPlayer.sendMessage(ChatColor.YELLOW + "Updating lock: "
+					sPlayer.sendMessage(ChatColor.YELLOW + "Updating Bookshelf: "
 							+ query);
 				if (G333Config.STORAGE_TYPE.equals("MYSQL")) {
 					try {
@@ -400,7 +399,7 @@ public class BITInventory {
 	}
 
 	public void RemoveBitInventory(SpoutPlayer sPlayer, int destroycost) {
-		boolean deletelock = true;
+		boolean deleteInventory = true;
 		if (BIT.useEconomy) {
 			if (BIT.plugin.Method.hasAccount(sPlayer.getName())) {
 				if (BIT.plugin.Method.getAccount(sPlayer.getName()).hasEnough(
@@ -416,7 +415,7 @@ public class BITInventory {
 					sPlayer.sendMessage("You dont have enough money ("
 							+ BIT.plugin.Method.getAccount(sPlayer.getName())
 									.balance() + "). Cost is:" + destroycost);
-					deletelock = false;
+					deleteInventory = false;
 				}
 			}
 		}
@@ -424,9 +423,9 @@ public class BITInventory {
 				+ sBlock.getX() + " AND y = " + sBlock.getY() + " AND z = "
 				+ sBlock.getZ() + " AND world='" + sBlock.getWorld().getName()
 				+ "');";
-		if (deletelock) {
+		if (deleteInventory) {
 			if (G333Config.DEBUG_SQL)
-				sPlayer.sendMessage(ChatColor.YELLOW + "Removeing lock: "
+				sPlayer.sendMessage(ChatColor.YELLOW + "Removing Bookshelf: "
 						+ query);
 			if (G333Config.STORAGE_TYPE.equals("MYSQL")) {
 				try {
@@ -441,10 +440,10 @@ public class BITInventory {
 			} else { // SQLLITE
 				BIT.manageSQLite.deleteQuery(query);
 			}
-			G333Messages.sendNotification(sPlayer, "DigiLock removed.");
+			G333Messages.sendNotification(sPlayer, "Bookshelf removed.");
 		} else {
 			G333Messages.sendNotification(sPlayer, "You need more money ("
-					+ G333Config.BOOKSHELF_DESTROYCOST + ")");
+					+ destroycost + ")");
 		}
 
 	}

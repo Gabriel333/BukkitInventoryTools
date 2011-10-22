@@ -38,7 +38,9 @@ public class BITBookInputListener extends InputListener {
 		// PLAYER_INVENTORY
 		if (screentype == ScreenType.PLAYER_INVENTORY) {
 			if (keypressed.equals(G333Config.LIBRARY_READKEY)) {
-				sBlock = null;
+				
+				//sBlock = null;
+				
 				handleItemInHand(sPlayer, sBlock, itemInHand);
 			} 
 
@@ -192,7 +194,7 @@ public class BITBookInputListener extends InputListener {
 					// TODO: get the bookId.
 					sPlayer.sendMessage("Open existing book");
 					int bookId=1;
-					bitBook.loadBook(sPlayer,bookId);
+					bitBook.loadBook(sPlayer,sBlock,BITInventoryType.PLAYER_INVENTORY, slotNo, bookId);
 					bitBook.openBook(sPlayer,bookId);
 				}
 			} else {
@@ -224,7 +226,7 @@ public class BITBookInputListener extends InputListener {
 							+ numberOfPages);
 					sPlayer.sendMessage("BITBookInputListener-CurrentBookId:"
 							+ bookId);
-					bitBook.setBitBook(bookId, sBlock, slotNo, title, author,
+					bitBook.setBitBook(bookId, sPlayer.getName(), BITInventoryType.PLAYER_INVENTORY, sBlock, slotNo, title, author,
 							coAuthors, numberOfPages, pages, masterCopy,
 							masterCopyId, forceBookToPlayerInventory,
 							canBeMovedFromInventory, copyTheBookWhenMoved,

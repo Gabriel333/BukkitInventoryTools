@@ -317,7 +317,6 @@ public class BIT extends JavaPlugin {
 						if (manageMySQL.checkTable(oldBooksTable)) {
 							G333Messages.showInfo("Upgrade " + oldBooksTable
 									+ " to " + bitInventoryTable + ".");
-							// TODO: choose the right fields
 							query = "CREATE TABLE "
 									+ booksTable
 									+ " (x INT, y INT, z INT, world VARCHAR(255), "
@@ -332,7 +331,6 @@ public class BIT extends JavaPlugin {
 						} else {
 							G333Messages.showInfo("Creating table "
 									+ booksTable);
-							// TODO: choose the right fields
 							query = "CREATE TABLE "
 									+ booksTable
 									+ " (x INT, y INT, z INT, world VARCHAR(255), "
@@ -407,7 +405,7 @@ public class BIT extends JavaPlugin {
 							+ " to " + bitInventoryTable + ".");
 					query = "CREATE TABLE "
 							+ bitInventoryTable
-							+ " (x INT, y INT, z INT, world VARCHAR(255), "
+							+ " (playername VARCHAR(255), x INT, y INT, z INT, world VARCHAR(255), "
 							+ "owner VARCHAR(255), "
 							+ "name VARCHAR(255), "
 							+ "coowners VARCHAR(255), "
@@ -415,13 +413,13 @@ public class BIT extends JavaPlugin {
 							+ "itemstack_type INT, itemstack_amount INT, itemstack_durability INT); ";
 					insert = "insert into "
 							+ bitInventoryTable
-							+ " (x, y, z, world, "
+							+ " (playername, x, y, z, world, "
 							+ "owner, "
 							+ "name, "
 							+ "coowners, "
 							+ "usecost, slotno, "
-							+ "itemstack_type INT, itemstack_amount INT, itemstack_durability INT) "
-							+ "select x, y, z, world, owner, name,"
+							+ "itemstack_type, itemstack_amount, itemstack_durability) "
+							+ "select playername, x, y, z, world, owner, name,"
 							+ "coowners, usecost, "
 							+ "itemstack_type, itemstack_amount, itemstack_durability FROM "
 							+ oldDigilockTable + ";";
@@ -432,7 +430,7 @@ public class BIT extends JavaPlugin {
 							.showInfo("Creating table " + bitInventoryTable);
 					query = "CREATE TABLE "
 							+ bitInventoryTable
-							+ " (x INT, y INT, z INT, world VARCHAR(255), "
+							+ " (playername VARCHAR(255), x INT, y INT, z INT, world VARCHAR(255), "
 							+ "owner VARCHAR(255), "
 							+ "name VARCHAR(255), "
 							+ "coowners VARCHAR(255), "
@@ -451,21 +449,21 @@ public class BIT extends JavaPlugin {
 							+ booksTable + ".");
 					query = "CREATE TABLE "
 							+ booksTable
-							+ " ( bookid INT, world VARCHAR(255), inventorytype INT,"
-							+ " x INT, y INT, z INT, slotno INT, title VARCHAR(255),"
-							+ " author VARCHAR(255), coauthor VARCHAR(255), "
+							+ " ( playername TEXT, bookid INT, world TEXT, inventorytype INT,"
+							+ " x INT, y INT, z INT, slotno INT, title TEXT,"
+							+ " author TEXT, coauthor TEXT, "
 							+ " numberofpages INT, pageno INT, page TEXT,"
 							+ " mastercopy BOOLEAN, mastercopyid INT,"
 							+ " force BOOLEAN, moved BOOLEAN, copy BOOLEAN, usecost INT);";
 					insert = "insert into "
 							+ booksTable
-							+ " ( bookid INT, world VARCHAR(255), inventorytype INT,"
-							+ " x INT, y INT, z INT, slotno INT, title VARCHAR(255),"
-							+ " author VARCHAR(255), coauthor VARCHAR(255), "
-							+ " numberofpages INT, pageno INT, page TEXT,"
-							+ " mastercopy BOOLEAN, mastercopyid INT,"
-							+ " force BOOLEAN, moved BOOLEAN, copy BOOLEAN, usecost INT) "
-							+ "select bookid, world, inventorytype,"
+							+ " (playername, bookid, world, inventorytype,"
+							+ " x, y, z, slotno, title,"
+							+ " author, coauthor, "
+							+ " numberofpages, pageno, page,"
+							+ " mastercopy, mastercopyid,"
+							+ " force, moved, copy, usecost) "
+							+ "select playername, bookid, world, inventorytype,"
 							+ " x, y, z, slotno, title,"
 							+ " author, coauthor, "
 							+ " numberofpages, pageno, page,"
@@ -476,12 +474,11 @@ public class BIT extends JavaPlugin {
 					manageSQLite.insertQuery(insert);
 				} else {
 					G333Messages.showInfo("Creating table " + booksTable);
-					// TODO: choose the right fields
 					query = "CREATE TABLE "
 							+ booksTable
-							+ " ( bookid INT, world VARCHAR(255), inventorytype INT,"
-							+ " x INT, y INT, z INT, slotno INT, title VARCHAR(255),"
-							+ " author VARCHAR(255), coauthor VARCHAR(255), "
+							+ " (playername TEXT, bookid INT, world TEXT, inventorytype INT,"
+							+ " x INT, y INT, z INT, slotno INT, title TEXT,"
+							+ " author TEXT, coauthor TEXT, "
 							+ " numberofpages INT, pageno INT, page TEXT,"
 							+ " mastercopy BOOLEAN, mastercopyid INT,"
 							+ " force BOOLEAN, moved BOOLEAN, copy BOOLEAN, usecost INT);";
@@ -489,7 +486,7 @@ public class BIT extends JavaPlugin {
 					manageSQLite.createTable(query);
 				}
 			} else {
-				// G333Messages.showInfo(bitInventoryTable + " exists.");
+				G333Messages.showInfo(booksTable + " exists.");
 			}
 		}
 	}

@@ -91,8 +91,8 @@ public class BITBookSpoutListener extends SpoutListener {
 						BITBook.forceBookToPlayerInventoryButtonGUI
 								.get(id)
 								.setText(
-										"Master:"
-												+ BITBook.masterCopyGUI.get(id));
+										"Force:"
+												+ BITBook.forceBookToPlayerInventoryGUI.get(id));
 						BITBook.forceBookToPlayerInventoryButtonGUI.get(id)
 								.setDirty(true);
 					}
@@ -106,8 +106,8 @@ public class BITBookSpoutListener extends SpoutListener {
 						BITBook.canBeMovedFromInventoryButtonGUI
 								.get(id)
 								.setText(
-										"Master:"
-												+ BITBook.masterCopyGUI.get(id));
+										"Moved:"
+												+ BITBook.canBeMovedFromInventoryGUI.get(id));
 						BITBook.canBeMovedFromInventoryButtonGUI.get(id)
 								.setDirty(true);
 					}
@@ -119,7 +119,7 @@ public class BITBookSpoutListener extends SpoutListener {
 							BITBook.copyTheBookWhenMovedGUI.put(id, true);
 						}
 						BITBook.copyTheBookWhenMovedButtonGUI.get(id).setText(
-								"Master:" + BITBook.masterCopyGUI.get(id));
+								"Copy:" + BITBook.copyTheBookWhenMovedGUI.get(id));
 						BITBook.copyTheBookWhenMovedButtonGUI.get(id).setDirty(
 								true);
 					}

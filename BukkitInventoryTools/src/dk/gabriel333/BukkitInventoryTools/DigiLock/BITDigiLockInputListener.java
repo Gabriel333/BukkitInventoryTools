@@ -4,6 +4,7 @@ import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.block.Dispenser;
 import org.bukkit.inventory.Inventory;
+import org.bukkit.material.Lever;
 import org.getspout.spoutapi.SpoutManager;
 import org.getspout.spoutapi.block.SpoutBlock;
 import org.getspout.spoutapi.block.SpoutChest;
@@ -293,6 +294,10 @@ public class BITDigiLockInputListener extends InputListener {
 					//	Lever lever = (Lever) targetblock.getState().getData();
 					//	lever.setPowered(false);
 					//}
+					Lever lever = (Lever) targetblock.getState().getData();
+					//lever.setPowered(false);
+					targetblock.setData((byte) (lever.getData() |8));
+					
 					sPlayer.closeActiveWindow();
 					BITDigiLock.cleanupPopupScreen(sPlayer);
 

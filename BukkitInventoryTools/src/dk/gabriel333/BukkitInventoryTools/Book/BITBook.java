@@ -6,7 +6,6 @@ import java.util.UUID;
 
 import org.bukkit.Material;
 import org.bukkit.block.Block;
-import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.Plugin;
 import org.getspout.spoutapi.block.SpoutBlock;
@@ -18,6 +17,7 @@ import org.getspout.spoutapi.gui.PopupScreen;
 import org.getspout.spoutapi.player.SpoutPlayer;
 
 import dk.gabriel333.BukkitInventoryTools.BIT;
+import dk.gabriel333.BukkitInventoryTools.BITEnums.BITInventoryType;
 
 public class BITBook {
 
@@ -31,14 +31,15 @@ public class BITBook {
 		plugin = this.plugin;
 	}
 
-	protected SpoutBlock sBlock;
 	protected int bookId;
+	protected BITInventoryType inventoryType;
+	protected SpoutBlock sBlock;
 	protected int slotNo;
 	protected String title;
 	protected String author;
 	protected String coAuthors;
 	protected int numberOfPages;
-	protected GenericTextField[] pages;
+	protected String[] pages;
 	protected Boolean masterCopy;
 	protected int masterCopyId;
 	protected Boolean forceBookToPlayerInventory;
@@ -65,8 +66,8 @@ public class BITBook {
 	 * @param useCost
 	 */
 	BITBook(int bookId, SpoutBlock sBlock, int slotNo, String title,
-			String author, String coAuthors, int numberOfPages,
-			GenericTextField[] pages, Boolean masterCopy, int masterCopyId,
+			String author, String coAuthors, int numberOfPages, String[] pages,
+			Boolean masterCopy, int masterCopyId,
 			Boolean forceBookToPlayerInventory,
 			Boolean canBeMovedFromInventory, Boolean copyTheBookWhenMoved,
 			int useCost) {
@@ -86,24 +87,35 @@ public class BITBook {
 		this.useCost = useCost;
 	}
 
-	public static Map<Integer, BITBook> bitBooks = new HashMap<Integer, BITBook>();
+	public static HashMap<Integer, BITBook> bitBooks = new HashMap<Integer, BITBook>();
+
 	public static Map<Integer, PopupScreen> popupScreen = new HashMap<Integer, PopupScreen>();
 	public static Map<UUID, String> BITButtons = new HashMap<UUID, String>();
 	public static Map<Integer, Integer> userno = new HashMap<Integer, Integer>();
 
 	// Parameters for the bookPopupScreen
+	public static Map<Integer, Integer> currentBookId = new HashMap<Integer, Integer>();
 	public static Map<Integer, GenericTextField> titleGUI = new HashMap<Integer, GenericTextField>();
+	public static Map<Integer, Integer> currentPageNo = new HashMap<Integer, Integer>();
+	public static Map<Integer, Integer> numberOfPagesGUI = new HashMap<Integer, Integer>();
+	public static Map<Integer, GenericTextField> pagesGUI = new HashMap<Integer, GenericTextField>();
+	public static Map<Integer, String[]> pagesGUI2 = new HashMap<Integer, String[]>();
 	public static Map<Integer, GenericTextField> authorGUI = new HashMap<Integer, GenericTextField>();
 	public static Map<Integer, GenericTextField> coAuthorsGUI = new HashMap<Integer, GenericTextField>();
-	public static Map<Integer, GenericTextField> masterCopyGUI = new HashMap<Integer, GenericTextField>();
-	public static Map<Integer, GenericTextField> forceBookToPlayerInventoryGUI = new HashMap<Integer, GenericTextField>();
-	public static Map<Integer, GenericTextField> canBeMovedFromInventoryGUI = new HashMap<Integer, GenericTextField>();
-	public static Map<Integer, GenericTextField> copyTheBookWhenMovedGUI = new HashMap<Integer, GenericTextField>();
+	public static Map<Integer, Boolean> masterCopyGUI = new HashMap<Integer, Boolean>();
+	public static Map<Integer, GenericButton> masterCopyButtonGUI = new HashMap<Integer, GenericButton>();
+	public static Map<Integer, Integer> masterCopyIdGUI = new HashMap<Integer, Integer>();
+	public static Map<Integer, Boolean> forceBookToPlayerInventoryGUI = new HashMap<Integer, Boolean>();
+	public static Map<Integer, GenericButton> forceBookToPlayerInventoryButtonGUI = new HashMap<Integer, GenericButton>();
+	public static Map<Integer, GenericButton> canBeMovedFromInventoryButtonGUI = new HashMap<Integer, GenericButton>();
+	public static Map<Integer, Boolean> canBeMovedFromInventoryGUI = new HashMap<Integer, Boolean>();
+	public static Map<Integer, GenericButton> copyTheBookWhenMovedButtonGUI = new HashMap<Integer, GenericButton>();
+	public static Map<Integer, Boolean> copyTheBookWhenMovedGUI = new HashMap<Integer, Boolean>();
 	public static Map<Integer, GenericTextField> useCostGUI = new HashMap<Integer, GenericTextField>();
 
 	public void setBitBook(int bookId, SpoutBlock sBlock, int slotNo,
 			String title, String author, String coAuthors, int numberOfPages,
-			GenericTextField[] pages, Boolean masterCopy, int masterCopyId,
+			String[] pages, Boolean masterCopy, int masterCopyId,
 			Boolean forceBookToPlayerInventory,
 			Boolean canBeMovedFromInventory, Boolean copyTheBookWhenMoved,
 			int useCost) {
@@ -149,29 +161,12 @@ public class BITBook {
 		return title;
 	}
 
+	public int getNumberOfPages() {
+		return numberOfPages;
+	}
+
 	public void setTitle(String title) {
 		this.title = title;
-	}
-
-	public static boolean isWritten() {
-		// TODO: check if the book is written (true) or if it is empty
-		return false;
-	}
-
-	public void read(Player player, int page) {
-		// TODO: Open Book and show it on the Screen
-	}
-
-	public GenericTextField getPage(int pageNo) {
-		if (pageNo < 0 || pageNo > numberOfPages) {
-			return null;
-		} else {
-			return pages[pageNo];
-		}
-	}
-
-	public int pageCount() {
-		return numberOfPages;
 	}
 
 	protected final static Material writeableMaterials[] = { Material.BOOK,
@@ -200,20 +195,106 @@ public class BITBook {
 		return false;
 	}
 
-	public void saveBook() {
+	public static boolean isWritten(BITInventoryType inventoryType, int SlotNo) {
+		
+			// TODO: test if bookId is stored in SQL database
+			// if yes load the book into bitBooks and return true
+		
+
+		return true;
+	}
+
+	public static void saveBook(SpoutPlayer sPlayer, int bookId) {
+		int id = sPlayer.getEntityId();
+
+		// for (int i = 0; i < numberOfPagesGUI.get(id); i++) {
+		// pagesGUI2.get(id)[i] = getPages(i);
+		// pagesGUI.get(id).setText(pagesGUI2.get(id)[i]);
+		// }
+
+		bitBooks.put(
+				bookId,
+				new BITBook(bookId, bitBooks.get(bookId).getBlock(), bitBooks
+						.get(bookId).getSlotNo(), titleGUI.get(id).getText(),
+						authorGUI.get(id).getText(), coAuthorsGUI.get(id)
+								.getText(), numberOfPagesGUI.get(id), pagesGUI2
+								.get(id), masterCopyGUI.get(id),
+						masterCopyIdGUI.get(id), forceBookToPlayerInventoryGUI
+								.get(id), canBeMovedFromInventoryGUI.get(id),
+						copyTheBookWhenMovedGUI.get(id), Integer
+								.valueOf(useCostGUI.get(id).getText())));
 		// TODO: save the Book to SQL
 	}
 
-	public BITBook loadBook() {
-		// TODO: Load the book from SQL
-		return null;
+	public void loadBook(int bookId) {
+		if (bitBooks.containsKey(bookId)) {
+			this.bookId = bitBooks.get(bookId).getBookId();
+			this.sBlock = bitBooks.get(bookId).getBlock();
+			this.slotNo = bitBooks.get(bookId).getSlotNo();
+			this.title = bitBooks.get(bookId).getTitle();
+			this.author = bitBooks.get(bookId).getAuthor();
+			this.coAuthors = bitBooks.get(bookId).getCoAuthors();
+			this.numberOfPages = bitBooks.get(bookId).getNumberOfPages();
+			this.pages = bitBooks.get(bookId).getPages();
+			this.masterCopy = bitBooks.get(bookId).getMasterCopy();
+			this.masterCopyId = bitBooks.get(bookId).getMasterCopyId();
+			this.forceBookToPlayerInventory = bitBooks.get(bookId)
+					.getForceBookToPlayerInventory();
+			this.canBeMovedFromInventory = bitBooks.get(bookId)
+					.getCanBeMovedFromInventory();
+			this.copyTheBookWhenMoved = bitBooks.get(bookId)
+					.getCopyTheBookWhenMoved();
+			this.useCost = bitBooks.get(bookId).getUseCost();
+		} else {
+			// TODO: Load the book from SQL
+		}
+	}
+
+	private int getUseCost() {
+		return useCost;
+	}
+
+	private Boolean getCopyTheBookWhenMoved() {
+		return copyTheBookWhenMoved;
+	}
+
+	private Boolean getCanBeMovedFromInventory() {
+		return canBeMovedFromInventory;
+	}
+
+	private Boolean getForceBookToPlayerInventory() {
+		return forceBookToPlayerInventory;
+	}
+
+	private int getMasterCopyId() {
+		return masterCopyId;
+	}
+
+	private Boolean getMasterCopy() {
+		return masterCopy;
+	}
+
+	private String[] getPages() {
+		return pages;
+	}
+
+	private String getPages(int i) {
+		return pages[i];
+	}
+
+	private int getSlotNo() {
+		return slotNo;
+	}
+
+	private SpoutBlock getBlock() {
+		return sBlock;
 	}
 
 	public void removeBook() {
 		// TODO: remove the book from SQL
 	}
 
-	public void openBook(SpoutPlayer sPlayer, int pageNo) {
+	public void openBook(SpoutPlayer sPlayer, int bookId) {
 		int y = 20, itemHeight = 20;
 		int x = 100;
 		int textFieldHeight = 100, textFieldWidth = 320;
@@ -222,18 +303,15 @@ public class BITBook {
 
 		int id = sPlayer.getEntityId();
 		addUserData(id);
-
 		titleGUI.get(id).setText(title);
 		authorGUI.get(id).setText(author);
 		coAuthorsGUI.get(id).setText(coAuthors);
-		// TODO: Should I use yesNo(masterCopy) here?
-		masterCopyGUI.get(id).setText(masterCopy.toString());
-		forceBookToPlayerInventoryGUI.get(id).setText(
-				forceBookToPlayerInventory.toString());
-		canBeMovedFromInventoryGUI.get(id).setText(
-				canBeMovedFromInventory.toString());
-		copyTheBookWhenMovedGUI.get(id)
-				.setText(copyTheBookWhenMoved.toString());
+		currentPageNo.put(id, 0);
+		numberOfPagesGUI.put(id, getNumberOfPages());
+		for (int i = 0; i < getNumberOfPages(); i++) {
+			pagesGUI2.get(id)[i] = getPages(i);
+			pagesGUI.get(id).setText(pagesGUI2.get(id)[i]);
+		}
 		useCostGUI.get(id).setText(String.valueOf(useCost));
 
 		// ItemWidget
@@ -250,7 +328,8 @@ public class BITBook {
 				.setX(x + textFieldWidth - 2 * buttonHeight - 5)
 				.setY(y + 2 * itemHeight + 10 - buttonHeight - 1)
 				.setHeight(buttonHeight).setWidth(buttonHeight);
-		nextPageBookButton.setTooltip("Page " + String.valueOf(pageNo));
+		nextPageBookButton.setTooltip("Next page ("
+				+ String.valueOf(currentPageNo.get(id) + 1) + ")");
 		popupScreen.get(id).attachWidget(BIT.plugin, nextPageBookButton);
 		BITButtons.put(nextPageBookButton.getId(), "nextPageButton");
 
@@ -260,7 +339,8 @@ public class BITBook {
 				.setX(x + textFieldWidth - buttonHeight)
 				.setY(y + 2 * itemHeight + 10 - buttonHeight - 1)
 				.setHeight(buttonHeight).setWidth(buttonHeight);
-		previousPageBookButton.setTooltip("Page " + String.valueOf(pageNo));
+		previousPageBookButton.setTooltip("Previous page ("
+				+ String.valueOf(currentPageNo.get(id) - 1) + ")");
 		popupScreen.get(id).attachWidget(BIT.plugin, previousPageBookButton);
 		BITButtons.put(previousPageBookButton.getId(), "previousPageButton");
 
@@ -275,20 +355,15 @@ public class BITBook {
 
 		y = y + 2 * itemHeight + 10;
 
-		BITBook book = new BITBook();
-		book.loadBook();
-		// Page
-		GenericTextField page = new GenericTextField();
-		// page=book.getPage(1);
-		page.setText("");
-		page.setTooltip("Enter the text in the book.");
-		page.setX(x).setY(y);
-		page.setHeight(textFieldHeight).setWidth(textFieldWidth);
+		pagesGUI.get(id).setText(pagesGUI2.get(id)[currentPageNo.get(id)]);
+		pagesGUI.get(id).setTooltip("Enter the text in the book.");
+		pagesGUI.get(id).setX(x).setY(y);
+		pagesGUI.get(id).setHeight(textFieldHeight).setWidth(textFieldWidth);
 		// page.setMarginLeft(20).setMarginBottom(20);
-		page.setCursorPosition(1).setMaximumCharacters(1000);
-		page.setMaximumLines(8);
-		page.setFocus(true);
-		popupScreen.get(id).attachWidget(BIT.plugin, page);
+		pagesGUI.get(id).setCursorPosition(1).setMaximumCharacters(1000);
+		pagesGUI.get(id).setMaximumLines(8);
+		pagesGUI.get(id).setFocus(true);
+		popupScreen.get(id).attachWidget(BIT.plugin, pagesGUI.get(id));
 		y = y + textFieldHeight + 10;
 
 		// SaveButton
@@ -311,44 +386,51 @@ public class BITBook {
 		y = 67;
 
 		// masterCopyButton
-		GenericButton masterCopyButton = new GenericButton("Master:"
-				+ yesNo(masterCopy));
-		masterCopyButton.setAuto(false).setX(x).setY(y).setHeight(buttonHeight)
-				.setWidth(buttonWidth);
-		popupScreen.get(id).attachWidget(BIT.plugin, masterCopyButton);
-		BITButtons.put(masterCopyButton.getId(), "masterCopyButton");
+		masterCopyButtonGUI.get(id).setText("Master:" + masterCopyGUI.get(id));
+		masterCopyButtonGUI.get(id).setAuto(false).setX(x).setY(y)
+				.setHeight(buttonHeight).setWidth(buttonWidth);
+		masterCopyButtonGUI.get(id).setTooltip(
+				"The masterCopy keeps all copies updated aumatically.");
+		popupScreen.get(id).attachWidget(BIT.plugin,
+				masterCopyButtonGUI.get(id));
+		BITButtons.put(masterCopyButtonGUI.get(id).getId(), "masterCopyButton");
 		y = y + buttonHeight + 1;
 
 		// forceBookToPlayerInventoryButton
-		GenericButton forceBookToPlayerInventoryButton = new GenericButton(
-				"ToPlayer:" + yesNo(forceBookToPlayerInventory));
-		forceBookToPlayerInventoryButton.setAuto(false).setX(x).setY(y)
+		forceBookToPlayerInventoryButtonGUI.get(id).setText(
+				"Force:" + forceBookToPlayerInventoryGUI.get(id));
+		forceBookToPlayerInventoryButtonGUI.get(id).setAuto(false).setX(x).setY(y)
 				.setHeight(buttonHeight).setWidth(buttonWidth);
+		forceBookToPlayerInventoryButtonGUI.get(id)
+				.setTooltip("Force this book in to all players inventory.");
 		popupScreen.get(id).attachWidget(BIT.plugin,
-				forceBookToPlayerInventoryButton);
-		BITButtons.put(forceBookToPlayerInventoryButton.getId(),
+				forceBookToPlayerInventoryButtonGUI.get(id));
+		BITButtons.put(forceBookToPlayerInventoryButtonGUI.get(id).getId(),
 				"forceBookToPlayerInventoryButton");
 		y = y + buttonHeight + 1;
 
 		// canBeMovedFromInventoryButton
-		GenericButton canBeMovedFromInventoryButton = new GenericButton(
-				"Moveable:" + yesNo(canBeMovedFromInventory));
-		canBeMovedFromInventoryButton.setAuto(false).setX(x).setY(y)
+		canBeMovedFromInventoryButtonGUI.get(id).setText("Moved:" + canBeMovedFromInventoryGUI.get(id));
+		canBeMovedFromInventoryButtonGUI.get(id).setAuto(false).setX(x).setY(y)
 				.setHeight(buttonHeight).setWidth(buttonWidth);
+		canBeMovedFromInventoryButtonGUI.get(id)
+				.setTooltip("If this is 'No', the user cant take a copy.");
 		popupScreen.get(id).attachWidget(BIT.plugin,
-				canBeMovedFromInventoryButton);
-		BITButtons.put(canBeMovedFromInventoryButton.getId(),
+				canBeMovedFromInventoryButtonGUI.get(id));
+		BITButtons.put(canBeMovedFromInventoryButtonGUI.get(id).getId(),
 				"canBeMovedFromInventoryButton");
 		y = y + buttonHeight + 1;
 
 		// copyTheBookWhenMovedButton
-		GenericButton copyTheBookWhenMovedButton = new GenericButton("Copy:"
-				+ yesNo(copyTheBookWhenMoved));
-		copyTheBookWhenMovedButton.setAuto(false).setX(x).setY(y)
+		copyTheBookWhenMovedButtonGUI.get(id).setText("Copy:"
+				+ copyTheBookWhenMovedGUI.get(id));
+		copyTheBookWhenMovedButtonGUI.get(id).setAuto(false).setX(x).setY(y)
 				.setHeight(buttonHeight).setWidth(buttonWidth);
+		copyTheBookWhenMovedButtonGUI.get(id)
+				.setTooltip("Specifies if the book is being copied or moved if the player moves the book.");
 		popupScreen.get(id)
-				.attachWidget(BIT.plugin, copyTheBookWhenMovedButton);
-		BITButtons.put(copyTheBookWhenMovedButton.getId(),
+				.attachWidget(BIT.plugin, copyTheBookWhenMovedButtonGUI.get(id));
+		BITButtons.put(copyTheBookWhenMovedButtonGUI.get(id).getId(),
 				"copyTheBookWhenMovedButton");
 		y = y + buttonHeight + 1;
 
@@ -385,10 +467,8 @@ public class BITBook {
 		sPlayer.getMainScreen().attachPopupScreen(popupScreen.get(id));
 
 	}
-	
-	
 
-	public void cleanupPopupScreen(SpoutPlayer sPlayer) {
+	public static void cleanupPopupScreen(SpoutPlayer sPlayer) {
 		int playerId = sPlayer.getEntityId();
 		if (popupScreen.containsKey(playerId)) {
 			popupScreen.get(playerId).removeWidgets(BIT.plugin);
@@ -397,6 +477,7 @@ public class BITBook {
 		}
 	}
 
+	@SuppressWarnings("unused")
 	private String yesNo(Boolean b) {
 		if (b)
 			return "Yes";
@@ -404,18 +485,36 @@ public class BITBook {
 			return "No";
 	}
 
-	public static void removeUserData(int id) {
+	@SuppressWarnings("unused")
+	private Boolean trueFalse(String str) {
+		if (str.equals("Yes"))
+			return true;
+		else
+			return false;
+	}
+
+	public static void removeUserDataxx(int id) {
 		if (userno.containsKey(id)) {
 			// BITBook
 			popupScreen.remove(id);
 			titleGUI.remove(id);
+			currentPageNo.remove(id);
+			numberOfPagesGUI.remove(id);
+			pagesGUI.remove(id);
+			pagesGUI2.remove(id);
 			authorGUI.remove(id);
 			coAuthorsGUI.remove(id);
 			masterCopyGUI.remove(id);
+			masterCopyButtonGUI.remove(id);
+			masterCopyIdGUI.remove(id);
 			forceBookToPlayerInventoryGUI.remove(id);
+			forceBookToPlayerInventoryButtonGUI.remove(id);
 			canBeMovedFromInventoryGUI.remove(id);
+			canBeMovedFromInventoryButtonGUI.remove(id);
 			copyTheBookWhenMovedGUI.remove(id);
+			copyTheBookWhenMovedButtonGUI.remove(id);
 			useCostGUI.remove(id);
+			currentBookId.remove(id);
 		}
 	}
 
@@ -424,14 +523,52 @@ public class BITBook {
 			// BITBook
 			popupScreen.put(id, new GenericPopup());
 			titleGUI.put(id, new GenericTextField());
+			currentPageNo.put(id, 0);
+			numberOfPagesGUI.put(id, 0);
+			pagesGUI.put(id, new GenericTextField());
+			pagesGUI2.put(id, new String[10]);
 			authorGUI.put(id, new GenericTextField());
 			coAuthorsGUI.put(id, new GenericTextField());
-			masterCopyGUI.put(id, new GenericTextField());
-			forceBookToPlayerInventoryGUI.put(id, new GenericTextField());
-			canBeMovedFromInventoryGUI.put(id, new GenericTextField());
-			copyTheBookWhenMovedGUI.put(id, new GenericTextField());
+			masterCopyGUI.put(id, false);
+			masterCopyButtonGUI.put(id, new GenericButton());
+			masterCopyIdGUI.put(id, 0);
+			forceBookToPlayerInventoryGUI.put(id, false);
+			forceBookToPlayerInventoryButtonGUI.put(id, new GenericButton());
+			canBeMovedFromInventoryGUI.put(id, true);
+			canBeMovedFromInventoryButtonGUI.put(id, new GenericButton());
+			copyTheBookWhenMovedGUI.put(id, false);
+			copyTheBookWhenMovedButtonGUI.put(id, new GenericButton());
 			useCostGUI.put(id, new GenericTextField());
+			currentBookId.put(id, 0);
 		}
+	}
+
+	public static void showNextPage(SpoutPlayer sPlayer) {
+		int id = sPlayer.getEntityId();
+		int i = currentPageNo.get(id);
+		pagesGUI2.get(id)[i] = pagesGUI.get(id).getText();
+		if (i == (numberOfPagesGUI.get(id) - 1)) {
+			i = 0;
+		} else {
+			i++;
+		}
+		currentPageNo.put(id, i);
+		pagesGUI.get(id).setText(pagesGUI2.get(id)[i]);
+		pagesGUI.get(id).setDirty(true);
+	}
+
+	public static void showPreviousPage(SpoutPlayer sPlayer) {
+		int id = sPlayer.getEntityId();
+		int i = currentPageNo.get(id);
+		pagesGUI2.get(id)[i] = pagesGUI.get(id).getText();
+		if (i == 0) {
+			i = numberOfPagesGUI.get(id) - 1;
+		} else {
+			i--;
+		}
+		currentPageNo.put(id, i);
+		pagesGUI.get(id).setText(pagesGUI2.get(id)[i]);
+		pagesGUI.get(id).setDirty(true);
 	}
 
 }

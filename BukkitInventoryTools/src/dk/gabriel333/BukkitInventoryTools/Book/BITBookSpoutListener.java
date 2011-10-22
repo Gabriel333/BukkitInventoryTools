@@ -20,88 +20,116 @@ public class BITBookSpoutListener extends SpoutListener {
 			Button button = ((ButtonClickEvent) event).getButton();
 			UUID uuid = button.getId();
 			SpoutPlayer sPlayer = ((ButtonClickEvent) event).getPlayer();
-			// sPlayer.sendMessage("(1)BITBookSpoutListener");
 			SpoutBlock sBlock = (SpoutBlock) sPlayer.getTargetBlock(null, 5);
 			ItemStack itemInHand = sPlayer.getInventory().getItemInHand();
 			int id = sPlayer.getEntityId();
 
 			if (BITBook.isWriteable(sBlock)
 					|| BITBook.isWriteable(itemInHand.getType())) {
-				BITBook bitBook = new BITBook();
-				// TODO: get actual book from BITBooks(bookId)
-				bitBook.loadBook();
-
+				sPlayer.sendMessage("BITBookSpoutListener-CurrentBookId:"
+						+ BITBook.currentBookId.get(id) + " button="
+						+ BITBook.BITButtons.get(uuid));
 
 				if (BITBook.BITButtons.get(uuid) == "saveBookButton") {
 					BITBook.popupScreen.get(id).close();
-					bitBook.cleanupPopupScreen(sPlayer);
+					BITBook.cleanupPopupScreen(sPlayer);
 					BITBook.BITButtons.remove(uuid);
-					// TODO: save BITBook
+					sPlayer.sendMessage("bookId="
+							+ BITBook.currentBookId.get(id) + " title="
+							+ BITBook.titleGUI.get(id).getText());
+					BITBook.saveBook(sPlayer, BITBook.currentBookId.get(id));
 
 				} else if (BITBook.BITButtons.get(uuid) == "cancelBookButton") {
 					BITBook.popupScreen.get(id).close();
-					bitBook.cleanupPopupScreen(sPlayer);
+					BITBook.cleanupPopupScreen(sPlayer);
 					BITBook.BITButtons.remove(uuid);
+					sPlayer.sendMessage("You clicked cancel - dropping current book id:"
+							+ BITBook.currentBookId.get(id));
+					BITBook.bitBooks.remove(BITBook.currentBookId.get(id));
+					BITBook.currentBookId.put(id, 0);
 
-				} else if ((BITBook.BITButtons.get(uuid) == "AuthorButton")) {
+				}
+				/*
+				 * else if ((BITBook.BITButtons.get(uuid) == "authorButton")) {
+				 * if (validateFields(sPlayer)) {
+				 * 
+				 * } } else if ((BITBook.BITButtons.get(uuid) ==
+				 * "coAuthorButton")) { if (validateFields(sPlayer)) {
+				 * 
+				 * } }
+				 */
+				else if ((BITBook.BITButtons.get(uuid) == "nextPageButton")) {
 					if (validateFields(sPlayer)) {
-
-					}
-				} else if ((BITBook.BITButtons.get(uuid) == "CoAuthorButton")) {
-					if (validateFields(sPlayer)) {
-
-					}
-				} else if ((BITBook.BITButtons.get(uuid) == "nextPageButton")) {
-					if (validateFields(sPlayer)) {
+						BITBook.showNextPage(sPlayer);
 
 					}
 				} else if ((BITBook.BITButtons.get(uuid) == "previousPageButton")) {
 					if (validateFields(sPlayer)) {
+						BITBook.showPreviousPage(sPlayer);
 
 					}
-				} else if ((BITBook.BITButtons.get(uuid) == "MasterCopyButton")) {
+				} else if ((BITBook.BITButtons.get(uuid) == "masterCopyButton")) {
 					if (validateFields(sPlayer)) {
-						if (bitBook.masterCopy) {
-							bitBook.masterCopy = false;
-							bitBook.masterCopyId=0;
+						if (BITBook.masterCopyGUI.get(id)) {
+							BITBook.masterCopyGUI.put(id, false);
 						} else {
-							bitBook.masterCopy = true;
-							bitBook.masterCopyId = bitBook.bookId;
+							BITBook.masterCopyGUI.put(id, true);
 						}
-
+						BITBook.masterCopyButtonGUI.get(id).setText(
+								"Master:" + BITBook.masterCopyGUI.get(id));
+						BITBook.masterCopyButtonGUI.get(id).setDirty(true);
 					}
 				} else if ((BITBook.BITButtons.get(uuid) == "forceBookToPlayerInventoryButton")) {
 					if (validateFields(sPlayer)) {
-						if (bitBook.forceBookToPlayerInventory){
-							bitBook.forceBookToPlayerInventory= false;
+						if (BITBook.forceBookToPlayerInventoryGUI.get(id)) {
+							BITBook.forceBookToPlayerInventoryGUI
+									.put(id, false);
 						} else {
-							bitBook.forceBookToPlayerInventory = true;
+							BITBook.forceBookToPlayerInventoryGUI.put(id, true);
 						}
-
+						BITBook.forceBookToPlayerInventoryButtonGUI
+								.get(id)
+								.setText(
+										"Master:"
+												+ BITBook.masterCopyGUI.get(id));
+						BITBook.forceBookToPlayerInventoryButtonGUI.get(id)
+								.setDirty(true);
 					}
 				} else if ((BITBook.BITButtons.get(uuid) == "canBeMovedFromInventoryButton")) {
 					if (validateFields(sPlayer)) {
-						if (bitBook.canBeMovedFromInventory){
-							bitBook.canBeMovedFromInventory=false;
+						if (BITBook.canBeMovedFromInventoryGUI.get(id)) {
+							BITBook.canBeMovedFromInventoryGUI.put(id, false);
 						} else {
-							bitBook.canBeMovedFromInventory=true;
+							BITBook.canBeMovedFromInventoryGUI.put(id, true);
 						}
-
+						BITBook.canBeMovedFromInventoryButtonGUI
+								.get(id)
+								.setText(
+										"Master:"
+												+ BITBook.masterCopyGUI.get(id));
+						BITBook.canBeMovedFromInventoryButtonGUI.get(id)
+								.setDirty(true);
 					}
 				} else if ((BITBook.BITButtons.get(uuid) == "copyTheBookWhenMovedButton")) {
 					if (validateFields(sPlayer)) {
-						if (bitBook.copyTheBookWhenMoved){
-							bitBook.copyTheBookWhenMoved=false;
+						if (BITBook.copyTheBookWhenMovedGUI.get(id)) {
+							BITBook.copyTheBookWhenMovedGUI.put(id, false);
 						} else {
-							bitBook.copyTheBookWhenMoved=true;
+							BITBook.copyTheBookWhenMovedGUI.put(id, true);
 						}
-
-					}
-				} else if ((BITBook.BITButtons.get(uuid) == "UseCostButton")) {
-					if (validateFields(sPlayer)) {
-
+						BITBook.copyTheBookWhenMovedButtonGUI.get(id).setText(
+								"Master:" + BITBook.masterCopyGUI.get(id));
+						BITBook.copyTheBookWhenMovedButtonGUI.get(id).setDirty(
+								true);
 					}
 				}
+
+				/*
+				 * else if ((BITBook.BITButtons.get(uuid) == "useCostButton")) {
+				 * if (validateFields(sPlayer)) {
+				 * 
+				 * } }
+				 */
 
 				// ************************************
 				// This only happens if I have forgot to handle a button

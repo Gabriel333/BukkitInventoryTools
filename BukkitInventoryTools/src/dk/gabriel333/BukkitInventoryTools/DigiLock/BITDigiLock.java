@@ -1658,7 +1658,6 @@ public class BITDigiLock {
 	public static void removeUserData(int id) {
 		if (userno.containsKey(id)) {
 			// DigiLock
-			userno.remove(id);
 			popupScreen.remove(id);
 			pincodeGUI.remove(id);
 			ownerGUI.remove(id);
@@ -1667,6 +1666,7 @@ public class BITDigiLock {
 			closetimerGUI.remove(id);
 			useCostGUI.remove(id);
 			connectedToGUI.remove(id);
+			userno.remove(id);
 		}
 	}
 

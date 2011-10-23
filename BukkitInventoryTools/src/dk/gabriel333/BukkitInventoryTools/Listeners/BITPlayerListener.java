@@ -53,10 +53,11 @@ public class BITPlayerListener extends PlayerListener {
 		}
 		int id = sPlayer.getEntityId();
 
-		if (G333Config.DEBUG_GUI) sPlayer.sendMessage("BITPlayerListener:" + " Your action was:"
-				+ event.getAction() + " on block:" + block.getType() + " with:"
-				+ itemInHand.getType() + " while holding:"
-				+ BIT.holdingKey.get(id));
+		if (G333Config.DEBUG_GUI)
+			sPlayer.sendMessage("BITPlayerListener:" + " Your action was:"
+					+ event.getAction() + " on block:" + block.getType()
+					+ " with:" + itemInHand.getType() + " while holding:"
+					+ BIT.holdingKey.get(id));
 
 		// HANDLING THAT PLAYER CLICK ON A BLOCK WITH A DIGILOCK
 		if (BITDigiLock.isLocked(block)) {
@@ -584,7 +585,8 @@ public class BITPlayerListener extends PlayerListener {
 			// HANDLING SIGN and SIGN_POST
 			else if (BITDigiLock.isSign(block)) {
 				if (event.getAction().equals(Action.RIGHT_CLICK_BLOCK)
-						&& G333Config.LIBRARY_USESIGNEDITGUI) {
+						&& G333Config.LIBRARY_USESIGNEDITGUI
+						&& BIT.holdingKey.get(id).equals("KEY_LSHIFT")) {
 					Sign sign = (Sign) block.getState();
 					sPlayer.openSignEditGUI(sign);
 				}
@@ -622,23 +624,23 @@ public class BITPlayerListener extends PlayerListener {
 	}
 
 	public void onPlayerLogin(PlayerLoginEvent event) {
-		// int id = event.getPlayer().getEntityId();
-		// BITPlayer.addUserData(id);
+		int id = event.getPlayer().getEntityId();
+		BIT.addUserData(id);
 	}
 
 	public void onPlayerKick(PlayerKickEvent event) {
-		// int id = event.getPlayer().getEntityId();
-		// BITPlayer.removeUserData(id);
+		int id = event.getPlayer().getEntityId();
+		BIT.removeUserData(id);
 	}
 
 	public void onPlayerJoin(PlayerJoinEvent event) {
-		// int id = event.getPlayer().getEntityId();
-		// BITPlayer.addUserData(id);
+		int id = event.getPlayer().getEntityId();
+		BIT.addUserData(id);
 	}
 
 	public void onPlayerQuit(PlayerQuitEvent event) {
-		// int id = event.getPlayer().getEntityId();
-		// BITPlayer.removeUserData(id);
+		int id = event.getPlayer().getEntityId();
+		BIT.removeUserData(id);
 	}
 
 }

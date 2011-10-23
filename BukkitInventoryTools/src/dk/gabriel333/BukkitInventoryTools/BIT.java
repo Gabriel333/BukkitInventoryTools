@@ -49,10 +49,6 @@ public class BIT extends JavaPlugin {
 	// Hook into MyWolf
 	public static Boolean mywolf = false;
 	public static MyWolfPlugin myWolfPlugin;
-	
-	// Playerdata
-	public static Map<Integer, String> holdingKey = new HashMap<Integer, String>();
-	
 
 	@Override
 	public void onEnable() {
@@ -144,11 +140,11 @@ public class BIT extends JavaPlugin {
 				Event.Priority.Normal, this);
 		pm.registerEvent(Event.Type.CUSTOM_EVENT, new BITBookSpoutListener(),
 				Event.Priority.Normal, this);
-		
+
 		// BITKeyboardListener
 		pm.registerEvent(Event.Type.CUSTOM_EVENT, new BITKeyboardListener(),
 				Event.Priority.Normal, this);
-		
+
 	}
 
 	@Override
@@ -503,8 +499,27 @@ public class BIT extends JavaPlugin {
 					manageSQLite.createTable(query);
 				}
 			} else {
-				//G333Messages.showInfo(bookTable + " exists.");
+				// G333Messages.showInfo(bookTable + " exists.");
 			}
+		}
+	}
+
+	// Playerdata
+	public static Map<Integer, String> holdingKey = new HashMap<Integer, String>();
+	public static Map<Integer, Integer> userno = new HashMap<Integer, Integer>();
+	public static void removeUserData(int id) {
+		if (userno.containsKey(id)) {
+			// DigiLock
+			holdingKey.remove(id);
+			userno.remove(id);
+		}
+	}
+
+	public static void addUserData(int id) {
+		if (!userno.containsKey(id)) {
+			// DigiLock
+			userno.put(id, new Integer(id));
+			holdingKey.put(id, "");
 		}
 	}
 

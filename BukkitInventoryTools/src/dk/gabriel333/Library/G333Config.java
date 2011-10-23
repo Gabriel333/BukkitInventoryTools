@@ -20,6 +20,7 @@ public class G333Config {
 	public static String LIBRARY_MENUKEY;
 	public static String LIBRARY_LOCKKEY;
 	public static String LIBRARY_READKEY;
+	public static Boolean LIBRARY_USESIGNEDITGUI;
 	
 	public static String STORAGE_TYPE;
 	public static String STORAGE_HOST;
@@ -95,6 +96,7 @@ public class G333Config {
 		LIBRARY_MENUKEY = getStringParm("Library.MenuKey", "KEY_M");
 		LIBRARY_LOCKKEY = getStringParm("Library.LockKey", "KEY_L");
 		LIBRARY_READKEY = getStringParm("Library.ReadKey", "KEY_R");
+		LIBRARY_USESIGNEDITGUI = getBooleanParm("Library.UseSignEditGUI", true);
 
 		//SQL
 		STORAGE_TYPE=getStringParm("Storage.Type", "SQLite");

@@ -96,7 +96,7 @@ public class BITDigiLockSpoutListener extends SpoutListener {
 									digilock.getBlock(), digilock.getUseCost());
 
 						} else if (BITDigiLock.isSign(sBlock)) {
-							if (sPlayer.isSpoutCraftEnabled()) {
+							if (sPlayer.isSpoutCraftEnabled()&& G333Config.LIBRARY_USESIGNEDITGUI) {
 								Sign sign = (Sign) sBlock.getState();
 								sPlayer.openSignEditGUI(sign);
 							} else {

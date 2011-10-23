@@ -86,10 +86,10 @@ public class BITBlockListener extends BlockListener {
 		if (event.isCancelled())
 			return;
 		SpoutBlock sBlock = (SpoutBlock) event.getBlock();
-		SpoutPlayer sPlayer = (SpoutPlayer) event.getPlayer();
-		SpoutBlock blockOnTop = sBlock.getRelative(BlockFace.UP);
 		if (!BITDigiLock.isLockable(sBlock))
 			return;
+		SpoutPlayer sPlayer = (SpoutPlayer) event.getPlayer();
+		SpoutBlock blockOnTop = sBlock.getRelative(BlockFace.UP);
 		if (BITDigiLock.isLocked(sBlock) || BITDigiLock.isLocked(blockOnTop)) {
 			sPlayer.damage(5);
 			event.setCancelled(true);
@@ -107,7 +107,6 @@ public class BITBlockListener extends BlockListener {
 		if (event.isCancelled())
 			return;
 		SpoutBlock sBlock = (SpoutBlock) event.getBlock();
-		// SpoutPlayer sPlayer = (SpoutPlayer) event.getPlayer();
 		if (!BITDigiLock.isLockable(sBlock))
 			return;
 		if (BITDigiLock.isLocked(sBlock)) {
@@ -188,7 +187,9 @@ public class BITBlockListener extends BlockListener {
 		if (!BITDigiLock.isLockable(sBlock))
 			return;
 		if (BITDigiLock.isLocked(sBlock)) {
-			// event.setCancelled(true);
+			if (!G333Config.LIBRARY_USESIGNEDITGUI) {
+				event.setCancelled(true);
+			}
 		}
 	}
 

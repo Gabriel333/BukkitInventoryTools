@@ -234,8 +234,8 @@ public class BIT extends JavaPlugin {
 	public static String oldDigilockTable = "BukkitInventoryTools3";
 	public static String bitInventoryTable = "Bookshelf";
 	public static String oldBitInventoryTable = "Bookshelf_NONE";
-	public static String booksTable = "Book";
-	public static String oldBooksTable = "Book_NONE";
+	public static String bookTable = "BookPRERELEASE";
+	public static String oldBookTable = "Book_NONE";
 
 	private void setupSQL() {
 		if (G333Config.STORAGE_TYPE.equals("MYSQL")) {
@@ -313,32 +313,36 @@ public class BIT extends JavaPlugin {
 					}
 
 					// Check BooksTable
-					if (!manageMySQL.checkTable(booksTable)) {
-						if (manageMySQL.checkTable(oldBooksTable)) {
-							G333Messages.showInfo("Upgrade " + oldBooksTable
-									+ " to " + bitInventoryTable + ".");
+					if (!manageMySQL.checkTable(bookTable)) {
+						if (manageMySQL.checkTable(oldBookTable)) {
+							G333Messages.showInfo("Upgrade " + oldBookTable
+									+ " to " + bookTable + ".");
 							query = "CREATE TABLE "
-									+ booksTable
-									+ " (x INT, y INT, z INT, world VARCHAR(255), "
-									+ "owner VARCHAR(255), "
-									+ "name VARCHAR(255), "
-									+ "coowners VARCHAR(255), "
-									+ "usecost INT, slotno INT, "
-									+ "itemstack_type INT, itemstack_amount INT, itemstack_durability INT) "
-									+ "AS SELECT x, y, z, world, owner, name, coowners, usecost, "
-									+ "itemstack_type, itemstack_amount, itemstack_durability FROM "
-									+ oldBooksTable + ";";
+									+ bookTable
+									+ " (playername TEXT, bookid INT, world TEXT, inventorytype INT,"
+									+ " x INT, y INT, z INT, slotno INT, title TEXT,"
+									+ " author TEXT, coauthor TEXT, "
+									+ " numberofpages INT, pageno INT, page TEXT,"
+									+ " mastercopy BOOLEAN, mastercopyid INT,"
+									+ " force BOOLEAN, moved BOOLEAN, copy BOOLEAN, usecost INT)"
+									+ "AS select playername, bookid, world, inventorytype,"
+									+ " x, y, z, slotno, title,"
+									+ " author, coauthor, "
+									+ " numberofpages, pageno, page,"
+									+ " mastercopy, mastercopyid,"
+									+ " force, moved, copy, usecost FROM "
+									+ oldBookTable + ";";
 						} else {
-							G333Messages.showInfo("Creating table "
-									+ booksTable);
+							G333Messages
+									.showInfo("Creating table " + bookTable);
 							query = "CREATE TABLE "
-									+ booksTable
-									+ " (x INT, y INT, z INT, world VARCHAR(255), "
-									+ "owner VARCHAR(255), "
-									+ "name VARCHAR(255), "
-									+ "coowners VARCHAR(255), "
-									+ "usecost INT, slotno INT, "
-									+ "itemstack_type INT, itemstack_amount INT, itemstack_durability INT); ";
+									+ bookTable
+									+ " (playername TEXT, bookid INT, world TEXT, inventorytype INT,"
+									+ " x INT, y INT, z INT, slotno INT, title TEXT,"
+									+ " author TEXT, coauthor TEXT, "
+									+ " numberofpages INT, pageno INT, page TEXT,"
+									+ " mastercopy BOOLEAN, mastercopyid INT,"
+									+ " force BOOLEAN, moved BOOLEAN, copy BOOLEAN, usecost INT);";
 						}
 						manageMySQL.createTable(query);
 					}
@@ -443,12 +447,12 @@ public class BIT extends JavaPlugin {
 			}
 
 			// Check BooksTable
-			if (!manageSQLite.checkTable(booksTable)) {
-				if (manageSQLite.checkTable(oldBooksTable)) {
-					G333Messages.showInfo("Upgrade " + oldBooksTable + " to "
-							+ booksTable + ".");
+			if (!manageSQLite.checkTable(bookTable)) {
+				if (manageSQLite.checkTable(oldBookTable)) {
+					G333Messages.showInfo("Upgrade " + oldBookTable + " to "
+							+ bookTable + ".");
 					query = "CREATE TABLE "
-							+ booksTable
+							+ bookTable
 							+ " ( playername TEXT, bookid INT, world TEXT, inventorytype INT,"
 							+ " x INT, y INT, z INT, slotno INT, title TEXT,"
 							+ " author TEXT, coauthor TEXT, "
@@ -456,7 +460,7 @@ public class BIT extends JavaPlugin {
 							+ " mastercopy BOOLEAN, mastercopyid INT,"
 							+ " force BOOLEAN, moved BOOLEAN, copy BOOLEAN, usecost INT);";
 					insert = "insert into "
-							+ booksTable
+							+ bookTable
 							+ " (playername, bookid, world, inventorytype,"
 							+ " x, y, z, slotno, title,"
 							+ " author, coauthor, "
@@ -469,13 +473,13 @@ public class BIT extends JavaPlugin {
 							+ " numberofpages, pageno, page,"
 							+ " mastercopy, mastercopyid,"
 							+ " force, moved, copy, usecost FROM "
-							+ oldBooksTable + ";";
+							+ oldBookTable + ";";
 					manageSQLite.createTable(query);
 					manageSQLite.insertQuery(insert);
 				} else {
-					G333Messages.showInfo("Creating table " + booksTable);
+					G333Messages.showInfo("Creating table " + bookTable);
 					query = "CREATE TABLE "
-							+ booksTable
+							+ bookTable
 							+ " (playername TEXT, bookid INT, world TEXT, inventorytype INT,"
 							+ " x INT, y INT, z INT, slotno INT, title TEXT,"
 							+ " author TEXT, coauthor TEXT, "
@@ -486,7 +490,7 @@ public class BIT extends JavaPlugin {
 					manageSQLite.createTable(query);
 				}
 			} else {
-				G333Messages.showInfo(booksTable + " exists.");
+				//G333Messages.showInfo(bookTable + " exists.");
 			}
 		}
 	}

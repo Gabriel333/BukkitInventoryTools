@@ -437,7 +437,7 @@ public class BITPlayerListener extends PlayerListener {
 								|| digilock.isCoowner(sPlayer)) {
 							G333Messages.sendNotification(sPlayer,
 									"Used with fingerprint");
-							if (sPlayer.isSpoutCraftEnabled()) {
+							if (sPlayer.isSpoutCraftEnabled()&&G333Config.LIBRARY_USESIGNEDITGUI) {
 								Sign sign = (Sign) block.getState();
 								sPlayer.openSignEditGUI(sign);
 							}
@@ -567,7 +567,7 @@ public class BITPlayerListener extends PlayerListener {
 
 			// HANDLING SIGN and SIGN_POST
 			else if (BITDigiLock.isSign(block)) {
-				if (event.getAction().equals(Action.RIGHT_CLICK_BLOCK)) {
+				if (event.getAction().equals(Action.RIGHT_CLICK_BLOCK)&&G333Config.LIBRARY_USESIGNEDITGUI) {
 					Sign sign = (Sign) block.getState();
 					sPlayer.openSignEditGUI(sign);
 				}

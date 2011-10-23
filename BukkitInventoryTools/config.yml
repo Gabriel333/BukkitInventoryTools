@@ -25,6 +25,9 @@ Library:
     LockKey: KEY_L
     MenuKey: DISABLED
     ReadKey: KEY_R
+    # If you want to disable Spouts SignEditGUI and use 
+    # the ordinary editor, set UseSignEditGUI: false
+    UseSignEditGUI: true
 
 ############################################################
 # +------------------------------------------------------+ #

@@ -10,7 +10,7 @@ import org.getspout.spoutapi.gui.ScreenType;
 import org.getspout.spoutapi.player.SpoutPlayer;
 
 import dk.gabriel333.BukkitInventoryTools.BIT;
-import dk.gabriel333.BukkitInventoryTools.BITEnums.BITInventoryType;
+import dk.gabriel333.BukkitInventoryTools.BITEnums.InventoryType;
 import dk.gabriel333.BukkitInventoryTools.DigiLock.BITDigiLock;
 import dk.gabriel333.BukkitInventoryTools.Inventory.BITInventory;
 import dk.gabriel333.BukkitInventoryTools.Sort.BITSortInventory;
@@ -162,12 +162,12 @@ public class BITBookInputListener extends InputListener {
 
 			// CUSTOM_SCREEN
 			else if (screentype == ScreenType.CUSTOM_SCREEN) {
-				G333Messages.sendNotification(sPlayer, "Key:"+keypressed);
+				//G333Messages.sendNotification(sPlayer, "Key:"+keypressed);
 				if (keypressed.equals("KEY_ESCAPE")) {
 					sPlayer.closeActiveWindow();
 					BITBook.cleanupPopupScreen(sPlayer);
 
-					sPlayer.sendMessage("You pressed escape - dropping current book");
+					//sPlayer.sendMessage("You pressed escape - dropping current book");
 					BITBook.bitBooks.remove(BITBook.currentBookId.get(id));
 					BITBook.currentBookId.put(id, 0);
 
@@ -186,7 +186,7 @@ public class BITBookInputListener extends InputListener {
 			int slotNo = sPlayer.getInventory().getHeldItemSlot();
 			BITBook bitBook = new BITBook();
 			
-			if (BITBook.isWritten(sPlayer, sBlock, BITInventoryType.PLAYER_INVENTORY,slotNo)) {
+			if (BITBook.isWritten(sPlayer, sBlock, InventoryType.PLAYER_INVENTORY,slotNo)) {
 				if (G333Permissions.hasPerm(sPlayer, "book.use",
 						G333Permissions.NOT_QUIET)
 						|| G333Permissions.hasPerm(sPlayer, "book.admin",
@@ -194,7 +194,7 @@ public class BITBookInputListener extends InputListener {
 					// TODO: get the bookId.
 					sPlayer.sendMessage("Open existing book");
 					int bookId=1;
-					bitBook.loadBook(sPlayer,sBlock,BITInventoryType.PLAYER_INVENTORY, slotNo, bookId);
+					bitBook.loadBook(sPlayer,sBlock,InventoryType.PLAYER_INVENTORY, slotNo, bookId);
 					bitBook.openBook(sPlayer,bookId);
 				}
 			} else {
@@ -226,7 +226,7 @@ public class BITBookInputListener extends InputListener {
 							+ numberOfPages);
 					sPlayer.sendMessage("BITBookInputListener-CurrentBookId:"
 							+ bookId);
-					bitBook.setBitBook(bookId, sPlayer.getName(), BITInventoryType.PLAYER_INVENTORY, sBlock, slotNo, title, author,
+					bitBook.setBitBook(bookId, sPlayer.getName(), InventoryType.PLAYER_INVENTORY, sBlock, slotNo, title, author,
 							coAuthors, numberOfPages, pages, masterCopy,
 							masterCopyId, forceBookToPlayerInventory,
 							canBeMovedFromInventory, copyTheBookWhenMoved,

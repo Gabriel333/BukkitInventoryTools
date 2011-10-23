@@ -284,20 +284,21 @@ public class BITDigiLockInputListener extends InputListener {
 				if (keypressed.equals("KEY_ESCAPE")) {
 					// TODO: the lever must swing back to off, when the
 					// player press ESC. Next lines does not work. :-(
-					//if (BITDigiLock.isLever(targetblock)) {
-					//	if ( BITDigiLock.isLeverOn(targetblock)) {
-					//		BITDigiLock.leverOff(sPlayer, targetblock);
-					//	} else {
-					//		BITDigiLock.leverOn(sPlayer, targetblock,0);
-					//	}
-					//	sPlayer.sendMessage("setting lever to off");
-					//	Lever lever = (Lever) targetblock.getState().getData();
-					//	lever.setPowered(false);
-					//}
-					Lever lever = (Lever) targetblock.getState().getData();
-					//lever.setPowered(false);
-					targetblock.setData((byte) (lever.getData() |8));
-					
+					// if (BITDigiLock.isLever(targetblock)) {
+					// if ( BITDigiLock.isLeverOn(targetblock)) {
+					// BITDigiLock.leverOff(sPlayer, targetblock);
+					// } else {
+					// BITDigiLock.leverOn(sPlayer, targetblock,0);
+					// }
+					// sPlayer.sendMessage("setting lever to off");
+					// Lever lever = (Lever) targetblock.getState().getData();
+					// lever.setPowered(false);
+					// }
+					if (BITDigiLock.isLever(targetblock)) {
+						Lever lever = (Lever) targetblock.getState().getData();
+						// lever.setPowered(false);
+						targetblock.setData((byte) (lever.getData() | 8));
+					}
 					sPlayer.closeActiveWindow();
 					BITDigiLock.cleanupPopupScreen(sPlayer);
 

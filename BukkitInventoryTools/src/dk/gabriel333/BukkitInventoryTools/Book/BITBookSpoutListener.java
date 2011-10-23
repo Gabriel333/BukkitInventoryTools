@@ -12,7 +12,7 @@ import org.getspout.spoutapi.player.SpoutPlayer;
 
 import dk.gabriel333.Library.G333Config;
 import dk.gabriel333.Library.G333Messages;
-import dk.gabriel333.BukkitInventoryTools.BITEnums.BITInventoryType;
+import dk.gabriel333.BukkitInventoryTools.BITEnums.InventoryType;
 
 public class BITBookSpoutListener extends SpoutListener {
 
@@ -27,9 +27,9 @@ public class BITBookSpoutListener extends SpoutListener {
 
 			if (BITBook.isWriteable(sBlock)
 					|| BITBook.isWriteable(itemInHand.getType())) {
-				sPlayer.sendMessage("BITBookSpoutListener-CurrentBookId:"
-						+ BITBook.currentBookId.get(id) + " button="
-						+ BITBook.BITButtons.get(uuid));
+				//sPlayer.sendMessage("BITBookSpoutListener-CurrentBookId:"
+				//		+ BITBook.currentBookId.get(id) + " button="
+				//		+ BITBook.BITButtons.get(uuid));
 
 				if (BITBook.BITButtons.get(uuid) == "saveBookButton") {
 					BITBook.popupScreen.get(id).close();
@@ -38,7 +38,7 @@ public class BITBookSpoutListener extends SpoutListener {
 					sPlayer.sendMessage("bookId="
 							+ BITBook.currentBookId.get(id) + " title="
 							+ BITBook.titleGUI.get(id).getText());
-					BITBook.saveBook(sPlayer, sBlock, BITBook.currentBookId.get(id), BITInventoryType.PLAYER_INVENTORY);
+					BITBook.saveBook(sPlayer, sBlock, BITBook.currentBookId.get(id), InventoryType.PLAYER_INVENTORY);
 
 				} else if (BITBook.BITButtons.get(uuid) == "cancelBookButton") {
 					BITBook.popupScreen.get(id).close();
@@ -125,13 +125,6 @@ public class BITBookSpoutListener extends SpoutListener {
 					}
 				}
 
-				/*
-				 * else if ((BITBook.BITButtons.get(uuid) == "useCostButton")) {
-				 * if (validateFields(sPlayer)) {
-				 * 
-				 * } }
-				 */
-
 				// ************************************
 				// This only happens if I have forgot to handle a button
 				// ************************************
@@ -156,7 +149,7 @@ public class BITBookSpoutListener extends SpoutListener {
 			G333Messages.sendNotification(sPlayer, "Cost must be less "
 					+ G333Config.BOOK_USEMAXCOST);
 			BITBook.useCostGUI.get(id).setText(
-					String.valueOf(G333Config.DIGILOCK_USEMAXCOST));
+					String.valueOf(G333Config.BOOK_USEMAXCOST));
 			BITBook.popupScreen.get(id).setDirty(true);
 			return false;
 		} else if (useCost < 0) {

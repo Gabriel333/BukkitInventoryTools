@@ -230,8 +230,8 @@ public class BIT extends JavaPlugin {
 	public static mysqlCore manageMySQL; // MySQL handler
 	public static sqlCore manageSQLite; // SQLite handler
 	public static Logger log = Logger.getLogger("Minecraft");
-	public static String digilockTable = "BukkitInventoryTools4";
-	public static String oldDigilockTable = "BukkitInventoryTools3";
+	public static String digilockTable = "BukkitInventoryTools5";
+	public static String oldDigilockTable = "BukkitInventoryTools4";
 	public static String bitInventoryTable = "Bookshelf";
 	public static String oldBitInventoryTable = "Bookshelf_NONE";
 	public static String bookTable = "BookPRERELEASE";
@@ -262,10 +262,10 @@ public class BIT extends JavaPlugin {
 									+ digilockTable
 									+ " (x INT, y INT, z INT, world VARCHAR(255), "
 									+ "owner VARCHAR(255), pincode VARCHAR(255), "
-									+ " coowners VARCHAR(255), closetimer INT, "
+									+ " coowners VARCHAR(255), users VARCHAR(255), closetimer INT, "
 									+ "typeid INT, connectedto VARCHAR(255), usecost INT) "
 									+ "AS SELECT x, y, z, world, owner, pincode, "
-									+ "coowners, closetimer, typeid, connectedto, usecost FROM "
+									+ "'none', coowners, closetimer, typeid, connectedto, usecost FROM "
 									+ oldDigilockTable + ";";
 						} else {
 							G333Messages.showInfo("Creating table "
@@ -273,7 +273,7 @@ public class BIT extends JavaPlugin {
 							query = "CREATE TABLE "
 									+ digilockTable
 									+ " (x INT, y INT, z INT, world VARCHAR(255), owner VARCHAR(255), "
-									+ "pincode VARCHAR(255), coowners VARCHAR(255), closetimer INT, "
+									+ "pincode VARCHAR(255), coowners VARCHAR(255), users VARCHAR(255), closetimer INT, "
 									+ "typeid INT, connectedto VARCHAR(255), usecost INT);";
 						}
 						manageMySQL.createTable(query);
@@ -374,15 +374,16 @@ public class BIT extends JavaPlugin {
 							+ " to " + digilockTable + ".");
 					query = "CREATE TABLE "
 							+ digilockTable
-							+ " (x INTEGER, y INTEGER, z INTEGER, world TEXT, owner TEXT, pincode TEXT, "
-							+ " coowners TEXT, closetimer INTEGER, "
-							+ "typeid INTEGER, connectedto TEXT, usecost INTEGER)";
+							+ " (x INTEGER, y INTEGER, z INTEGER, world TEXT, owner TEXT,"
+							+ " pincode TEXT, "
+							+ " coowners TEXT, users TEXT, closetimer INTEGER,"
+							+ " typeid INTEGER, connectedto TEXT, usecost INTEGER);";
 					insert = "insert into "
 							+ digilockTable
 							+ " (x, y, z, world, owner, pincode, "
-							+ "coowners, closetimer, usecost, connectedto, typeid) "
+							+ "coowners, users, closetimer, usecost, connectedto, typeid) "
 							+ "select x, y, z, world, owner, pincode,"
-							+ "coowners, closetimer, usecost, connectedto, typeid FROM "
+							+ "'none', coowners, closetimer, usecost, connectedto, typeid FROM "
 							+ oldDigilockTable + ";";
 					// G333Messages.showInfo("Create Table:" + query);
 					// G333Messages.showInfo("Insert:" + insert);
@@ -393,9 +394,10 @@ public class BIT extends JavaPlugin {
 					G333Messages.showInfo("Creating table " + digilockTable);
 					query = "CREATE TABLE "
 							+ digilockTable
-							+ " (x INTEGER, y INTEGER, z INTEGER, world TEXT, owner TEXT, pincode TEXT, "
-							+ " coowners TEXT, closetimer INTEGER, "
-							+ "typeid INTEGER, connectedto TEXT, usecost INTEGER)";
+							+ " (x INTEGER, y INTEGER, z INTEGER, world TEXT, owner TEXT,"
+							+ " pincode TEXT,"
+							+ " coowners TEXT, users TEXT, closetimer INTEGER,"
+							+ " typeid INTEGER, connectedto TEXT, usecost INTEGER);";
 					manageSQLite.createTable(query);
 				}
 			} else {

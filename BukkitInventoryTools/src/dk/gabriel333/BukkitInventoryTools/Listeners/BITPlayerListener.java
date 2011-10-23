@@ -70,7 +70,8 @@ public class BITPlayerListener extends PlayerListener {
 									Action.RIGHT_CLICK_BLOCK)) {
 						// OPEN CHEST BY FINGERPRINT / NAME
 						if (digilock.isOwner(sPlayer)
-								|| digilock.isCoowner(sPlayer)) {
+								|| digilock.isCoowner(sPlayer)
+								|| digilock.isUser(sPlayer)) {
 							SpoutChest sChest = (SpoutChest) block.getState();
 							Inventory inv = sChest.getLargestInventory();
 							G333Messages.sendNotification(sPlayer,
@@ -101,7 +102,8 @@ public class BITPlayerListener extends PlayerListener {
 									"fingerprint")) {
 						// TOGGLE DOOR BY FINGERPRINT / NAME
 						if (digilock.isOwner(sPlayer)
-								|| digilock.isCoowner(sPlayer)) {
+								|| digilock.isCoowner(sPlayer)
+								|| digilock.isUser(sPlayer)) {
 							BITDigiLock.playDigiLockSound(block);
 							if (BITDigiLock.isDoubleDoorOpen(block)) {
 								BITDigiLock.closeDoubleDoor(sPlayer, block, 0);
@@ -143,7 +145,8 @@ public class BITPlayerListener extends PlayerListener {
 									"fingerprint")) {
 						// TOGGLE DOOR BY FINGERPRINT / NAME
 						if (digilock.isOwner(sPlayer)
-								|| digilock.isCoowner(sPlayer)) {
+								|| digilock.isCoowner(sPlayer)
+								|| digilock.isUser(sPlayer)) {
 							BITDigiLock.playDigiLockSound(block);
 							if (BITDigiLock.isDoorOpen(block)) {
 								BITDigiLock.closeDoor(sPlayer, block, 0);
@@ -184,7 +187,8 @@ public class BITPlayerListener extends PlayerListener {
 									"fingerprint")) {
 						// TOGGLE DOOR BY FINGERPRINT / NAME
 						if (digilock.isOwner(sPlayer)
-								|| digilock.isCoowner(sPlayer)) {
+								|| digilock.isCoowner(sPlayer)
+								|| digilock.isUser(sPlayer)) {
 							BITDigiLock.playDigiLockSound(block);
 							if (BITDigiLock.isTrapdoorOpen(sPlayer, block)) {
 								BITDigiLock.closeTrapdoor(sPlayer, block);
@@ -225,7 +229,8 @@ public class BITPlayerListener extends PlayerListener {
 									Action.RIGHT_CLICK_BLOCK)) {
 						// USE DISPENSER BY FINGERPRINT (playername)
 						if (digilock.isOwner(sPlayer)
-								|| digilock.isCoowner(sPlayer)) {
+								|| digilock.isCoowner(sPlayer)
+								|| digilock.isUser(sPlayer)) {
 							G333Messages.sendNotification(sPlayer,
 									"Opened with fingerprint");
 							BITDigiLock.playDigiLockSound(digilock.getBlock());
@@ -257,7 +262,8 @@ public class BITPlayerListener extends PlayerListener {
 									Action.RIGHT_CLICK_BLOCK)) {
 						// USE FURNACE BY FINGERPRINT (playername)
 						if (digilock.isOwner(sPlayer)
-								|| digilock.isCoowner(sPlayer)) {
+								|| digilock.isCoowner(sPlayer)
+								|| digilock.isUser(sPlayer)) {
 							G333Messages.sendNotification(sPlayer,
 									"Used with fingerprint");
 							BITDigiLock.playDigiLockSound(digilock.getBlock());
@@ -293,7 +299,8 @@ public class BITPlayerListener extends PlayerListener {
 									"fingerprint")) {
 						// USE LEVER BY FINGERPRINT
 						if (digilock.isOwner(sPlayer)
-								|| digilock.isCoowner(sPlayer)) {
+								|| digilock.isCoowner(sPlayer)
+								|| digilock.isUser(sPlayer)) {
 							if (nextLockableBlock != null) {
 								if (BITDigiLock.isLocked(nextLockableBlock)) {
 									G333Messages.sendNotification(sPlayer,
@@ -347,7 +354,8 @@ public class BITPlayerListener extends PlayerListener {
 										event.setCancelled(true);
 									}
 								} else {
-									if (BITDigiLock.isDoubleDoor(nextLockableBlock)) {
+									if (BITDigiLock
+											.isDoubleDoor(nextLockableBlock)) {
 										BITDigiLock.closeDoubleDoor(sPlayer,
 												nextLockableBlock, 0);
 									} else if (BITDigiLock
@@ -396,7 +404,8 @@ public class BITPlayerListener extends PlayerListener {
 						// (playername)
 						Button button = (Button) block.getState().getData();
 						if (digilock.isOwner(sPlayer)
-								|| digilock.isCoowner(sPlayer)) {
+								|| digilock.isCoowner(sPlayer)
+								|| digilock.isUser(sPlayer)) {
 							G333Messages.sendNotification(sPlayer,
 									"Used with fingerprint");
 							BITDigiLock.playDigiLockSound(block);
@@ -434,10 +443,12 @@ public class BITPlayerListener extends PlayerListener {
 									Action.RIGHT_CLICK_BLOCK)) {
 						// USE SIGN BY FINGERPRINT (playername)
 						if (digilock.isOwner(sPlayer)
-								|| digilock.isCoowner(sPlayer)) {
+								|| digilock.isCoowner(sPlayer)
+								|| digilock.isUser(sPlayer)) {
 							G333Messages.sendNotification(sPlayer,
 									"Used with fingerprint");
-							if (sPlayer.isSpoutCraftEnabled()&&G333Config.LIBRARY_USESIGNEDITGUI) {
+							if (sPlayer.isSpoutCraftEnabled()
+									&& G333Config.LIBRARY_USESIGNEDITGUI) {
 								Sign sign = (Sign) block.getState();
 								sPlayer.openSignEditGUI(sign);
 							}
@@ -473,7 +484,8 @@ public class BITPlayerListener extends PlayerListener {
 									Action.RIGHT_CLICK_BLOCK)) {
 						// USE SIGN BY FINGERPRINT (playername)
 						if (digilock.isOwner(sPlayer)
-								|| digilock.isCoowner(sPlayer)) {
+								|| digilock.isCoowner(sPlayer)
+								|| digilock.isUser(sPlayer)) {
 							G333Messages.sendNotification(sPlayer,
 									"Used with fingerprint");
 							// if (sPlayer.isSpoutCraftEnabled()) {
@@ -567,7 +579,8 @@ public class BITPlayerListener extends PlayerListener {
 
 			// HANDLING SIGN and SIGN_POST
 			else if (BITDigiLock.isSign(block)) {
-				if (event.getAction().equals(Action.RIGHT_CLICK_BLOCK)&&G333Config.LIBRARY_USESIGNEDITGUI) {
+				if (event.getAction().equals(Action.RIGHT_CLICK_BLOCK)
+						&& G333Config.LIBRARY_USESIGNEDITGUI) {
 					Sign sign = (Sign) block.getState();
 					sPlayer.openSignEditGUI(sign);
 				}

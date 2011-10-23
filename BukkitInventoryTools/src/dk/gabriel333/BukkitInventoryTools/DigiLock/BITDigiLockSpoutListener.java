@@ -149,6 +149,7 @@ public class BITDigiLockSpoutListener extends SpoutListener {
 										.valueOf(BITDigiLock.closetimerGUI.get(
 												id).getText()),
 								BITDigiLock.coOwnersGUI.get(id).getText(),
+								BITDigiLock.usersGUI.get(id).getText(),
 								sBlock.getTypeId(), "", Integer
 										.valueOf(BITDigiLock.useCostGUI.get(id)
 												.getText()));
@@ -175,6 +176,10 @@ public class BITDigiLockSpoutListener extends SpoutListener {
 					}
 
 				} else if ((BITDigiLock.BITDigiLockButtons.get(uuid) == "CoOwnerButton")) {
+					if (validateSetPincodeFields(sPlayer)) {
+					}
+
+				} else if ((BITDigiLock.BITDigiLockButtons.get(uuid) == "usersButton")) {
 					if (validateSetPincodeFields(sPlayer)) {
 					}
 

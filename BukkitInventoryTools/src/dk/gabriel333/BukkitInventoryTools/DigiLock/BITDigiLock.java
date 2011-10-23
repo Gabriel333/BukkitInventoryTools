@@ -46,6 +46,7 @@ public class BITDigiLock {
 	protected String owner;
 	protected int closetimer;
 	protected String coOwners;
+	protected String users;
 	protected int typeId;
 	protected String connectedTo;
 	protected int useCost;
@@ -58,17 +59,20 @@ public class BITDigiLock {
 	 * @param owner
 	 * @param closetimer
 	 * @param coowners
+	 * @param users
 	 * @param typeId
 	 * @param connectedTo
 	 * @param useCost
 	 */
 	BITDigiLock(SpoutBlock block, String pincode, String owner, int closetimer,
-			String coowners, int typeId, String connectedTo, int useCost) {
+			String coowners, String users, int typeId, String connectedTo,
+			int useCost) {
 		this.sBlock = block;
 		this.pincode = pincode;
 		this.owner = owner;
 		this.closetimer = closetimer;
 		this.coOwners = coowners;
+		this.users = users;
 		this.typeId = typeId;
 		this.connectedTo = connectedTo;
 		this.useCost = useCost;
@@ -101,7 +105,7 @@ public class BITDigiLock {
 	 */
 	public static void SaveDigiLock(SpoutPlayer sPlayer, SpoutBlock block,
 			String pincode, String owner, Integer closetimer, String coowners,
-			int typeId, String connectedTo, int useCost) {
+			String users, int typeId, String connectedTo, int useCost) {
 		String query;
 		boolean createlock = true;
 		boolean newLock = true;
@@ -111,8 +115,9 @@ public class BITDigiLock {
 			newLock = false;
 			query = "UPDATE " + BIT.digilockTable + " SET pincode='" + pincode
 					+ "', owner='" + owner + "', closetimer=" + closetimer
-					+ " , coowners='" + coowners + "', typeid=" + typeId
-					+ ", connectedto='" + connectedTo + "', usecost=" + useCost
+					+ " , coowners='" + coowners + "' , users='" + users
+					+ "', typeid=" + typeId + ", connectedto='" + connectedTo
+					+ "', usecost=" + useCost
 
 					+ " WHERE x = " + block.getX() + " AND y = " + block.getY()
 					+ " AND z = " + block.getZ() + " AND world='"
@@ -121,13 +126,13 @@ public class BITDigiLock {
 			// NEW DIGILOCK
 			query = "INSERT INTO " + BIT.digilockTable
 					+ " (pincode, owner, closetimer, "
-					+ "x, y, z, world, coowners, "
+					+ "x, y, z, world, coowners, users, "
 					+ "typeid, connectedto, usecost) VALUES ('" + pincode
 					+ "', '" + owner + "', " + closetimer + ", " + block.getX()
 					+ ", " + block.getY() + ", " + block.getZ() + ", '"
-					+ block.getWorld().getName() + "', '" + coowners + "', "
-					+ block.getTypeId() + ", '" + connectedTo + "', " + useCost
-					+ " );";
+					+ block.getWorld().getName() + "', '" + coowners + "', '"
+					+ users + "', " + block.getTypeId() + ", '" + connectedTo
+					+ "', " + useCost + " );";
 			if (BIT.useEconomy) {
 				if (BIT.plugin.Method.hasAccount(sPlayer.getName()) && cost > 0) {
 					if (BIT.plugin.Method.getAccount(sPlayer.getName())
@@ -264,6 +269,13 @@ public class BITDigiLock {
 		return false;
 	}
 
+	public boolean isUser(SpoutPlayer sPlayer) {
+		if (users.toLowerCase().contains(sPlayer.getName().toLowerCase())
+				|| users.toLowerCase().contains("everyone"))
+			return true;
+		return false;
+	}
+
 	/**
 	 * Checks if sPlayer is Owner of the DigiLock.
 	 * 
@@ -297,6 +309,19 @@ public class BITDigiLock {
 		if (coOwners.toLowerCase().contains(name.toLowerCase())) {
 			this.coOwners = coOwners.replace(name, "");
 			this.coOwners = coOwners.replace(",,", ",");
+			return true;
+		}
+		return false;
+	}
+
+	public void addUser(String name) {
+		this.users = users.concat("," + name);
+	}
+
+	public boolean removeUser(String name) {
+		if (users.toLowerCase().contains(name.toLowerCase())) {
+			this.users = users.replace(name, "");
+			this.users = users.replace(",,", ",");
 			return true;
 		}
 		return false;
@@ -348,6 +373,10 @@ public class BITDigiLock {
 		return coOwners;
 	}
 
+	public String getUsers() {
+		return users;
+	}
+
 	public SpoutBlock getBlock() {
 		return sBlock;
 	}
@@ -380,6 +409,10 @@ public class BITDigiLock {
 		this.coOwners = coowners;
 	}
 
+	public void setUsers(String users) {
+		this.users = users;
+	}
+
 	public void setUseCost(int useCost) {
 		this.useCost = useCost;
 	}
@@ -389,12 +422,14 @@ public class BITDigiLock {
 	}
 
 	public void setDigiLock(SpoutBlock block, String pincode, String owner,
-			int closetimer, String coowners, String connectedTo, int useCost) {
+			int closetimer, String coowners, String users, String connectedTo,
+			int useCost) {
 		this.sBlock = block;
 		this.pincode = pincode;
 		this.owner = owner;
 		this.closetimer = closetimer;
 		this.coOwners = coowners;
+		this.users = users;
 		this.typeId = block.getTypeId();
 		this.connectedTo = connectedTo;
 		this.useCost = useCost;
@@ -429,11 +464,13 @@ public class BITDigiLock {
 				String owner = result.getString("owner");
 				int closetimer = result.getInt("closetimer");
 				String coowners = result.getString("coowners");
+				String users = result.getString("users");
 				int typeId = result.getInt("typeId");
 				String connectedTo = result.getString("connectedto");
 				int useCost = result.getInt("usecost");
 				BITDigiLock digilock = new BITDigiLock(block, pincode, owner,
-						closetimer, coowners, typeId, connectedTo, useCost);
+						closetimer, coowners, users, typeId, connectedTo,
+						useCost);
 				return digilock;
 			} else {
 				return null;
@@ -650,7 +687,8 @@ public class BITDigiLock {
 			}
 			boolean pressButton = true;
 			if (BIT.useEconomy && cost > 0 && doTheWork
-					&& !isOwner(sPlayer, sBlock)) {
+					&& digilock.isUser(sPlayer) && !(digilock.isOwner(sPlayer)
+					|| digilock.isCoowner(sPlayer))) {
 				if (BIT.plugin.Method.hasAccount(sPlayer.getName())) {
 					if (BIT.plugin.Method.getAccount(sPlayer.getName())
 							.hasEnough(cost)) {
@@ -757,7 +795,9 @@ public class BITDigiLock {
 				}
 				boolean setleveron = true;
 				if (BIT.useEconomy && cost > 0 && doTheWork
-						&& !isOwner(sPlayer, sBlock)) {
+						&& digilock.isUser(sPlayer)
+						&& !(digilock.isOwner(sPlayer)
+						||digilock.isCoowner(sPlayer))) {
 					if (BIT.plugin.Method.hasAccount(sPlayer.getName())) {
 						if (BIT.plugin.Method.getAccount(sPlayer.getName())
 								.hasEnough(cost)) {
@@ -883,7 +923,8 @@ public class BITDigiLock {
 	public static void openDoor(SpoutPlayer sPlayer, SpoutBlock sBlock, int cost) {
 		boolean opendoor = true;
 		BITDigiLock digilock = loadDigiLock(sBlock);
-		if (BIT.useEconomy && cost > 0 && !isOwner(sPlayer, sBlock)) {
+		if (BIT.useEconomy && cost > 0 && digilock.isUser(sPlayer) 
+				&& !(digilock.isOwner(sPlayer) || digilock.isCoowner(sPlayer))) {
 			if (BIT.plugin.Method.hasAccount(sPlayer.getName())) {
 				if (BIT.plugin.Method.getAccount(sPlayer.getName()).hasEnough(
 						cost)) {
@@ -932,7 +973,8 @@ public class BITDigiLock {
 			int cost) {
 		boolean closedoor = true;
 		BITDigiLock digilock = loadDigiLock(sBlock);
-		if (BIT.useEconomy && cost > 0 && !isOwner(sPlayer, sBlock)) {
+		if (BIT.useEconomy && cost > 0 && digilock.isUser(sPlayer)
+				&& !(digilock.isOwner(sPlayer) || digilock.isCoowner(sPlayer))) {
 			if (BIT.plugin.Method.hasAccount(sPlayer.getName())) {
 				if (BIT.plugin.Method.getAccount(sPlayer.getName()).hasEnough(
 						cost)) {
@@ -1053,7 +1095,8 @@ public class BITDigiLock {
 			int cost) {
 		boolean opentrapdoor = true;
 		BITDigiLock digilock = loadDigiLock(sBlock);
-		if (BIT.useEconomy && cost > 0 && !isOwner(sPlayer, sBlock)) {
+		if (BIT.useEconomy && cost > 0 && digilock.isUser(sPlayer)
+				&& !(digilock.isOwner(sPlayer) || digilock.isCoowner(sPlayer))) {
 			if (BIT.plugin.Method.hasAccount(sPlayer.getName())) {
 				if (BIT.plugin.Method.getAccount(sPlayer.getName()).hasEnough(
 						cost)) {
@@ -1307,6 +1350,7 @@ public class BITDigiLock {
 	public static Map<Integer, GenericTextField> ownerGUI = new HashMap<Integer, GenericTextField>();
 	public static Map<Integer, GenericTextField> closetimerGUI = new HashMap<Integer, GenericTextField>();
 	public static Map<Integer, GenericTextField> coOwnersGUI = new HashMap<Integer, GenericTextField>();
+	public static Map<Integer, GenericTextField> usersGUI = new HashMap<Integer, GenericTextField>();
 	public static Map<Integer, GenericTextField> useCostGUI = new HashMap<Integer, GenericTextField>();
 	public static Map<Integer, GenericTextField> connectedToGUI = new HashMap<Integer, GenericTextField>();
 
@@ -1398,6 +1442,7 @@ public class BITDigiLock {
 		itemwidget.setHeight(height * 2).setWidth(height * 2)
 				.setDepth(height * 2);
 		itemwidget.setTooltip("Locked inventory");
+		itemwidget.setMargin(5).setFixed(false);
 		popupScreen.get(id).attachWidget(BIT.plugin, itemwidget);
 		y = y + 3 * height;
 
@@ -1444,6 +1489,7 @@ public class BITDigiLock {
 			pincodeGUI.get(id).setText(digilock.getPincode());
 			ownerGUI.get(id).setText(digilock.getOwner());
 			coOwnersGUI.get(id).setText(digilock.getCoOwners());
+			usersGUI.get(id).setText(digilock.getUsers());
 			closetimerGUI.get(id).setText(
 					Integer.toString(digilock.getClosetimer()));
 			useCostGUI.get(id).setText(Integer.toString(digilock.getUseCost()));
@@ -1451,6 +1497,7 @@ public class BITDigiLock {
 			pincodeGUI.get(id).setText("");
 			ownerGUI.get(id).setText(sPlayer.getName());
 			coOwnersGUI.get(id).setText("");
+			usersGUI.get(id).setText("");
 			closetimerGUI.get(id).setText("0");
 			useCostGUI.get(id).setText("0");
 		}
@@ -1485,7 +1532,7 @@ public class BITDigiLock {
 		w3 = 50;
 		w4 = 50;
 
-		y = 170;
+		y = 165;
 		// ownerButton
 		GenericButton ownerButton = new GenericButton("Owner");
 		ownerButton.setAuto(false).setX(x).setY(y).setHeight(height)
@@ -1545,6 +1592,21 @@ public class BITDigiLock {
 		popupScreen.get(id).attachWidget(BIT.plugin, coOwnersGUI.get(id));
 		y = y + height;
 
+		// setUsersButton
+		GenericButton usersButton = new GenericButton("Users");
+		usersButton.setAuto(false).setX(x).setY(y).setHeight(height)
+				.setWidth(w1);
+		usersButton.setTooltip("users must be seperated by a comma.");
+		popupScreen.get(id).attachWidget(BIT.plugin, usersButton);
+		BITDigiLockButtons.put(usersButton.getId(), "usersButton");
+		// listOfUsers
+		usersGUI.get(id).setX(x + w1 + 1).setY(y).setWidth(340)
+				.setHeight(height);
+		usersGUI.get(id).setMaximumCharacters(200);
+		usersGUI.get(id).setText(usersGUI.get(id).getText());
+		popupScreen.get(id).attachWidget(BIT.plugin, usersGUI.get(id));
+		y = y + height;
+
 		// Second row ------------X=170-270-370------------------------------
 		y = 110;
 		x = 180;
@@ -1601,6 +1663,7 @@ public class BITDigiLock {
 			pincodeGUI.remove(id);
 			ownerGUI.remove(id);
 			coOwnersGUI.remove(id);
+			usersGUI.remove(id);
 			closetimerGUI.remove(id);
 			useCostGUI.remove(id);
 			connectedToGUI.remove(id);
@@ -1615,6 +1678,7 @@ public class BITDigiLock {
 			pincodeGUI.put(id, new GenericTextField());
 			ownerGUI.put(id, new GenericTextField());
 			coOwnersGUI.put(id, new GenericTextField());
+			usersGUI.put(id, new GenericTextField());
 			closetimerGUI.put(id, new GenericTextField());
 			useCostGUI.put(id, new GenericTextField());
 			connectedToGUI.put(id, new GenericTextField());

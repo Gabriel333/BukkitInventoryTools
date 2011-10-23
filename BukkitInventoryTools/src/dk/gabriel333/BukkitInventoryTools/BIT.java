@@ -1,6 +1,8 @@
 package dk.gabriel333.BukkitInventoryTools;
 
 import java.net.MalformedURLException;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.logging.Logger;
 
 import org.bukkit.command.CommandSender;
@@ -47,6 +49,10 @@ public class BIT extends JavaPlugin {
 	// Hook into MyWolf
 	public static Boolean mywolf = false;
 	public static MyWolfPlugin myWolfPlugin;
+	
+	// Playerdata
+	public static Map<Integer, String> holdingKey = new HashMap<Integer, String>();
+	
 
 	@Override
 	public void onEnable() {
@@ -138,6 +144,11 @@ public class BIT extends JavaPlugin {
 				Event.Priority.Normal, this);
 		pm.registerEvent(Event.Type.CUSTOM_EVENT, new BITBookSpoutListener(),
 				Event.Priority.Normal, this);
+		
+		// BITKeyboardListener
+		pm.registerEvent(Event.Type.CUSTOM_EVENT, new BITKeyboardListener(),
+				Event.Priority.Normal, this);
+		
 	}
 
 	@Override

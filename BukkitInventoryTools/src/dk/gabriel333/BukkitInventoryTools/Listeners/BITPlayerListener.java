@@ -21,6 +21,7 @@ import org.getspout.spoutapi.block.SpoutBlock;
 import org.getspout.spoutapi.block.SpoutChest;
 import org.getspout.spoutapi.player.SpoutPlayer;
 
+import dk.gabriel333.BukkitInventoryTools.BIT;
 import dk.gabriel333.BukkitInventoryTools.DigiLock.BITDigiLock;
 import dk.gabriel333.BukkitInventoryTools.Inventory.BITInventory;
 import dk.gabriel333.Library.G333Config;
@@ -51,10 +52,11 @@ public class BITPlayerListener extends PlayerListener {
 			return;
 		}
 		int id = sPlayer.getEntityId();
-		if (G333Config.DEBUG_GUI)
-			sPlayer.sendMessage("BITPlayerListener:Event:"
-					+ event.getEventName() + " action:" + event.getAction()
-					+ " Block:" + event.getClickedBlock());
+
+		if (G333Config.DEBUG_GUI) sPlayer.sendMessage("BITPlayerListener:" + " Your action was:"
+				+ event.getAction() + " on block:" + block.getType() + " with:"
+				+ itemInHand.getType() + " while holding:"
+				+ BIT.holdingKey.get(id));
 
 		// HANDLING THAT PLAYER CLICK ON A BLOCK WITH A DIGILOCK
 		if (BITDigiLock.isLocked(block)) {
@@ -448,7 +450,9 @@ public class BITPlayerListener extends PlayerListener {
 							G333Messages.sendNotification(sPlayer,
 									"Used with fingerprint");
 							if (sPlayer.isSpoutCraftEnabled()
-									&& G333Config.LIBRARY_USESIGNEDITGUI) {
+									&& G333Config.LIBRARY_USESIGNEDITGUI
+									&& BIT.holdingKey.get(id).equals(
+											"KEY_LSHIFT")) {
 								Sign sign = (Sign) block.getState();
 								sPlayer.openSignEditGUI(sign);
 							}

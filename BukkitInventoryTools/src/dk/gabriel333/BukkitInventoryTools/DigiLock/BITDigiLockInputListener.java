@@ -29,8 +29,9 @@ public class BITDigiLockInputListener extends InputListener {
 		String keypressed = event.getKey().name();
 		if (!(keypressed.equals(G333Config.LIBRARY_SORTKEY)
 				|| keypressed.equals(G333Config.LIBRARY_LOCKKEY)
-				|| keypressed.equals("KEY_ESCAPE") || keypressed
-					.equals("KEY_RETURN")))
+				|| keypressed.equals("KEY_ESCAPE")
+				|| keypressed.equals("KEY_RETURN") || keypressed
+					.equals("KEY_E")))
 			return;
 		SpoutBlock targetblock = (SpoutBlock) sPlayer.getTargetBlock(null, 5);
 
@@ -121,7 +122,8 @@ public class BITDigiLockInputListener extends InputListener {
 										"Bookshelf sorted.");
 							}
 						}
-					} else if (keypressed.equals("KEY_ESCAPE")) {
+					} else if (keypressed.equals("KEY_ESCAPE")
+							|| keypressed.equals("KEY_E")) {
 						int id = sPlayer.getEntityId();
 						BITInventory bitInventory = BITInventory.openedInventories
 								.get(id);
@@ -281,7 +283,7 @@ public class BITDigiLockInputListener extends InputListener {
 
 			// CUSTOM_SCREEN
 			else if (screentype == ScreenType.CUSTOM_SCREEN) {
-				if (keypressed.equals("KEY_ESCAPE")) {
+				if (keypressed.equals("KEY_ESCAPE")||keypressed.equals("KEY_E")) {
 					// TODO: the lever must swing back to off, when the
 					// player press ESC. Next lines does not work. :-(
 					// if (BITDigiLock.isLever(targetblock)) {

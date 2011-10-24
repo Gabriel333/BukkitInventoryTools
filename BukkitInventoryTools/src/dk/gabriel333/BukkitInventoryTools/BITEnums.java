@@ -18,7 +18,7 @@ public class BITEnums {
 			this.desc = desc;
 		}
 
-		public int inventoryType() {
+		public int inventoryTypeId() {
 			return this.type;
 		}
 

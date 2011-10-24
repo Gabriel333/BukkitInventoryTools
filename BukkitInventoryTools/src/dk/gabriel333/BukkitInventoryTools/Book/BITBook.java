@@ -263,34 +263,37 @@ public class BITBook {
 		case PLAYER_INVENTORY:
 			query = "SELECT * FROM " + BIT.bookTable + " WHERE (slotno = "
 					+ slotNo + " AND world='" + sPlayer.getWorld().getName()
-					+ "' AND inventorytype = " + inventoryType
-					+ " AND playername=" + sPlayer.getName() + ");";
+					+ "' AND inventorytype = " + inventoryType.inventoryTypeId()
+					+ " AND playername='" + sPlayer.getName() + "');";
 			break;
 		case SPOUTBACKPACK_INVENTORY:
 			query = "SELECT * FROM " + BIT.bookTable + " WHERE (slotno = "
 					+ slotNo + " AND world='" + sPlayer.getWorld().getName()
-					+ "' AND inventorytype = " + inventoryType
-					+ " AND playername=" + sPlayer.getName() + ");";
+					+ "' AND inventorytype = " + inventoryType.inventoryTypeId()
+					+ " AND playername='" + sPlayer.getName() + "');";
 			break;
 		case CHEST_INVENTORY:
 			query = "SELECT * FROM " + BIT.bookTable + " WHERE (slotno = "
 					+ slotNo + " AND world='" + sPlayer.getWorld().getName()
-					+ "' AND inventorytype = " + inventoryType + " AND x= "
+					+ "' AND inventorytype = " + inventoryType.inventoryTypeId() + " AND x= "
 					+ sBlock.getX() + " AND y= " + sBlock.getY() + " AND z= "
 					+ sBlock.getZ() + " AND playername='' " + ");";
 			break;
 		case BOOKSHELF_INVENTORY:
 			query = "SELECT * FROM " + BIT.bookTable + " WHERE (slotno = "
 					+ slotNo + " AND world='" + sPlayer.getWorld().getName()
-					+ "' AND inventorytype = " + inventoryType + " AND x= "
+					+ "' AND inventorytype = " + inventoryType.inventoryTypeId() + " AND x= "
 					+ sBlock.getX() + " AND y= " + sBlock.getY() + " AND z= "
 					+ sBlock.getZ() + " AND playername='' " + ");";
 
 			break;
 		default:
 		}
-		//sPlayer.sendMessage("BITBook-trying to query:" + query);
-
+		
+		if (G333Config.DEBUG_SQL)
+			sPlayer.sendMessage(ChatColor.YELLOW + "IsWritten: "
+					+ query);
+		
 		ResultSet result = null;
 		if (G333Config.STORAGE_TYPE.equals("MYSQL")) {
 			try {
@@ -318,20 +321,13 @@ public class BITBook {
 	}
 
 	public static void saveBook(SpoutPlayer sPlayer, SpoutBlock sBlock,
-			int bookId, InventoryType inventoryType) {
+			int bookId, InventoryType inventoryType, int slotNo) {
 		int id = sPlayer.getEntityId();
-
-		// for (int i = 0; i < numberOfPagesGUI.get(id); i++) {
-		// pagesGUI2.get(id)[i] = getPages(i);
-		// pagesGUI.get(id).setText(pagesGUI2.get(id)[i]);
-		// }
-
 		bitBooks.put(
 				bookId,
-				new BITBook(bookId, sPlayer.getName(), inventoryType, bitBooks
-						.get(bookId).getBlock(), bitBooks.get(bookId)
-						.getSlotNo(), titleGUI.get(id).getText(), authorGUI
-						.get(id).getText(), coAuthorsGUI.get(id).getText(),
+				new BITBook(bookId, sPlayer.getName(), inventoryType, sBlock,
+						slotNo, titleGUI.get(id).getText(), authorGUI.get(id)
+								.getText(), coAuthorsGUI.get(id).getText(),
 						numberOfPagesGUI.get(id), pagesGUI2.get(id),
 						masterCopyGUI.get(id), masterCopyIdGUI.get(id),
 						forceBookToPlayerInventoryGUI.get(id),
@@ -342,8 +338,7 @@ public class BITBook {
 		String query = "";
 		boolean createBook = true;
 		int cost = G333Config.BOOK_COST;
-		if (BITBook.isWritten(sPlayer, sBlock, inventoryType,
-				bitBooks.get(bookId).getSlotNo())) {
+		if (BITBook.isWritten(sPlayer, sBlock, inventoryType, slotNo)) {
 			for (int i = 0; i < bitBooks.get(bookId).getNumberOfPages(); i++) {
 				// TODO: decide what to do when block is null?
 				switch (inventoryType) {
@@ -593,49 +588,15 @@ public class BITBook {
 				for (int i = 0; i < bitBooks.get(bookId).getNumberOfPages(); i++) {
 					query = "INSERT INTO "
 							+ BIT.bookTable
-							+ "( bookid="
-							+ bookId
-							+ ", world='"
-							+ sPlayer.getWorld().getName()
-							+ "', inventorytype="
-							+ bitBooks.get(bookId).getInventoryType()
-							+ ", x="
-							+ bitBooks.get(bookId).getBlock().getX()
-							+ ", y="
-							+ bitBooks.get(bookId).getBlock().getY()
-							+ ", z="
-							+ bitBooks.get(bookId).getBlock().getZ()
-							+ ", slotno="
-							+ bitBooks.get(bookId).getSlotNo()
-							+ ", title='"
-							+ bitBooks.get(bookId).getTitle()
-							+ "', author='"
-							+ bitBooks.get(bookId).getAuthor()
-							+ "', coauthor='"
-							+ bitBooks.get(bookId).getCoAuthors()
-							+ "', numberofpages="
-							+ bitBooks.get(bookId).getNumberOfPages()
-							+ ", pageno="
-							+ i
-							+ ", page='"
-							+ bitBooks.get(bookId).getPages(i)
-							+ "', mastercopy='"
-							+ bitBooks.get(bookId).getMasterCopy()
-							+ "', mastercopyid="
-							+ bitBooks.get(bookId)
-							+ ", force='"
-							+ bitBooks.get(bookId)
-									.getForceBookToPlayerInventory()
-							+ "', moved='"
-							+ bitBooks.get(bookId).getCanBeMovedFromInventory()
-							+ "', copy='"
-							+ bitBooks.get(bookId).getCopyTheBookWhenMoved()
-							+ "') VALUES ( "
+							+ "( bookid, world, inventorytype, x, y, z, slotno, title,"
+							+ "author, coauthor, numberofpages, pageno, page, mastercopy,"
+							+ "mastercopyid, force, moved, copy) VALUES ( "
 							+ bookId
 							+ ", '"
 							+ sPlayer.getWorld().getName()
 							+ "', "
 							+ bitBooks.get(bookId).getInventoryType()
+									.inventoryTypeId()
 							+ ", "
 							+ bitBooks.get(bookId).getBlock().getX()
 							+ ", "
@@ -659,7 +620,7 @@ public class BITBook {
 							+ "', '"
 							+ bitBooks.get(bookId).getMasterCopy()
 							+ "', "
-							+ bitBooks.get(bookId)
+							+ bitBooks.get(bookId).getMasterCopyId()
 							+ ", '"
 							+ bitBooks.get(bookId)
 									.getForceBookToPlayerInventory() + "', '"
@@ -667,7 +628,6 @@ public class BITBook {
 							+ "', '"
 							+ bitBooks.get(bookId).getCopyTheBookWhenMoved()
 							+ "' );";
-					// sPlayer.sendMessage("Insert:" + query);
 					if (G333Config.DEBUG_SQL)
 						sPlayer.sendMessage(ChatColor.YELLOW
 								+ "Insert to bookTable: " + query);
@@ -739,14 +699,14 @@ public class BITBook {
 						+ bookId + " world='" + sPlayer.getWorld().getName()
 						+ "' AND playername='" + sPlayer.getName()
 						+ "' AND slotNo=" + slotNo + " AND inventorytype="
-						+ inventoryType + ";";
+						+ inventoryType.inventoryTypeId() + ";";
 				break;
 			case SPOUTBACKPACK_INVENTORY:
 				query = "select * FROM " + BIT.oldBookTable + " WHERE bookid="
 						+ bookId + " world='" + sPlayer.getWorld().getName()
 						+ "' AND playername='" + sPlayer.getName()
 						+ "' AND slotNo=" + slotNo + " AND inventorytype="
-						+ inventoryType + ";";
+						+ inventoryType.inventoryTypeId() + ";";
 				break;
 			case CHEST_INVENTORY:
 				// TODO: add block,x,y,z
@@ -755,7 +715,7 @@ public class BITBook {
 						+ "' AND playername=''" + " AND x= " + sBlock.getX()
 						+ " AND y= " + sBlock.getY() + " AND z= "
 						+ sBlock.getZ() + " AND slotNo=" + slotNo
-						+ " AND inventorytype=" + inventoryType + ";";
+						+ " AND inventorytype=" + inventoryType.inventoryTypeId() + ";";
 				break;
 			}
 
@@ -772,14 +732,12 @@ public class BITBook {
 				}
 			} else { // SQLLITE
 				result = BIT.manageSQLite.sqlQuery(query);
-				// sPlayer.sendMessage("Result:" + result.toString());
 			}
 			int i = 0;
 			int resX = 0, resY = 0, resZ = 0;
 
 			try {
 				while (result != null && result.next()) {
-					// && i < size
 					resBookId = result.getInt("bookid");
 					resInventoryType = result.getInt("inventorytype");
 					resX = result.getInt("x");
@@ -800,12 +758,6 @@ public class BITBook {
 					resCopyTheBookWhenMoved = result.getBoolean("copy");
 					;
 					resUseCost = result.getInt("usecost");
-					// sPlayer.sendMessage("i:" + i + ");
-					if (sBlock == null) {
-
-					} else {
-
-					}
 					G333Messages.showInfo("i:" + i + " inv_type="
 							+ resInventoryType);
 					i++;

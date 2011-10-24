@@ -39,14 +39,14 @@ public class BITPlayerListener extends PlayerListener {
 				.getAction().equals(Action.LEFT_CLICK_BLOCK))) {
 			return;
 		}
-		SpoutBlock block = (SpoutBlock) event.getClickedBlock();
+		SpoutBlock sBlock = (SpoutBlock) event.getClickedBlock();
 		// for faster handling
-		if (!BITDigiLock.isLockable(block)) {
+		if (!BITDigiLock.isLockable(sBlock)) {
 			return;
 		}
 		SpoutPlayer sPlayer = (SpoutPlayer) event.getPlayer();
 		ItemStack itemInHand = sPlayer.getInventory().getItemInHand();
-		if (itemInHand.getType().equals(block.getType())) {
+		if (itemInHand.getType().equals(sBlock.getType())) {
 			// This allows the user to place a new Bookshelf on a Bookshelf
 			// where the Inventory is created.
 			return;
@@ -55,323 +55,302 @@ public class BITPlayerListener extends PlayerListener {
 
 		if (G333Config.DEBUG_GUI)
 			sPlayer.sendMessage("BITPlayerListener:" + " Your action was:"
-					+ event.getAction() + " on block:" + block.getType()
+					+ event.getAction() + " on sBlock:" + sBlock.getType()
 					+ " with:" + itemInHand.getType() + " while holding:"
 					+ BIT.holdingKey.get(id));
 
+		// Call setPincode
+		if (sPlayer.isSpoutCraftEnabled()
+				&& BITDigiLock.isLockable(sBlock)
+				&& BIT.holdingKey.get(id).equals("KEY_LCONTROL")
+				&& event.getAction().equals(Action.RIGHT_CLICK_BLOCK)
+				&& (G333Permissions.hasPerm(sPlayer, "digilock.create",
+						G333Permissions.NOT_QUIET) || G333Permissions.hasPerm(
+						sPlayer, "digilock.admin", G333Permissions.NOT_QUIET))) {
+			event.setCancelled(true);
+			BITDigiLock.setPincode(sPlayer, sBlock);
+			
+		// Call openEditSignGUI	
+		} else 
+
 		// HANDLING THAT PLAYER CLICK ON A BLOCK WITH A DIGILOCK
-		if (BITDigiLock.isLocked(block)) {
-			BITDigiLock digilock = BITDigiLock.loadDigiLock(block);
-			if (G333Permissions.hasPerm(sPlayer, "digilock.use",
-					G333Permissions.NOT_QUIET)) {
+		if (BITDigiLock.isLocked(sBlock)) {
+			BITDigiLock digilock = BITDigiLock.loadDigiLock(sBlock);
 
-				// HANDLING A LOCKED CHEST AND DOUBLECHEST
-				if (BITDigiLock.isChest(block)) {
-					if ((digilock.getPincode().equals("") || digilock
-							.getPincode().equalsIgnoreCase("fingerprint"))
-							&& event.getAction().equals(
-									Action.RIGHT_CLICK_BLOCK)) {
-						// OPEN CHEST BY FINGERPRINT / NAME
-						if (digilock.isOwner(sPlayer)
-								|| digilock.isCoowner(sPlayer)
-								|| digilock.isUser(sPlayer)) {
-							SpoutChest sChest = (SpoutChest) block.getState();
-							Inventory inv = sChest.getLargestInventory();
-							G333Messages.sendNotification(sPlayer,
-									"Opened by fingerprint");
-							BITDigiLock.playDigiLockSound(block);
-							sPlayer.openInventoryWindow(inv);
-						} else {
-							event.setCancelled(true);
-							sPlayer.sendMessage("Your fingerprint does not match the DigiLock");
-						}
+			// HANDLING A LOCKED CHEST AND DOUBLECHEST
+			if (BITDigiLock.isChest(sBlock)) {
+				if ((digilock.getPincode().equals("") || digilock.getPincode()
+						.equalsIgnoreCase("fingerprint"))
+						&& event.getAction().equals(Action.RIGHT_CLICK_BLOCK)
+						&& G333Permissions.hasPerm(sPlayer, "digilock.use",
+								G333Permissions.NOT_QUIET)) {
+					// OPEN CHEST BY FINGERPRINT / NAME
+					if (digilock.isOwner(sPlayer)
+							|| digilock.isCoowner(sPlayer)
+							|| digilock.isUser(sPlayer)) {
+						SpoutChest sChest = (SpoutChest) sBlock.getState();
+						Inventory inv = sChest.getLargestInventory();
+						G333Messages.sendNotification(sPlayer,
+								"Opened by fingerprint");
+						BITDigiLock.playDigiLockSound(sBlock);
+						sPlayer.openInventoryWindow(inv);
 					} else {
 						event.setCancelled(true);
-						if (sPlayer.isSpoutCraftEnabled()
-								&& event.getAction().equals(
-										Action.RIGHT_CLICK_BLOCK)) {
-							BITDigiLock.getPincode(sPlayer, block);
-						} else {
-							sPlayer.sendMessage("Locked with Digilock.");
-						}
+						sPlayer.sendMessage("Your fingerprint does not match the DigiLock");
 					}
-				}
-
-				// HANDLING A LOCKED DOUBLEDOOR
-				else if (BITDigiLock.isDoubleDoor(block)) {
+				} else {
 					event.setCancelled(true);
-					if (digilock.getPincode().equals("")
-							|| digilock.getPincode().equalsIgnoreCase(
-									"fingerprint")) {
-						// TOGGLE DOOR BY FINGERPRINT / NAME
-						if (digilock.isOwner(sPlayer)
-								|| digilock.isCoowner(sPlayer)
-								|| digilock.isUser(sPlayer)) {
-							BITDigiLock.playDigiLockSound(block);
-							if (BITDigiLock.isDoubleDoorOpen(block)) {
-								BITDigiLock.closeDoubleDoor(sPlayer, block, 0);
-							} else {
-								BITDigiLock.openDoubleDoor(sPlayer, block,
-										digilock.getUseCost());
-							}
-							G333Messages.sendNotification(sPlayer,
-									"Used with fingerprint");
-						} else {
-							sPlayer.sendMessage("Your fingerprint does not match the DigiLock");
-							if (BITDigiLock.isDoubleDoorOpen(block)) {
-								BITDigiLock.playDigiLockSound(block);
-								BITDigiLock.closeDoubleDoor(sPlayer, block, 0);
-							}
-						}
-					} else {
-						// ASK FOR PINCODE
-						if (!BITDigiLock.isDoubleDoorOpen(block)) {
-							if (sPlayer.isSpoutCraftEnabled()) {
-								BITDigiLock.getPincode(sPlayer,
-										BITDigiLock.getLeftDoubleDoor(block));
-							} else {
-								sPlayer.sendMessage("Digilock'ed by "
-										+ sPlayer.getName());
-							}
-						} else {
-							BITDigiLock.closeDoubleDoor(sPlayer, block, 0);
-							BITDigiLock.playDigiLockSound(block);
-						}
-					}
-				}
-
-				// HANDLING A LOCKED DOOR
-				else if (BITDigiLock.isDoor(block)) {
-					event.setCancelled(true);
-					if (digilock.getPincode().equals("")
-							|| digilock.getPincode().equalsIgnoreCase(
-									"fingerprint")) {
-						// TOGGLE DOOR BY FINGERPRINT / NAME
-						if (digilock.isOwner(sPlayer)
-								|| digilock.isCoowner(sPlayer)
-								|| digilock.isUser(sPlayer)) {
-							BITDigiLock.playDigiLockSound(block);
-							if (BITDigiLock.isDoorOpen(block)) {
-								BITDigiLock.closeDoor(sPlayer, block, 0);
-							} else {
-								BITDigiLock.openDoor(sPlayer, block,
-										digilock.getUseCost());
-							}
-							G333Messages.sendNotification(sPlayer,
-									"Used with fingerprint");
-						} else {
-							sPlayer.sendMessage("Your fingerprint does not match the DigiLock");
-							if (BITDigiLock.isDoorOpen(block)) {
-								BITDigiLock.playDigiLockSound(block);
-								BITDigiLock.closeDoor(sPlayer, block, 0);
-							}
-						}
-					} else {
-						// ASK FOR PINCODE
-						if (!BITDigiLock.isDoorOpen(block)) {
-							if (sPlayer.isSpoutCraftEnabled()) {
-								BITDigiLock.getPincode(sPlayer, block);
-							} else {
-								sPlayer.sendMessage("Digilock'ed by "
-										+ sPlayer.getName());
-							}
-						} else {
-							BITDigiLock.closeDoor(sPlayer, block, 0);
-							BITDigiLock.playDigiLockSound(block);
-						}
-					}
-				}
-
-				// HANDLING A LOCKED TRAP_DOOR
-				else if (block.getType().equals(Material.TRAP_DOOR)) {
-					event.setCancelled(true);
-					if (digilock.getPincode().equals("")
-							|| digilock.getPincode().equalsIgnoreCase(
-									"fingerprint")) {
-						// TOGGLE DOOR BY FINGERPRINT / NAME
-						if (digilock.isOwner(sPlayer)
-								|| digilock.isCoowner(sPlayer)
-								|| digilock.isUser(sPlayer)) {
-							BITDigiLock.playDigiLockSound(block);
-							if (BITDigiLock.isTrapdoorOpen(sPlayer, block)) {
-								BITDigiLock.closeTrapdoor(sPlayer, block);
-							} else {
-								BITDigiLock.openTrapdoor(sPlayer, block,
-										digilock.getUseCost());
-							}
-							G333Messages.sendNotification(sPlayer,
-									"Used with fingerprint");
-						} else {
-							sPlayer.sendMessage("Your fingerprint does not match the DigiLock");
-							if (BITDigiLock.isTrapdoorOpen(sPlayer, block)) {
-								BITDigiLock.playDigiLockSound(block);
-								BITDigiLock.closeDoor(sPlayer, block, 0);
-							}
-						}
-					} else {
-						// ASK FOR PINCODE
-						if (!BITDigiLock.isTrapdoorOpen(sPlayer, block)) {
-							if (sPlayer.isSpoutCraftEnabled()) {
-								BITDigiLock.getPincode(sPlayer, block);
-							} else {
-								sPlayer.sendMessage("Digilock'ed by "
-										+ sPlayer.getName());
-							}
-						} else {
-							BITDigiLock.closeTrapdoor(sPlayer, block);
-							BITDigiLock.playDigiLockSound(block);
-						}
-					}
-				}
-
-				// HANDLING A LOCKED DISPENCER
-				else if (block.getType().equals(Material.DISPENSER)) {
-					if ((digilock.getPincode().equals("") || digilock
-							.getPincode().equalsIgnoreCase("fingerprint"))
+					if (sPlayer.isSpoutCraftEnabled()
 							&& event.getAction().equals(
-									Action.RIGHT_CLICK_BLOCK)) {
-						// USE DISPENSER BY FINGERPRINT (playername)
-						if (digilock.isOwner(sPlayer)
-								|| digilock.isCoowner(sPlayer)
-								|| digilock.isUser(sPlayer)) {
-							G333Messages.sendNotification(sPlayer,
-									"Opened with fingerprint");
-							BITDigiLock.playDigiLockSound(digilock.getBlock());
-							Dispenser dispenser = (Dispenser) block.getState();
-							Inventory inv = dispenser.getInventory();
-							sPlayer.openInventoryWindow(inv);
-						} else {
-							event.setCancelled(true);
-							sPlayer.sendMessage("Your fingerprint does not match the DigiLock");
-						}
+									Action.RIGHT_CLICK_BLOCK)
+							&& G333Permissions.hasPerm(sPlayer, "digilock.use",
+									G333Permissions.NOT_QUIET)) {
+						BITDigiLock.getPincode(sPlayer, sBlock);
 					} else {
-						event.setCancelled(true);
-						if (sPlayer.isSpoutCraftEnabled()
-								&& event.getAction().equals(
-										Action.RIGHT_CLICK_BLOCK)) {
-							BITDigiLock.getPincode(sPlayer, block);
+						sPlayer.sendMessage("Locked with Digilock.");
+					}
+				}
+			}
+
+			// HANDLING A LOCKED DOUBLEDOOR
+			else if (BITDigiLock.isDoubleDoor(sBlock)) {
+				event.setCancelled(true);
+				if (digilock.getPincode().equals("")
+						|| digilock.getPincode()
+								.equalsIgnoreCase("fingerprint")
+						&& G333Permissions.hasPerm(sPlayer, "digilock.use",
+								G333Permissions.NOT_QUIET)) {
+					// TOGGLE DOOR BY FINGERPRINT / NAME
+					if (digilock.isOwner(sPlayer)
+							|| digilock.isCoowner(sPlayer)
+							|| digilock.isUser(sPlayer)) {
+						BITDigiLock.playDigiLockSound(sBlock);
+						if (BITDigiLock.isDoubleDoorOpen(sBlock)) {
+							BITDigiLock.closeDoubleDoor(sPlayer, sBlock, 0);
+						} else {
+							BITDigiLock.openDoubleDoor(sPlayer, sBlock,
+									digilock.getUseCost());
+						}
+						G333Messages.sendNotification(sPlayer,
+								"Used with fingerprint");
+					} else {
+						sPlayer.sendMessage("Your fingerprint does not match the DigiLock");
+						if (BITDigiLock.isDoubleDoorOpen(sBlock)) {
+							BITDigiLock.playDigiLockSound(sBlock);
+							BITDigiLock.closeDoubleDoor(sPlayer, sBlock, 0);
+						}
+					}
+				} else {
+					// ASK FOR PINCODE
+					if (!BITDigiLock.isDoubleDoorOpen(sBlock)
+							&& G333Permissions.hasPerm(sPlayer, "digilock.use",
+									G333Permissions.NOT_QUIET)) {
+						if (sPlayer.isSpoutCraftEnabled()) {
+							BITDigiLock.getPincode(sPlayer,
+									BITDigiLock.getLeftDoubleDoor(sBlock));
 						} else {
 							sPlayer.sendMessage("Digilock'ed by "
 									+ sPlayer.getName());
 						}
+					} else {
+						BITDigiLock.closeDoubleDoor(sPlayer, sBlock, 0);
+						BITDigiLock.playDigiLockSound(sBlock);
 					}
 				}
+			}
 
-				// HANDLING FURNACE
-				else if (block.getType().equals(Material.FURNACE)) {
-					if ((digilock.getPincode().equals("") || digilock
-							.getPincode().equalsIgnoreCase("fingerprint"))
-							&& event.getAction().equals(
-									Action.RIGHT_CLICK_BLOCK)) {
-						// USE FURNACE BY FINGERPRINT (playername)
-						if (digilock.isOwner(sPlayer)
-								|| digilock.isCoowner(sPlayer)
-								|| digilock.isUser(sPlayer)) {
-							G333Messages.sendNotification(sPlayer,
-									"Used with fingerprint");
-							BITDigiLock.playDigiLockSound(digilock.getBlock());
-							Furnace furnace = (Furnace) block.getState();
-							Inventory inv = furnace.getInventory();
-							sPlayer.openInventoryWindow(inv);
+			// HANDLING A LOCKED DOOR
+			else if (BITDigiLock.isDoor(sBlock)) {
+				event.setCancelled(true);
+				if (digilock.getPincode().equals("")
+						|| digilock.getPincode()
+								.equalsIgnoreCase("fingerprint")
+						&& G333Permissions.hasPerm(sPlayer, "digilock.use",
+								G333Permissions.NOT_QUIET)) {
+					// TOGGLE DOOR BY FINGERPRINT / NAME
+					if (digilock.isOwner(sPlayer)
+							|| digilock.isCoowner(sPlayer)
+							|| digilock.isUser(sPlayer)) {
+						BITDigiLock.playDigiLockSound(sBlock);
+						if (BITDigiLock.isDoorOpen(sBlock)) {
+							BITDigiLock.closeDoor(sPlayer, sBlock, 0);
 						} else {
-							event.setCancelled(true);
-							sPlayer.sendMessage("Your fingerprint does not match the DigiLock");
+							BITDigiLock.openDoor(sPlayer, sBlock,
+									digilock.getUseCost());
 						}
+						G333Messages.sendNotification(sPlayer,
+								"Used with fingerprint");
 					} else {
-						event.setCancelled(true);
+						sPlayer.sendMessage("Your fingerprint does not match the DigiLock");
+						if (BITDigiLock.isDoorOpen(sBlock)) {
+							BITDigiLock.playDigiLockSound(sBlock);
+							BITDigiLock.closeDoor(sPlayer, sBlock, 0);
+						}
+					}
+				} else {
+					// ASK FOR PINCODE
+					if (!BITDigiLock.isDoorOpen(sBlock)) {
 						if (sPlayer.isSpoutCraftEnabled()
-								&& event.getAction().equals(
-										Action.RIGHT_CLICK_BLOCK)) {
-							BITDigiLock.getPincode(sPlayer, block);
+								&& G333Permissions.hasPerm(sPlayer,
+										"digilock.use",
+										G333Permissions.NOT_QUIET)) {
+							BITDigiLock.getPincode(sPlayer, sBlock);
 						} else {
 							sPlayer.sendMessage("Digilock'ed by "
 									+ sPlayer.getName());
 						}
+					} else {
+						BITDigiLock.closeDoor(sPlayer, sBlock, 0);
+						BITDigiLock.playDigiLockSound(sBlock);
 					}
 				}
+			}
 
-				// HANDLING LEVER
-				else if (block.getType().equals(Material.LEVER)) {
-					Lever lever = (Lever) block.getState().getData();
-					SpoutBlock nextLockableBlock = digilock
-							.getNextLockableBlock(sPlayer, block);
-					// SpoutBlock nextLockedBlock = digilock.getNextLockedBlock(
-					// sPlayer, block);
-					if (digilock.getPincode().equals("")
-							|| digilock.getPincode().equalsIgnoreCase(
-									"fingerprint")) {
-						// USE LEVER BY FINGERPRINT
-						if (digilock.isOwner(sPlayer)
-								|| digilock.isCoowner(sPlayer)
-								|| digilock.isUser(sPlayer)) {
-							if (nextLockableBlock != null) {
-								if (BITDigiLock.isLocked(nextLockableBlock)) {
-									G333Messages.sendNotification(sPlayer,
-											"Used with fingerprint");
-									BITDigiLock.playDigiLockSound(block);
-									if (lever.isPowered()) {
-										BITDigiLock.leverOff(sPlayer, block);
-									} else {
-										BITDigiLock.leverOn(sPlayer, block,
-												digilock.getUseCost());
-									}
-									BITDigiLock.playDigiLockSound(block);
-								} else {
-									sPlayer.sendMessage("The connected block "
-											+ nextLockableBlock.getType()
-											+ " is not locked. Please lock it.");
-									if (BITDigiLock
-											.isDoubleDoor(nextLockableBlock)) {
-										BITDigiLock.closeDoubleDoor(sPlayer,
-												nextLockableBlock, 0);
-									} else if (BITDigiLock
-											.isDoor(nextLockableBlock)) {
-										BITDigiLock.closeDoor(sPlayer,
-												nextLockableBlock, 0);
-									} else if (BITDigiLock
-											.isTrapdoor(nextLockableBlock)) {
-										BITDigiLock.closeTrapdoor(sPlayer,
-												nextLockableBlock);
-									}
-									BITDigiLock.leverOff(sPlayer, block);
-									event.setCancelled(true);
-
-								}
-							} else {
-								sPlayer.sendMessage("The lever is not connected to anything.");
-							}
+			// HANDLING A LOCKED TRAP_DOOR
+			else if (sBlock.getType().equals(Material.TRAP_DOOR)) {
+				event.setCancelled(true);
+				if (digilock.getPincode().equals("")
+						|| digilock.getPincode()
+								.equalsIgnoreCase("fingerprint")
+						&& G333Permissions.hasPerm(sPlayer, "digilock.use",
+								G333Permissions.NOT_QUIET)) {
+					// TOGGLE DOOR BY FINGERPRINT / NAME
+					if (digilock.isOwner(sPlayer)
+							|| digilock.isCoowner(sPlayer)
+							|| digilock.isUser(sPlayer)) {
+						BITDigiLock.playDigiLockSound(sBlock);
+						if (BITDigiLock.isTrapdoorOpen(sPlayer, sBlock)) {
+							BITDigiLock.closeTrapdoor(sPlayer, sBlock);
 						} else {
-							sPlayer.sendMessage("Your fingerprint does not match the DigiLock");
-							event.setCancelled(true);
-							BITDigiLock.leverOff(sPlayer, block);
+							BITDigiLock.openTrapdoor(sPlayer, sBlock,
+									digilock.getUseCost());
 						}
-					} else { // LEVER with pincode
+						G333Messages.sendNotification(sPlayer,
+								"Used with fingerprint");
+					} else {
+						sPlayer.sendMessage("Your fingerprint does not match the DigiLock");
+						if (BITDigiLock.isTrapdoorOpen(sPlayer, sBlock)) {
+							BITDigiLock.playDigiLockSound(sBlock);
+							BITDigiLock.closeDoor(sPlayer, sBlock, 0);
+						}
+					}
+				} else {
+					// ASK FOR PINCODE
+					if (!BITDigiLock.isTrapdoorOpen(sPlayer, sBlock)) {
+						if (sPlayer.isSpoutCraftEnabled()
+								&& G333Permissions.hasPerm(sPlayer,
+										"digilock.use",
+										G333Permissions.NOT_QUIET)) {
+							BITDigiLock.getPincode(sPlayer, sBlock);
+						} else {
+							sPlayer.sendMessage("Digilock'ed by "
+									+ sPlayer.getName());
+						}
+					} else {
+						BITDigiLock.closeTrapdoor(sPlayer, sBlock);
+						BITDigiLock.playDigiLockSound(sBlock);
+					}
+				}
+			}
+
+			// HANDLING A LOCKED DISPENCER
+			else if (sBlock.getType().equals(Material.DISPENSER)) {
+				if ((digilock.getPincode().equals("") || digilock.getPincode()
+						.equalsIgnoreCase("fingerprint"))
+						&& event.getAction().equals(Action.RIGHT_CLICK_BLOCK)
+						&& G333Permissions.hasPerm(sPlayer, "digilock.use",
+								G333Permissions.NOT_QUIET)) {
+					// USE DISPENSER BY FINGERPRINT (playername)
+					if (digilock.isOwner(sPlayer)
+							|| digilock.isCoowner(sPlayer)
+							|| digilock.isUser(sPlayer)) {
+						G333Messages.sendNotification(sPlayer,
+								"Opened with fingerprint");
+						BITDigiLock.playDigiLockSound(digilock.getBlock());
+						Dispenser dispenser = (Dispenser) sBlock.getState();
+						Inventory inv = dispenser.getInventory();
+						sPlayer.openInventoryWindow(inv);
+					} else {
+						event.setCancelled(true);
+						sPlayer.sendMessage("Your fingerprint does not match the DigiLock");
+					}
+				} else {
+					event.setCancelled(true);
+					if (sPlayer.isSpoutCraftEnabled()
+							&& event.getAction().equals(
+									Action.RIGHT_CLICK_BLOCK)
+							&& G333Permissions.hasPerm(sPlayer, "digilock.use",
+									G333Permissions.NOT_QUIET)) {
+						BITDigiLock.getPincode(sPlayer, sBlock);
+					} else {
+						sPlayer.sendMessage("Digilock'ed by "
+								+ sPlayer.getName());
+					}
+				}
+			}
+
+			// HANDLING FURNACE
+			else if (sBlock.getType().equals(Material.FURNACE)) {
+				if ((digilock.getPincode().equals("") || digilock.getPincode()
+						.equalsIgnoreCase("fingerprint")
+						&& G333Permissions.hasPerm(sPlayer, "digilock.use",
+								G333Permissions.NOT_QUIET))
+						&& event.getAction().equals(Action.RIGHT_CLICK_BLOCK)) {
+					// USE FURNACE BY FINGERPRINT (playername)
+					if (digilock.isOwner(sPlayer)
+							|| digilock.isCoowner(sPlayer)
+							|| digilock.isUser(sPlayer)) {
+						G333Messages.sendNotification(sPlayer,
+								"Used with fingerprint");
+						BITDigiLock.playDigiLockSound(digilock.getBlock());
+						Furnace furnace = (Furnace) sBlock.getState();
+						Inventory inv = furnace.getInventory();
+						sPlayer.openInventoryWindow(inv);
+					} else {
+						event.setCancelled(true);
+						sPlayer.sendMessage("Your fingerprint does not match the DigiLock");
+					}
+				} else {
+					event.setCancelled(true);
+					if (sPlayer.isSpoutCraftEnabled()
+							&& event.getAction().equals(
+									Action.RIGHT_CLICK_BLOCK)
+							&& G333Permissions.hasPerm(sPlayer, "digilock.use",
+									G333Permissions.NOT_QUIET)) {
+						BITDigiLock.getPincode(sPlayer, sBlock);
+					} else {
+						sPlayer.sendMessage("Digilock'ed by "
+								+ sPlayer.getName());
+					}
+				}
+			}
+
+			// HANDLING LEVER
+			else if (sBlock.getType().equals(Material.LEVER)) {
+				Lever lever = (Lever) sBlock.getState().getData();
+				SpoutBlock nextLockableBlock = digilock.getNextLockableBlock(
+						sPlayer, sBlock);
+				if (digilock.getPincode().equals("")
+						|| digilock.getPincode()
+								.equalsIgnoreCase("fingerprint")
+						&& G333Permissions.hasPerm(sPlayer, "digilock.use",
+								G333Permissions.NOT_QUIET)) {
+					// USE LEVER BY FINGERPRINT
+					if (digilock.isOwner(sPlayer)
+							|| digilock.isCoowner(sPlayer)
+							|| digilock.isUser(sPlayer)) {
 						if (nextLockableBlock != null) {
 							if (BITDigiLock.isLocked(nextLockableBlock)) {
-								if (!BITDigiLock.isLeverOn(block)) {
-									if (sPlayer.isSpoutCraftEnabled()) {
-										BITDigiLock.getPincode(sPlayer, block);
-									} else {
-										sPlayer.sendMessage("Digilock'ed by "
-												+ sPlayer.getName());
-										event.setCancelled(true);
-									}
+								G333Messages.sendNotification(sPlayer,
+										"Used with fingerprint");
+								BITDigiLock.playDigiLockSound(sBlock);
+								if (lever.isPowered()) {
+									BITDigiLock.leverOff(sPlayer, sBlock);
 								} else {
-									if (BITDigiLock
-											.isDoubleDoor(nextLockableBlock)) {
-										BITDigiLock.closeDoubleDoor(sPlayer,
-												nextLockableBlock, 0);
-									} else if (BITDigiLock
-											.isDoor(nextLockableBlock)) {
-										BITDigiLock.closeDoor(sPlayer,
-												nextLockableBlock, 0);
-									} else if (BITDigiLock
-											.isTrapdoor(nextLockableBlock)) {
-										BITDigiLock.closeTrapdoor(sPlayer,
-												nextLockableBlock);
-									}
-									BITDigiLock.leverOff(sPlayer, block);
+									BITDigiLock.leverOn(sPlayer, sBlock,
+											digilock.getUseCost());
 								}
+								BITDigiLock.playDigiLockSound(sBlock);
 							} else {
 								sPlayer.sendMessage("The connected block "
 										+ nextLockableBlock.getType()
@@ -388,227 +367,292 @@ public class BITPlayerListener extends PlayerListener {
 									BITDigiLock.closeTrapdoor(sPlayer,
 											nextLockableBlock);
 								}
-								BITDigiLock.leverOff(sPlayer, block);
+								BITDigiLock.leverOff(sPlayer, sBlock);
 								event.setCancelled(true);
 
 							}
 						} else {
 							sPlayer.sendMessage("The lever is not connected to anything.");
 						}
+					} else {
+						sPlayer.sendMessage("Your fingerprint does not match the DigiLock");
+						event.setCancelled(true);
+						BITDigiLock.leverOff(sPlayer, sBlock);
 					}
-				}
-
-				// HANDLING STONE_BUTTON
-				else if (block.getType().equals(Material.STONE_BUTTON)) {
-					if (digilock.getPincode().equals("")
-							|| digilock.getPincode().equalsIgnoreCase(
-									"fingerprint")) {
-						// PRESS STONE_BUTTON BY FINGERPRINT
-						// (playername)
-						Button button = (Button) block.getState().getData();
-						if (digilock.isOwner(sPlayer)
-								|| digilock.isCoowner(sPlayer)
-								|| digilock.isUser(sPlayer)) {
-							G333Messages.sendNotification(sPlayer,
-									"Used with fingerprint");
-							BITDigiLock.playDigiLockSound(block);
-							if (!button.isPowered()) {
-								BITDigiLock.pressButtonOn(sPlayer, block,
-										digilock.getUseCost());
+				} else { // LEVER with pincode
+					if (nextLockableBlock != null) {
+						if (BITDigiLock.isLocked(nextLockableBlock)) {
+							if (!BITDigiLock.isLeverOn(sBlock)) {
+								if (sPlayer.isSpoutCraftEnabled()
+										&& G333Permissions.hasPerm(sPlayer,
+												"digilock.use",
+												G333Permissions.NOT_QUIET)) {
+									BITDigiLock.getPincode(sPlayer, sBlock);
+								} else {
+									sPlayer.sendMessage("Digilock'ed by "
+											+ sPlayer.getName());
+									event.setCancelled(true);
+								}
+							} else {
+								if (BITDigiLock.isDoubleDoor(nextLockableBlock)) {
+									BITDigiLock.closeDoubleDoor(sPlayer,
+											nextLockableBlock, 0);
+								} else if (BITDigiLock
+										.isDoor(nextLockableBlock)) {
+									BITDigiLock.closeDoor(sPlayer,
+											nextLockableBlock, 0);
+								} else if (BITDigiLock
+										.isTrapdoor(nextLockableBlock)) {
+									BITDigiLock.closeTrapdoor(sPlayer,
+											nextLockableBlock);
+								}
+								BITDigiLock.leverOff(sPlayer, sBlock);
 							}
 						} else {
+							sPlayer.sendMessage("The connected block "
+									+ nextLockableBlock.getType()
+									+ " is not locked. Please lock it.");
+							if (BITDigiLock.isDoubleDoor(nextLockableBlock)) {
+								BITDigiLock.closeDoubleDoor(sPlayer,
+										nextLockableBlock, 0);
+							} else if (BITDigiLock.isDoor(nextLockableBlock)) {
+								BITDigiLock.closeDoor(sPlayer,
+										nextLockableBlock, 0);
+							} else if (BITDigiLock
+									.isTrapdoor(nextLockableBlock)) {
+								BITDigiLock.closeTrapdoor(sPlayer,
+										nextLockableBlock);
+							}
+							BITDigiLock.leverOff(sPlayer, sBlock);
 							event.setCancelled(true);
-							sPlayer.sendMessage("Your fingerprint does not match the DigiLock");
+
+						}
+					} else {
+						sPlayer.sendMessage("The lever is not connected to anything.");
+					}
+				}
+			}
+
+			// HANDLING STONE_BUTTON
+			else if (sBlock.getType().equals(Material.STONE_BUTTON)) {
+				if (digilock.getPincode().equals("")
+						|| digilock.getPincode()
+								.equalsIgnoreCase("fingerprint")
+						&& G333Permissions.hasPerm(sPlayer, "digilock.use",
+								G333Permissions.NOT_QUIET)) {
+					// PRESS STONE_BUTTON BY FINGERPRINT
+					// (playername)
+					Button button = (Button) sBlock.getState().getData();
+					if (digilock.isOwner(sPlayer)
+							|| digilock.isCoowner(sPlayer)
+							|| digilock.isUser(sPlayer)) {
+						G333Messages.sendNotification(sPlayer,
+								"Used with fingerprint");
+						BITDigiLock.playDigiLockSound(sBlock);
+						if (!button.isPowered()) {
+							BITDigiLock.pressButtonOn(sPlayer, sBlock,
+									digilock.getUseCost());
 						}
 					} else {
 						event.setCancelled(true);
-						if (sPlayer.isSpoutCraftEnabled()) {
-							BITDigiLock.getPincode(sPlayer, block);
-							if (digilock.getPincode().equals(
-									BITDigiLock.pincodeGUI.get(id).getText())) {
-								// okay - go on
-							} else {
-								// event.setCancelled(true);
-							}
-						} else {
-							sPlayer.sendMessage("Digilock'ed by "
-									+ sPlayer.getName());
-							// event.setCancelled(true);
-						}
-					}
-				}
-
-				// HANDLING SIGN and SIGN_POST
-				else if (BITDigiLock.isSign(block)) {
-					if ((digilock.getPincode().equals("") || digilock
-							.getPincode().equalsIgnoreCase("fingerprint"))
-							&& event.getAction().equals(
-									Action.RIGHT_CLICK_BLOCK)) {
-						// USE SIGN BY FINGERPRINT (playername)
-						if (digilock.isOwner(sPlayer)
-								|| digilock.isCoowner(sPlayer)
-								|| digilock.isUser(sPlayer)) {
-							G333Messages.sendNotification(sPlayer,
-									"Used with fingerprint");
-							if (sPlayer.isSpoutCraftEnabled()
-									&& G333Config.LIBRARY_USESIGNEDITGUI
-									&& BIT.holdingKey.get(id).equals(
-											"KEY_LSHIFT")) {
-								Sign sign = (Sign) block.getState();
-								sPlayer.openSignEditGUI(sign);
-							}
-						} else {
-							event.setCancelled(true);
-							sPlayer.sendMessage("Your fingerprint does not match the DigiLock");
-						}
-					} else {
-						if (sPlayer.isSpoutCraftEnabled()
-								&& event.getAction().equals(
-										Action.RIGHT_CLICK_BLOCK)) {
-							BITDigiLock.getPincode(sPlayer, block);
-							if (digilock.getPincode().equals(
-									BITDigiLock.pincodeGUI.get(id).getText())) {
-								// okay - go on
-							} else {
-								// if (G333Config.config.DEBUG_DOOR)
-								event.setCancelled(true);
-							}
-						} else {
-							sPlayer.sendMessage("Digilock'ed by "
-									+ sPlayer.getName());
-							event.setCancelled(true);
-						}
-					}
-				}
-
-				// BOOKSHELF
-				else if ((block.getType().equals(Material.BOOKSHELF))) {
-					if ((digilock.getPincode().equals("") || digilock
-							.getPincode().equalsIgnoreCase("fingerprint"))
-							&& event.getAction().equals(
-									Action.RIGHT_CLICK_BLOCK)) {
-						// USE SIGN BY FINGERPRINT (playername)
-						if (digilock.isOwner(sPlayer)
-								|| digilock.isCoowner(sPlayer)
-								|| digilock.isUser(sPlayer)) {
-							G333Messages.sendNotification(sPlayer,
-									"Used with fingerprint");
-							// if (sPlayer.isSpoutCraftEnabled()) {
-							BITInventory bitInventory = BITInventory
-									.loadBitInventory(sPlayer, block);
-							bitInventory
-									.openBitInventory(sPlayer, bitInventory);
-							// } else {
-
-							// }
-						} else {
-							event.setCancelled(true);
-							sPlayer.sendMessage("Your fingerprint does not match the DigiLock");
-						}
-					} else {
-						if (sPlayer.isSpoutCraftEnabled()
-								&& event.getAction().equals(
-										Action.RIGHT_CLICK_BLOCK)) {
-							BITDigiLock.getPincode(sPlayer, block);
-							if (digilock.getPincode().equals(
-									BITDigiLock.pincodeGUI.get(id).getText())) {
-								// okay - go on
-							} else {
-								event.setCancelled(true);
-							}
-						} else {
-							sPlayer.sendMessage("Digilock'ed by "
-									+ sPlayer.getName());
-							event.setCancelled(true);
-						}
+						sPlayer.sendMessage("Your fingerprint does not match the DigiLock");
 					}
 				} else {
-					sPlayer.sendMessage("ERROR: BITPlayerListener. Cant handle block:"
-							+ block.getType());
+					event.setCancelled(true);
+					if (sPlayer.isSpoutCraftEnabled()
+							&& G333Permissions.hasPerm(sPlayer, "digilock.use",
+									G333Permissions.NOT_QUIET)) {
+						BITDigiLock.getPincode(sPlayer, sBlock);
+						if (digilock.getPincode().equals(
+								BITDigiLock.pincodeGUI.get(id).getText())) {
+							// okay - go on
+						} else {
+							// event.setCancelled(true);
+						}
+					} else {
+						sPlayer.sendMessage("Digilock'ed by "
+								+ sPlayer.getName());
+						// event.setCancelled(true);
+					}
 				}
-
-			} else {
-				// the player has not digilock.use permission.
-				G333Messages.sendNotification(sPlayer, "Locked with Digilock.");
-				event.setCancelled(true);
 			}
+
+			// HANDLING SIGN and SIGN_POST
+			else if (BITDigiLock.isSign(sBlock)) {
+				if ((digilock.getPincode().equals("") || digilock.getPincode()
+						.equalsIgnoreCase("fingerprint"))
+						&& event.getAction().equals(Action.RIGHT_CLICK_BLOCK)
+						&& G333Permissions.hasPerm(sPlayer, "digilock.use",
+								G333Permissions.NOT_QUIET)) {
+					// USE SIGN BY FINGERPRINT (playername)
+					if (digilock.isOwner(sPlayer)
+							|| digilock.isCoowner(sPlayer)
+							|| digilock.isUser(sPlayer)) {
+						G333Messages.sendNotification(sPlayer,
+								"Used with fingerprint");
+						if (sPlayer.isSpoutCraftEnabled()
+								&& G333Config.LIBRARY_USESIGNEDITGUI
+								&& BIT.holdingKey.get(id).equals("KEY_LSHIFT")
+								&& G333Permissions.hasPerm(sPlayer,
+										"digilock.use",
+										G333Permissions.NOT_QUIET)) {
+							Sign sign = (Sign) sBlock.getState();
+							sPlayer.openSignEditGUI(sign);
+						} 
+					} else {
+						event.setCancelled(true);
+						sPlayer.sendMessage("Your fingerprint does not match the DigiLock");
+					}
+				} else {
+					if (sPlayer.isSpoutCraftEnabled()
+							&& event.getAction().equals(
+									Action.RIGHT_CLICK_BLOCK)
+							&& G333Permissions.hasPerm(sPlayer, "digilock.use",
+									G333Permissions.NOT_QUIET)) {
+						BITDigiLock.getPincode(sPlayer, sBlock);
+						if (digilock.getPincode().equals(
+								BITDigiLock.pincodeGUI.get(id).getText())) {
+							// okay - go on
+						} else {
+							// if (G333Config.config.DEBUG_DOOR)
+							event.setCancelled(true);
+						}
+					} else {
+						sPlayer.sendMessage("Digilock'ed by "
+								+ sPlayer.getName());
+						event.setCancelled(true);
+					}
+				}
+			}
+
+			// BOOKSHELF
+			else if ((sBlock.getType().equals(Material.BOOKSHELF))) {
+				if ((digilock.getPincode().equals("") || digilock.getPincode()
+						.equalsIgnoreCase("fingerprint"))
+						&& event.getAction().equals(Action.RIGHT_CLICK_BLOCK)
+						&& G333Permissions.hasPerm(sPlayer, "digilock.use",
+								G333Permissions.NOT_QUIET)
+						&& G333Permissions.hasPerm(sPlayer, "bookshelf.use",
+								G333Permissions.NOT_QUIET)) {
+					// USE SIGN BY FINGERPRINT (playername)
+					if (digilock.isOwner(sPlayer)
+							|| digilock.isCoowner(sPlayer)
+							|| digilock.isUser(sPlayer)) {
+						G333Messages.sendNotification(sPlayer,
+								"Used with fingerprint");
+						// if (sPlayer.isSpoutCraftEnabled()) {
+						BITInventory bitInventory = BITInventory
+								.loadBitInventory(sPlayer, sBlock);
+						bitInventory.openBitInventory(sPlayer, bitInventory);
+						// } else {
+
+						// }
+					} else {
+						event.setCancelled(true);
+						sPlayer.sendMessage("Your fingerprint does not match the DigiLock");
+					}
+				} else {
+					if (sPlayer.isSpoutCraftEnabled()
+							&& event.getAction().equals(
+									Action.RIGHT_CLICK_BLOCK)
+							&& G333Permissions.hasPerm(sPlayer, "digilock.use",
+									G333Permissions.NOT_QUIET)) {
+						BITDigiLock.getPincode(sPlayer, sBlock);
+						if (digilock.getPincode().equals(
+								BITDigiLock.pincodeGUI.get(id).getText())) {
+							// okay - go on
+						} else {
+							event.setCancelled(true);
+						}
+					} else {
+						sPlayer.sendMessage("Digilock'ed by "
+								+ sPlayer.getName());
+						event.setCancelled(true);
+					}
+				}
+			} else {
+				sPlayer.sendMessage("ERROR: BITPlayerListener. Cant handle block:"
+						+ sBlock.getType());
+			}
+
+			// } else {
+			// // the player has not digilock.use permission.
+			// G333Messages.sendNotification(sPlayer, "Locked with Digilock.");
+			// event.setCancelled(true);
+			// }
+			
+			
 			// ELSE - IT WAS NOT A LOCKED BLOCK
 		} else {
 			if (G333Config.DEBUG_GUI) {
 				sPlayer.sendMessage("There is no digilock on this block");
-			}
-			if (BITDigiLock.isChest(block)) {
 
 			}
 			// HANDLING THE DOUBLEDOOR
-			else if (BITDigiLock.isDoubleDoor(block)) {
+			else if (BITDigiLock.isDoubleDoor(sBlock)) {
 				event.setCancelled(true);
-				if (BITDigiLock.isDoubleDoorOpen(block)) {
-					BITDigiLock.closeDoubleDoor(sPlayer, block, 0);
+				if (BITDigiLock.isDoubleDoorOpen(sBlock)) {
+					BITDigiLock.closeDoubleDoor(sPlayer, sBlock, 0);
 				} else {
-					BITDigiLock.openDoubleDoor(sPlayer, block, 0);
+					BITDigiLock.openDoubleDoor(sPlayer, sBlock, 0);
 				}
 
 			}
 			// HANDLING THE DOOR
-			else if (BITDigiLock.isDoor(block)) {
+			else if (BITDigiLock.isDoor(sBlock)) {
 
 			}
 			// HANDLING TRAP_DOOR
-			else if (block.getType().equals(Material.TRAP_DOOR)) {
+			else if (sBlock.getType().equals(Material.TRAP_DOOR)) {
 
 			}
 			// HANDLING DISPENCER
-			else if (block.getType().equals(Material.DISPENSER)) {
+			else if (sBlock.getType().equals(Material.DISPENSER)) {
 
 			}
 			// HANDLING FURNACE
-			else if (block.getType().equals(Material.FURNACE)) {
+			else if (sBlock.getType().equals(Material.FURNACE)) {
 
 			}
 			// HANDLING LEVER
-			else if (block.getType().equals(Material.LEVER)) {
-				Lever lever = (Lever) block.getState().getData();
+			else if (sBlock.getType().equals(Material.LEVER)) {
+				Lever lever = (Lever) sBlock.getState().getData();
 				if (lever.isPowered()) {
 
-					BITDigiLock.leverOff(sPlayer, block);
+					BITDigiLock.leverOff(sPlayer, sBlock);
 				} else {
-					BITDigiLock.leverOn(sPlayer, block, 0);
+					BITDigiLock.leverOn(sPlayer, sBlock, 0);
 				}
 
 			}
 			// HANDLING STONE_BUTTON
-			else if (block.getType().equals(Material.STONE_BUTTON)) {
+			else if (sBlock.getType().equals(Material.STONE_BUTTON)) {
 
 			}
 
 			// HANDLING SIGN and SIGN_POST
-			else if (BITDigiLock.isSign(block)) {
+			else if (BITDigiLock.isSign(sBlock)) {
 				if (event.getAction().equals(Action.RIGHT_CLICK_BLOCK)
 						&& G333Config.LIBRARY_USESIGNEDITGUI
 						&& BIT.holdingKey.get(id).equals("KEY_LSHIFT")) {
-					Sign sign = (Sign) block.getState();
+					Sign sign = (Sign) sBlock.getState();
 					sPlayer.openSignEditGUI(sign);
 				}
-
 			}
+			
 			// BOOKSHELF
-			else if (block.getType().equals(Material.BOOKSHELF)
+			else if (sBlock.getType().equals(Material.BOOKSHELF)
 					&& event.getAction().equals(Action.RIGHT_CLICK_BLOCK)) {
-				if (BITInventory.isBitInventoryCreated(block)
+				if (BITInventory.isBitInventoryCreated(sBlock)
 						&& G333Permissions.hasPerm(sPlayer, "bookshelf.use",
 								G333Permissions.NOT_QUIET)) {
 					BITInventory bitInventory = BITInventory.loadBitInventory(
-							sPlayer, block);
+							sPlayer, sBlock);
 					bitInventory.openBitInventory(sPlayer, bitInventory);
-				} else if (!BITInventory.isBitInventoryCreated(block)
+				} else if (!BITInventory.isBitInventoryCreated(sBlock)
 						&& G333Permissions.hasPerm(sPlayer, "bookshelf.create",
 								G333Permissions.NOT_QUIET)) {
-
-					// BITInventory bitInventory = new BITInventory(BIT.plugin);
-
-					BITInventory.setBookshelfInventory(sPlayer, block);
-
+					BITInventory.setBookshelfInventory(sPlayer, sBlock);
 				}
 
 			}

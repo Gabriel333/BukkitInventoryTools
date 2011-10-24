@@ -34,15 +34,15 @@ public class BITBookInputListener extends InputListener {
 		SpoutBlock sBlock = (SpoutBlock) sPlayer.getTargetBlock(null, 5);
 		ItemStack itemInHand = sPlayer.getInventory().getItemInHand();
 		int id = sPlayer.getEntityId();
-		//BITBook bitBook = new BITBook();
+		// BITBook bitBook = new BITBook();
 		// PLAYER_INVENTORY
 		if (screentype == ScreenType.PLAYER_INVENTORY) {
 			if (keypressed.equals(G333Config.LIBRARY_READKEY)) {
-				
-				//sBlock = null;
-				
+
+				// sBlock = null;
+
 				handleItemInHand(sPlayer, sBlock, itemInHand);
-			} 
+			}
 
 		} else
 		// SpoutBackpack
@@ -162,12 +162,12 @@ public class BITBookInputListener extends InputListener {
 
 			// CUSTOM_SCREEN
 			else if (screentype == ScreenType.CUSTOM_SCREEN) {
-				//G333Messages.sendNotification(sPlayer, "Key:"+keypressed);
+				// G333Messages.sendNotification(sPlayer, "Key:"+keypressed);
 				if (keypressed.equals("KEY_ESCAPE")) {
 					sPlayer.closeActiveWindow();
 					BITBook.cleanupPopupScreen(sPlayer);
 
-					//sPlayer.sendMessage("You pressed escape - dropping current book");
+					// sPlayer.sendMessage("You pressed escape - dropping current book");
 					BITBook.bitBooks.remove(BITBook.currentBookId.get(id));
 					BITBook.currentBookId.put(id, 0);
 
@@ -178,24 +178,26 @@ public class BITBookInputListener extends InputListener {
 		}
 	}
 
-	private void handleItemInHand(SpoutPlayer sPlayer,
-			SpoutBlock sBlock, ItemStack itemInHand) {
+	private void handleItemInHand(SpoutPlayer sPlayer, SpoutBlock sBlock,
+			ItemStack itemInHand) {
 		if (BITBook.isWriteable(itemInHand.getType())
 				&& itemInHand.getAmount() == 1) {
-			
+
 			int slotNo = sPlayer.getInventory().getHeldItemSlot();
 			BITBook bitBook = new BITBook();
-			
-			if (BITBook.isWritten(sPlayer, sBlock, InventoryType.PLAYER_INVENTORY,slotNo)) {
+
+			if (BITBook.isWritten(sPlayer, sBlock,
+					InventoryType.PLAYER_INVENTORY, slotNo)) {
 				if (G333Permissions.hasPerm(sPlayer, "book.use",
 						G333Permissions.NOT_QUIET)
 						|| G333Permissions.hasPerm(sPlayer, "book.admin",
 								G333Permissions.NOT_QUIET)) {
 					// TODO: get the bookId.
 					sPlayer.sendMessage("Open existing book");
-					int bookId=1;
-					bitBook.loadBook(sPlayer,sBlock,InventoryType.PLAYER_INVENTORY, slotNo, bookId);
-					bitBook.openBook(sPlayer,bookId);
+					int bookId = 1;
+					bitBook.loadBook(sPlayer, sBlock,
+							InventoryType.PLAYER_INVENTORY, slotNo, bookId);
+					bitBook.openBook(sPlayer, bookId);
 				}
 			} else {
 				// new book
@@ -203,9 +205,9 @@ public class BITBookInputListener extends InputListener {
 						G333Permissions.NOT_QUIET)) {
 					int id = sPlayer.getEntityId();
 					int bookId = bitBook.getNextBookId();
-					sPlayer.sendMessage("Creating new book with id:"+bookId);
+					sPlayer.sendMessage("Creating new book with id:" + bookId);
 					BITBook.currentBookId.put(id, bookId);
-					
+
 					String title = "Title";
 					String author = sPlayer.getName();
 					String coAuthors = "";
@@ -226,9 +228,11 @@ public class BITBookInputListener extends InputListener {
 							+ numberOfPages);
 					sPlayer.sendMessage("BITBookInputListener-CurrentBookId:"
 							+ bookId);
-					bitBook.setBitBook(bookId, sPlayer.getName(), InventoryType.PLAYER_INVENTORY, sBlock, slotNo, title, author,
-							coAuthors, numberOfPages, pages, masterCopy,
-							masterCopyId, forceBookToPlayerInventory,
+					bitBook.setBitBook(bookId, sPlayer.getName(),
+							InventoryType.PLAYER_INVENTORY, sBlock, slotNo,
+							title, author, coAuthors, numberOfPages, pages,
+							masterCopy, masterCopyId,
+							forceBookToPlayerInventory,
 							canBeMovedFromInventory, copyTheBookWhenMoved,
 							useCost);
 					BITBook.bitBooks.put(bookId, bitBook);

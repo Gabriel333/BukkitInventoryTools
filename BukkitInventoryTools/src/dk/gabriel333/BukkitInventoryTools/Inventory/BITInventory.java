@@ -122,9 +122,7 @@ public class BITInventory {
 			saveBitInventory(sPlayer, inv.getBlock(), inv.getOwner(),
 					inv.getName(), inv.getCoOwners(), inv.getInventory(),
 					inv.getUseCost());
-		} else {
-			sPlayer.sendMessage("BITInventory error: Inventory is null in SaveBitInventory!");
-		}
+		} 
 	}
 
 	public static void saveBitInventory(SpoutPlayer sPlayer, SpoutBlock block,

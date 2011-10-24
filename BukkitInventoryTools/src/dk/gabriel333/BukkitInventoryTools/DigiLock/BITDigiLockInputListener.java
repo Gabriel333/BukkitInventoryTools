@@ -30,8 +30,10 @@ public class BITDigiLockInputListener extends InputListener {
 		if (!(keypressed.equals(G333Config.LIBRARY_SORTKEY)
 				|| keypressed.equals(G333Config.LIBRARY_LOCKKEY)
 				|| keypressed.equals("KEY_ESCAPE")
-				|| keypressed.equals("KEY_RETURN") || keypressed
-					.equals("KEY_E")))
+				|| keypressed.equals("KEY_RETURN") 
+				//|| keypressed.equals("KEY_E")
+				)
+					)
 			return;
 		SpoutBlock targetblock = (SpoutBlock) sPlayer.getTargetBlock(null, 5);
 
@@ -123,7 +125,7 @@ public class BITDigiLockInputListener extends InputListener {
 							}
 						}
 					} else if (keypressed.equals("KEY_ESCAPE")
-							|| keypressed.equals("KEY_E")) {
+							) {
 						int id = sPlayer.getEntityId();
 						BITInventory bitInventory = BITInventory.openedInventories
 								.get(id);

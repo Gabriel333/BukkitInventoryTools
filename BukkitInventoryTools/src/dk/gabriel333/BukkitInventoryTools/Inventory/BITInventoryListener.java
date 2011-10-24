@@ -32,9 +32,17 @@ public class BITInventoryListener extends InventoryListener {
 	}
 
 	public void onInventoryClose(InventoryCloseEvent event) {
-		//SpoutPlayer sPlayer = (SpoutPlayer) event.getPlayer();
+		SpoutPlayer sPlayer = (SpoutPlayer) event.getPlayer();
 		//sPlayer.sendMessage("an inventory was closed:"+event.getLocation()+" evtname:"+
 		//event.getEventName());
+		if (event.getInventory().getName().equals("Bookshelf")) {
+			int id = sPlayer.getEntityId();
+			BITInventory bitInventory = BITInventory.openedInventories
+					.get(id);
+			BITInventory.saveBitInventory(sPlayer, bitInventory);
+			BITInventory.openedInventories.remove(id);
+		}
+			
 		//BITInventory.closeBitInventory(sPlayer);
 	}
 

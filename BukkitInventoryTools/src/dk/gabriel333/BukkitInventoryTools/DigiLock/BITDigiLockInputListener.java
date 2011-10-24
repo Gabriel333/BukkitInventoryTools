@@ -31,7 +31,6 @@ public class BITDigiLockInputListener extends InputListener {
 				|| keypressed.equals(G333Config.LIBRARY_LOCKKEY)
 				|| keypressed.equals("KEY_ESCAPE")
 				|| keypressed.equals("KEY_RETURN") 
-				//|| keypressed.equals("KEY_E")
 				)
 					)
 			return;

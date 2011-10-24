@@ -121,7 +121,7 @@ public class BITBookInputListener extends InputListener {
 						&& BITBook.isWriteable(itemInHand.getType())
 						&& itemInHand.getAmount() == 1) {
 
-					sBlock = null;
+					//sBlock = null;
 					handleItemInHand(sPlayer, sBlock, itemInHand);
 
 				}

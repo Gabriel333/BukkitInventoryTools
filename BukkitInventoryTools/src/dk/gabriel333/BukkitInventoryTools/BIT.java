@@ -328,14 +328,14 @@ public class BIT extends JavaPlugin {
 									+ bookTable
 									+ " (playername TEXT, bookid INT, world TEXT, inventorytype INT,"
 									+ " x INT, y INT, z INT, slotno INT, title TEXT,"
-									+ " author TEXT, coauthor TEXT, "
-									+ " numberofpages INT, pageno INT, page TEXT,"
+									+ " author TEXT, coauthors TEXT, "
+									+ " numberofpages INT, pageno INT, bodytext TEXT,"
 									+ " mastercopy BOOLEAN, mastercopyid INT,"
 									+ " force BOOLEAN, moved BOOLEAN, copy BOOLEAN, usecost INT)"
 									+ "AS select playername, bookid, world, inventorytype,"
 									+ " x, y, z, slotno, title,"
-									+ " author, coauthor, "
-									+ " numberofpages, pageno, page,"
+									+ " author, coauthors, "
+									+ " numberofpages, pageno, bodytext,"
 									+ " mastercopy, mastercopyid,"
 									+ " force, moved, copy, usecost FROM "
 									+ oldBookTable + ";";
@@ -346,8 +346,8 @@ public class BIT extends JavaPlugin {
 									+ bookTable
 									+ " (playername TEXT, bookid INT, world TEXT, inventorytype INT,"
 									+ " x INT, y INT, z INT, slotno INT, title TEXT,"
-									+ " author TEXT, coauthor TEXT, "
-									+ " numberofpages INT, pageno INT, page TEXT,"
+									+ " author TEXT, coauthors TEXT, "
+									+ " numberofpages INT, pageno INT, bodytext TEXT,"
 									+ " mastercopy BOOLEAN, mastercopyid INT,"
 									+ " force BOOLEAN, moved BOOLEAN, copy BOOLEAN, usecost INT);";
 						}
@@ -464,22 +464,22 @@ public class BIT extends JavaPlugin {
 							+ bookTable
 							+ " ( playername TEXT, bookid INT, world TEXT, inventorytype INT,"
 							+ " x INT, y INT, z INT, slotno INT, title TEXT,"
-							+ " author TEXT, coauthor TEXT, "
-							+ " numberofpages INT, pageno INT, page TEXT,"
+							+ " author TEXT, coauthors TEXT, "
+							+ " numberofpages INT, pageno INT, bodytext TEXT,"
 							+ " mastercopy BOOLEAN, mastercopyid INT,"
 							+ " force BOOLEAN, moved BOOLEAN, copy BOOLEAN, usecost INT);";
 					insert = "insert into "
 							+ bookTable
 							+ " (playername, bookid, world, inventorytype,"
 							+ " x, y, z, slotno, title,"
-							+ " author, coauthor, "
-							+ " numberofpages, pageno, page,"
+							+ " author, coauthors, "
+							+ " numberofpages, pageno, bodytext,"
 							+ " mastercopy, mastercopyid,"
 							+ " force, moved, copy, usecost) "
 							+ "select playername, bookid, world, inventorytype,"
 							+ " x, y, z, slotno, title,"
-							+ " author, coauthor, "
-							+ " numberofpages, pageno, page,"
+							+ " author, coauthors, "
+							+ " numberofpages, pageno, bodytext,"
 							+ " mastercopy, mastercopyid,"
 							+ " force, moved, copy, usecost FROM "
 							+ oldBookTable + ";";
@@ -491,8 +491,8 @@ public class BIT extends JavaPlugin {
 							+ bookTable
 							+ " (playername TEXT, bookid INT, world TEXT, inventorytype INT,"
 							+ " x INT, y INT, z INT, slotno INT, title TEXT,"
-							+ " author TEXT, coauthor TEXT, "
-							+ " numberofpages INT, pageno INT, page TEXT,"
+							+ " author TEXT, coauthors TEXT, "
+							+ " numberofpages INT, pageno INT, bodytext TEXT,"
 							+ " mastercopy BOOLEAN, mastercopyid INT,"
 							+ " force BOOLEAN, moved BOOLEAN, copy BOOLEAN, usecost INT);";
 

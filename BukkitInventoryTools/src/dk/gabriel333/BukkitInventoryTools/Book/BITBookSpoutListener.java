@@ -28,24 +28,21 @@ public class BITBookSpoutListener extends SpoutListener {
 
 			if (BITBook.isWriteable(sBlock)
 					|| BITBook.isWriteable(itemInHand.getType())) {
-				// sPlayer.sendMessage("BITBookSpoutListener-CurrentBookId:"
-				// + BITBook.currentBookId.get(id) + " button="
-				// + BITBook.BITButtons.get(uuid));
 
 				if (BITBook.BITButtons.get(uuid) == "saveBookButton") {
 					BITBook.popupScreen.get(id).close();
 					BITBook.cleanupPopupScreen(sPlayer);
 					BITBook.BITButtons.remove(uuid);
 					int i = BITBook.currentPageNo.get(id);
-					BITBook.pagesGUI2.get(id)[i] = BITBook.pagesGUI.get(id)
+					BITBook.bodytextGUI2.get(id)[i] = BITBook.bodytextGUI.get(id)
 							.getText();
 
 					sPlayer.sendMessage("bookId="
 							+ BITBook.currentBookId.get(id) + " title="
 							+ BITBook.titleGUI.get(id).getText() + " p1="
-							+ BITBook.pagesGUI2.get(id)[1]+ " p2="
-									+ BITBook.pagesGUI2.get(id)[2]+ " p3="
-											+ BITBook.pagesGUI2.get(id)[3]);
+							+ BITBook.bodytextGUI2.get(id)[1]+ " p2="
+									+ BITBook.bodytextGUI2.get(id)[2]+ " p3="
+											+ BITBook.bodytextGUI2.get(id)[3]);
 
 					BITBook.saveBook(sPlayer, sBlock,
 							BITBook.currentBookId.get(id),

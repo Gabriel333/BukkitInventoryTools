@@ -39,8 +39,6 @@ public class BITBookInputListener extends InputListener {
 		if (screentype == ScreenType.PLAYER_INVENTORY) {
 			if (keypressed.equals(G333Config.LIBRARY_READKEY)) {
 
-				// sBlock = null;
-
 				handleItemInHand(sPlayer, sBlock, itemInHand);
 			}
 
@@ -121,7 +119,7 @@ public class BITBookInputListener extends InputListener {
 						&& BITBook.isWriteable(itemInHand.getType())
 						&& itemInHand.getAmount() == 1) {
 
-					//sBlock = null;
+					// sBlock = null;
 					handleItemInHand(sPlayer, sBlock, itemInHand);
 
 				}
@@ -166,10 +164,12 @@ public class BITBookInputListener extends InputListener {
 				if (keypressed.equals("KEY_ESCAPE")) {
 					sPlayer.closeActiveWindow();
 					BITBook.cleanupPopupScreen(sPlayer);
-
-					// sPlayer.sendMessage("You pressed escape - dropping current book");
 					BITBook.bitBooks.remove(BITBook.currentBookId.get(id));
 					BITBook.currentBookId.put(id, 0);
+
+					// sPlayer.sendMessage("You pressed escape - dropping current book");
+					// BITBook.bitBooks.remove(BITBook.currentBookId.get(id));
+					// BITBook.currentBookId.put(id, 0);
 
 				}
 			}
@@ -194,10 +194,14 @@ public class BITBookInputListener extends InputListener {
 								G333Permissions.NOT_QUIET)) {
 					// TODO: get the bookId.
 					sPlayer.sendMessage("Open existing book");
-					int bookId = 1;
-					bitBook.loadBook(sPlayer, sBlock,
-							InventoryType.PLAYER_INVENTORY, slotNo, bookId);
-					bitBook.openBook(sPlayer, bookId);
+
+					bitBook = BITBook.loadBook(sPlayer, sBlock,
+							InventoryType.PLAYER_INVENTORY, slotNo);
+					if (bitBook != null) {
+						bitBook.openBook(sPlayer, bitBook.getBookId());
+					} else {
+						sPlayer.sendMessage("BITBookInputListener - bitBook is null!");
+					}
 				}
 			} else {
 				// new book
@@ -205,7 +209,8 @@ public class BITBookInputListener extends InputListener {
 						G333Permissions.NOT_QUIET)) {
 					int id = sPlayer.getEntityId();
 					int bookId = bitBook.getNextBookId();
-					sPlayer.sendMessage("Creating new book with id:" + bookId);
+					sPlayer.sendMessage("Creating new book with id:" + bookId
+							+ " in slotNo:" + slotNo);
 					BITBook.currentBookId.put(id, bookId);
 
 					String title = "Title";
@@ -224,10 +229,6 @@ public class BITBookInputListener extends InputListener {
 					Boolean copyTheBookWhenMoved = false;
 					int useCost = 0;
 
-					sPlayer.sendMessage("BITBookInputListener-numberOfPages:"
-							+ numberOfPages);
-					sPlayer.sendMessage("BITBookInputListener-CurrentBookId:"
-							+ bookId);
 					bitBook.setBitBook(bookId, sPlayer.getName(),
 							InventoryType.PLAYER_INVENTORY, sBlock, slotNo,
 							title, author, coAuthors, numberOfPages, pages,

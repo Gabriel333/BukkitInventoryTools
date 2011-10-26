@@ -165,7 +165,7 @@ public class BITBookInputListener extends InputListener {
 					sPlayer.closeActiveWindow();
 					BITBook.cleanupPopupScreen(sPlayer);
 					BITBook.bitBooks.remove(BITBook.currentBookId.get(id));
-					BITBook.currentBookId.put(id, 0);
+					BITBook.currentBookId.put(id, (short) 0);
 
 					// sPlayer.sendMessage("You pressed escape - dropping current book");
 					// BITBook.bitBooks.remove(BITBook.currentBookId.get(id));
@@ -208,7 +208,7 @@ public class BITBookInputListener extends InputListener {
 				if (G333Permissions.hasPerm(sPlayer, "book.create",
 						G333Permissions.NOT_QUIET)) {
 					int id = sPlayer.getEntityId();
-					int bookId = bitBook.getNextBookId();
+					short bookId = bitBook.getNextBookId();
 					sPlayer.sendMessage("Creating new book with id:" + bookId
 							+ " in slotNo:" + slotNo);
 					BITBook.currentBookId.put(id, bookId);
@@ -223,7 +223,7 @@ public class BITBookInputListener extends InputListener {
 					pages[1] = "This is page number 2";
 					pages[2] = "This is page number 3";
 					Boolean masterCopy = false;
-					int masterCopyId = 0;
+					short masterCopyId = 0;
 					Boolean forceBookToPlayerInventory = false;
 					Boolean canBeMovedFromInventory = true;
 					Boolean copyTheBookWhenMoved = false;

@@ -38,7 +38,7 @@ public class BITBook {
 		plugin = this.plugin;
 	}
 
-	protected int bookId;
+	protected short bookId;
 	protected String playerName;
 	protected InventoryType inventoryType;
 	protected SpoutBlock sBlock;
@@ -73,10 +73,10 @@ public class BITBook {
 	 * @param copyTheBookWhenMoved
 	 * @param useCost
 	 */
-	BITBook(int bookId, String playerName, InventoryType inventoryType,
+	BITBook(short bookId, String playerName, InventoryType inventoryType,
 			SpoutBlock sBlock, int slotNo, String title, String author,
 			String coAuthors, int numberOfPages, String[] bodytext,
-			Boolean masterCopy, int masterCopyId,
+			Boolean masterCopy, short masterCopyId,
 			Boolean forceBookToPlayerInventory,
 			Boolean canBeMovedFromInventory, Boolean copyTheBookWhenMoved,
 			int useCost) {
@@ -98,14 +98,14 @@ public class BITBook {
 		this.useCost = useCost;
 	}
 
-	public static HashMap<Integer, BITBook> bitBooks = new HashMap<Integer, BITBook>();
+	public static HashMap<Short, BITBook> bitBooks = new HashMap<Short, BITBook>();
 
 	public static Map<Integer, PopupScreen> popupScreen = new HashMap<Integer, PopupScreen>();
 	public static Map<UUID, String> BITButtons = new HashMap<UUID, String>();
 	public static Map<Integer, Integer> userno = new HashMap<Integer, Integer>();
 
 	// Parameters for the bookPopupScreen
-	public static Map<Integer, Integer> currentBookId = new HashMap<Integer, Integer>();
+	public static Map<Integer, Short> currentBookId = new HashMap<Integer, Short>();
 
 	public static Map<Integer, GenericTextField> titleGUI = new HashMap<Integer, GenericTextField>();
 	public static Map<Integer, Integer> currentPageNo = new HashMap<Integer, Integer>();
@@ -116,7 +116,7 @@ public class BITBook {
 	public static Map<Integer, GenericTextField> coAuthorsGUI = new HashMap<Integer, GenericTextField>();
 	public static Map<Integer, Boolean> masterCopyGUI = new HashMap<Integer, Boolean>();
 	public static Map<Integer, GenericButton> masterCopyButtonGUI = new HashMap<Integer, GenericButton>();
-	public static Map<Integer, Integer> masterCopyIdGUI = new HashMap<Integer, Integer>();
+	public static Map<Integer, Short> masterCopyIdGUI = new HashMap<Integer, Short>();
 	public static Map<Integer, Boolean> forceBookToPlayerInventoryGUI = new HashMap<Integer, Boolean>();
 	public static Map<Integer, GenericButton> forceBookToPlayerInventoryButtonGUI = new HashMap<Integer, GenericButton>();
 	public static Map<Integer, GenericButton> canBeMovedFromInventoryButtonGUI = new HashMap<Integer, GenericButton>();
@@ -125,10 +125,10 @@ public class BITBook {
 	public static Map<Integer, Boolean> copyTheBookWhenMovedGUI = new HashMap<Integer, Boolean>();
 	public static Map<Integer, GenericTextField> useCostGUI = new HashMap<Integer, GenericTextField>();
 
-	public void setBitBook(int bookId, String playerName,
+	public void setBitBook(short bookId, String playerName,
 			InventoryType inventoryType, SpoutBlock sBlock, int slotNo,
 			String title, String author, String coAuthors, int numberOfPages,
-			String[] bodytext, Boolean masterCopy, int masterCopyId,
+			String[] bodytext, Boolean masterCopy, short masterCopyId,
 			Boolean forceBookToPlayerInventory,
 			Boolean canBeMovedFromInventory, Boolean copyTheBookWhenMoved,
 			int useCost) {
@@ -150,7 +150,7 @@ public class BITBook {
 		this.useCost = useCost;
 	}
 
-	public int getBookId() {
+	public short getBookId() {
 		return bookId;
 	}
 
@@ -158,8 +158,8 @@ public class BITBook {
 		return inventoryType;
 	}
 
-	public int getNextBookId() {
-		int nextId = 1;
+	public short getNextBookId() {
+		short nextId = 1;
 		if (!bitBooks.isEmpty()) {
 			while (bitBooks.containsKey(nextId)) {
 				nextId++;
@@ -326,7 +326,7 @@ public class BITBook {
 	}
 
 	public static void saveBook(SpoutPlayer sPlayer, SpoutBlock sBlock,
-			int bookId, InventoryType inventoryType, int slotNo) {
+			short bookId, InventoryType inventoryType, int slotNo) {
 
 		int id = sPlayer.getEntityId();
 
@@ -671,14 +671,14 @@ public class BITBook {
 						+ cost);
 			}
 		}
-		BITBook.currentBookId.put(id, 0);
+		BITBook.currentBookId.put(id, (short) 0);
 
 	}
 
 	public static BITBook loadBook(SpoutPlayer sPlayer, SpoutBlock sBlock,
 			InventoryType inventoryType, int slotNo) {
 
-		int resBookId = 0;
+		short resBookId = 0;
 		int resSlotNo = 0;
 		// String resWorld="";
 		String resTitle = "";
@@ -688,7 +688,7 @@ public class BITBook {
 		String resBodytext[] = new String[10];
 		int resPageno;
 		Boolean resMasterCopy = false;
-		int resMasterCopyId = 0;
+		short resMasterCopyId = 0;
 		Boolean resForceBookToPlayerInventory = false;
 		Boolean resCanBeMovedFromInventory = true;
 		Boolean resCopyTheBookWhenMoved = false;
@@ -739,7 +739,7 @@ public class BITBook {
 		int resX = 0, resY = 0, resZ = 0;
 		try {
 			while (result != null && result.next()) {
-				resBookId = result.getInt("bookid");
+				resBookId = (short) result.getInt("bookid");
 				resX = result.getInt("x");
 				resY = result.getInt("y");
 				resZ = result.getInt("z");
@@ -752,7 +752,7 @@ public class BITBook {
 				resPageno = result.getInt("pageno");
 				resBodytext[resPageno] = result.getString("bodytext");
 				resMasterCopy = result.getBoolean("mastercopy");
-				resMasterCopyId = result.getInt("mastercopyid");
+				resMasterCopyId = (short) result.getInt("mastercopyid");
 				resForceBookToPlayerInventory = result.getBoolean("force");
 				resCanBeMovedFromInventory = result.getBoolean("moved");
 				resCopyTheBookWhenMoved = result.getBoolean("copy");
@@ -1065,7 +1065,7 @@ public class BITBook {
 			coAuthorsGUI.put(id, new GenericTextField());
 			masterCopyGUI.put(id, false);
 			masterCopyButtonGUI.put(id, new GenericButton());
-			masterCopyIdGUI.put(id, 0);
+			masterCopyIdGUI.put(id, (short) 0);
 			forceBookToPlayerInventoryGUI.put(id, false);
 			forceBookToPlayerInventoryButtonGUI.put(id, new GenericButton());
 			canBeMovedFromInventoryGUI.put(id, true);

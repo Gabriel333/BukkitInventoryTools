@@ -1,6 +1,8 @@
 package dk.gabriel333.BukkitInventoryTools.Inventory;
 
+import org.bukkit.Material;
 import org.bukkit.event.Event;
+import org.bukkit.inventory.ItemStack;
 import org.getspout.spoutapi.event.inventory.InventoryClickEvent;
 import org.getspout.spoutapi.event.inventory.InventoryCloseEvent;
 import org.getspout.spoutapi.event.inventory.InventoryCraftEvent;
@@ -42,11 +44,16 @@ public class BITInventoryListener extends InventoryListener {
 			BITInventory.saveBitInventory(sPlayer, bitInventory);
 			BITInventory.openedInventories.remove(id);
 		}
-			
-		//BITInventory.closeBitInventory(sPlayer);
 	}
 
 	public void onInventoryClick(InventoryClickEvent event) {
+		SpoutPlayer sPlayer = (SpoutPlayer) event.getPlayer();
+		ItemStack itemClicked = event.getItem();
+        ItemStack itemHolding = event.getCursor();
+        if (itemClicked != null && itemClicked.getType() == Material.BOOK) {
+        	sPlayer.sendMessage("ItemClicked:"+itemClicked.getType()+ " itemHolding:"+itemHolding.getType());
+        }
+		
 
 	}
 
@@ -55,6 +62,7 @@ public class BITInventoryListener extends InventoryListener {
 	}
 
 	public void onCustumEvent(Event event) {
+	   
 
 	}
 

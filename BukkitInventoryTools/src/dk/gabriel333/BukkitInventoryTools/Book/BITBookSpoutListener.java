@@ -55,7 +55,7 @@ public class BITBookSpoutListener extends SpoutListener {
 					sPlayer.sendMessage("You clicked cancel - dropping current book id:"
 							+ BITBook.currentBookId.get(id));
 					BITBook.bitBooks.remove(BITBook.currentBookId.get(id));
-					BITBook.currentBookId.put(id, 0);
+					BITBook.currentBookId.put(id, (short) 0);
 
 				}
 				/*

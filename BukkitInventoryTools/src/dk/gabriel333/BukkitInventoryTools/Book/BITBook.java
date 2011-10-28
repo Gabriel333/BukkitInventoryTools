@@ -14,7 +14,6 @@ import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.Plugin;
-import org.getspout.spoutapi.SpoutManager;
 import org.getspout.spoutapi.gui.GenericButton;
 import org.getspout.spoutapi.gui.GenericItemWidget;
 import org.getspout.spoutapi.gui.GenericPopup;
@@ -348,6 +347,9 @@ public class BITBook {
 					BIT.manageSQLite.insertQuery(query);
 				}
 			}
+			ItemStack item = sPlayer.getItemInHand();
+			item.setDurability(bookId);
+			sPlayer.setItemInHand(item);
 			G333Messages.sendNotification(sPlayer, "Book updated.");
 		} else {
 			// NEW BOOK
@@ -423,7 +425,7 @@ public class BITBook {
 				ItemStack item = sPlayer.getItemInHand();
 				item.setDurability(bookId);
 				sPlayer.setItemInHand(item);
-				BITBook.currentBookId.put(id, (short) bookId);
+				//BITBook.currentBookId.put(id, (short) bookId);
 			} else {
 				sPlayer.sendMessage("You dont have enough money. Cost is:"
 						+ cost);
@@ -823,11 +825,10 @@ public class BITBook {
 		bodytextGUI.get(id).setDirty(true);
 	}
 
-	@SuppressWarnings("deprecation")
 	public static void setBookName(short bookId, String title) {
 		//String str = "Book:"+title;
 		//SpoutManager.getMaterialManager().setItemName(Material.BOOK, str);
-		SpoutManager.getItemManager().setItemName(Material.BOOK, bookId,"Book:" + title);
+		//SpoutManager.getItemManager().setItemName(Material.BOOK, bookId,"Book:" + title);
 		for (Player p : Bukkit.getServer().getOnlinePlayers()) {
 			SpoutPlayer sp = (SpoutPlayer) p;
 			if (sp.isSpoutCraftEnabled()) {

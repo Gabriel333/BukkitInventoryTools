@@ -30,11 +30,6 @@ public class BITBookSpoutListener extends SpoutListener {
 						.getText();
 
 				BITBook.saveBook(sPlayer, BITBook.currentBookId.get(id));
-				sPlayer.sendMessage("bookId=" + BITBook.currentBookId.get(id)
-						+ " title=" + BITBook.titleGUI.get(id).getText()
-						+ " p1=" + BITBook.bodytextGUI2.get(id)[1] + " p2="
-						+ BITBook.bodytextGUI2.get(id)[2] + " p3="
-						+ BITBook.bodytextGUI2.get(id)[3]);
 				itemInHand.setDurability(BITBook.currentBookId.get(id));
 
 			} else if (BITBook.BITButtons.get(uuid) == "cancelBookButton") {

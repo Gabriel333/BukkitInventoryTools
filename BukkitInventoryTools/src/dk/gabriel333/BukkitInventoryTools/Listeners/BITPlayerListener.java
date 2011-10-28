@@ -665,8 +665,16 @@ public class BITPlayerListener extends PlayerListener {
 			sPlayer.sendMessage("Event:" + event.getEventName() + " type:"
 					+ event.getType());
 		}
+		
+		// ItemStack item = event.getPlayer().getInventory().getItem(event.getNewSlot());
+	    //    if (item != null && item.getType() == Material.BOOK && item.getDurability() != 0) {
+	    //            sBook book = plugin.getBookById(item.getDurability());
+	    //            if (book != null) {
+	    //                    event.getPlayer().sendMessage(BookWorm.TEXT_COLOR + BookWorm.S_READ_BOOK + ": " + BookWorm.TEXT_COLOR_2 + book.getTitle());
+	    //            }
+	    //    }
 	}
-
+	
 	public void onPlayerLogin(PlayerLoginEvent event) {
 		int id = event.getPlayer().getEntityId();
 		BIT.addUserData(id);

@@ -1,5 +1,6 @@
 package dk.gabriel333.BukkitInventoryTools;
 
+import java.lang.reflect.Field;
 import java.net.MalformedURLException;
 import java.util.HashMap;
 import java.util.Map;
@@ -65,6 +66,7 @@ public class BIT extends JavaPlugin {
 			setupMyWolf();
 			registerEvents();
 			addCommands();
+			setupBook();
 			// BITPlayer.clearAllUserData();
 			G333Messages.showInfo("BIT version " + pdfFile.getVersion()
 					+ " is enabled!");
@@ -115,8 +117,6 @@ public class BIT extends JavaPlugin {
 				Priority.Normal, this);
 		pm.registerEvent(Type.BLOCK_PISTON_RETRACT, new BITBlockListener(),
 				Priority.Normal, this);
-		pm.registerEvent(Event.Type.CUSTOM_EVENT,
-				new BITInventoryListener(this), Event.Priority.Low, this);
 		pm.registerEvent(Event.Type.PLAYER_INTERACT, new BITPlayerListener(),
 				Priority.Normal, this);
 		pm.registerEvent(Event.Type.PLAYER_JOIN, new BITPlayerListener(),
@@ -135,7 +135,10 @@ public class BIT extends JavaPlugin {
 		// BITIventory Listeners
 		pm.registerEvent(Event.Type.CUSTOM_EVENT,
 				new BITInventorySpoutListener(), Event.Priority.Normal, this);
+
 		// BITBook Listeners
+		pm.registerEvent(Event.Type.CUSTOM_EVENT,
+				new BITInventoryListener(this), Event.Priority.Low, this);
 		pm.registerEvent(Event.Type.CUSTOM_EVENT, new BITBookInputListener(),
 				Event.Priority.Normal, this);
 		pm.registerEvent(Event.Type.CUSTOM_EVENT, new BITBookSpoutListener(),
@@ -462,16 +465,14 @@ public class BIT extends JavaPlugin {
 							+ bookTable + ".");
 					query = "CREATE TABLE "
 							+ bookTable
-							+ " ( playername TEXT, bookid INT, world TEXT, inventorytype INT,"
-							+ " x INT, y INT, z INT, slotno INT, title TEXT,"
+							+ " (bookid INT, title TEXT,"
 							+ " author TEXT, coauthors TEXT, "
 							+ " numberofpages INT, pageno INT, bodytext TEXT,"
 							+ " mastercopy BOOLEAN, mastercopyid INT,"
 							+ " force BOOLEAN, moved BOOLEAN, copy BOOLEAN, usecost INT);";
 					insert = "insert into "
 							+ bookTable
-							+ " (playername, bookid, world, inventorytype,"
-							+ " x, y, z, slotno, title,"
+							+ " (bookid, title,"
 							+ " author, coauthors, "
 							+ " numberofpages, pageno, bodytext,"
 							+ " mastercopy, mastercopyid,"
@@ -489,8 +490,7 @@ public class BIT extends JavaPlugin {
 					G333Messages.showInfo("Creating table " + bookTable);
 					query = "CREATE TABLE "
 							+ bookTable
-							+ " (playername TEXT, bookid INT, world TEXT, inventorytype INT,"
-							+ " x INT, y INT, z INT, slotno INT, title TEXT,"
+							+ " (bookid INT, title TEXT,"
 							+ " author TEXT, coauthors TEXT, "
 							+ " numberofpages INT, pageno INT, bodytext TEXT,"
 							+ " mastercopy BOOLEAN, mastercopyid INT,"
@@ -523,4 +523,32 @@ public class BIT extends JavaPlugin {
 		}
 	}
 
+	public static void setupBook(){
+		 // THIS PREVENTS BOOK FROM STACKING
+		try {
+	            boolean ok = false;
+	            try {
+	                    // attempt to make books with different data values stack separately
+	                    Field field1 = net.minecraft.server.Item.class.getDeclaredField("bs");
+	                    if (field1.getType() == boolean.class) {
+	                            field1.setAccessible(true);
+	                            field1.setBoolean(net.minecraft.server.Item.BOOK, true);
+	                            ok = true;
+	                    } 
+	            } catch (Exception e) {
+	            }
+	            if (!ok) {
+	                    // otherwise limit stack size to 1
+	                    Field field2 = net.minecraft.server.Item.class.getDeclaredField("maxStackSize");
+	                    field2.setAccessible(true);
+	                    field2.setInt(net.minecraft.server.Item.BOOK, 1);
+	            }
+	    } catch (Exception e) {
+	            e.printStackTrace();
+	    }
+	    
+	    
+	}
+
+	
 }

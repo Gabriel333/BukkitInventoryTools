@@ -1,6 +1,5 @@
 package dk.gabriel333.BukkitInventoryTools.Inventory;
 
-import org.bukkit.Material;
 import org.bukkit.event.Event;
 import org.bukkit.inventory.ItemStack;
 import org.getspout.spoutapi.event.inventory.InventoryClickEvent;
@@ -35,12 +34,11 @@ public class BITInventoryListener extends InventoryListener {
 
 	public void onInventoryClose(InventoryCloseEvent event) {
 		SpoutPlayer sPlayer = (SpoutPlayer) event.getPlayer();
-		//sPlayer.sendMessage("an inventory was closed:"+event.getLocation()+" evtname:"+
-		//event.getEventName());
+		// sPlayer.sendMessage("an inventory was closed:"+event.getLocation()+" evtname:"+
+		// event.getEventName());
 		if (event.getInventory().getName().equals("Bookshelf")) {
 			int id = sPlayer.getEntityId();
-			BITInventory bitInventory = BITInventory.openedInventories
-					.get(id);
+			BITInventory bitInventory = BITInventory.openedInventories.get(id);
 			BITInventory.saveBitInventory(sPlayer, bitInventory);
 			BITInventory.openedInventories.remove(id);
 		}
@@ -49,12 +47,25 @@ public class BITInventoryListener extends InventoryListener {
 	public void onInventoryClick(InventoryClickEvent event) {
 		SpoutPlayer sPlayer = (SpoutPlayer) event.getPlayer();
 		ItemStack itemClicked = event.getItem();
-        ItemStack itemHolding = event.getCursor();
-        if (itemClicked != null && itemClicked.getType() == Material.BOOK) {
-        	sPlayer.sendMessage("ItemClicked:"+itemClicked.getType()+ " itemHolding:"+itemHolding.getType());
-        }
-		
+		ItemStack itemHolding = event.getCursor();
 
+		if (itemClicked != null && BIT.holdingKey.equals("KEY_LCONTROL")) {
+			short bookId = sPlayer.getItemInHand().getDurability();
+			sPlayer.sendMessage("(1)ItemClicked:" + itemClicked.getType()
+					+ " bookId:" + bookId);
+
+		} else {
+
+			if (itemClicked != null) {
+				sPlayer.sendMessage("ItemClicked:" + itemClicked.getType()
+						+ "id:" + itemClicked.getDurability());
+
+			}
+			if (itemHolding != null) {
+				sPlayer.sendMessage("itemHolding:" + itemHolding.getType()
+						+ " id:" + itemHolding.getDurability());
+			}
+		}
 	}
 
 	public void onInventoryCraft(InventoryCraftEvent event) {
@@ -62,7 +73,6 @@ public class BITInventoryListener extends InventoryListener {
 	}
 
 	public void onCustumEvent(Event event) {
-	   
 
 	}
 

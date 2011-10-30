@@ -15,7 +15,6 @@ import org.bukkit.event.block.BlockPistonRetractEvent;
 import org.bukkit.event.block.BlockRedstoneEvent;
 import org.bukkit.event.block.BlockSpreadEvent;
 import org.bukkit.event.block.SignChangeEvent;
-import org.bukkit.material.Door;
 import org.getspout.spoutapi.block.SpoutBlock;
 import org.getspout.spoutapi.player.SpoutPlayer;
 
@@ -28,7 +27,7 @@ public class BITBlockListener extends BlockListener {
 
 	public void onBlockRedstoneChange(BlockRedstoneEvent event) {
 		// TODO: THERE IS AN MEMORY LEAK HERE!!!
-		SpoutBlock sBlock = (SpoutBlock) event.getBlock();
+	/*	SpoutBlock sBlock = (SpoutBlock) event.getBlock();
 		if (!BITDigiLock.isLockable(sBlock))
 			return;
 		if (BITDigiLock.isLocked(sBlock)) {
@@ -45,7 +44,7 @@ public class BITBlockListener extends BlockListener {
 					event.setNewCurrent(event.getOldCurrent());
 				}
 			}
-		}
+		}*/
 	}
 
 	public void onBlockPhysics(BlockPhysicsEvent event) {
@@ -73,6 +72,9 @@ public class BITBlockListener extends BlockListener {
 		if (!BITDigiLock.isLockable(sBlock))
 			return;
 		if (BITDigiLock.isLocked(sBlock)) {
+			if (BITDigiLock.isDoubleDoor(sBlock)){
+				G333Messages.showInfo("Tried to break doubledoor");
+			}
 			event.setCancelled(true);
 			if (G333Config.DEBUG_EVENTS) {
 				G333Messages.showInfo("BlockFromTo:"

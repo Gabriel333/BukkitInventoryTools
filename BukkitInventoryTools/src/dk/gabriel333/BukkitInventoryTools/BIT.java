@@ -95,6 +95,7 @@ public class BIT extends JavaPlugin {
 				Priority.Normal, this);
 		pm.registerEvent(Event.Type.BLOCK_DAMAGE, new BITBlockListener(),
 				Priority.Normal, this);
+		// REDSTONE_CHANGE is disabled because of memory leak
 		// pm.registerEvent(Type.REDSTONE_CHANGE, new BITBlockListener(),
 		// Priority.Normal, this);
 		pm.registerEvent(Type.BLOCK_PHYSICS, new BITBlockListener(),
@@ -111,8 +112,8 @@ public class BIT extends JavaPlugin {
 				Priority.Normal, this);
 		pm.registerEvent(Type.BLOCK_IGNITE, new BITBlockListener(),
 				Priority.Normal, this);
-		// pm.registerEvent(Type.SIGN_CHANGE, new BITBlockListener(),
-		// Priority.Normal, this);
+		pm.registerEvent(Type.SIGN_CHANGE, new BITBlockListener(),
+		Priority.Normal, this);
 		pm.registerEvent(Type.BLOCK_PISTON_EXTEND, new BITBlockListener(),
 				Priority.Normal, this);
 		pm.registerEvent(Type.BLOCK_PISTON_RETRACT, new BITBlockListener(),
@@ -244,7 +245,7 @@ public class BIT extends JavaPlugin {
 	public static String oldDigilockTable = "BukkitInventoryTools4";
 	public static String bitInventoryTable = "Bookshelf";
 	public static String oldBitInventoryTable = "Bookshelf_NONE";
-	public static String bookTable = "BookPRERELEASE";
+	public static String bookTable = "Book";
 	public static String oldBookTable = "Book_NONE";
 
 	private void setupSQL() {

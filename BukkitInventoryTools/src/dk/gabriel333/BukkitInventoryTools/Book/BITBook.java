@@ -227,7 +227,7 @@ public class BITBook {
 
 	public static short getMaxBookId() {
 		String query = "SELECT MAX(bookId) as max FROM " + BIT.bookTable + " ;";
-		short max = 0;
+		short max = 10000;
 		ResultSet result = null;
 		if (G333Config.STORAGE_TYPE.equals("MYSQL")) {
 			try {
@@ -431,7 +431,7 @@ public class BITBook {
 						+ cost);
 			}
 		}
-		BITBook.currentBookId.put(id, (short) 0);
+		BITBook.currentBookId.put(id, (short) 10000);
 	}
 
 	public static BITBook loadBook(SpoutPlayer sPlayer, short bookId) {
@@ -489,9 +489,12 @@ public class BITBook {
 					resMasterCopyId, resForceBookToPlayerInventory,
 					resCanBeMovedFromInventory, resCopyTheBookWhenMoved,
 					resUseCost));
+			BITBook.currentBookId.put(sPlayer.getEntityId(), bookId);
+			setBookName(bookId, resTitle);
+		} else {
+			//TODO: if bookid not found then set durability to 0 ???
 		}
-		BITBook.currentBookId.put(sPlayer.getEntityId(), bookId);
-		setBookName(bookId, resTitle);
+		
 		return bitBooks.get(bookId);
 		
 	}

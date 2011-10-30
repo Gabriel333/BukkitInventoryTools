@@ -41,7 +41,7 @@ public class BITBookInputListener extends InputListener {
 				sPlayer.closeActiveWindow();
 				BITBook.cleanupPopupScreen(sPlayer);
 				BITBook.bitBooks.remove(BITBook.currentBookId.get(id));
-				BITBook.currentBookId.put(id, (short) 0);
+				BITBook.currentBookId.put(id, (short) 10000);
 			}
 		}
 	}
@@ -53,13 +53,13 @@ public class BITBookInputListener extends InputListener {
 
 			short bookId = itemInHand.getDurability();
 			BITBook bitBook = new BITBook();
-			if (bookId > 0) {
+			if (bookId > 10000) {
 				if (G333Permissions.hasPerm(sPlayer, "book.use",
 						G333Permissions.NOT_QUIET)
 						|| G333Permissions.hasPerm(sPlayer, "book.admin",
 								G333Permissions.NOT_QUIET)) {
 					bitBook = BITBook.loadBook(sPlayer, bookId);
-					bitBook.openBook(sPlayer, bitBook.getBookId());
+					bitBook.openBook(sPlayer, bookId);
 				}
 			} else {
 				// new book

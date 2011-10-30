@@ -69,9 +69,9 @@ public class BITPlayerListener extends PlayerListener {
 						sPlayer, "digilock.admin", G333Permissions.NOT_QUIET))) {
 			event.setCancelled(true);
 			BITDigiLock.setPincode(sPlayer, sBlock);
-			
-		// Call openEditSignGUI	
-		} else 
+
+			// Call openEditSignGUI
+		} else
 
 		// HANDLING THAT PLAYER CLICK ON A BLOCK WITH A DIGILOCK
 		if (BITDigiLock.isLocked(sBlock)) {
@@ -498,7 +498,7 @@ public class BITPlayerListener extends PlayerListener {
 										G333Permissions.NOT_QUIET)) {
 							Sign sign = (Sign) sBlock.getState();
 							sPlayer.openSignEditGUI(sign);
-						} 
+						}
 					} else {
 						event.setCancelled(true);
 						sPlayer.sendMessage("Your fingerprint does not match the DigiLock");
@@ -580,8 +580,7 @@ public class BITPlayerListener extends PlayerListener {
 			// G333Messages.sendNotification(sPlayer, "Locked with Digilock.");
 			// event.setCancelled(true);
 			// }
-			
-			
+
 			// ELSE - IT WAS NOT A LOCKED BLOCK
 		} else {
 			if (G333Config.DEBUG_GUI) {
@@ -590,11 +589,15 @@ public class BITPlayerListener extends PlayerListener {
 			}
 			// HANDLING THE DOUBLEDOOR
 			else if (BITDigiLock.isDoubleDoor(sBlock)) {
-				event.setCancelled(true);
-				if (BITDigiLock.isDoubleDoorOpen(sBlock)) {
-					BITDigiLock.closeDoubleDoor(sPlayer, sBlock, 0);
-				} else {
-					BITDigiLock.openDoubleDoor(sPlayer, sBlock, 0);
+				// if LEFT_CLICK_BLOCK is canceled the double door cant be
+				// broken. 
+				if (event.getAction().equals(Action.RIGHT_CLICK_BLOCK)) {
+					event.setCancelled(true);
+					if (BITDigiLock.isDoubleDoorOpen(sBlock)) {
+						BITDigiLock.closeDoubleDoor(sPlayer, sBlock, 0);
+					} else {
+						BITDigiLock.openDoubleDoor(sPlayer, sBlock, 0);
+					}
 				}
 
 			}
@@ -639,7 +642,7 @@ public class BITPlayerListener extends PlayerListener {
 					sPlayer.openSignEditGUI(sign);
 				}
 			}
-			
+
 			// BOOKSHELF
 			else if (sBlock.getType().equals(Material.BOOKSHELF)
 					&& event.getAction().equals(Action.RIGHT_CLICK_BLOCK)) {
@@ -665,16 +668,20 @@ public class BITPlayerListener extends PlayerListener {
 			sPlayer.sendMessage("Event:" + event.getEventName() + " type:"
 					+ event.getType());
 		}
-		
-		// ItemStack item = event.getPlayer().getInventory().getItem(event.getNewSlot());
-	    //    if (item != null && item.getType() == Material.BOOK && item.getDurability() != 0) {
-	    //            sBook book = plugin.getBookById(item.getDurability());
-	    //            if (book != null) {
-	    //                    event.getPlayer().sendMessage(BookWorm.TEXT_COLOR + BookWorm.S_READ_BOOK + ": " + BookWorm.TEXT_COLOR_2 + book.getTitle());
-	    //            }
-	    //    }
+
+		// ItemStack item =
+		// event.getPlayer().getInventory().getItem(event.getNewSlot());
+		// if (item != null && item.getType() == Material.BOOK &&
+		// item.getDurability() != 0) {
+		// sBook book = plugin.getBookById(item.getDurability());
+		// if (book != null) {
+		// event.getPlayer().sendMessage(BookWorm.TEXT_COLOR +
+		// BookWorm.S_READ_BOOK + ": " + BookWorm.TEXT_COLOR_2 +
+		// book.getTitle());
+		// }
+		// }
 	}
-	
+
 	public void onPlayerLogin(PlayerLoginEvent event) {
 		int id = event.getPlayer().getEntityId();
 		BIT.addUserData(id);

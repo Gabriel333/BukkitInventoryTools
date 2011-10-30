@@ -27,7 +27,9 @@ public class DatabaseHandler {
 	private void openConnection() throws MalformedURLException, InstantiationException, IllegalAccessException {
 		try {
 			Class.forName("com.mysql.jdbc.Driver");
-			connection = DriverManager.getConnection("jdbc:mysql://" + dblocation + "/" + database, username, password);
+			// TODO: remove +"?autoReconnect=true" if it does not solve the problem from ticket 75
+
+			connection = DriverManager.getConnection("jdbc:mysql://" + dblocation + "/" + database+"?autoReconnect=true", username, password);
 	    } catch (ClassNotFoundException e) {
 	    	core.writeError("ClassNotFoundException! " + e.getMessage(), true);
 	    } catch (SQLException e) {

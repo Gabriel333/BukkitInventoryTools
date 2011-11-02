@@ -231,7 +231,7 @@ public class BITPlayerListener extends PlayerListener {
 						sPlayer.sendMessage("Your fingerprint does not match the DigiLock");
 						if (BITDigiLock.isTrapdoorOpen(sPlayer, sBlock)) {
 							BITDigiLock.playDigiLockSound(sBlock);
-							BITDigiLock.closeDoor(sPlayer, sBlock, 0);
+							BITDigiLock.closeTrapdoor(sPlayer, sBlock);
 						}
 					}
 				} else {
@@ -253,6 +253,53 @@ public class BITPlayerListener extends PlayerListener {
 				}
 			}
 
+			// HANDLING A FENCE GATE
+						else if (sBlock.getType().equals(Material.FENCE_GATE)) {
+							event.setCancelled(true);
+							if (digilock.getPincode().equals("")
+									|| digilock.getPincode()
+											.equalsIgnoreCase("fingerprint")
+									&& G333Permissions.hasPerm(sPlayer, "digilock.use",
+											G333Permissions.NOT_QUIET)) {
+								// TOGGLE DOOR BY FINGERPRINT / NAME
+								if (digilock.isOwner(sPlayer)
+										|| digilock.isCoowner(sPlayer)
+										|| digilock.isUser(sPlayer)) {
+									BITDigiLock.playDigiLockSound(sBlock);
+									if (BITDigiLock.isFenceGateOpen(sPlayer, sBlock)) {
+										BITDigiLock.closeFenceGate(sPlayer, sBlock);
+									} else {
+										BITDigiLock.openFenceGate(sPlayer, sBlock,
+												digilock.getUseCost());
+									}
+									G333Messages.sendNotification(sPlayer,
+											"Used with fingerprint");
+								} else {
+									sPlayer.sendMessage("Your fingerprint does not match the DigiLock");
+									if (BITDigiLock.isFenceGateOpen(sPlayer, sBlock)) {
+										BITDigiLock.playDigiLockSound(sBlock);
+										BITDigiLock.closeFenceGate(sPlayer, sBlock);
+									}
+								}
+							} else {
+								// ASK FOR PINCODE
+								if (!BITDigiLock.isFenceGateOpen(sPlayer, sBlock)) {
+									if (sPlayer.isSpoutCraftEnabled()
+											&& G333Permissions.hasPerm(sPlayer,
+													"digilock.use",
+													G333Permissions.NOT_QUIET)) {
+										BITDigiLock.getPincode(sPlayer, sBlock);
+									} else {
+										sPlayer.sendMessage("Digilock'ed by "
+												+ sPlayer.getName());
+									}
+								} else {
+									BITDigiLock.closeFenceGate(sPlayer, sBlock);
+									BITDigiLock.playDigiLockSound(sBlock);
+								}
+							}
+						}
+			
 			// HANDLING A LOCKED DISPENCER
 			else if (sBlock.getType().equals(Material.DISPENSER)) {
 				if ((digilock.getPincode().equals("") || digilock.getPincode()

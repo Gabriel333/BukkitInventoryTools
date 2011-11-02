@@ -227,8 +227,6 @@ public class BITInventory {
 	}
 
 	public static Boolean isBitInventoryCreated(SpoutBlock block) {
-		// TODO: Implement a HASHMAP for testing if the Inventory is created.
-		// G333Messages.showInfo("isLocked was called");
 		String query = "SELECT * FROM " + BIT.bitInventoryTable
 				+ " WHERE (x = " + block.getX() + " AND y = " + block.getY()
 				+ " AND z = " + block.getZ() + " AND world='"
@@ -299,9 +297,6 @@ public class BITInventory {
 				itemstack_amount = result.getInt("itemstack_amount");
 				itemstack_durability = (short) result
 						.getInt("itemstack_durability");
-				// sPlayer.sendMessage("i:" + i + " tp:" + itemstack_typeId
-				// + " amt:" + itemstack_amount + "du:"
-				// + itemstack_durability);
 				if (itemstack_amount == 0) {
 					inventory.clear(i);
 				} else {
@@ -312,10 +307,6 @@ public class BITInventory {
 					inventory.setItem(i, itemstack);
 
 				}
-				// G333Messages.showInfo("i:" + i + " " + "tp:"
-				// + inventory.getItem(i).getType() + " amt:"
-				// + inventory.getItem(i).getAmount() + " du:"
-				// + inventory.getItem(i).getDurability());
 				name = result.getString("name");
 				owner = result.getString("owner");
 				coOwners = result.getString("coowners");
@@ -325,10 +316,6 @@ public class BITInventory {
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
-		// G333Messages.showInfo("name:" + name + " owner:" + owner +
-		// " coowners:"
-		// + coOwners + " usecost:" + useCost);
-		// G333Messages.showInfo("inv:" + inventory);
 		BITInventory inv = new BITInventory(sBlock, owner, name, coOwners,
 				inventory, useCost);
 		return inv;
@@ -487,7 +474,6 @@ public class BITInventory {
 
 	public static void removeBookshelfAndDropItems(SpoutPlayer sPlayer,
 			SpoutBlock sBlock) {
-		// World world = sBlock.getBlock().getWorld();
 		World world = sBlock.getWorld();
 		Location location = sBlock.getLocation();
 		BITInventory bitInventory = BITInventory.loadBitInventory(sPlayer,
@@ -501,7 +487,6 @@ public class BITInventory {
 			}
 			bitInventory.RemoveBitInventory(sPlayer,
 					G333Config.BOOKSHELF_DESTROYCOST);
-
 		}
 		if (G333Config.BOOKSHELF_RECOVER_ON_BREAK){
 			ItemStack item = new ItemStack(Material.BOOKSHELF,1);

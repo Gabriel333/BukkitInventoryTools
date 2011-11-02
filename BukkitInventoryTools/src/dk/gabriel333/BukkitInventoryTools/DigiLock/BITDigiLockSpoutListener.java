@@ -60,6 +60,16 @@ public class BITDigiLockSpoutListener extends SpoutListener {
 							BITDigiLock.openDoor(sPlayer, digilock.getBlock(),
 									digilock.getUseCost());
 
+						} else if (BITDigiLock.isTrapdoor(sBlock)) {
+							BITDigiLock.playDigiLockSound(digilock.getBlock());
+							BITDigiLock.openTrapdoor(sPlayer,
+									digilock.getBlock(), digilock.getUseCost());
+
+						} else if (BITDigiLock.isFenceGate(sBlock)) {
+							BITDigiLock.playDigiLockSound(digilock.getBlock());
+							BITDigiLock.openFenceGate(sPlayer,
+									digilock.getBlock(), digilock.getUseCost());
+
 						} else if (BITDigiLock.isLever(sBlock)) {
 							BITDigiLock.leverOn(sPlayer, sBlock,
 									digilock.getUseCost());
@@ -89,11 +99,6 @@ public class BITDigiLockSpoutListener extends SpoutListener {
 									.loadBitInventory(sPlayer, sBlock);
 							bitInventory
 									.openBitInventory(sPlayer, bitInventory);
-
-						} else if (BITDigiLock.isTrapdoor(sBlock)) {
-							BITDigiLock.playDigiLockSound(digilock.getBlock());
-							BITDigiLock.openTrapdoor(sPlayer,
-									digilock.getBlock(), digilock.getUseCost());
 
 						} else if (BITDigiLock.isSign(sBlock)) {
 							if (sPlayer.isSpoutCraftEnabled()&& G333Config.LIBRARY_USESIGNEDITGUI) {

@@ -332,7 +332,8 @@ public class BITDigiLock {
 			Material.IRON_DOOR_BLOCK, Material.WOODEN_DOOR, Material.WOOD_DOOR,
 			Material.FURNACE, Material.DISPENSER, Material.LEVER,
 			Material.STONE_BUTTON, Material.BOOKSHELF, Material.TRAP_DOOR,
-			Material.SIGN, Material.SIGN_POST, Material.WALL_SIGN };
+			Material.SIGN, Material.SIGN_POST, Material.WALL_SIGN,
+			Material.FENCE_GATE };
 
 	// check if material is a lockable block
 	/**
@@ -686,9 +687,12 @@ public class BITDigiLock {
 						+ nextBlock.getType());
 			}
 			boolean pressButton = true;
-			if (BIT.useEconomy && cost > 0 && doTheWork
-					&& digilock.isUser(sPlayer) && !(digilock.isOwner(sPlayer)
-					|| digilock.isCoowner(sPlayer))) {
+			if (BIT.useEconomy
+					&& cost > 0
+					&& doTheWork
+					&& digilock.isUser(sPlayer)
+					&& !(digilock.isOwner(sPlayer) || digilock
+							.isCoowner(sPlayer))) {
 				if (BIT.plugin.Method.hasAccount(sPlayer.getName())) {
 					if (BIT.plugin.Method.getAccount(sPlayer.getName())
 							.hasEnough(cost)) {
@@ -794,10 +798,12 @@ public class BITDigiLock {
 							+ nextBlock.getType());
 				}
 				boolean setleveron = true;
-				if (BIT.useEconomy && cost > 0 && doTheWork
+				if (BIT.useEconomy
+						&& cost > 0
+						&& doTheWork
 						&& digilock.isUser(sPlayer)
-						&& !(digilock.isOwner(sPlayer)
-						||digilock.isCoowner(sPlayer))) {
+						&& !(digilock.isOwner(sPlayer) || digilock
+								.isCoowner(sPlayer))) {
 					if (BIT.plugin.Method.hasAccount(sPlayer.getName())) {
 						if (BIT.plugin.Method.getAccount(sPlayer.getName())
 								.hasEnough(cost)) {
@@ -923,7 +929,7 @@ public class BITDigiLock {
 	public static void openDoor(SpoutPlayer sPlayer, SpoutBlock sBlock, int cost) {
 		boolean opendoor = true;
 		BITDigiLock digilock = loadDigiLock(sBlock);
-		if (BIT.useEconomy && cost > 0 && digilock.isUser(sPlayer) 
+		if (BIT.useEconomy && cost > 0 && digilock.isUser(sPlayer)
 				&& !(digilock.isOwner(sPlayer) || digilock.isCoowner(sPlayer))) {
 			if (BIT.plugin.Method.hasAccount(sPlayer.getName())) {
 				if (BIT.plugin.Method.getAccount(sPlayer.getName()).hasEnough(
@@ -1131,8 +1137,6 @@ public class BITDigiLock {
 
 	public static void closeTrapdoor(SpoutPlayer sPlayer, SpoutBlock sBlock) {
 		sBlock.setData((byte) ((sBlock.getState().getData().getData() | 4) ^ 4));
-		if (G333Config.DEBUG_DOOR)
-			sPlayer.sendMessage("Close the door.");
 	}
 
 	public static void toggleTrapdoor(SpoutPlayer sPlayer, SpoutBlock sBlock) {
@@ -1154,6 +1158,96 @@ public class BITDigiLock {
 						if (sBlock.getType() == Material.TRAP_DOOR) {
 							if (isTrapdoorOpen(sp, sb)) {
 								closeTrapdoor(sp, sb);
+								playDigiLockSound(sBlock);
+							}
+						}
+					}
+				}, fs);
+		return taskID;
+	}
+
+	// *******************************************************
+	//
+	// FENCE_GATE
+	//
+	// *******************************************************
+
+	public static boolean isFenceGate(Block block) {
+		if (block.getType().equals(Material.FENCE_GATE)) {
+			return true;
+		}
+		return false;
+	}
+
+	public static boolean isFenceGateOpen(SpoutPlayer sPlayer, SpoutBlock sBlock) {
+		if ((sBlock.getState().getData().getData() & 4) == 4) {
+			return true;
+		} else {
+			return false;
+		}
+	}
+
+	public static void openFenceGate(SpoutPlayer sPlayer, SpoutBlock sBlock,
+			int cost) {
+		boolean openFenceGate = true;
+		BITDigiLock digilock = loadDigiLock(sBlock);
+		if (BIT.useEconomy && cost > 0 && digilock.isUser(sPlayer)
+				&& !(digilock.isOwner(sPlayer) || digilock.isCoowner(sPlayer))) {
+			if (BIT.plugin.Method.hasAccount(sPlayer.getName())) {
+				if (BIT.plugin.Method.getAccount(sPlayer.getName()).hasEnough(
+						cost)) {
+					BIT.plugin.Method.getAccount(sPlayer.getName()).subtract(
+							cost);
+					BIT.plugin.Method.getAccount(digilock.getOwner()).add(cost);
+					sPlayer.sendMessage("Your account ("
+							+ BIT.plugin.Method.getAccount(sPlayer.getName())
+									.balance() + ") has been deducted " + cost
+							+ " bucks");
+				} else {
+					sPlayer.sendMessage("You dont have enough money ("
+							+ BIT.plugin.Method.getAccount(sPlayer.getName())
+									.balance() + "). Cost is:" + cost);
+					openFenceGate = false;
+				}
+			}
+		}
+		if (openFenceGate) {
+			if (!isFenceGateOpen(sPlayer, sBlock)) {
+				sBlock.setData((byte) (sBlock.getState().getData().getData() | 4));
+				if (digilock != null) {
+					playDigiLockSound(sBlock);
+					if (digilock.getClosetimer() > 0) {
+						scheduleCloseFenceGate(sPlayer, sBlock,
+								digilock.getClosetimer());
+					}
+				}
+			}
+		}
+	}
+
+	public static void closeFenceGate(SpoutPlayer sPlayer, SpoutBlock sBlock) {
+		sBlock.setData((byte) ((sBlock.getState().getData().getData() | 4) ^ 4));
+	}
+
+	public static void toggleFenceGate(SpoutPlayer sPlayer, SpoutBlock sBlock) {
+		sBlock.setData((byte) (sBlock.getState().getData().getData() ^ 4));
+	}
+
+	public static int scheduleCloseFenceGate(final SpoutPlayer sPlayer,
+			final SpoutBlock sBlock, final int closetimer) {
+		int fs = closetimer * 20;
+		// 20 ticks / second
+		int taskID = BIT.plugin.getServer().getScheduler()
+				.scheduleSyncDelayedTask(BIT.plugin, new Runnable() {
+					public void run() {
+						SpoutBlock sb = sBlock;
+						SpoutPlayer sp = sPlayer;
+						if (G333Config.DEBUG_DOOR)
+							sp.sendMessage("Autoclosing the fencegate in "
+									+ closetimer + " seconds");
+						if (sBlock.getType() == Material.FENCE_GATE) {
+							if (isFenceGateOpen(sp, sb)) {
+								closeFenceGate(sp, sb);
 								playDigiLockSound(sBlock);
 							}
 						}

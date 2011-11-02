@@ -1,7 +1,6 @@
 package dk.gabriel333.BukkitInventoryTools.Inventory;
 
 import org.bukkit.event.Event;
-import org.bukkit.inventory.ItemStack;
 import org.getspout.spoutapi.event.inventory.InventoryClickEvent;
 import org.getspout.spoutapi.event.inventory.InventoryCloseEvent;
 import org.getspout.spoutapi.event.inventory.InventoryCraftEvent;
@@ -29,13 +28,10 @@ public class BITInventoryListener extends InventoryListener {
 						+ G333Config.LIBRARY_SORTKEY);
 			}
 		}
-
 	}
 
 	public void onInventoryClose(InventoryCloseEvent event) {
 		SpoutPlayer sPlayer = (SpoutPlayer) event.getPlayer();
-		// sPlayer.sendMessage("an inventory was closed:"+event.getLocation()+" evtname:"+
-		// event.getEventName());
 		if (event.getInventory().getName().equals("Bookshelf")) {
 			int id = sPlayer.getEntityId();
 			BITInventory bitInventory = BITInventory.openedInventories.get(id);
@@ -45,27 +41,29 @@ public class BITInventoryListener extends InventoryListener {
 	}
 
 	public void onInventoryClick(InventoryClickEvent event) {
+		/*
 		SpoutPlayer sPlayer = (SpoutPlayer) event.getPlayer();
 		ItemStack itemClicked = event.getItem();
 		ItemStack itemHolding = event.getCursor();
-
+		short bookId = sPlayer.getItemInHand().getDurability();
 		if (itemClicked != null && BIT.holdingKey.equals("KEY_LCONTROL")) {
-			short bookId = sPlayer.getItemInHand().getDurability();
 			sPlayer.sendMessage("(1)ItemClicked:" + itemClicked.getType()
 					+ " bookId:" + bookId);
-
-		} else {
-
-			if (itemClicked != null) {
-				sPlayer.sendMessage("ItemClicked:" + itemClicked.getType()
-						+ "id:" + itemClicked.getDurability());
-
-			}
-			if (itemHolding != null) {
-				sPlayer.sendMessage("itemHolding:" + itemHolding.getType()
-						+ " id:" + itemHolding.getDurability());
-			}
 		}
+		if (itemHolding != null && BIT.holdingKey.equals("KEY_LCONTROL")) {
+			sPlayer.sendMessage("(2)ItemClicked:" + itemHolding.getType()
+					+ " bookId:" + bookId);
+		}
+		if (itemClicked != null) {
+			sPlayer.sendMessage("(3)ItemClicked:" + itemClicked.getType()
+					+ "id:" + itemClicked.getDurability());
+
+		}
+		if (itemHolding != null) {
+			sPlayer.sendMessage("(4)itemHolding:" + itemHolding.getType()
+					+ " id:" + itemHolding.getDurability());
+		}
+		*/
 	}
 
 	public void onInventoryCraft(InventoryCraftEvent event) {

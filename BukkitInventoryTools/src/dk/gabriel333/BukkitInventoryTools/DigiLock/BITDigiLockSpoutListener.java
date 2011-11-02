@@ -236,7 +236,7 @@ public class BITDigiLockSpoutListener extends SpoutListener {
 			BITDigiLock.popupScreen.get(id).setDirty(true);
 			return false;
 		} else if (useCost < 0) {
-			G333Messages.sendNotification(sPlayer, "Cost must be > 0");
+			G333Messages.sendNotification(sPlayer, "Cost must be >= 0");
 			BITDigiLock.useCostGUI.get(id).setText("0");
 			BITDigiLock.popupScreen.get(id).setDirty(true);
 			return false;

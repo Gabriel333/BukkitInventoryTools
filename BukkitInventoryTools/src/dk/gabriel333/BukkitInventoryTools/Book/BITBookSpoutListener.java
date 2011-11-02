@@ -31,15 +31,17 @@ public class BITBookSpoutListener extends SpoutListener {
 
 				BITBook.saveBook(sPlayer, BITBook.currentBookId.get(id));
 				itemInHand.setDurability(BITBook.currentBookId.get(id));
+				sPlayer.closeActiveWindow();
 
 			} else if (BITBook.BITButtons.get(uuid) == "cancelBookButton") {
 				BITBook.popupScreen.get(id).close();
 				BITBook.cleanupPopupScreen(sPlayer);
 				BITBook.BITButtons.remove(uuid);
-				sPlayer.sendMessage("You clicked cancel - dropping current book id:"
-						+ BITBook.currentBookId.get(id));
+				// sPlayer.sendMessage("You clicked cancel - dropping current book id:"
+				// + BITBook.currentBookId.get(id));
 				BITBook.bitBooks.remove(BITBook.currentBookId.get(id));
-				BITBook.currentBookId.put(id, (short) 10000);
+				BITBook.currentBookId.put(id, (short) 1000);
+				sPlayer.closeActiveWindow();
 
 			} else if ((BITBook.BITButtons.get(uuid) == "nextPageButton")) {
 				if (validateFields(sPlayer)) {
@@ -133,7 +135,7 @@ public class BITBookSpoutListener extends SpoutListener {
 			BITBook.popupScreen.get(id).setDirty(true);
 			return false;
 		} else if (useCost < 0) {
-			G333Messages.sendNotification(sPlayer, "Cost must be > 0");
+			G333Messages.sendNotification(sPlayer, "Cost must be >= 0");
 			BITBook.useCostGUI.get(id).setText("0");
 			BITBook.popupScreen.get(id).setDirty(true);
 			return false;

@@ -77,7 +77,6 @@ public class BITInventorySpoutListener extends SpoutListener {
 
 	private boolean validateSetPincodeFields(SpoutPlayer sPlayer) {
 		int id = sPlayer.getEntityId();
-
 		if (BITInventory.useCostGUI.get(id).getText().equals("")) {
 			BITInventory.useCostGUI.get(id).setText("0");
 			BITInventory.popupScreen.get(id).setDirty(true);
@@ -92,7 +91,7 @@ public class BITInventorySpoutListener extends SpoutListener {
 			BITInventory.popupScreen.get(id).setDirty(true);
 			return false;
 		} else if (useCost < 0) {
-			G333Messages.sendNotification(sPlayer, "Cost must be > 0");
+			G333Messages.sendNotification(sPlayer, "Cost must be >= 0");
 			BITInventory.useCostGUI.get(id).setText("0");
 			BITInventory.popupScreen.get(id).setDirty(true);
 			return false;

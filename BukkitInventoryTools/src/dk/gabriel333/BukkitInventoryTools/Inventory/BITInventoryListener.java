@@ -1,6 +1,8 @@
 package dk.gabriel333.BukkitInventoryTools.Inventory;
 
+import org.bukkit.Material;
 import org.bukkit.event.Event;
+import org.bukkit.inventory.Inventory;
 import org.getspout.spoutapi.event.inventory.InventoryClickEvent;
 import org.getspout.spoutapi.event.inventory.InventoryCloseEvent;
 import org.getspout.spoutapi.event.inventory.InventoryCraftEvent;
@@ -9,6 +11,7 @@ import org.getspout.spoutapi.event.inventory.InventoryOpenEvent;
 import org.getspout.spoutapi.player.SpoutPlayer;
 
 import dk.gabriel333.BukkitInventoryTools.BIT;
+import dk.gabriel333.BukkitInventoryTools.Book.BITBook;
 import dk.gabriel333.Library.G333Config;
 import dk.gabriel333.Library.G333Messages;
 
@@ -28,6 +31,20 @@ public class BITInventoryListener extends InventoryListener {
 						+ G333Config.LIBRARY_SORTKEY);
 			}
 		}
+		Inventory inv = event.getInventory();
+		short bookId = 0;
+		if (inv.contains(Material.BOOK)) {
+			BITBook bitBook = new BITBook();
+			for (int i = 0; i < inv.getSize(); i++) {
+				if (inv.getItem(i).getType() == Material.BOOK) {
+					bookId = inv.getItem(i).getDurability();
+					if (bookId > 1000) {
+						bitBook = BITBook.loadBook(sPlayer, bookId);
+						BITBook.setBookName(bookId, bitBook.getTitle());
+					}
+				}
+			}
+		}
 	}
 
 	public void onInventoryClose(InventoryCloseEvent event) {
@@ -42,28 +59,22 @@ public class BITInventoryListener extends InventoryListener {
 
 	public void onInventoryClick(InventoryClickEvent event) {
 		/*
-		SpoutPlayer sPlayer = (SpoutPlayer) event.getPlayer();
-		ItemStack itemClicked = event.getItem();
-		ItemStack itemHolding = event.getCursor();
-		short bookId = sPlayer.getItemInHand().getDurability();
-		if (itemClicked != null && BIT.holdingKey.equals("KEY_LCONTROL")) {
-			sPlayer.sendMessage("(1)ItemClicked:" + itemClicked.getType()
-					+ " bookId:" + bookId);
-		}
-		if (itemHolding != null && BIT.holdingKey.equals("KEY_LCONTROL")) {
-			sPlayer.sendMessage("(2)ItemClicked:" + itemHolding.getType()
-					+ " bookId:" + bookId);
-		}
-		if (itemClicked != null) {
-			sPlayer.sendMessage("(3)ItemClicked:" + itemClicked.getType()
-					+ "id:" + itemClicked.getDurability());
-
-		}
-		if (itemHolding != null) {
-			sPlayer.sendMessage("(4)itemHolding:" + itemHolding.getType()
-					+ " id:" + itemHolding.getDurability());
-		}
-		*/
+		 * SpoutPlayer sPlayer = (SpoutPlayer) event.getPlayer(); ItemStack
+		 * itemClicked = event.getItem(); ItemStack itemHolding =
+		 * event.getCursor(); short bookId =
+		 * sPlayer.getItemInHand().getDurability(); if (itemClicked != null &&
+		 * BIT.holdingKey.equals("KEY_LCONTROL")) {
+		 * sPlayer.sendMessage("(1)ItemClicked:" + itemClicked.getType() +
+		 * " bookId:" + bookId); } if (itemHolding != null &&
+		 * BIT.holdingKey.equals("KEY_LCONTROL")) {
+		 * sPlayer.sendMessage("(2)ItemClicked:" + itemHolding.getType() +
+		 * " bookId:" + bookId); } if (itemClicked != null) {
+		 * sPlayer.sendMessage("(3)ItemClicked:" + itemClicked.getType() + "id:"
+		 * + itemClicked.getDurability());
+		 * 
+		 * } if (itemHolding != null) { sPlayer.sendMessage("(4)itemHolding:" +
+		 * itemHolding.getType() + " id:" + itemHolding.getDurability()); }
+		 */
 	}
 
 	public void onInventoryCraft(InventoryCraftEvent event) {

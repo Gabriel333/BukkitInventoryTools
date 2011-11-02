@@ -117,8 +117,6 @@ public class BITInventory {
 	}
 
 	public static void saveBitInventory(SpoutPlayer sPlayer, BITInventory inv) {
-		// sPlayer.sendMessage("block:"+inv.getBlock().getType()+"own:"+
-		// " name:"+inv.getName()+" coo:"+inv.getCoOwners()+" usecost:"+inv.getUseCost());
 		if (inv != null) {
 			saveBitInventory(sPlayer, inv.getBlock(), inv.getOwner(),
 					inv.getName(), inv.getCoOwners(), inv.getInventory(),
@@ -186,7 +184,6 @@ public class BITInventory {
 				}
 			}
 			if (createBookshelf) {
-				// sPlayer.sendMessage("Inventorysize:" + inventory.getSize());
 				for (int i = 0; i < inventory.getSize(); i++) {
 					query = "INSERT INTO "
 							+ BIT.bitInventoryTable

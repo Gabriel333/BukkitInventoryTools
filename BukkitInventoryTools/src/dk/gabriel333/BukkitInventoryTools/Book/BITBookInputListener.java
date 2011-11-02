@@ -26,7 +26,8 @@ public class BITBookInputListener extends InputListener {
 		ItemStack itemInHand = sPlayer.getInventory().getItemInHand();
 		int id = sPlayer.getEntityId();
 		if (BITBook.isWriteable(itemInHand.getType())) {
-			if (keypressed.equals(G333Config.LIBRARY_READKEY)) {
+			if (keypressed.equals(G333Config.LIBRARY_READKEY)
+					&& screentype != ScreenType.CHAT_SCREEN) {
 				handleItemInHand(sPlayer);
 			} else if (keypressed.equals("KEY_ESCAPE")
 					&& screentype != ScreenType.GAME_SCREEN) {
@@ -51,19 +52,20 @@ public class BITBookInputListener extends InputListener {
 						|| G333Permissions.hasPerm(sPlayer, "book.admin",
 								G333Permissions.NOT_QUIET)) {
 					bitBook = BITBook.loadBook(sPlayer, bookId);
-					if (bitBook != null){
+					if (bitBook != null) {
 						bitBook.openBook(sPlayer, bookId);
 					} else {
-					    handleItemInHand(sPlayer);			
+						handleItemInHand(sPlayer);
 					}
 				}
-			} else if (bookId==0){
+			} else if (bookId == 0) {
 				// new book
 				if (G333Permissions.hasPerm(sPlayer, "book.create",
 						G333Permissions.NOT_QUIET)) {
 					int id = sPlayer.getEntityId();
 					bookId = BITBook.getNextBookId();
-					//sPlayer.sendMessage("Creating new book with id:" + bookId);
+					// sPlayer.sendMessage("Creating new book with id:" +
+					// bookId);
 					BITBook.currentBookId.put(id, bookId);
 					String title = "Title";
 					String author = sPlayer.getName();
@@ -89,8 +91,9 @@ public class BITBookInputListener extends InputListener {
 
 				}
 			} else {
-				//TODO: edit/open/import bookworm book.
-				G333Messages.sendNotification(sPlayer, "This is a bookworm book!");
+				// TODO: edit/open/import bookworm book.
+				G333Messages.sendNotification(sPlayer,
+						"This is a bookworm book!");
 			}
 		} else {
 			if (BITBook.isWriteable(itemInHand.getType())) {

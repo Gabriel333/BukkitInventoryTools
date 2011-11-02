@@ -1482,7 +1482,7 @@ public class BITDigiLock {
 		case 62:
 			return 62; // Burning Furnace
 		case 63:
-			return 63; // SIGN_POST
+			return 95; // SIGN_POST
 		case 64:
 			// return 324; // Wooden door
 			return 95;
@@ -1498,7 +1498,9 @@ public class BITDigiLock {
 			// return 77; // Stone button
 			return 95;
 		case 96:
-			return 96; // Trap_door
+			return 95; // Trap_door
+		case 107:
+			return 95; //FENCEGATE
 		}
 		return 95;
 	}

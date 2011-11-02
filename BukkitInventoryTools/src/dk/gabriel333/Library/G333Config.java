@@ -52,6 +52,7 @@ public class G333Config {
 	public static int BOOKSHELF_USEMAXCOST;
 	public static int BOOKSHELF_SIZE;
 	public static int BOOKSHELF_DESTROYCOST;
+	public static Boolean BOOKSHELF_RECOVER_ON_BREAK;
 	
 	public static int BOOK_COST;
 	public static int BOOK_USEMAXCOST;
@@ -132,6 +133,7 @@ public class G333Config {
 		BOOKSHELF_USEMAXCOST = getIntParm("Bookshelf.UseMaxCost", 100);
 		BOOKSHELF_SIZE = getIntParm("Bookshelf.Size", 9);
 		BOOKSHELF_DESTROYCOST = getIntParm("Bookshelf.DestroyCost", 10);
+		BOOKSHELF_RECOVER_ON_BREAK=getBooleanParm("Bookshelf.RecoverOnBreak", false);
 		
 		//Book
 		BOOK_COST = getIntParm("Book.Cost", 10);

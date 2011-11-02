@@ -9,6 +9,7 @@ import java.util.UUID;
 
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
+import org.bukkit.Material;
 import org.bukkit.World;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
@@ -501,6 +502,10 @@ public class BITInventory {
 			bitInventory.RemoveBitInventory(sPlayer,
 					G333Config.BOOKSHELF_DESTROYCOST);
 
+		}
+		if (G333Config.BOOKSHELF_RECOVER_ON_BREAK){
+			ItemStack item = new ItemStack(Material.BOOKSHELF,1);
+			world.dropItemNaturally(location, item);
 		}
 	}
 

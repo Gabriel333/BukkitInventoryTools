@@ -113,7 +113,7 @@ public class BIT extends JavaPlugin {
 		pm.registerEvent(Type.BLOCK_IGNITE, new BITBlockListener(),
 				Priority.Normal, this);
 		pm.registerEvent(Type.SIGN_CHANGE, new BITBlockListener(),
-		Priority.Normal, this);
+				Priority.Normal, this);
 		pm.registerEvent(Type.BLOCK_PISTON_EXTEND, new BITBlockListener(),
 				Priority.Normal, this);
 		pm.registerEvent(Type.BLOCK_PISTON_RETRACT, new BITBlockListener(),
@@ -298,13 +298,13 @@ public class BIT extends JavaPlugin {
 									+ bitInventoryTable + ".");
 							query = "CREATE TABLE "
 									+ bitInventoryTable
-									+ " (x INT, y INT, z INT, world VARCHAR(255), "
+									+ " (playername VARCHAR(255), x INT, y INT, z INT, world VARCHAR(255), "
 									+ "owner VARCHAR(255), "
 									+ "name VARCHAR(255), "
 									+ "coowners VARCHAR(255), "
 									+ "usecost INT, slotno INT, "
 									+ "itemstack_type INT, itemstack_amount INT, itemstack_durability INT) "
-									+ "AS SELECT x, y, z, world, owner, name, coowners, usecost, "
+									+ "AS SELECT plyername, x, y, z, world, owner, name, coowners, usecost, "
 									+ "itemstack_type, itemstack_amount, itemstack_durability FROM "
 									+ oldBitInventoryTable + ";";
 						} else {
@@ -312,7 +312,7 @@ public class BIT extends JavaPlugin {
 									+ bitInventoryTable);
 							query = "CREATE TABLE "
 									+ bitInventoryTable
-									+ " (x INT, y INT, z INT, world VARCHAR(255), "
+									+ " (playername VARCHAR(255), x INT, y INT, z INT, world VARCHAR(255), "
 									+ "owner VARCHAR(255), "
 									+ "name VARCHAR(255), "
 									+ "coowners VARCHAR(255), "
@@ -333,8 +333,8 @@ public class BIT extends JavaPlugin {
 									+ " (bookid INT, title TEXT,"
 									+ " author TEXT, coauthors TEXT, "
 									+ " numberofpages INT, pageno INT, bodytext TEXT,"
-									+ " mastercopy BOOL, mastercopyid INT,"
-									+ " force BOOL, moved BOOL, copy BOOL, usecost INT)"
+									+ " mastercopy BOOLEAN, mastercopyid INT,"
+									+ " force BOOLEAN, moved BOOLEAN, copy BOOLEAN, usecost INT)"
 									+ " AS select bookid, title,"
 									+ " author, coauthors, "
 									+ " numberofpages, pageno, bodytext,"
@@ -349,8 +349,8 @@ public class BIT extends JavaPlugin {
 									+ " (bookid INT, title TEXT,"
 									+ " author TEXT, coauthors TEXT, "
 									+ " numberofpages INT, pageno INT, bodytext TEXT,"
-									+ " mastercopy BOOL, mastercopyid INT,"
-									+ " force BOOL, moved BOOL, copy BOOL, usecost INT);";
+									+ " mastercopy BOOLEAN, mastercopyid INT,"
+									+ " force BOOLEAN, moved BOOLEAN, copy BOOLEAN, usecost INT);";
 						}
 						manageMySQL.createTable(query);
 					}
@@ -505,6 +505,7 @@ public class BIT extends JavaPlugin {
 	// Playerdata
 	public static Map<Integer, String> holdingKey = new HashMap<Integer, String>();
 	public static Map<Integer, Integer> userno = new HashMap<Integer, Integer>();
+
 	public static void removeUserData(int id) {
 		if (userno.containsKey(id)) {
 			// DigiLock
@@ -521,32 +522,33 @@ public class BIT extends JavaPlugin {
 		}
 	}
 
-	public static void setupBook(){
-		 // THIS PREVENTS BOOK FROM STACKING
+	public static void setupBook() {
+		// THIS PREVENTS BOOK FROM STACKING
 		try {
-	            boolean ok = false;
-	            try {
-	                    // attempt to make books with different data values stack separately
-	                    Field field1 = net.minecraft.server.Item.class.getDeclaredField("bs");
-	                    if (field1.getType() == boolean.class) {
-	                            field1.setAccessible(true);
-	                            field1.setBoolean(net.minecraft.server.Item.BOOK, true);
-	                            ok = true;
-	                    } 
-	            } catch (Exception e) {
-	            }
-	            if (!ok) {
-	                    // otherwise limit stack size to 1
-	                    Field field2 = net.minecraft.server.Item.class.getDeclaredField("maxStackSize");
-	                    field2.setAccessible(true);
-	                    field2.setInt(net.minecraft.server.Item.BOOK, 1);
-	            }
-	    } catch (Exception e) {
-	            e.printStackTrace();
-	    }
-	    
-	    
+			boolean ok = false;
+			try {
+				// attempt to make books with different data values stack
+				// separately
+				Field field1 = net.minecraft.server.Item.class
+						.getDeclaredField("bs");
+				if (field1.getType() == boolean.class) {
+					field1.setAccessible(true);
+					field1.setBoolean(net.minecraft.server.Item.BOOK, true);
+					ok = true;
+				}
+			} catch (Exception e) {
+			}
+			if (!ok) {
+				// otherwise limit stack size to 1
+				Field field2 = net.minecraft.server.Item.class
+						.getDeclaredField("maxStackSize");
+				field2.setAccessible(true);
+				field2.setInt(net.minecraft.server.Item.BOOK, 1);
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+
 	}
 
-	
 }

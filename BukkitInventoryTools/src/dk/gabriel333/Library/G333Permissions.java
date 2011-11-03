@@ -25,24 +25,25 @@ public class G333Permissions {
 	// Hook into Permissions 3.xxx
 	private static Plugin permissions3Plugin;
 	private static PermissionHandler permission3Handler;
-	public static Boolean permissions3 = false; 
-	
+	public static Boolean permissions3 = false;
+
 	// Hook into PermissionsBukkit
 	private static Plugin permissionsBukkitPlugin;
-	public static Boolean permissionsBukkit = false; 
+	public static Boolean permissionsBukkit = false;
 
 	// Hook into PermissionsEx
 	private static Plugin permissionsExPlugin;
-	public static Boolean permissionsex = false; 
+	public static Boolean permissionsex = false;
 
 	// Hook into bPermissions
+	private static Plugin bPermissionsPlugin;
 	public static WorldPermissionsManager wpm = null;
 	public static Boolean bPermissions = false;
 
 	// Initialize all permissionsplugins
 	public static void setupPermissions(Plugin plugin) {
 		PERMISSION_NODE = plugin.getDescription().getName() + ".";
-		if (permissions3 || permissionsBukkit || permissionsex) {
+		if (permissions3 || permissionsBukkit || permissionsex || bPermissions) {
 			G333Messages
 					.showWarning("Your permission system is allready detected!");
 			return;
@@ -87,25 +88,35 @@ public class G333Permissions {
 
 			}
 			// bPermissions
-			try {
-				//wpm = Permissions.getWorldPermissionsManager();
-				//bPermissions = true;
-				//G333Messages.showInfo("bPermissions is detected.");
-				//numberOfPermissionSystems++;
-			} catch (Exception e) {
-				
+			if (bPermissionsPlugin == null) {
+				bPermissionsPlugin = plugin.getServer().getPluginManager()
+						.getPlugin("bPermissions");
+				if (bPermissionsPlugin != null) {
+					G333Messages.showInfo("bPermissions is detected.");
+					bPermissions = true;
+					numberOfPermissionSystems++;
+					try {
+						// wpm = Permissions.getWorldPermissionsManager();
+						// bPermissions = true;
+						// G333Messages.showInfo("bPermissions is detected.");
+						// numberOfPermissionSystems++;
+					} catch (Exception e) {
+
+					}
+				}
 			}
-			
+
 			// No permission systems found
 			if (permissions3Plugin == null && permissionsBukkitPlugin == null
-					&& permissionsExPlugin == null) {
+					&& permissionsExPlugin == null
+					&& bPermissionsPlugin == null) {
 				G333Messages
 						.showInfo("PermissionsBukkit/Permissions3/PermissionsEx system not detected, defaulting to permissions in plugin.yml");
 				return;
 			}
 			if (numberOfPermissionSystems > 1) {
 				G333Messages
-						.showInfo("OBS. More than one permission system detected. The test sequence is: PermissionsBukkit, Permissions/PermissionsBridges, PermissionsEx");
+						.showInfo("OBS. More than one permission system detected. The test sequence is: PermissionsBukkit, Permissions/PermissionsBridges, PermissionsEx, bPermissions");
 			}
 		}
 	}
@@ -124,7 +135,7 @@ public class G333Permissions {
 		// return true;
 		// }
 
-		// How to hook into Permissions
+		// How to hook into Permissions 3.1.6
 		// Basic Permission Check
 		// In this example (MyPlugin) is meant to represent the name of your
 		// plugin,
@@ -160,7 +171,7 @@ public class G333Permissions {
 					.getPermissionManager();
 			hasPermission = permissionsexManager.has(sPlayer,
 					(PERMISSION_NODE + label).toLowerCase());
-		} 
+		}
 
 		// return permission
 		if (hasPermission) {

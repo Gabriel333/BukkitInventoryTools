@@ -330,14 +330,12 @@ public class BIT extends JavaPlugin {
 									+ " to " + bookTable + ".");
 							query = "CREATE TABLE "
 									+ bookTable
-									+ " (playername TEXT, bookid INT, world TEXT, inventorytype INT,"
-									+ " x INT, y INT, z INT, slotno INT, title TEXT,"
+									+ " (bookid INT, title TEXT,"
 									+ " author TEXT, coauthors TEXT, "
 									+ " numberofpages INT, pageno INT, bodytext TEXT,"
-									+ " mastercopy BOOLEAN, mastercopyid INT,"
-									+ " force BOOLEAN, moved BOOLEAN, copy BOOLEAN, usecost INT)"
-									+ "AS select playername, bookid, world, inventorytype,"
-									+ " x, y, z, slotno, title,"
+									+ " mastercopy BOOL, mastercopyid INT,"
+									+ " force BOOL, moved BOOL, copy BOOL, usecost INT)"
+									+ " AS select bookid, title,"
 									+ " author, coauthors, "
 									+ " numberofpages, pageno, bodytext,"
 									+ " mastercopy, mastercopyid,"
@@ -348,12 +346,11 @@ public class BIT extends JavaPlugin {
 									.showInfo("Creating table " + bookTable);
 							query = "CREATE TABLE "
 									+ bookTable
-									+ " (playername TEXT, bookid INT, world TEXT, inventorytype INT,"
-									+ " x INT, y INT, z INT, slotno INT, title TEXT,"
+									+ " (bookid INT, title TEXT,"
 									+ " author TEXT, coauthors TEXT, "
 									+ " numberofpages INT, pageno INT, bodytext TEXT,"
-									+ " mastercopy BOOLEAN, mastercopyid INT,"
-									+ " force BOOLEAN, moved BOOLEAN, copy BOOLEAN, usecost INT);";
+									+ " mastercopy BOOL, mastercopyid INT,"
+									+ " force BOOL, moved BOOL, copy BOOL, usecost INT);";
 						}
 						manageMySQL.createTable(query);
 					}

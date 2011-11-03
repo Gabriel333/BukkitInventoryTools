@@ -58,8 +58,8 @@ public class G333Permissions {
 					G333Messages.showInfo("PermissionsBukkit is detected.");
 					numberOfPermissionSystems++;
 				}
-
 			}
+
 			// Permission3
 			if (permissions3Plugin == null) {
 				permissions3Plugin = plugin.getServer().getPluginManager()
@@ -74,8 +74,8 @@ public class G333Permissions {
 											.getDescription().getFullName());
 					numberOfPermissionSystems++;
 				}
-
 			}
+
 			// PermissionEx
 			if (permissionsExPlugin == null) {
 				permissionsExPlugin = plugin.getServer().getPluginManager()
@@ -85,8 +85,8 @@ public class G333Permissions {
 					permissionsex = true;
 					numberOfPermissionSystems++;
 				}
-
 			}
+
 			// bPermissions
 			if (bPermissionsPlugin == null) {
 				bPermissionsPlugin = plugin.getServer().getPluginManager()

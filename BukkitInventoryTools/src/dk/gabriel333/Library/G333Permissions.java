@@ -1,5 +1,6 @@
 package dk.gabriel333.Library;
 
+import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.plugin.Plugin;
@@ -28,15 +29,16 @@ public class G333Permissions {
 	public static Boolean permissions3 = false;
 
 	// Hook into PermissionsBukkit
-	private static Plugin permissionsBukkitPlugin;
+	//private static Plugin permissionsBukkitPlugin;
 	public static Boolean permissionsBukkit = false;
 
 	// Hook into PermissionsEx
-	private static Plugin permissionsExPlugin;
+	// private static Plugin permissionsExPlugin;
+	private static PermissionManager permissionsexManager;
 	public static Boolean permissionsex = false;
 
 	// Hook into bPermissions
-	private static Plugin bPermissionsPlugin;
+	// private static Plugin bPermissionsPlugin;
 	public static WorldPermissionsManager wpm = null;
 	public static Boolean bPermissions = false;
 
@@ -48,18 +50,33 @@ public class G333Permissions {
 					.showWarning("Your permission system is allready detected!");
 			return;
 		} else {
-			int numberOfPermissionSystems = 0;
 			// PermissionsBukkit
-			if (permissionsBukkitPlugin == null) {
-				permissionsBukkitPlugin = plugin.getServer().getPluginManager()
-						.getPlugin("PermissionsBukkit");
-				if (permissionsBukkitPlugin != null) {
-					permissionsBukkit = true;
-					G333Messages.showInfo("PermissionsBukkit is detected.");
-					numberOfPermissionSystems++;
-				}
-			}
+			if (Bukkit.getServer().getPluginManager()
+					.isPluginEnabled("PermissionsBukkit")) {
+				permissionsBukkit = true;
+				G333Messages.showInfo("PermissionsBukkit is detected.");
+			} else
 
+			// PermissionEx
+			if (Bukkit.getServer().getPluginManager()
+					.isPluginEnabled("PermissionsEx")) {
+				permissionsexManager = PermissionsEx.getPermissionManager();
+				G333Messages.showInfo("PermissionsEx is detected.");
+				permissionsex = true;
+			} else
+
+			// bPermissions
+			if (Bukkit.getServer().getPluginManager()
+					.isPluginEnabled("bPermissions")) {
+
+				try {
+					// wpm = Permissions.getWorldPermissionsManager();
+					bPermissions = true;
+					G333Messages.showInfo("bPermissions is detected.");
+				} catch (Exception e) {
+
+				}
+			} else
 			// Permission3
 			if (permissions3Plugin == null) {
 				permissions3Plugin = plugin.getServer().getPluginManager()
@@ -72,51 +89,14 @@ public class G333Permissions {
 							.showInfo("Permissions3/SuperpermBridge is detected. "
 									+ ((Permissions) permissions3Plugin)
 											.getDescription().getFullName());
-					numberOfPermissionSystems++;
-				}
-			}
-
-			// PermissionEx
-			if (permissionsExPlugin == null) {
-				permissionsExPlugin = plugin.getServer().getPluginManager()
-						.getPlugin("PermissionsEx");
-				if (permissionsExPlugin != null) {
-					G333Messages.showInfo("PermissionsEx is detected.");
-					permissionsex = true;
-					numberOfPermissionSystems++;
-				}
-			}
-
-			// bPermissions
-			if (bPermissionsPlugin == null) {
-				bPermissionsPlugin = plugin.getServer().getPluginManager()
-						.getPlugin("bPermissions");
-				if (bPermissionsPlugin != null) {
-					G333Messages.showInfo("bPermissions is detected.");
-					bPermissions = true;
-					numberOfPermissionSystems++;
-					try {
-						// wpm = Permissions.getWorldPermissionsManager();
-						// bPermissions = true;
-						// G333Messages.showInfo("bPermissions is detected.");
-						// numberOfPermissionSystems++;
-					} catch (Exception e) {
-
-					}
 				}
 			}
 
 			// No permission systems found
-			if (permissions3Plugin == null && permissionsBukkitPlugin == null
-					&& permissionsExPlugin == null
-					&& bPermissionsPlugin == null) {
+			if (!(permissions3||permissionsBukkit ||permissionsex || bPermissions )) {
 				G333Messages
-						.showInfo("PermissionsBukkit/Permissions3/PermissionsEx system not detected, defaulting to permissions in plugin.yml");
+						.showInfo("PermissionsBukkit/PermissionsEx/bPermissions/Permissions3 system not detected, defaulting to permissions in plugin.yml");
 				return;
-			}
-			if (numberOfPermissionSystems > 1) {
-				G333Messages
-						.showInfo("OBS. More than one permission system detected. The test sequence is: PermissionsBukkit, Permissions/PermissionsBridges, PermissionsEx, bPermissions");
 			}
 		}
 	}
@@ -161,15 +141,17 @@ public class G333Permissions {
 		if (sPlayer.hasPermission((PERMISSION_NODE + label).toLowerCase())
 				|| sPlayer.hasPermission((PERMISSION_NODE + "*").toLowerCase())) {
 			hasPermission = true;
+		} else if (permissionsex) {
+			// PermissionsEx
+			hasPermission = permissionsexManager.has(sPlayer,
+					(PERMISSION_NODE + label).toLowerCase());
+		} else if (bPermissions) {
+			// bPermissions
+			// hasPermission = wpm.getPermissionSet(world).has(sPlayer,
+			// (PERMISSION_NODE + label).toLowerCase());
 		} else if (permissions3) {
 			// Permissions3 or SuperpermBridge
 			hasPermission = permission3Handler.has(sPlayer,
-					(PERMISSION_NODE + label).toLowerCase());
-		} else if (permissionsex) {
-			// PermissionsEx
-			PermissionManager permissionsexManager = PermissionsEx
-					.getPermissionManager();
-			hasPermission = permissionsexManager.has(sPlayer,
 					(PERMISSION_NODE + label).toLowerCase());
 		}
 

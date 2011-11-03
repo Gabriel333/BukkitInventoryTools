@@ -29,7 +29,7 @@ public class G333Permissions {
 	public static Boolean permissions3 = false;
 
 	// Hook into PermissionsBukkit
-	//private static Plugin permissionsBukkitPlugin;
+	private static Plugin permissionsBukkitPlugin;
 	public static Boolean permissionsBukkit = false;
 
 	// Hook into PermissionsEx
@@ -51,8 +51,9 @@ public class G333Permissions {
 			return;
 		} else {
 			// PermissionsBukkit
-			if (Bukkit.getServer().getPluginManager()
-					.isPluginEnabled("PermissionsBukkit")) {
+			permissionsBukkitPlugin = plugin.getServer().getPluginManager()
+					.getPlugin("PermissionsBukkit");
+			if (permissionsBukkitPlugin != null) {
 				permissionsBukkit = true;
 				G333Messages.showInfo("PermissionsBukkit is detected.");
 			} else
@@ -70,7 +71,7 @@ public class G333Permissions {
 					.isPluginEnabled("bPermissions")) {
 
 				try {
-					// wpm = Permissions.getWorldPermissionsManager();
+					wpm = de.bananaco.permissions.Permissions.getWorldPermissionsManager();
 					bPermissions = true;
 					G333Messages.showInfo("bPermissions is detected.");
 				} catch (Exception e) {
@@ -93,9 +94,8 @@ public class G333Permissions {
 			}
 
 			// No permission systems found
-			if (!(permissions3||permissionsBukkit ||permissionsex || bPermissions )) {
-				G333Messages
-						.showInfo("PermissionsBukkit/PermissionsEx/bPermissions/Permissions3 system not detected, defaulting to permissions in plugin.yml");
+			if (!(permissions3 || permissionsBukkit || permissionsex || bPermissions)) {
+				G333Messages.showInfo("Defaulting to build-in permissions.");
 				return;
 			}
 		}
@@ -142,15 +142,13 @@ public class G333Permissions {
 				|| sPlayer.hasPermission((PERMISSION_NODE + "*").toLowerCase())) {
 			hasPermission = true;
 		} else if (permissionsex) {
-			// PermissionsEx
 			hasPermission = permissionsexManager.has(sPlayer,
 					(PERMISSION_NODE + label).toLowerCase());
 		} else if (bPermissions) {
-			// bPermissions
-			// hasPermission = wpm.getPermissionSet(world).has(sPlayer,
-			// (PERMISSION_NODE + label).toLowerCase());
+			 hasPermission = wpm.getPermissionSet(sPlayer.getWorld()).has(sPlayer,
+			 (PERMISSION_NODE + label).toLowerCase());
 		} else if (permissions3) {
-			// Permissions3 or SuperpermBridge
+			// or SuperpermBridge
 			hasPermission = permission3Handler.has(sPlayer,
 					(PERMISSION_NODE + label).toLowerCase());
 		}

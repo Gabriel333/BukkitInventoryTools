@@ -140,6 +140,10 @@ public class G333Config {
 		BOOK_USEMAXCOST = getIntParm("Book.UseMaxCost", 50);
 		BOOK_DESTROYCOST = getIntParm("Book.DestroyCost", 0);
 		
+		//SpoutBackpack
+		
+		
+		
 		//Debug
 		DEBUG_PERMISSIONS = getBooleanParm("Debug.Permissions", false);
 		DEBUG_SORTINVENTORY = getBooleanParm("Debug.Inventory", false);

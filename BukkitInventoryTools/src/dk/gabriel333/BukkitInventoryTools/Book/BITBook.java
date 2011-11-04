@@ -322,7 +322,7 @@ public class BITBook {
 						+ "', mastercopy='"
 						+ bitBooks.get(bookId).getMasterCopy()
 						+ "', mastercopyid="
-						+ bitBooks.get(bookId).getMasterCopyId() + ", force='"
+						+ bitBooks.get(bookId).getMasterCopyId() + ", forcebook='"
 						+ bitBooks.get(bookId).getForceBookToPlayerInventory()
 						+ "', moved='"
 						+ bitBooks.get(bookId).getCanBeMovedFromInventory()
@@ -378,7 +378,7 @@ public class BITBook {
 							+ BIT.bookTable
 							+ "(bookid,title,"
 							+ "author,coauthors,numberofpages,pageno,bodytext,mastercopy,"
-							+ "mastercopyid,force,moved,copy,usecost) VALUES ("
+							+ "mastercopyid,forcebook,moved,copy,usecost) VALUES ("
 							+ bookId
 							+ ", '"
 							//+ bitBooks.get(bookId).getTitle()
@@ -486,7 +486,7 @@ public class BITBook {
 				resBodytext[resPageno] = result.getString("bodytext");
 				resMasterCopy = result.getBoolean("mastercopy");
 				resMasterCopyId = (short) result.getInt("mastercopyid");
-				resForceBookToPlayerInventory = result.getBoolean("force");
+				resForceBookToPlayerInventory = result.getBoolean("forcebook");
 				resCanBeMovedFromInventory = result.getBoolean("moved");
 				resCopyTheBookWhenMoved = result.getBoolean("copy");
 				resUseCost = result.getInt("usecost");

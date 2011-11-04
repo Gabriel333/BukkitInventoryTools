@@ -63,6 +63,7 @@ public class BIT extends JavaPlugin {
 			setupSQL();
 			setupRegister();
 			setupSpoutBackpack();
+			setupSpoutBackpack2();
 			setupMyWolf();
 			registerEvents();
 			addCommands();
@@ -217,6 +218,13 @@ public class BIT extends JavaPlugin {
 			}
 		}
 	}
+	
+	private void setupSpoutBackpack2() {
+		// TODO Auto-generated method stub
+		
+	}
+
+
 
 	private void setupMyWolf() {
 		if (myWolfPlugin == null) {
@@ -245,8 +253,8 @@ public class BIT extends JavaPlugin {
 	public static String oldDigilockTable = "BukkitInventoryTools4";
 	public static String bitInventoryTable = "Bookshelf";
 	public static String oldBitInventoryTable = "Bookshelf_NONE";
-	public static String bookTable = "Book";
-	public static String oldBookTable = "Book_NONE";
+	public static String bookTable = "Book2";
+	public static String oldBookTable = "Book";
 
 	private void setupSQL() {
 		if (G333Config.STORAGE_TYPE.equals("MYSQL")) {
@@ -330,27 +338,27 @@ public class BIT extends JavaPlugin {
 									+ " to " + bookTable + ".");
 							query = "CREATE TABLE "
 									+ bookTable
-									+ " (bookid INT, title TEXT,"
-									+ " author TEXT, coauthors TEXT, "
+									+ " (bookid INT, title VARCHAR(255),"
+									+ " author VARCHAR(255), coauthors VARCHAR(255), "
 									+ " numberofpages INT, pageno INT, bodytext TEXT,"
-									+ " mastercopy TINYINT(1), mastercopyid INT,"
-									+ " force TINYINT(1), moved TINYINT(1), copy TINYINT(1), usecost INT)"
+									+ " mastercopy BOOLEAN, mastercopyid INT,"
+									+ " forcebook BOOLEAN, moved BOOLEAN, copy BOOLEAN, usecost INT)"
 									+ " AS select bookid, title,"
 									+ " author, coauthors, "
 									+ " numberofpages, pageno, bodytext,"
 									+ " mastercopy, mastercopyid,"
-									+ " force, moved, copy, usecost FROM "
+									+ " forcebook, moved, copy, usecost FROM "
 									+ oldBookTable + ";";
 						} else {
 							G333Messages
 									.showInfo("Creating table " + bookTable);
 							query = "CREATE TABLE "
 									+ bookTable
-									+ " (bookid INT, title TEXT,"
-									+ " author TEXT, coauthors TEXT, "
+									+ " (bookid INT, title VARCHAR(255),"
+									+ " author VARCHAR(255), coauthors VARCHAR(255), "
 									+ " numberofpages INT, pageno INT, bodytext TEXT,"
-									+ " mastercopy TINYINT(1), mastercopyid INT,"
-									+ " force TINYINT(1), moved TINYINT(1), copy TINYINT(1), usecost INT);";
+									+ " mastercopy BOOLEAN, mastercopyid INT,"
+									+ " forcebook BOOLEAN, moved BOOLEAN, copy BOOLEAN, usecost INT);";
 						}
 						manageMySQL.createTable(query);
 					}
@@ -467,14 +475,14 @@ public class BIT extends JavaPlugin {
 							+ " author TEXT, coauthors TEXT, "
 							+ " numberofpages INT, pageno INT, bodytext TEXT,"
 							+ " mastercopy BOOLEAN, mastercopyid INT,"
-							+ " force BOOLEAN, moved BOOLEAN, copy BOOLEAN, usecost INT);";
+							+ " forcebook BOOLEAN, moved BOOLEAN, copy BOOLEAN, usecost INT);";
 					insert = "insert into "
 							+ bookTable
 							+ " (bookid, title,"
 							+ " author, coauthors, "
 							+ " numberofpages, pageno, bodytext,"
 							+ " mastercopy, mastercopyid,"
-							+ " force, moved, copy, usecost) "
+							+ " forcebook, moved, copy, usecost) "
 							+ "select bookid, title,"
 							+ " author, coauthors, "
 							+ " numberofpages, pageno, bodytext,"
@@ -491,7 +499,7 @@ public class BIT extends JavaPlugin {
 							+ " author TEXT, coauthors TEXT, "
 							+ " numberofpages INT, pageno INT, bodytext TEXT,"
 							+ " mastercopy BOOLEAN, mastercopyid INT,"
-							+ " force BOOLEAN, moved BOOLEAN, copy BOOLEAN, usecost INT);";
+							+ " forcebook BOOLEAN, moved BOOLEAN, copy BOOLEAN, usecost INT);";
 
 					manageSQLite.createTable(query);
 				}

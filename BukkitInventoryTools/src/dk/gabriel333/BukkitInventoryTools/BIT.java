@@ -333,8 +333,8 @@ public class BIT extends JavaPlugin {
 									+ " (bookid INT, title TEXT,"
 									+ " author TEXT, coauthors TEXT, "
 									+ " numberofpages INT, pageno INT, bodytext TEXT,"
-									+ " mastercopy BOOLEAN, mastercopyid INT,"
-									+ " force BOOLEAN, moved BOOLEAN, copy BOOLEAN, usecost INT)"
+									+ " mastercopy TINYINT(1), mastercopyid INT,"
+									+ " force TINYINT(1), moved TINYINT(1), copy TINYINT(1), usecost INT)"
 									+ " AS select bookid, title,"
 									+ " author, coauthors, "
 									+ " numberofpages, pageno, bodytext,"
@@ -349,8 +349,8 @@ public class BIT extends JavaPlugin {
 									+ " (bookid INT, title TEXT,"
 									+ " author TEXT, coauthors TEXT, "
 									+ " numberofpages INT, pageno INT, bodytext TEXT,"
-									+ " mastercopy BOOLEAN, mastercopyid INT,"
-									+ " force BOOLEAN, moved BOOLEAN, copy BOOLEAN, usecost INT);";
+									+ " mastercopy TINYINT(1), mastercopyid INT,"
+									+ " force TINYINT(1), moved TINYINT(1), copy TINYINT(1), usecost INT);";
 						}
 						manageMySQL.createTable(query);
 					}

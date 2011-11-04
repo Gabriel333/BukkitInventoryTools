@@ -33,12 +33,10 @@ public class G333Permissions {
 	public static Boolean permissionsBukkit = false;
 
 	// Hook into PermissionsEx
-	// private static Plugin permissionsExPlugin;
 	private static PermissionManager permissionsexManager;
 	public static Boolean permissionsex = false;
 
 	// Hook into bPermissions
-	// private static Plugin bPermissionsPlugin;
 	public static WorldPermissionsManager wpm = null;
 	public static Boolean bPermissions = false;
 

@@ -1,5 +1,6 @@
 package dk.gabriel333.spoutbackpack;
 
+import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
@@ -9,10 +10,12 @@ import org.getspout.spoutapi.event.inventory.InventoryCloseEvent;
 import org.getspout.spoutapi.event.inventory.InventoryListener;
 import org.getspout.spoutapi.event.inventory.InventorySlotType;
 
-public class SBInventoryListener extends InventoryListener {
-	private SpoutBackpack	plugin;
+import dk.gabriel333.BukkitInventoryTools.BIT;
 
-	public SBInventoryListener(SpoutBackpack plugin) {
+public class SBInventoryListener extends InventoryListener {
+	private BIT plugin;
+
+	public SBInventoryListener(BIT plugin) {
 		this.plugin = plugin;
 	}
 
@@ -27,7 +30,7 @@ public class SBInventoryListener extends InventoryListener {
 				plugin.openedInventories.remove(player.getName());
 			}
 			Inventory inv = event.getInventory();
-			if (inv.getName().equals(plugin.inventoryName) && inv.getSize() == plugin.allowedSize(player.getWorld(), player, true)) {
+			if (inv.getName().equals(plugin.inventoryName) && inv.getSize() == BIT.allowedSize(player.getWorld(), player, true)) {
 				plugin.inventories.put(player.getName(), inv.getContents());
 			}
 		} else {
@@ -36,8 +39,8 @@ public class SBInventoryListener extends InventoryListener {
 			}
 			Inventory inv = event.getInventory();
 			if (inv.getName().equals(plugin.inventoryName)
-					&& inv.getSize() == plugin.allowedSize(
-							plugin.getServer().getPlayer(plugin.openedInventoriesOthers.get(player.getName())).getWorld(), plugin
+					&& inv.getSize() == BIT.allowedSize(
+							Bukkit.getServer().getPlayer(plugin.openedInventoriesOthers.get(player.getName())).getWorld(), Bukkit
 									.getServer().getPlayer(plugin.openedInventoriesOthers.get(player.getName())), true)) {
 				plugin.inventories.put(plugin.openedInventoriesOthers.get(player.getName()), inv.getContents());
 				plugin.openedInventoriesOthers.remove(player.getName());
@@ -49,7 +52,7 @@ public class SBInventoryListener extends InventoryListener {
 	public void onInventoryClick(InventoryClickEvent event) {
 		Player player = event.getPlayer();
 		if (plugin.openedInventoriesOthers.containsKey(event.getPlayer().getName())) {
-			player = plugin.getServer().getPlayer(plugin.openedInventoriesOthers.get(event.getPlayer()));
+			player = Bukkit.getServer().getPlayer(plugin.openedInventoriesOthers.get(event.getPlayer()));
 		}
 		InventorySlotType clickedSlotType = event.getSlotType();
 		Inventory inv = event.getInventory();

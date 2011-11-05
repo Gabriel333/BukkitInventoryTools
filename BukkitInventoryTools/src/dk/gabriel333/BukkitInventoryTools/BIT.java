@@ -1,25 +1,46 @@
 package dk.gabriel333.BukkitInventoryTools;
 
+import java.io.File;
 import java.lang.reflect.Field;
 import java.net.MalformedURLException;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.logging.Logger;
 
+import org.bukkit.Bukkit;
+import org.bukkit.Location;
+import org.bukkit.World;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Event;
 import org.bukkit.event.Event.Priority;
 import org.bukkit.event.Event.Type;
+import org.bukkit.inventory.Inventory;
+import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.PluginDescriptionFile;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
+import org.bukkit.util.config.Configuration;
+import org.getspout.spout.inventory.CustomInventory;
+import org.getspout.spoutapi.gui.GenericLabel;
+
 import com.alta189.sqlLibrary.MySQL.mysqlCore;
 import com.alta189.sqlLibrary.SQLite.sqlCore;
+import com.garbagemule.MobArena.MobArenaHandler;
+import com.sk89q.worldguard.bukkit.WorldGuardPlugin;
+import com.sk89q.worldguard.protection.regions.ProtectedRegion;
+
 import dk.gabriel333.register.payment.Method;
 import dk.gabriel333.register.payment.Methods;
-
+import dk.gabriel333.spoutbackpack.SBEntityListener;
+import dk.gabriel333.spoutbackpack.SBInputListener;
+import dk.gabriel333.spoutbackpack.SBInventoryListener;
+import dk.gabriel333.spoutbackpack.SBLanguageInterface;
+import dk.gabriel333.spoutbackpack.SBPlayerListener;
+import dk.gabriel333.spoutbackpack.SBLanguageInterface.Language;
 import de.Keyle.MyWolf.MyWolfPlugin;
 import dk.gabriel333.BukkitInventoryTools.Commands.*;
 import dk.gabriel333.BukkitInventoryTools.Listeners.*;
@@ -28,10 +49,12 @@ import dk.gabriel333.BukkitInventoryTools.Book.*;
 import dk.gabriel333.BukkitInventoryTools.DigiLock.*;
 import dk.gabriel333.Library.G333Config;
 import dk.gabriel333.Library.G333Messages;
+import dk.gabriel333.Library.G333Permissions;
 import dk.gabriel333.Library.G333Plugin;
 
 import me.neatmonster.spoutbackpack.SBHandler;
 
+@SuppressWarnings("deprecation")
 public class BIT extends JavaPlugin {
 
 	public static BIT plugin;
@@ -46,6 +69,37 @@ public class BIT extends JavaPlugin {
 	// Hook into SpoutBackpack
 	public static SBHandler spoutBackpackHandler;
 	public static Boolean spoutbackpack = false;
+
+	public HashMap<String, ItemStack[]> inventories = new HashMap<String, ItemStack[]>();
+	public HashMap<String, Inventory> openedInventories = new HashMap<String, Inventory>();
+	public HashMap<String, String> openedInventoriesOthers = new HashMap<String, String>();
+	public HashMap<String, GenericLabel> widgets = new HashMap<String, GenericLabel>();
+	public boolean useWidget;
+	public String inventoryName;
+	public int blackOrWhiteList;
+	public List<Integer> whitelist = new ArrayList<Integer>();
+	public List<Integer> blacklist = new ArrayList<Integer>();
+	public SBLanguageInterface li;
+	public boolean workbenchEnabled;
+	public boolean workbenchInventory;
+	public boolean workbenchBuyable;
+	public static MobArenaHandler mobArenaHandler;
+	public List<String> noBackpackRegions = new ArrayList<String>();
+	public List<Player> portals = new ArrayList<Player>();
+	public int widgetX;
+	public int widgetY;
+	public String logTag = "[BITSpoutBackpack]";
+	public Configuration config;
+	public double price18;
+	public double price27;
+	public double price36;
+	public double price45;
+	public double price54;
+	public int saveTime;
+	public int saveTaskId;
+	public boolean logSaves;
+	
+	
 
 	// Hook into MyWolf
 	public static Boolean mywolf = false;
@@ -68,6 +122,9 @@ public class BIT extends JavaPlugin {
 			registerEvents();
 			addCommands();
 			setupBook();
+			setupMobArena();
+			loadOrReloadConfiguration();
+			li = new SBLanguageInterface(loadLanguage());
 			// BITPlayer.clearAllUserData();
 			G333Messages.showInfo("BIT version " + pdfFile.getVersion()
 					+ " is enabled!");
@@ -130,13 +187,14 @@ public class BIT extends JavaPlugin {
 		pm.registerEvent(Event.Type.PLAYER_KICK, new BITPlayerListener(),
 				Priority.Normal, this);
 		// BITDigiLock Listeners
-		pm.registerEvent(Event.Type.CUSTOM_EVENT,
-				new BITDigiLockInputListener(), Event.Priority.Normal, this);
+		pm.registerEvent(Event.Type.CUSTOM_EVENT, new BITDigiLockInputListener(
+				this), Event.Priority.Normal, this);
 		pm.registerEvent(Event.Type.CUSTOM_EVENT,
 				new BITDigiLockSpoutListener(), Event.Priority.Normal, this);
 		// BITIventory Listeners
 		pm.registerEvent(Event.Type.CUSTOM_EVENT,
-				new BITInventorySpoutListener(), Event.Priority.Normal, this);
+				new BITInventorySpoutListener(this), Event.Priority.Normal,
+				this);
 
 		// BITBook Listeners
 		pm.registerEvent(Event.Type.CUSTOM_EVENT,
@@ -149,6 +207,24 @@ public class BIT extends JavaPlugin {
 		// BITKeyboardListener
 		pm.registerEvent(Event.Type.CUSTOM_EVENT, new BITKeyboardListener(),
 				Event.Priority.Normal, this);
+
+		// SpoutBackpack
+		pm.registerEvent(Type.CUSTOM_EVENT, new SBInputListener(),
+				Priority.Normal, this);
+		pm.registerEvent(Type.CUSTOM_EVENT, new SBInventoryListener(this),
+				Priority.Normal, this);
+		pm.registerEvent(Type.PLAYER_JOIN, new SBPlayerListener(this),
+				Priority.Normal, this);
+		pm.registerEvent(Type.PLAYER_TELEPORT, new SBPlayerListener(this),
+				Priority.Monitor, this);
+		pm.registerEvent(Type.PLAYER_PORTAL, new SBPlayerListener(this),
+				Priority.Monitor, this);
+		pm.registerEvent(Type.PLAYER_KICK, new SBPlayerListener(this),
+				Priority.Normal, this);
+		pm.registerEvent(Type.PLAYER_QUIT, new SBPlayerListener(this),
+				Priority.Normal, this);
+		pm.registerEvent(Type.ENTITY_DEATH, new SBEntityListener(this),
+				Priority.Normal, this);
 
 	}
 
@@ -218,13 +294,11 @@ public class BIT extends JavaPlugin {
 			}
 		}
 	}
-	
+
 	private void setupSpoutBackpack2() {
 		// TODO Auto-generated method stub
-		
+
 	}
-
-
 
 	private void setupMyWolf() {
 		if (myWolfPlugin == null) {
@@ -476,15 +550,12 @@ public class BIT extends JavaPlugin {
 							+ " numberofpages INT, pageno INT, bodytext TEXT,"
 							+ " mastercopy BOOLEAN, mastercopyid INT,"
 							+ " forcebook BOOLEAN, moved BOOLEAN, copy BOOLEAN, usecost INT);";
-					insert = "insert into "
-							+ bookTable
-							+ " (bookid, title,"
+					insert = "insert into " + bookTable + " (bookid, title,"
 							+ " author, coauthors, "
 							+ " numberofpages, pageno, bodytext,"
 							+ " mastercopy, mastercopyid,"
 							+ " forcebook, moved, copy, usecost) "
-							+ "select bookid, title,"
-							+ " author, coauthors, "
+							+ "select bookid, title," + " author, coauthors, "
 							+ " numberofpages, pageno, bodytext,"
 							+ " mastercopy, mastercopyid,"
 							+ " force, moved, copy, usecost FROM "
@@ -556,6 +627,277 @@ public class BIT extends JavaPlugin {
 			e.printStackTrace();
 		}
 
+	}
+
+	WorldGuardPlugin getWorldGuard() {
+		Plugin plugin = Bukkit.getServer().getPluginManager()
+				.getPlugin("WorldGuard");
+		if (plugin == null || !(plugin instanceof WorldGuardPlugin)) {
+			return null;
+		}
+		return (WorldGuardPlugin) plugin;
+	}
+
+	private void setupMobArena() {
+		if (mobArenaHandler != null) {
+			return;
+		}
+		Plugin mobArenaPlugin = Bukkit.getServer().getPluginManager()
+				.getPlugin("MobArena");
+		if (mobArenaPlugin == null) {
+			return;
+		}
+		mobArenaHandler = new MobArenaHandler();
+		G333Messages.showInfo("MobArena detected");
+		return;
+	}
+
+	public static int allowedSize(World world, Player player,
+			boolean configurationCheck) {
+		int size = 9;
+		if (G333Permissions.hasPerm(player, "backpack.size54",
+				G333Permissions.NOT_QUIET)) {
+			size = 54;
+		} else if (G333Permissions.hasPerm(player, "backpack.size45",
+				G333Permissions.NOT_QUIET)) {
+			size = 45;
+		} else if (G333Permissions.hasPerm(player, "backpack.size36",
+				G333Permissions.NOT_QUIET)) {
+			size = 36;
+		} else if (G333Permissions.hasPerm(player, "backpack.size27",
+				G333Permissions.NOT_QUIET)) {
+			size = 27;
+		} else if (G333Permissions.hasPerm(player, "backpack.size18",
+				G333Permissions.NOT_QUIET)) {
+			size = 18;
+		} else if (G333Permissions.hasPerm(player, "backpack.size9",
+				G333Permissions.NOT_QUIET)) {
+			size = 9;
+		} else {
+			if (player.isOp() == true) {
+				size = 54;
+			} else {
+				size = 9;
+			}
+		}
+		return size;
+	}
+
+	public void updateInventory(Player player, ItemStack[] is) {
+		this.inventories.put(player.getName(), is);
+	}
+
+	public boolean canOpenBackpack(World world, Player player) {
+		boolean canOpenBackpack = false;
+
+		if (G333Permissions.hasPerm(player, "backpack.size54",
+				G333Permissions.QUIET)
+				|| G333Permissions.hasPerm(player, "backpack.size45",
+						G333Permissions.QUIET)
+				|| G333Permissions.hasPerm(player, "backpack.size36",
+						G333Permissions.QUIET)
+				|| G333Permissions.hasPerm(player, "backpack.size27",
+						G333Permissions.QUIET)
+				|| G333Permissions.hasPerm(player, "backpack.size18",
+						G333Permissions.QUIET)
+				|| G333Permissions.hasPerm(player, "backpack.size9",
+						G333Permissions.QUIET)) {
+
+			canOpenBackpack = true;
+		} else {
+			canOpenBackpack = false;
+		}
+
+		if (getWorldGuard() != null) {
+			Location location = player.getLocation();
+			com.sk89q.worldedit.Vector vector = new com.sk89q.worldedit.Vector(
+					location.getX(), location.getY(), location.getZ());
+			Map<String, ProtectedRegion> regions = getWorldGuard()
+					.getGlobalRegionManager().get(location.getWorld())
+					.getRegions();
+			List<String> inRegions = new ArrayList<String>();
+			for (String key_ : regions.keySet()) {
+				ProtectedRegion region = regions.get(key_);
+				if (region.contains(vector)) {
+					inRegions.add(key_);
+				}
+			}
+			for (String region : noBackpackRegions) {
+				if (inRegions.contains(region)) {
+					canOpenBackpack = false;
+				}
+			}
+		}
+		if (mobArenaHandler != null) {
+			if (mobArenaHandler.inRegion(player.getLocation())) {
+				canOpenBackpack = false;
+			}
+		}
+		// CLJif (jail != null) {
+		// CLJ if (jail.isPlayerJailed(player.getName()) == true) {
+		// CLJ canOpenBackpack = false;
+		// CLJ }
+		// CLJ}
+		return canOpenBackpack;
+	}
+
+	public boolean hasWorkbench(Player player) {
+		if (G333Permissions.hasPerm(player, "backpack.workbench",
+				G333Permissions.NOT_QUIET))
+			return true;
+		File saveFile;
+		if (config.getBoolean("Backpack." + player.getWorld().getName()
+				+ ".InventoriesShare?", true)) {
+			saveFile = new File(plugin.getDataFolder() + File.separator
+					+ "inventories", player.getName() + ".yml");
+		} else {
+			saveFile = new File(plugin.getDataFolder() + File.separator
+					+ "inventories", player.getName() + "_"
+					+ player.getWorld().getName() + ".yml");
+		}
+		Configuration config = new Configuration(saveFile);
+		config.load();
+		boolean enabled = config.getBoolean("Workbench", false);
+		config.save();
+		if (enabled)
+			return true;
+		return false;
+	}
+
+	public void setWorkbench(Player player, boolean enabled) {
+		File saveFile;
+		if (config.getBoolean("Backpack." + player.getWorld().getName()
+				+ ".InventoriesShare?", true)) {
+			saveFile = new File(plugin.getDataFolder() + File.separator
+					+ "inventories", player.getName() + ".yml");
+		} else {
+			saveFile = new File(plugin.getDataFolder() + File.separator
+					+ "inventories", player.getName() + "_"
+					+ player.getWorld().getName() + ".yml");
+		}
+		Configuration config = new Configuration(saveFile);
+		config.load();
+		config.setProperty("Workbench", enabled);
+		config.save();
+	}
+
+	public boolean isOpenBackpack(Player player) {
+		return plugin.openedInventories.containsKey(player.getName());
+	}
+
+	public Inventory getOpenedBackpack(Player player) {
+		return plugin.openedInventories.get(player.getName());
+	}
+
+	public Inventory getClosedBackpack(Player player) {
+		CustomInventory inventory = new CustomInventory(BIT.allowedSize(
+				player.getWorld(), player, true), plugin.inventoryName);
+		if (plugin.inventories.containsKey(player.getName())) {
+			inventory.setContents(plugin.inventories.get(player.getName()));
+		}
+		return inventory;
+	}
+
+	public void setClosedBackpack(Player player, Inventory inventory) {
+		plugin.inventories.put(player.getName(), inventory.getContents());
+		return;
+	}
+
+	public void loadInventory(Player player, World world) {
+		if (plugin.inventories.get(player.getName()) != null) {
+			return;
+		}
+		File saveFile;
+		if (config.getBoolean("Backpack." + world.getName()
+				+ ".InventoriesShare?", true)) {
+			saveFile = new File(plugin.getDataFolder() + File.separator
+					+ "inventories", player.getName() + ".yml");
+		} else {
+			saveFile = new File(plugin.getDataFolder() + File.separator
+					+ "inventories", player.getName() + "_" + world.getName()
+					+ ".yml");
+		}
+		@SuppressWarnings({})
+		Configuration config = new Configuration(saveFile);
+		config.load();
+		int size = BIT.allowedSize(world, player, true);
+		CustomInventory inv = new CustomInventory(size, plugin.inventoryName);
+		if (saveFile.exists()) {
+			Integer i = 0;
+			for (i = 0; i < size; i++) {
+				ItemStack item = new ItemStack(0, 0);
+				item.setAmount(config.getInt(i.toString() + ".amount", 0));
+				item.setTypeId(config.getInt(i.toString() + ".type", 0));
+				Integer durability = config.getInt(
+						i.toString() + ".durability", 0);
+				item.setDurability(Short.parseShort(durability.toString()));
+				inv.setItem(i, item);
+			}
+		}
+		plugin.inventories.put(player.getName(), inv.getContents());
+	}
+	
+	public void loadOrReloadConfiguration() {
+		plugin.config = plugin.getConfiguration();
+		plugin.config.load();
+		plugin.config.getString("Language", "English");
+		plugin.config.getBoolean("Permissions.UsePermissions?", true);
+		plugin.config.getBoolean("Permissions.UsePermissionsBukkit?", false);
+		plugin.config.getBoolean("Permissions.UsePermissionsEx?", false);
+		plugin.config.getBoolean("Permissions.UseGroupManager?", false);
+		plugin.config.getString("Backpack.Key", "B");
+		plugin.inventoryName = plugin.config.getString("Backpack.Name", "Backpack");
+		plugin.config.getBoolean("Backpack.world_name.InventoriesShare?", true);
+		plugin.noBackpackRegions = plugin.config.getStringList(
+				"Backpack.RegionWhereBackpacksAreDisabled", null);
+		if (plugin.noBackpackRegions.size() == 0) {
+			plugin.noBackpackRegions.add("region1");
+			plugin.noBackpackRegions.add("region2");
+			plugin.config.setProperty("Backpack.RegionWhereBackpacksAreDisabled",
+					plugin.noBackpackRegions);
+		}
+		price18 = plugin.config.getDouble("Backpack.Price.18", 10.00);
+		price27 = plugin.config.getDouble("Backpack.Price.27", 20.00);
+		price36 = plugin.config.getDouble("Backpack.Price.36", 30.00);
+		price45 = plugin.config.getDouble("Backpack.Price.45", 40.00);
+		price54 = plugin.config.getDouble("Backpack.Price.54", 50.00);
+		plugin.blackOrWhiteList = plugin.config.getInt(
+				"Backpack.NoneBlackOrWhiteList?", 0);
+		if (plugin.blackOrWhiteList != 1 && plugin.blackOrWhiteList != 2) {
+			plugin.blackOrWhiteList = 0;
+		}
+		plugin.whitelist = plugin.config.getIntList("Backpack.Whitelist", null);
+		if (plugin.whitelist.size() == 0) {
+			plugin.whitelist.add(262);
+			plugin.config.setProperty("Backpack.Whitelist", plugin.whitelist);
+		}
+		plugin.blacklist = plugin.config.getIntList("Backpack.Blacklist", null);
+		if (plugin.blacklist.size() == 0) {
+			plugin.blacklist.add(264);
+			plugin.config.setProperty("Backpack.Blacklist", plugin.blacklist);
+		}
+		plugin.workbenchEnabled = plugin.config.getBoolean("Workbench.Enabled?", true);
+		plugin.config.getString("Workbench.Key", "N");
+		plugin.workbenchInventory = plugin.config.getBoolean("Workbench.NeededInInventory?",
+				false);
+		plugin.useWidget = plugin.config.getBoolean("Widget.Enabled?", true);
+		plugin.widgetX = plugin.config.getInt("Widget.PositionX", 3);
+		plugin.widgetY = plugin.config.getInt("Widget.PositionY", 5);
+		logSaves = plugin.config.getBoolean("Saves.Log?", false);
+		saveTime = plugin.config.getInt("Saves.Interval(InMinutes)", 5);
+		plugin.config.save();
+	}
+
+	public Language loadLanguage() {
+		if (G333Config.SBP_language.equalsIgnoreCase("EN")) {
+			return Language.ENGLISH;
+		} else if (G333Config.SBP_language.equalsIgnoreCase("FR")) {
+			return Language.FRENCH;
+		} else {
+			G333Messages
+					.showInfo("SpoutBackpack: language set to ENGLISH by default.");
+			return Language.ENGLISH;
+		}
 	}
 
 }

@@ -12,11 +12,19 @@ import org.getspout.spoutapi.event.spout.SpoutListener;
 import org.getspout.spoutapi.gui.Button;
 import org.getspout.spoutapi.player.SpoutPlayer;
 
+import dk.gabriel333.BukkitInventoryTools.BIT;
 import dk.gabriel333.BukkitInventoryTools.Inventory.BITInventory;
 import dk.gabriel333.Library.G333Config;
 import dk.gabriel333.Library.G333Messages;
 
 public class BITInventorySpoutListener extends SpoutListener {
+	
+	@SuppressWarnings("unused")
+	private BIT plugin;
+
+	public BITInventorySpoutListener(BIT plugin) {
+		this.plugin = plugin;
+	}
 
 	public void onCustomEvent(Event event) {
 		if (event instanceof ButtonClickEvent) {

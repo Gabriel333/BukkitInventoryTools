@@ -1,5 +1,6 @@
 package dk.gabriel333.Library;
 
+import org.anjocaido.groupmanager.GroupManager;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
@@ -40,6 +41,11 @@ public class G333Permissions {
 	public static WorldPermissionsManager wpm = null;
 	public static Boolean bPermissions = false;
 
+	// Hook into Essentials GroupManager
+	private static Plugin groupManagerPlugin;
+	private static GroupManager groupManager;
+	public static Boolean essentialsGroupManager = false;
+
 	// Initialize all permissionsplugins
 	public static void setupPermissions(Plugin plugin) {
 		PERMISSION_NODE = plugin.getDescription().getName() + ".";
@@ -69,12 +75,26 @@ public class G333Permissions {
 					.isPluginEnabled("bPermissions")) {
 
 				try {
-					wpm = de.bananaco.permissions.Permissions.getWorldPermissionsManager();
+					wpm = de.bananaco.permissions.Permissions
+							.getWorldPermissionsManager();
 					bPermissions = true;
 					G333Messages.showInfo("bPermissions is detected.");
 				} catch (Exception e) {
 
 				}
+			} else
+			// Essentials GroupManager
+			if (Bukkit.getServer().getPluginManager()
+					.isPluginEnabled("GroupManager")) {
+				groupManagerPlugin = Bukkit.getServer().getPluginManager()
+						.getPlugin("GroupManager");
+				if (groupManagerPlugin != null) {
+					groupManager = (GroupManager) groupManagerPlugin;
+					G333Messages.showInfo("GroupManager is detected.");
+					essentialsGroupManager = true;
+				}
+				
+
 			} else
 			// Permission3
 			if (permissions3Plugin == null) {
@@ -143,8 +163,12 @@ public class G333Permissions {
 			hasPermission = permissionsexManager.has(sPlayer,
 					(PERMISSION_NODE + label).toLowerCase());
 		} else if (bPermissions) {
-			 hasPermission = wpm.getPermissionSet(sPlayer.getWorld()).has(sPlayer,
-			 (PERMISSION_NODE + label).toLowerCase());
+			hasPermission = wpm.getPermissionSet(sPlayer.getWorld()).has(
+					sPlayer, (PERMISSION_NODE + label).toLowerCase());
+		} else if (essentialsGroupManager) {
+			// Essentials GroupManager
+			hasPermission = permission3Handler.has(sPlayer,
+					(PERMISSION_NODE + label).toLowerCase());
 		} else if (permissions3) {
 			// or SuperpermBridge
 			hasPermission = permission3Handler.has(sPlayer,

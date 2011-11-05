@@ -20,6 +20,8 @@ public class G333Config {
 	public static String LIBRARY_MENUKEY;
 	public static String LIBRARY_LOCKKEY;
 	public static String LIBRARY_READKEY;
+	public static String LIBRARY_BACKPACK;
+	public static String LIBRARY_WORKBENCH;
 	public static Boolean LIBRARY_USESIGNEDITGUI;
 	
 	public static String STORAGE_TYPE;
@@ -57,6 +59,10 @@ public class G333Config {
 	public static int BOOK_COST;
 	public static int BOOK_USEMAXCOST;
 	public static int BOOK_DESTROYCOST;
+	
+	public static String SBP_language;
+	public static Boolean SBP_InventoriesShare;
+	
 	
 	public static Boolean DEBUG_PERMISSIONS;
 	public static Boolean DEBUG_SORTINVENTORY;
@@ -97,6 +103,8 @@ public class G333Config {
 		LIBRARY_MENUKEY = getStringParm("Library.MenuKey", "KEY_M");
 		LIBRARY_LOCKKEY = getStringParm("Library.LockKey", "KEY_L");
 		LIBRARY_READKEY = getStringParm("Library.ReadKey", "KEY_R");
+		LIBRARY_BACKPACK = getStringParm("Library.Backpack", "KEY_B");
+		LIBRARY_WORKBENCH = getStringParm("Library.Workbench", "KEY_N");
 		LIBRARY_USESIGNEDITGUI = getBooleanParm("Library.UseSignEditGUI", true);
 
 		//SQL
@@ -141,8 +149,8 @@ public class G333Config {
 		BOOK_DESTROYCOST = getIntParm("Book.DestroyCost", 0);
 		
 		//SpoutBackpack
-		
-		
+		SBP_language = getStringParm("SpoutBackpack.Language","EN");
+		SBP_InventoriesShare = getBooleanParm("SBP.InventoriesShare",true);
 		
 		//Debug
 		DEBUG_PERMISSIONS = getBooleanParm("Debug.Permissions", false);

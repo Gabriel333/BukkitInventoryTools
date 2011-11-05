@@ -121,7 +121,12 @@ Book:
 # |            Properties for SpoutBackpack              | #
 # +------------------------------------------------------+ #
 ############################################################
-
+# Language: EN or FR
+# InventoriesShare: whether to share the backpack across 
+#           worlds. (true or false)
+SBP:
+    language: EN
+    InventoriesShare: true
 
 
 ############################################################

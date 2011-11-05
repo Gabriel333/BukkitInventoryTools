@@ -5,8 +5,10 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.plugin.Plugin;
 
+import dk.gabriel333.BukkitInventoryTools.BIT;
+
 public class SBHandler {
-	SpoutBackpack	plugin;
+	BIT	plugin;
 	boolean			spoutBackpackEnabled	= false;
 
 	/**
@@ -14,10 +16,10 @@ public class SBHandler {
 	 * SpoutBackpack.
 	 */
 	public SBHandler() {
-		Plugin SpoutBackpackPlugin = (SpoutBackpack) Bukkit.getServer().getPluginManager().getPlugin("SpoutBackpack");
+		Plugin SpoutBackpackPlugin = (Plugin) Bukkit.getServer().getPluginManager().getPlugin("BukkitInventoryTools");
 		if (SpoutBackpackPlugin == null) { return; }
 		spoutBackpackEnabled = true;
-		plugin = (SpoutBackpack) SpoutBackpackPlugin;
+		plugin = (BIT) SpoutBackpackPlugin;
 	}
 
 	/**

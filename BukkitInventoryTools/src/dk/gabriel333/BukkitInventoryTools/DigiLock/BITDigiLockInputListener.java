@@ -21,6 +21,12 @@ import dk.gabriel333.BukkitInventoryTools.Sort.BITSortInventory;
 import dk.gabriel333.Library.*;
 
 public class BITDigiLockInputListener extends InputListener {
+	
+	public BIT plugin;
+
+	public BITDigiLockInputListener(BIT plugin) {
+		this.plugin = plugin;
+	}
 
 	@Override
 	public void onKeyPressedEvent(KeyPressedEvent event) {

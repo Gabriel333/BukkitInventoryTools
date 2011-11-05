@@ -9,10 +9,13 @@ import org.bukkit.inventory.ItemStack;
 import org.getspout.spout.inventory.CustomInventory;
 import org.getspout.spoutapi.player.SpoutPlayer;
 
-public class SBEntityListener extends EntityListener {
-	private SpoutBackpack	plugin;
+import dk.gabriel333.BukkitInventoryTools.BIT;
+import dk.gabriel333.Library.G333Permissions;
 
-	public SBEntityListener(SpoutBackpack plugin) {
+public class SBEntityListener extends EntityListener {
+	private BIT plugin;
+
+	public SBEntityListener(BIT plugin) {
 		this.plugin = plugin;
 	}
 
@@ -21,30 +24,40 @@ public class SBEntityListener extends EntityListener {
 		Entity entity = event.getEntity();
 		if (entity instanceof Player) {
 			Player player = (Player) entity;
-			if (!plugin.userHasPermission(player, "backpack.nodrop") && plugin.canOpenBackpack(player.getWorld(), player)) {
+			if (!G333Permissions.hasPerm(player, "backpack.nodrop",
+					G333Permissions.QUIET)
+					&& plugin.canOpenBackpack(player.getWorld(), player)) {
 				if (!((SpoutPlayer) player).isSpoutCraftEnabled()) {
 					plugin.loadInventory(player, player.getWorld());
 				}
 				if (plugin.inventories.containsKey(player.getName())) {
-					ItemStack[] items = plugin.inventories.get(player.getName());
+					ItemStack[] items = plugin.inventories
+							.get(player.getName());
 					for (ItemStack item : items) {
 						if (item != null && item.getAmount() > 0) {
-							player.getWorld().dropItem(player.getLocation(), item);
+							player.getWorld().dropItem(player.getLocation(),
+									item);
 						}
 					}
-					CustomInventory inventory = new CustomInventory(plugin.allowedSize(player.getWorld(), player, true),
+					CustomInventory inventory = new CustomInventory(
+							BIT.allowedSize(player.getWorld(), player, true),
 							plugin.inventoryName);
-					for (Integer i = 0; i < plugin.allowedSize(player.getWorld(), player, true); i++) {
+					for (Integer i = 0; i < BIT.allowedSize(player.getWorld(),
+							player, true); i++) {
 						ItemStack item = new ItemStack(0, 0);
 						inventory.setItem(i, item);
 					}
-					plugin.inventories.put(player.getName(), inventory.getContents());
-					SBInventorySaveTask.saveInventory(player, player.getWorld());
+					plugin.inventories.put(player.getName(),
+							inventory.getContents());
+					SBInventorySaveTask
+							.saveInventory(player, player.getWorld());
 				}
 				if (!((SpoutPlayer) player).isSpoutCraftEnabled()) {
 
-					player.sendMessage(plugin.logTag + plugin.li.getMessage("your") + ChatColor.RED + plugin.inventoryName
-							+ ChatColor.WHITE + plugin.li.getMessage("hasbroken"));
+					player.sendMessage(plugin.logTag
+							+ plugin.li.getMessage("your") + ChatColor.RED
+							+ plugin.inventoryName + ChatColor.WHITE
+							+ plugin.li.getMessage("hasbroken"));
 				}
 			}
 		}

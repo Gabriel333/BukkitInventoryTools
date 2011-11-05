@@ -8,10 +8,12 @@ import org.bukkit.event.player.PlayerPortalEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.event.player.PlayerTeleportEvent;
 
-public class SBPlayerListener extends PlayerListener {
-	private SpoutBackpack	plugin;
+import dk.gabriel333.BukkitInventoryTools.BIT;
 
-	public SBPlayerListener(SpoutBackpack plugin) {
+public class SBPlayerListener extends PlayerListener {
+	private BIT plugin;
+
+	public SBPlayerListener(BIT plugin) {
 		this.plugin = plugin;
 	}
 
@@ -27,11 +29,15 @@ public class SBPlayerListener extends PlayerListener {
 
 	@Override
 	public void onPlayerTeleport(PlayerTeleportEvent event) {
-		if (((event.getFrom().getWorld().getName() != event.getTo().getWorld().getName()) || plugin.portals.contains(event.getPlayer())
-				&& plugin.config.getBoolean("Backpack." + event.getTo().getWorld().getName() + ".InventoriesShare?", true) == false)) {
+		if (((event.getFrom().getWorld().getName() != event.getTo().getWorld()
+				.getName()) || plugin.portals.contains(event.getPlayer())
+				&& plugin.config.getBoolean("Backpack."
+						+ event.getTo().getWorld().getName()
+						+ ".InventoriesShare?", true) == false)) {
 			try {
 				Player player = event.getPlayer();
-				SBInventorySaveTask.saveInventory(player, event.getFrom().getWorld());
+				SBInventorySaveTask.saveInventory(player, event.getFrom()
+						.getWorld());
 				plugin.inventories.remove(player.getName());
 				plugin.loadInventory(player, event.getTo().getWorld());
 			} catch (Exception e) {

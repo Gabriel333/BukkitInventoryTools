@@ -11,6 +11,7 @@ import org.getspout.spoutapi.event.inventory.InventoryListener;
 import org.getspout.spoutapi.event.inventory.InventorySlotType;
 
 import dk.gabriel333.BukkitInventoryTools.BIT;
+import dk.gabriel333.Library.G333Config;
 
 public class SBInventoryListener extends InventoryListener {
 	private BIT plugin;
@@ -22,28 +23,43 @@ public class SBInventoryListener extends InventoryListener {
 	@Override
 	public void onInventoryClose(InventoryCloseEvent event) {
 		Player player = event.getPlayer();
-		if (!plugin.openedInventoriesOthers.containsKey(player.getName())) {
-			if (plugin.openedInventories.containsKey(player.getName())) {
-				if (plugin.widgets.containsKey(player.getName()) && plugin.useWidget == true) {
-					plugin.widgets.get(player.getName()).setVisible(false).setDirty(true);
+		if (!BIT.openedInventoriesOthers.containsKey(player.getName())) {
+			if (BIT.openedInventories.containsKey(player.getName())) {
+				if (BIT.widgets.containsKey(player.getName())
+						&& G333Config.SBP_useWidget == true) {
+					BIT.widgets.get(player.getName()).setVisible(false)
+							.setDirty(true);
 				}
-				plugin.openedInventories.remove(player.getName());
+				BIT.openedInventories.remove(player.getName());
 			}
 			Inventory inv = event.getInventory();
-			if (inv.getName().equals(plugin.inventoryName) && inv.getSize() == BIT.allowedSize(player.getWorld(), player, true)) {
-				plugin.inventories.put(player.getName(), inv.getContents());
+			if (inv.getName().equals(BIT.inventoryName)
+					&& inv.getSize() == BIT.allowedSize(player.getWorld(),
+							player, true)) {
+				BIT.inventories.put(player.getName(), inv.getContents());
 			}
 		} else {
-			if (plugin.openedInventories.containsKey(plugin.openedInventoriesOthers.get(player.getName()))) {
-				plugin.openedInventories.remove(plugin.openedInventoriesOthers.get(player.getName()));
+			if (BIT.openedInventories
+					.containsKey(BIT.openedInventoriesOthers.get(player
+							.getName()))) {
+				BIT.openedInventories.remove(BIT.openedInventoriesOthers
+						.get(player.getName()));
 			}
 			Inventory inv = event.getInventory();
-			if (inv.getName().equals(plugin.inventoryName)
+			if (inv.getName().equals(BIT.inventoryName)
 					&& inv.getSize() == BIT.allowedSize(
-							Bukkit.getServer().getPlayer(plugin.openedInventoriesOthers.get(player.getName())).getWorld(), Bukkit
-									.getServer().getPlayer(plugin.openedInventoriesOthers.get(player.getName())), true)) {
-				plugin.inventories.put(plugin.openedInventoriesOthers.get(player.getName()), inv.getContents());
-				plugin.openedInventoriesOthers.remove(player.getName());
+							Bukkit.getServer()
+									.getPlayer(
+											BIT.openedInventoriesOthers
+													.get(player.getName()))
+									.getWorld(),
+							Bukkit.getServer().getPlayer(
+									BIT.openedInventoriesOthers.get(player
+											.getName())), true)) {
+				BIT.inventories.put(
+						BIT.openedInventoriesOthers.get(player.getName()),
+						inv.getContents());
+				BIT.openedInventoriesOthers.remove(player.getName());
 			}
 		}
 	}
@@ -51,8 +67,10 @@ public class SBInventoryListener extends InventoryListener {
 	@Override
 	public void onInventoryClick(InventoryClickEvent event) {
 		Player player = event.getPlayer();
-		if (plugin.openedInventoriesOthers.containsKey(event.getPlayer().getName())) {
-			player = Bukkit.getServer().getPlayer(plugin.openedInventoriesOthers.get(event.getPlayer()));
+		if (BIT.openedInventoriesOthers.containsKey(event.getPlayer()
+				.getName())) {
+			player = Bukkit.getServer().getPlayer(
+					BIT.openedInventoriesOthers.get(event.getPlayer()));
 		}
 		InventorySlotType clickedSlotType = event.getSlotType();
 		Inventory inv = event.getInventory();
@@ -60,20 +78,29 @@ public class SBInventoryListener extends InventoryListener {
 		ItemStack clickedItem = event.getItem();
 		int slot = event.getSlot();
 		try {
-			if ((plugin.openedInventories.containsKey(player.getName()) || plugin.openedInventoriesOthers.containsKey(player.getName()))
+			if ((BIT.openedInventories.containsKey(player.getName()) || BIT.openedInventoriesOthers
+					.containsKey(player.getName()))
 					&& clickedSlotType != InventorySlotType.CONTAINER
 					&& invName.equals("Inventory")
-					&& (plugin.blackOrWhiteList == 1 && plugin.blacklist.contains(clickedItem.getTypeId()) || plugin.blackOrWhiteList == 2
-							&& !plugin.whitelist.contains(clickedItem.getTypeId()))) {
+					&& (G333Config.SBP_blackOrWhiteList == 1
+							&& G333Config.blacklist.contains(String
+									.valueOf(clickedItem.getTypeId())) || G333Config.SBP_blackOrWhiteList == 2
+							&& !G333Config.whitelist.contains(String
+									.valueOf(clickedItem.getTypeId())))) {
 				event.setCancelled(true);
-				player.sendMessage(ChatColor.RED + plugin.li.getMessage("yourenotallowedtomovethis") + plugin.inventoryName + "!");
+				player.sendMessage(ChatColor.RED
+						+ BIT.li.getMessage("yourenotallowedtomovethis")
+						+ BIT.inventoryName + "!");
 				return;
 			}
-			if (clickedSlotType == InventorySlotType.CONTAINER && invName.equals(plugin.inventoryName) && clickedItem != null) {
+			if (clickedSlotType == InventorySlotType.CONTAINER
+					&& invName.equals(BIT.inventoryName)
+					&& clickedItem != null) {
 				ItemStack is = inv.getItem(slot);
 				is.setAmount(is.getAmount() - clickedItem.getAmount());
 				plugin.updateInventory(player, inv.getContents());
 			}
-		} catch (NullPointerException e) {}
+		} catch (NullPointerException e) {
+		}
 	}
 }

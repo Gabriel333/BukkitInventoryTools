@@ -23,8 +23,12 @@ Library:
     # Deactivate the HOTKEY by setting SortKey: DISABLED
     SortKey: KEY_S
     LockKey: KEY_L
-    MenuKey: DISABLED
     ReadKey: KEY_R
+    Backpack: KEY_B
+    Workbench: KEY_N
+    MenuKey: DISABLED
+
+
     # If you want to disable Spouts SignEditGUI and use 
     # the ordinary editor, set UseSignEditGUI: false
     UseSignEditGUI: true
@@ -125,8 +129,26 @@ Book:
 # InventoriesShare: whether to share the backpack across 
 #           worlds. (true or false)
 SBP:
-    language: EN
+    Language: EN
     InventoriesShare: true
+    RegionWhereBackpacksAreDisabled: region1, region2
+    Price18: 10.0
+    Price27: 20.0
+    Price36: 30.0
+    Price45: 40.0
+    Price54: 50.0
+    NoneBlackOrWhiteList: 0
+    Whitelist: 262
+    Blacklist: 264
+    WorkbenchEnabled: true
+    WorkbenchBuyable: true
+    WorkbenchNeededInInventory: false
+    WidgetEnabled: false
+    WidgetPositionX: 3
+    WidgetPositionY: 5
+    SavesLog: false
+    SavesInterval(InMinutes): 5
+    
 
 
 ############################################################

@@ -1,6 +1,8 @@
 package dk.gabriel333.BukkitInventoryTools;
 
 import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.lang.reflect.Field;
 import java.net.MalformedURLException;
 import java.util.ArrayList;
@@ -13,6 +15,8 @@ import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.command.CommandSender;
+import org.bukkit.configuration.InvalidConfigurationException;
+import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Event;
 import org.bukkit.event.Event.Priority;
@@ -23,7 +27,6 @@ import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.PluginDescriptionFile;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
-import org.bukkit.util.config.Configuration;
 import org.getspout.spout.inventory.CustomInventory;
 import org.getspout.spoutapi.gui.GenericLabel;
 
@@ -38,9 +41,11 @@ import dk.gabriel333.register.payment.Methods;
 import dk.gabriel333.spoutbackpack.SBEntityListener;
 import dk.gabriel333.spoutbackpack.SBInputListener;
 import dk.gabriel333.spoutbackpack.SBInventoryListener;
+import dk.gabriel333.spoutbackpack.SBInventorySaveTask;
 import dk.gabriel333.spoutbackpack.SBLanguageInterface;
 import dk.gabriel333.spoutbackpack.SBPlayerListener;
 import dk.gabriel333.spoutbackpack.SBLanguageInterface.Language;
+import dk.gabriel333.spoutbackpack.SpoutBackpack;
 import de.Keyle.MyWolf.MyWolfPlugin;
 import dk.gabriel333.BukkitInventoryTools.Commands.*;
 import dk.gabriel333.BukkitInventoryTools.Listeners.*;
@@ -54,7 +59,6 @@ import dk.gabriel333.Library.G333Plugin;
 
 import me.neatmonster.spoutbackpack.SBHandler;
 
-@SuppressWarnings("deprecation")
 public class BIT extends JavaPlugin {
 
 	public static BIT plugin;
@@ -69,37 +73,17 @@ public class BIT extends JavaPlugin {
 	// Hook into SpoutBackpack
 	public static SBHandler spoutBackpackHandler;
 	public static Boolean spoutbackpack = false;
-
-	public HashMap<String, ItemStack[]> inventories = new HashMap<String, ItemStack[]>();
-	public HashMap<String, Inventory> openedInventories = new HashMap<String, Inventory>();
-	public HashMap<String, String> openedInventoriesOthers = new HashMap<String, String>();
-	public HashMap<String, GenericLabel> widgets = new HashMap<String, GenericLabel>();
-	public boolean useWidget;
-	public String inventoryName;
-	public int blackOrWhiteList;
-	public List<Integer> whitelist = new ArrayList<Integer>();
-	public List<Integer> blacklist = new ArrayList<Integer>();
-	public SBLanguageInterface li;
-	public boolean workbenchEnabled;
-	public boolean workbenchInventory;
-	public boolean workbenchBuyable;
+	public static HashMap<String, ItemStack[]> inventories = new HashMap<String, ItemStack[]>();
+	public static HashMap<String, Inventory> openedInventories = new HashMap<String, Inventory>();
+	public static HashMap<String, String> openedInventoriesOthers = new HashMap<String, String>();
+	public static HashMap<String, GenericLabel> widgets = new HashMap<String, GenericLabel>();
+	public static String inventoryName = "Backpack";
+	public static SBLanguageInterface li;
 	public static MobArenaHandler mobArenaHandler;
-	public List<String> noBackpackRegions = new ArrayList<String>();
 	public List<Player> portals = new ArrayList<Player>();
-	public int widgetX;
-	public int widgetY;
 	public String logTag = "[BITSpoutBackpack]";
-	public Configuration config;
-	public double price18;
-	public double price27;
-	public double price36;
-	public double price45;
-	public double price54;
-	public int saveTime;
-	public int saveTaskId;
-	public boolean logSaves;
-	
-	
+	public YamlConfiguration config;
+	public static int saveTaskId;
 
 	// Hook into MyWolf
 	public static Boolean mywolf = false;
@@ -123,9 +107,12 @@ public class BIT extends JavaPlugin {
 			addCommands();
 			setupBook();
 			setupMobArena();
-			loadOrReloadConfiguration();
+			// loadOrReloadConfiguration();
 			li = new SBLanguageInterface(loadLanguage());
 			// BITPlayer.clearAllUserData();
+			for (Player player : Bukkit.getServer().getOnlinePlayers()) {
+				BIT.loadInventory(player, player.getWorld());
+			}
 			G333Messages.showInfo("BIT version " + pdfFile.getVersion()
 					+ " is enabled!");
 		} else {
@@ -230,6 +217,9 @@ public class BIT extends JavaPlugin {
 
 	@Override
 	public void onDisable() {
+		Bukkit.getServer().getScheduler().cancelTask(saveTaskId);
+		SBInventorySaveTask.saveAll();
+
 		PluginDescriptionFile pdfFile = this.getDescription();
 		G333Messages.showInfo(pdfFile.getName() + " version "
 				+ pdfFile.getVersion() + " is disabled!");
@@ -240,6 +230,7 @@ public class BIT extends JavaPlugin {
 		getCommand("Sort").setExecutor(new BITCommandSort(this));
 		getCommand("Digilock").setExecutor(new BITCommandDigiLock(this));
 		getCommand("Bookshelf").setExecutor(new BITCommandBookshelf(this));
+		getCommand("Backpack").setExecutor(new SpoutBackpack(this));
 	}
 
 	private void setupSpout() {
@@ -629,7 +620,7 @@ public class BIT extends JavaPlugin {
 
 	}
 
-	WorldGuardPlugin getWorldGuard() {
+	static WorldGuardPlugin getWorldGuard() {
 		Plugin plugin = Bukkit.getServer().getPluginManager()
 				.getPlugin("WorldGuard");
 		if (plugin == null || !(plugin instanceof WorldGuardPlugin)) {
@@ -656,38 +647,32 @@ public class BIT extends JavaPlugin {
 			boolean configurationCheck) {
 		int size = 9;
 		if (G333Permissions.hasPerm(player, "backpack.size54",
-				G333Permissions.NOT_QUIET)) {
+				G333Permissions.QUIET)) {
 			size = 54;
 		} else if (G333Permissions.hasPerm(player, "backpack.size45",
-				G333Permissions.NOT_QUIET)) {
+				G333Permissions.QUIET)) {
 			size = 45;
 		} else if (G333Permissions.hasPerm(player, "backpack.size36",
-				G333Permissions.NOT_QUIET)) {
+				G333Permissions.QUIET)) {
 			size = 36;
 		} else if (G333Permissions.hasPerm(player, "backpack.size27",
-				G333Permissions.NOT_QUIET)) {
+				G333Permissions.QUIET)) {
 			size = 27;
 		} else if (G333Permissions.hasPerm(player, "backpack.size18",
-				G333Permissions.NOT_QUIET)) {
+				G333Permissions.QUIET)) {
 			size = 18;
 		} else if (G333Permissions.hasPerm(player, "backpack.size9",
-				G333Permissions.NOT_QUIET)) {
+				G333Permissions.QUIET)) {
 			size = 9;
-		} else {
-			if (player.isOp() == true) {
-				size = 54;
-			} else {
-				size = 9;
-			}
 		}
 		return size;
 	}
 
 	public void updateInventory(Player player, ItemStack[] is) {
-		this.inventories.put(player.getName(), is);
+		BIT.inventories.put(player.getName(), is);
 	}
 
-	public boolean canOpenBackpack(World world, Player player) {
+	public static boolean canOpenBackpack(World world, Player player) {
 		boolean canOpenBackpack = false;
 
 		if (G333Permissions.hasPerm(player, "backpack.size54",
@@ -722,7 +707,7 @@ public class BIT extends JavaPlugin {
 					inRegions.add(key_);
 				}
 			}
-			for (String region : noBackpackRegions) {
+			for (String region : G333Config.SBP_noBackpackRegions) {
 				if (inRegions.contains(region)) {
 					canOpenBackpack = false;
 				}
@@ -741,13 +726,12 @@ public class BIT extends JavaPlugin {
 		return canOpenBackpack;
 	}
 
-	public boolean hasWorkbench(Player player) {
+	public static boolean hasWorkbench(Player player) {
 		if (G333Permissions.hasPerm(player, "backpack.workbench",
 				G333Permissions.NOT_QUIET))
 			return true;
 		File saveFile;
-		if (config.getBoolean("Backpack." + player.getWorld().getName()
-				+ ".InventoriesShare?", true)) {
+		if (G333Config.SBP_InventoriesShare) {
 			saveFile = new File(plugin.getDataFolder() + File.separator
 					+ "inventories", player.getName() + ".yml");
 		} else {
@@ -755,19 +739,36 @@ public class BIT extends JavaPlugin {
 					+ "inventories", player.getName() + "_"
 					+ player.getWorld().getName() + ".yml");
 		}
-		Configuration config = new Configuration(saveFile);
-		config.load();
+		YamlConfiguration config = new YamlConfiguration();
+		try {
+			config.load(saveFile);
+		} catch (FileNotFoundException e) {
+			G333Messages.showInfo("The workbench file did not exist for player:"
+					+ player.getName());
+			// TODO Auto-generated catch block
+			// e.printStackTrace();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (InvalidConfigurationException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		boolean enabled = config.getBoolean("Workbench", false);
-		config.save();
+		try {
+			config.save(saveFile);
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		if (enabled)
 			return true;
 		return false;
 	}
 
-	public void setWorkbench(Player player, boolean enabled) {
+	public static void setWorkbench(Player player, boolean enabled) {
 		File saveFile;
-		if (config.getBoolean("Backpack." + player.getWorld().getName()
-				+ ".InventoriesShare?", true)) {
+		if (G333Config.SBP_InventoriesShare) {
 			saveFile = new File(plugin.getDataFolder() + File.separator
 					+ "inventories", player.getName() + ".yml");
 		} else {
@@ -775,41 +776,56 @@ public class BIT extends JavaPlugin {
 					+ "inventories", player.getName() + "_"
 					+ player.getWorld().getName() + ".yml");
 		}
-		Configuration config = new Configuration(saveFile);
-		config.load();
-		config.setProperty("Workbench", enabled);
-		config.save();
+		YamlConfiguration config = new YamlConfiguration();
+		try {
+			config.load(saveFile);
+		} catch (FileNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (InvalidConfigurationException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		config.set("Workbench", enabled);
+		try {
+			config.save(saveFile);
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 
 	public boolean isOpenBackpack(Player player) {
-		return plugin.openedInventories.containsKey(player.getName());
+		return BIT.openedInventories.containsKey(player.getName());
 	}
 
 	public Inventory getOpenedBackpack(Player player) {
-		return plugin.openedInventories.get(player.getName());
+		return BIT.openedInventories.get(player.getName());
 	}
 
 	public Inventory getClosedBackpack(Player player) {
 		CustomInventory inventory = new CustomInventory(BIT.allowedSize(
-				player.getWorld(), player, true), plugin.inventoryName);
-		if (plugin.inventories.containsKey(player.getName())) {
-			inventory.setContents(plugin.inventories.get(player.getName()));
+				player.getWorld(), player, true), BIT.inventoryName);
+		if (BIT.inventories.containsKey(player.getName())) {
+			inventory.setContents(BIT.inventories.get(player.getName()));
 		}
 		return inventory;
 	}
 
 	public void setClosedBackpack(Player player, Inventory inventory) {
-		plugin.inventories.put(player.getName(), inventory.getContents());
+		BIT.inventories.put(player.getName(), inventory.getContents());
 		return;
 	}
 
-	public void loadInventory(Player player, World world) {
-		if (plugin.inventories.get(player.getName()) != null) {
+	public static void loadInventory(Player player, World world) {
+		if (BIT.inventories.get(player.getName()) != null) {
 			return;
 		}
 		File saveFile;
-		if (config.getBoolean("Backpack." + world.getName()
-				+ ".InventoriesShare?", true)) {
+		if (G333Config.SBP_InventoriesShare) {
 			saveFile = new File(plugin.getDataFolder() + File.separator
 					+ "inventories", player.getName() + ".yml");
 		} else {
@@ -818,10 +834,24 @@ public class BIT extends JavaPlugin {
 					+ ".yml");
 		}
 		@SuppressWarnings({})
-		Configuration config = new Configuration(saveFile);
-		config.load();
+		YamlConfiguration config = new YamlConfiguration();
+		try {
+			config.load(saveFile);
+		} catch (FileNotFoundException e) {
+			G333Messages
+					.showWarning("The Inventoryfile was not found for user:"
+							+ player.getName());
+			// TODO Auto-generated catch block
+			// e.printStackTrace();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (InvalidConfigurationException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		int size = BIT.allowedSize(world, player, true);
-		CustomInventory inv = new CustomInventory(size, plugin.inventoryName);
+		CustomInventory inv = new CustomInventory(size, BIT.inventoryName);
 		if (saveFile.exists()) {
 			Integer i = 0;
 			for (i = 0; i < size; i++) {
@@ -834,59 +864,61 @@ public class BIT extends JavaPlugin {
 				inv.setItem(i, item);
 			}
 		}
-		plugin.inventories.put(player.getName(), inv.getContents());
+		BIT.inventories.put(player.getName(), inv.getContents());
 	}
-	
-	public void loadOrReloadConfiguration() {
-		plugin.config = plugin.getConfiguration();
-		plugin.config.load();
-		plugin.config.getString("Language", "English");
-		plugin.config.getBoolean("Permissions.UsePermissions?", true);
-		plugin.config.getBoolean("Permissions.UsePermissionsBukkit?", false);
-		plugin.config.getBoolean("Permissions.UsePermissionsEx?", false);
-		plugin.config.getBoolean("Permissions.UseGroupManager?", false);
-		plugin.config.getString("Backpack.Key", "B");
-		plugin.inventoryName = plugin.config.getString("Backpack.Name", "Backpack");
-		plugin.config.getBoolean("Backpack.world_name.InventoriesShare?", true);
-		plugin.noBackpackRegions = plugin.config.getStringList(
-				"Backpack.RegionWhereBackpacksAreDisabled", null);
-		if (plugin.noBackpackRegions.size() == 0) {
-			plugin.noBackpackRegions.add("region1");
-			plugin.noBackpackRegions.add("region2");
-			plugin.config.setProperty("Backpack.RegionWhereBackpacksAreDisabled",
-					plugin.noBackpackRegions);
-		}
-		price18 = plugin.config.getDouble("Backpack.Price.18", 10.00);
-		price27 = plugin.config.getDouble("Backpack.Price.27", 20.00);
-		price36 = plugin.config.getDouble("Backpack.Price.36", 30.00);
-		price45 = plugin.config.getDouble("Backpack.Price.45", 40.00);
-		price54 = plugin.config.getDouble("Backpack.Price.54", 50.00);
-		plugin.blackOrWhiteList = plugin.config.getInt(
-				"Backpack.NoneBlackOrWhiteList?", 0);
-		if (plugin.blackOrWhiteList != 1 && plugin.blackOrWhiteList != 2) {
-			plugin.blackOrWhiteList = 0;
-		}
-		plugin.whitelist = plugin.config.getIntList("Backpack.Whitelist", null);
-		if (plugin.whitelist.size() == 0) {
-			plugin.whitelist.add(262);
-			plugin.config.setProperty("Backpack.Whitelist", plugin.whitelist);
-		}
-		plugin.blacklist = plugin.config.getIntList("Backpack.Blacklist", null);
-		if (plugin.blacklist.size() == 0) {
-			plugin.blacklist.add(264);
-			plugin.config.setProperty("Backpack.Blacklist", plugin.blacklist);
-		}
-		plugin.workbenchEnabled = plugin.config.getBoolean("Workbench.Enabled?", true);
-		plugin.config.getString("Workbench.Key", "N");
-		plugin.workbenchInventory = plugin.config.getBoolean("Workbench.NeededInInventory?",
-				false);
-		plugin.useWidget = plugin.config.getBoolean("Widget.Enabled?", true);
-		plugin.widgetX = plugin.config.getInt("Widget.PositionX", 3);
-		plugin.widgetY = plugin.config.getInt("Widget.PositionY", 5);
-		logSaves = plugin.config.getBoolean("Saves.Log?", false);
-		saveTime = plugin.config.getInt("Saves.Interval(InMinutes)", 5);
-		plugin.config.save();
-	}
+
+	// public void loadOrReloadConfiguration() {
+	// config = getConfiguration();
+	// config.load();
+	// config.getString("Language", "English");
+	// config.getBoolean("Permissions.UsePermissions?", true);
+	// config.getBoolean("Permissions.UsePermissionsBukkit?", false);
+	// config.getBoolean("Permissions.UsePermissionsEx?", false);
+	// config.getBoolean("Permissions.UseGroupManager?", false);
+	// config.getString("Backpack.Key", "B");
+	// inventoryName = config.getString("Backpack.Name", "Backpack");
+	// config.getBoolean("Backpack.world_name.InventoriesShare?", true);
+	// noBackpackRegions = config.getStringList(
+	// "Backpack.RegionWhereBackpacksAreDisabled", null);
+	// if (noBackpackRegions.size() == 0) {
+	// noBackpackRegions.add("region1");
+	// noBackpackRegions.add("region2");
+	// config.setProperty("Backpack.RegionWhereBackpacksAreDisabled",
+	// noBackpackRegions);
+	// }
+	// price18 = config.getDouble("Backpack.Price.18", 10.00);
+	// price27 = config.getDouble("Backpack.Price.27", 20.00);
+	// price36 = config.getDouble("Backpack.Price.36", 30.00);
+	// price45 = config.getDouble("Backpack.Price.45", 40.00);
+	// price54 = config.getDouble("Backpack.Price.54", 50.00);
+	// plugin.blackOrWhiteList = plugin.config.getInt(
+	// "Backpack.NoneBlackOrWhiteList?", 0);
+	// if (plugin.blackOrWhiteList != 1 && plugin.blackOrWhiteList != 2) {
+	// plugin.blackOrWhiteList = 0;
+	// }
+	// plugin.whitelist = plugin.config.getIntList("Backpack.Whitelist", null);
+	// if (plugin.whitelist.size() == 0) {
+	// plugin.whitelist.add(262);
+	// plugin.config.setProperty("Backpack.Whitelist", plugin.whitelist);
+	// }
+	// plugin.blacklist = plugin.config.getIntList("Backpack.Blacklist", null);
+	// if (plugin.blacklist.size() == 0) {
+	// plugin.blacklist.add(264);
+	// plugin.config.setProperty("Backpack.Blacklist", plugin.blacklist);
+	// }
+	// plugin.workbenchEnabled = plugin.config.getBoolean("Workbench.Enabled?",
+	// true);
+	// plugin.config.getString("Workbench.Key", "N");
+	// plugin.workbenchInventory =
+	// plugin.config.getBoolean("Workbench.NeededInInventory?",
+	// false);
+	// plugin.useWidget = plugin.config.getBoolean("Widget.Enabled?", true);
+	// plugin.widgetX = plugin.config.getInt("Widget.PositionX", 3);
+	// plugin.widgetY = plugin.config.getInt("Widget.PositionY", 5);
+	// logSaves = plugin.config.getBoolean("Saves.Log?", false);
+	// saveTime = plugin.config.getInt("Saves.Interval(InMinutes)", 5);
+	// plugin.config.save();
+	// }
 
 	public Language loadLanguage() {
 		if (G333Config.SBP_language.equalsIgnoreCase("EN")) {

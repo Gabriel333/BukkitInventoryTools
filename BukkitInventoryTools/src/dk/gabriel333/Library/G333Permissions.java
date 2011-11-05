@@ -43,7 +43,7 @@ public class G333Permissions {
 
 	// Hook into Essentials GroupManager
 	private static Plugin groupManagerPlugin;
-	private static GroupManager groupManager;
+	public static GroupManager groupManager;
 	public static Boolean essentialsGroupManager = false;
 
 	// Initialize all permissionsplugins
@@ -93,7 +93,6 @@ public class G333Permissions {
 					G333Messages.showInfo("GroupManager is detected.");
 					essentialsGroupManager = true;
 				}
-				
 
 			} else
 			// Permission3
@@ -167,8 +166,9 @@ public class G333Permissions {
 					sPlayer, (PERMISSION_NODE + label).toLowerCase());
 		} else if (essentialsGroupManager) {
 			// Essentials GroupManager
-			hasPermission = permission3Handler.has(sPlayer,
-					(PERMISSION_NODE + label).toLowerCase());
+			hasPermission = groupManager.getWorldsHolder()
+					.getWorldPermissions(sPlayer)
+					.has(sPlayer, (PERMISSION_NODE + label).toLowerCase());
 		} else if (permissions3) {
 			// or SuperpermBridge
 			hasPermission = permission3Handler.has(sPlayer,

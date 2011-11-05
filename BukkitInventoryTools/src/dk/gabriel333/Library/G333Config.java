@@ -5,7 +5,6 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
-
 import org.bukkit.configuration.InvalidConfigurationException;
 import org.bukkit.configuration.file.YamlConfiguration;
 import dk.gabriel333.BukkitInventoryTools.BIT;
@@ -62,7 +61,28 @@ public class G333Config {
 	
 	public static String SBP_language;
 	public static Boolean SBP_InventoriesShare;
-	
+	private static String noBackpackRegions;
+	public static String[] SBP_noBackpackRegions;
+	public static double SBP_price18;
+	public static double SBP_price27;
+	public static double SBP_price36;
+	public static double SBP_price45;
+	public static double SBP_price54;
+	public static int SBP_blackOrWhiteList;
+	public static String whitelist;
+	public static String SBP_whitelist[];
+	public static String blacklist;
+	public static String SBP_blacklist[];
+	public static boolean SBP_workbenchEnabled;
+	public static boolean SBP_workbenchInventory;
+	public static boolean SBP_workbenchBuyable;
+	public static boolean SBP_useWidget;
+	public static int SBP_widgetX;
+	public static int SBP_widgetY;
+	public static int SBP_saveTime;
+	public static boolean SBP_logSaves;
+
+
 	
 	public static Boolean DEBUG_PERMISSIONS;
 	public static Boolean DEBUG_SORTINVENTORY;
@@ -149,8 +169,38 @@ public class G333Config {
 		BOOK_DESTROYCOST = getIntParm("Book.DestroyCost", 0);
 		
 		//SpoutBackpack
-		SBP_language = getStringParm("SpoutBackpack.Language","EN");
+		SBP_language = getStringParm("SBP.Language","EN");
 		SBP_InventoriesShare = getBooleanParm("SBP.InventoriesShare",true);
+		noBackpackRegions = getStringParm("SBP.RegionWhereBackpacksAreDisabled", "region1,region2");
+		SBP_noBackpackRegions = noBackpackRegions.split(",");
+		SBP_price18 = getDoubleParm("SBP.Price18", 10.00);
+		SBP_price27 = getDoubleParm("SBP.Price27", 20.00);
+		SBP_price36 = getDoubleParm("SBP.Price36", 30.00);
+		SBP_price45 = getDoubleParm("SBP.Price45", 40.00);
+		SBP_price54 = getDoubleParm("SBP.Price54", 50.00);
+		SBP_blackOrWhiteList = getIntParm("SBP.NoneBlackOrWhiteList",0);
+		if (SBP_blackOrWhiteList != 1 && SBP_blackOrWhiteList != 2) {
+			SBP_blackOrWhiteList = 0;
+		}
+		whitelist = getStringParm("SBP.Whitelist","262");
+		SBP_whitelist = whitelist.split(",");
+		blacklist = getStringParm("SBP.Blacklist","264");
+		SBP_blacklist = blacklist.split(",");
+		SBP_workbenchEnabled = getBooleanParm("SBP.WorkbenchEnabled",true);
+		SBP_workbenchBuyable = getBooleanParm("SBP.WorkbenchBuyable",true);
+		SBP_workbenchInventory = getBooleanParm("SBP.WorkbenchNeededInInventory",false);
+		SBP_useWidget = getBooleanParm("SBP.WidgetEnabled",false);
+		SBP_widgetX = getIntParm("SBP.WidgetPositionX",3);
+		SBP_widgetY = getIntParm("SBP.WidgetPositionY",5);
+		SBP_logSaves = getBooleanParm("SBP.SavesLog",false);
+		SBP_saveTime = getIntParm("SBP.SavesInterval(InMinutes)",5);
+		
+
+
+		
+
+		
+		
 		
 		//Debug
 		DEBUG_PERMISSIONS = getBooleanParm("Debug.Permissions", false);
@@ -190,6 +240,15 @@ public class G333Config {
 			G333Messages.showWarning("Missing parameter:" +path);
 		} 
 		return config.getInt(path, def);
+	}
+	
+	private static double getDoubleParm(String path, double def) {
+		if (!config.contains(path)) {
+			config.set(path, def);
+			dosave=true;
+			G333Messages.showWarning("Missing parameter:" +path);
+		} 
+		return config.getDouble(path, def);
 	}
 
 	private static String getStringParm(String path, String def) {

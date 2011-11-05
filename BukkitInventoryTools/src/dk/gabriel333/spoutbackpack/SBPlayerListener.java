@@ -21,7 +21,7 @@ public class SBPlayerListener extends PlayerListener {
 	public void onPlayerJoin(PlayerJoinEvent event) {
 		try {
 			Player player = event.getPlayer();
-			plugin.loadInventory(player, player.getWorld());
+			BIT.loadInventory(player, player.getWorld());
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -38,8 +38,8 @@ public class SBPlayerListener extends PlayerListener {
 				Player player = event.getPlayer();
 				SBInventorySaveTask.saveInventory(player, event.getFrom()
 						.getWorld());
-				plugin.inventories.remove(player.getName());
-				plugin.loadInventory(player, event.getTo().getWorld());
+				BIT.inventories.remove(player.getName());
+				BIT.loadInventory(player, event.getTo().getWorld());
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
@@ -67,8 +67,8 @@ public class SBPlayerListener extends PlayerListener {
 		try {
 			Player player = event.getPlayer();
 			SBInventorySaveTask.saveInventory(player, player.getWorld());
-			if (plugin.inventories.containsKey(player)) {
-				plugin.inventories.remove(player);
+			if (BIT.inventories.containsKey(player)) {
+				BIT.inventories.remove(player);
 			}
 		} catch (Exception e) {
 			e.printStackTrace();

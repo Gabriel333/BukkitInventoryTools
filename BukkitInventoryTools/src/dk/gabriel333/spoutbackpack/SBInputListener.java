@@ -20,7 +20,7 @@ import dk.gabriel333.BukkitInventoryTools.BIT;
 import dk.gabriel333.Library.G333Config;
 
 public class SBInputListener extends InputListener {
-	private BIT plugin;
+	//private BIT plugin;
 
 	// public static Logger logger = Logger.getLogger("minecraft");
 
@@ -30,46 +30,47 @@ public class SBInputListener extends InputListener {
 
 	@Override
 	public void onKeyPressedEvent(KeyPressedEvent event) {
-		if (event.getKey().equals(G333Config.LIBRARY_BACKPACK)) {
+		String keypressed = event.getKey().name();
+		if (keypressed.equalsIgnoreCase(G333Config.LIBRARY_BACKPACK)) {
 			ScreenType screentype = event.getScreenType();
 			if (screentype == ScreenType.WORKBENCH_INVENTORY) {
 				return;
 			}
-			if (plugin.canOpenBackpack(event.getPlayer().getWorld(),
-					event.getPlayer()) == false) {
+			if (!BIT.canOpenBackpack(event.getPlayer().getWorld(),
+					event.getPlayer())) {
 				return;
 			}
 			if (screentype == ScreenType.CHEST_INVENTORY) {
 				CraftPlayer player = (CraftPlayer) event.getPlayer();
-				if (!plugin.openedInventoriesOthers.containsKey(player
+				if (!BIT.openedInventoriesOthers.containsKey(player
 						.getName())) {
-					if (plugin.openedInventories.containsKey(player.getName())) {
-						if (plugin.widgets.containsKey(player.getName())
-								&& plugin.useWidget == true) {
-							plugin.widgets.get(player.getName())
+					if (BIT.openedInventories.containsKey(player.getName())) {
+						if (BIT.widgets.containsKey(player.getName())
+								&& G333Config.SBP_useWidget == true) {
+							BIT.widgets.get(player.getName())
 									.setVisible(false).setDirty(true);
 						}
-						Inventory inv = plugin.openedInventories.get(player
+						Inventory inv = BIT.openedInventories.get(player
 								.getName());
-						plugin.inventories.put(player.getName(),
+						BIT.inventories.put(player.getName(),
 								inv.getContents());
 						event.getPlayer().closeActiveWindow();
 					}
 				} else {
-					if (plugin.openedInventories
-							.containsKey(plugin.openedInventoriesOthers
+					if (BIT.openedInventories
+							.containsKey(BIT.openedInventoriesOthers
 									.get(player.getName()))) {
-						Inventory inv = plugin.openedInventories
-								.get(plugin.openedInventoriesOthers.get(player
+						Inventory inv = BIT.openedInventories
+								.get(BIT.openedInventoriesOthers.get(player
 										.getName()));
-						plugin.inventories.put(plugin.openedInventoriesOthers
+						BIT.inventories.put(BIT.openedInventoriesOthers
 								.get(player.getName()), inv.getContents());
-						plugin.openedInventoriesOthers.remove(player.getName());
+						BIT.openedInventoriesOthers.remove(player.getName());
 						event.getPlayer().closeActiveWindow();
 					}
 				}
 			}
-			if (!plugin.openedInventoriesOthers.containsValue(event.getPlayer()
+			if (!BIT.openedInventoriesOthers.containsValue(event.getPlayer()
 					.getName())) {
 				if (screentype != null
 						&& (screentype == ScreenType.GAME_SCREEN
@@ -77,9 +78,9 @@ public class SBInputListener extends InputListener {
 								|| screentype == ScreenType.DISPENSER_INVENTORY
 								|| screentype == ScreenType.FURNACE_INVENTORY || screentype == ScreenType.WORKBENCH_INVENTORY)) {
 					SpoutPlayer player = event.getPlayer();
-					if (BIT.plugin.Method != null && plugin.useWidget == true) {
-						if (plugin.widgets.containsKey(player.getName())) {
-							plugin.widgets.get(player.getName())
+					if (BIT.plugin.Method != null && G333Config.SBP_useWidget == true) {
+						if (BIT.widgets.containsKey(player.getName())) {
+							BIT.widgets.get(player.getName())
 									.setVisible(true).setDirty(true);
 						} else {
 							GenericLabel widget = new GenericLabel("");
@@ -87,44 +88,44 @@ public class SBInputListener extends InputListener {
 								return;
 							}
 							widget.setText(
-									plugin.li.getMessage("money")
+									BIT.li.getMessage("money")
 											+ String.format(BIT.plugin.Method.format(BIT.plugin.Method
 													.getAccount(
 															player.getName())
 													.balance())))
 									.setTextColor(
 											new Color(1.0F, 1.0F, 1.0F, 1.0F))
-									.setX(plugin.widgetX).setY(plugin.widgetY);
+									.setX(G333Config.SBP_widgetX).setY(G333Config.SBP_widgetY);
 							player.getMainScreen().attachWidget(BIT.plugin,
 									widget);
-							plugin.widgets.put(player.getName(), widget);
+							BIT.widgets.put(player.getName(), widget);
 						}
 					}
 					CustomInventory inv = new CustomInventory(BIT.allowedSize(
 							player.getWorld(), player, true),
-							plugin.inventoryName);
-					plugin.openedInventories.put(player.getName(), inv);
-					if (plugin.inventories.containsKey(player.getName())) {
-						inv.setContents(plugin.inventories.get(player.getName()));
+							BIT.inventoryName);
+					BIT.openedInventories.put(player.getName(), inv);
+					if (BIT.inventories.containsKey(player.getName())) {
+						inv.setContents(BIT.inventories.get(player.getName()));
 					}
 					player.openInventoryWindow((Inventory) inv);
 				}
 			} else {
 				event.getPlayer().sendMessage(
-						plugin.li.getMessage("someoneisusingyour")
-								+ ChatColor.RED + plugin.inventoryName
-								+ ChatColor.WHITE + plugin.li.getMessage("!"));
+						BIT.li.getMessage("someoneisusingyour")
+								+ ChatColor.RED + BIT.inventoryName
+								+ ChatColor.WHITE + BIT.li.getMessage("!"));
 			}
-		} else if (event.getKey().equals(G333Config.LIBRARY_WORKBENCH)
-				&& plugin.workbenchEnabled == true) {
-			if (!plugin.openedInventoriesOthers.containsKey(event.getPlayer()
+		} else if (keypressed.equalsIgnoreCase(G333Config.LIBRARY_WORKBENCH)
+				&& G333Config.SBP_workbenchEnabled == true) {
+			if (!BIT.openedInventoriesOthers.containsKey(event.getPlayer()
 					.getName())) {
-				if (!plugin.openedInventories.containsKey(event.getPlayer()
+				if (!BIT.openedInventories.containsKey(event.getPlayer()
 						.getName())) {
-					if (!plugin.hasWorkbench(event.getPlayer())) {
+					if (!BIT.hasWorkbench(event.getPlayer())) {
 						return;
 					}
-					if (plugin.workbenchInventory == true
+					if (G333Config.SBP_workbenchInventory == true
 							&& !event.getPlayer().getInventory()
 									.contains(Material.WORKBENCH)) {
 						return;

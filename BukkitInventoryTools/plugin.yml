@@ -24,6 +24,10 @@ commands:
         usage: /bookshelf []|[create inventoryname]|[owner playername]|[usecost cost]|[remove]|[addcoowner name]|[remcoowner name]|[info]
         aliases: /bshelf
         permission: bukkitinventorytools.bookshelf.use
+    backpack:
+        description: Wear a backpack.
+        usage: /backpack
+        permission: bukkitinventorytools.backpack.use
 permissions:
     bukkitinventorytools.sortinventory.use:
         default: true
@@ -57,4 +61,27 @@ permissions:
         default: true
     bukkitinventorytools.book.admin:
         default: op
+    bukkitinventorytools.backpack.size9:
+        default: true
+    bukkitinventorytools.backpack.size18:
+        default: false
+    bukkitinventorytools.backpack.size27:
+        default: false
+    bukkitinventorytools.backpack.size36:
+        default: false
+    bukkitinventorytools.backpack.size45:
+        default: false
+    bukkitinventorytools.backpack.size54:
+        default: op
+    bukkitinventorytools.backpack.reload:
+        default: op
+    bukkitinventorytools.backpack.clear:
+        default: true
+    bukkitinventorytools.backpack.info.other:
+        default: op
+    bukkitinventorytools.backpack.clear.other:
+        default: op
+    bukkitinventorytools.backpack.open.other:
+        default: op
+
 

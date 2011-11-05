@@ -9,7 +9,7 @@ import dk.gabriel333.BukkitInventoryTools.BIT;
 
 public class SBHandler {
 	BIT	plugin;
-	boolean			spoutBackpackEnabled	= false;
+	boolean	spoutBackpackEnabled = false;
 
 	/**
 	 * Primary constructor. If 'spoutBackpackEnabled' equal true and 'plugin' is initialized, the server is running

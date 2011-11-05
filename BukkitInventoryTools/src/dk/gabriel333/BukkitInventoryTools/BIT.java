@@ -27,7 +27,8 @@ import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.PluginDescriptionFile;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
-import org.getspout.spout.inventory.CustomInventory;
+//import org.getspout.spout.inventory.CustomInventory;
+import org.getspout.spoutapi.SpoutManager;
 import org.getspout.spoutapi.gui.GenericLabel;
 
 import com.alta189.sqlLibrary.MySQL.mysqlCore;
@@ -75,10 +76,10 @@ public class BIT extends JavaPlugin {
 	// Hook into SpoutBackpack
 	public static SBHandler spoutBackpackHandler;
 	public static Boolean spoutbackpack = false;
-	public static HashMap<String, ItemStack[]> inventories = new HashMap<String, ItemStack[]>();
-	public static HashMap<String, Inventory> openedInventories = new HashMap<String, Inventory>();
-	public static HashMap<String, String> openedInventoriesOthers = new HashMap<String, String>();
-	public static HashMap<String, GenericLabel> widgets = new HashMap<String, GenericLabel>();
+	public static Map<String, ItemStack[]> inventories = new HashMap<String, ItemStack[]>();
+	public static Map<String, Inventory> openedInventories = new HashMap<String, Inventory>();
+	public static Map<String, String> openedInventoriesOthers = new HashMap<String, String>();
+	public static Map<String, GenericLabel> widgets = new HashMap<String, GenericLabel>();
 	public static String inventoryName = "Backpack";
 	public static SBLanguageInterface li;
 	public static MobArenaHandler mobArenaHandler;
@@ -196,7 +197,7 @@ public class BIT extends JavaPlugin {
 		pm.registerEvent(Event.Type.CUSTOM_EVENT, new BITKeyboardListener(),
 				Event.Priority.Normal, this);
 
-		// SpoutBackpack
+		// SpoutBackpack Listeners
 		pm.registerEvent(Type.CUSTOM_EVENT, new SBInputListener(),
 				Priority.Normal, this);
 		pm.registerEvent(Type.CUSTOM_EVENT, new SBInventoryListener(this),
@@ -260,7 +261,9 @@ public class BIT extends JavaPlugin {
 					new BITServerListener(this), Priority.Monitor, this);
 			getServer().getPluginManager().registerEvent(Type.PLUGIN_DISABLE,
 					new BITServerListener(this), Priority.Monitor, this);
+            useEconomy=true;
 		}
+		
 	}
 
 	public static boolean isPlayer(CommandSender sender) {
@@ -675,7 +678,32 @@ public class BIT extends JavaPlugin {
 				G333Permissions.QUIET)) {
 			size = 9;
 		}
+		if (configurationCheck) {
+			if (allowedSizeInConfig(world, player) < size) {
+				size = allowedSizeInConfig(world, player);
+			}
+		}
 		return size;
+	}
+	
+	public static int allowedSizeInConfig(World world, Player player) {
+		File saveFile;
+		if (G333Config.SBP_InventoriesShare) {
+			saveFile = new File(BIT.plugin.getDataFolder() + File.separator + "inventories", player.getName() + ".yml");
+		} else {
+			saveFile = new File(BIT.plugin.getDataFolder() + File.separator + "inventories", player.getName() + "_" + world.getName() + ".yml");
+		}
+		YamlConfiguration config = new YamlConfiguration();
+		try {
+			config.load(saveFile);
+		} catch (FileNotFoundException e) {
+			e.printStackTrace();
+		} catch (IOException e) {
+			e.printStackTrace();
+		} catch (InvalidConfigurationException e) {
+			e.printStackTrace();
+		}
+		return config.getInt("Size", 9);
 	}
 
 	public void updateInventory(Player player, ItemStack[] is) {
@@ -756,20 +784,16 @@ public class BIT extends JavaPlugin {
 			G333Messages
 					.showInfo("The workbench file did not exist for player:"
 							+ player.getName());
-			// TODO Auto-generated catch block
 			// e.printStackTrace();
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		} catch (InvalidConfigurationException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		boolean enabled = config.getBoolean("Workbench", false);
 		try {
 			config.save(saveFile);
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		if (enabled)
@@ -791,20 +815,16 @@ public class BIT extends JavaPlugin {
 		try {
 			config.load(saveFile);
 		} catch (FileNotFoundException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		} catch (InvalidConfigurationException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		config.set("Workbench", enabled);
 		try {
 			config.save(saveFile);
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}
@@ -818,8 +838,9 @@ public class BIT extends JavaPlugin {
 	}
 
 	public Inventory getClosedBackpack(Player player) {
-		CustomInventory inventory = new CustomInventory(BIT.allowedSize(
-				player.getWorld(), player, true), BIT.inventoryName);
+		Inventory inventory = SpoutManager.getInventoryBuilder().construct(
+				BIT.allowedSize(
+						player.getWorld(), player, true), BIT.inventoryName);
 		if (BIT.inventories.containsKey(player.getName())) {
 			inventory.setContents(BIT.inventories.get(player.getName()));
 		}
@@ -832,15 +853,15 @@ public class BIT extends JavaPlugin {
 	}
 
 	public static void loadInventory(Player player, World world) {
-		if (BIT.inventories.get(player.getName()) != null) {
+		if (BIT.inventories.containsKey(player.getName())) {
 			return;
 		}
 		File saveFile;
 		if (G333Config.SBP_InventoriesShare) {
-			saveFile = new File(plugin.getDataFolder() + File.separator
+			saveFile = new File(BIT.plugin.getDataFolder() + File.separator
 					+ "inventories", player.getName() + ".yml");
 		} else {
-			saveFile = new File(plugin.getDataFolder() + File.separator
+			saveFile = new File(BIT.plugin.getDataFolder() + File.separator
 					+ "inventories", player.getName() + "_" + world.getName()
 					+ ".yml");
 		}
@@ -852,17 +873,15 @@ public class BIT extends JavaPlugin {
 			G333Messages
 					.showWarning("The Inventoryfile was not found for user:"
 							+ player.getName());
-			// TODO Auto-generated catch block
 			// e.printStackTrace();
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		} catch (InvalidConfigurationException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		int size = BIT.allowedSize(world, player, true);
-		CustomInventory inv = new CustomInventory(size, BIT.inventoryName);
+		Inventory inv = SpoutManager.getInventoryBuilder().construct(
+				size, BIT.inventoryName);
 		if (saveFile.exists()) {
 			Integer i = 0;
 			for (i = 0; i < size; i++) {

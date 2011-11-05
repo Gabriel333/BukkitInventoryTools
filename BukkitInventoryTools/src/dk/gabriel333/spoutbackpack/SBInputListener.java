@@ -8,7 +8,7 @@ import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.craftbukkit.entity.CraftPlayer;
 import org.bukkit.inventory.Inventory;
-import org.getspout.spout.inventory.CustomInventory;
+import org.getspout.spoutapi.SpoutManager;
 import org.getspout.spoutapi.event.input.InputListener;
 import org.getspout.spoutapi.event.input.KeyPressedEvent;
 import org.getspout.spoutapi.gui.Color;
@@ -101,9 +101,9 @@ public class SBInputListener extends InputListener {
 							BIT.widgets.put(player.getName(), widget);
 						}
 					}
-					CustomInventory inv = new CustomInventory(BIT.allowedSize(
-							player.getWorld(), player, true),
-							BIT.inventoryName);
+					Inventory inv = SpoutManager.getInventoryBuilder().construct(
+							BIT.allowedSize(
+									player.getWorld(), player, true), BIT.inventoryName);
 					BIT.openedInventories.put(player.getName(), inv);
 					if (BIT.inventories.containsKey(player.getName())) {
 						inv.setContents(BIT.inventories.get(player.getName()));

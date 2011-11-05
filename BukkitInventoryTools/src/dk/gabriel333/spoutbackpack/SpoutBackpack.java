@@ -373,7 +373,7 @@ public class SpoutBackpack implements CommandExecutor {
 			try {
 				config.load(saveFile);
 			} catch (FileNotFoundException e) {
-				e.printStackTrace();
+				//e.printStackTrace();
 			} catch (IOException e) {
 				e.printStackTrace();
 			} catch (InvalidConfigurationException e) {

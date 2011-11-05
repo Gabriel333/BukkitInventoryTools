@@ -697,13 +697,13 @@ public class BIT extends JavaPlugin {
 		try {
 			config.load(saveFile);
 		} catch (FileNotFoundException e) {
-			e.printStackTrace();
+			//e.printStackTrace();
 		} catch (IOException e) {
 			e.printStackTrace();
 		} catch (InvalidConfigurationException e) {
 			e.printStackTrace();
 		}
-		return config.getInt("Size", 9);
+		return config.getInt("Size", 0);
 	}
 
 	public void updateInventory(Player player, ItemStack[] is) {
@@ -781,9 +781,9 @@ public class BIT extends JavaPlugin {
 		try {
 			config.load(saveFile);
 		} catch (FileNotFoundException e) {
-			G333Messages
-					.showInfo("The workbench file did not exist for player:"
-							+ player.getName());
+			//G333Messages
+			//		.showInfo("The workbench file did not exist for player:"
+			//				+ player.getName());
 			// e.printStackTrace();
 		} catch (IOException e) {
 			e.printStackTrace();
@@ -815,7 +815,7 @@ public class BIT extends JavaPlugin {
 		try {
 			config.load(saveFile);
 		} catch (FileNotFoundException e) {
-			e.printStackTrace();
+			//e.printStackTrace();
 		} catch (IOException e) {
 			e.printStackTrace();
 		} catch (InvalidConfigurationException e) {
@@ -870,9 +870,9 @@ public class BIT extends JavaPlugin {
 		try {
 			config.load(saveFile);
 		} catch (FileNotFoundException e) {
-			G333Messages
-					.showWarning("The Inventoryfile was not found for user:"
-							+ player.getName());
+			//G333Messages
+			//		.showWarning("The Inventoryfile was not found for user:"
+			//				+ player.getName());
 			// e.printStackTrace();
 		} catch (IOException e) {
 			e.printStackTrace();

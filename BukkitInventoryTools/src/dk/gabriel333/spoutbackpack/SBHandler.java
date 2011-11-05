@@ -30,7 +30,7 @@ public class SBHandler {
 	 * @return open Player's Backpack opened or not.
 	 */
 	public boolean isOpenSpoutBackpack(Player player) {
-		return plugin.isOpenBackpack(player);
+		return BIT.isOpenBackpack(player);
 	}
 
 	/**
@@ -41,7 +41,7 @@ public class SBHandler {
 	 * @return inventory The SpoutBackpack inventory of this player.
 	 */
 	public Inventory getOpenedSpoutBackpack(Player player) {
-		return plugin.getOpenedBackpack(player);
+		return BIT.getOpenedBackpack(player);
 	}
 
 	/**

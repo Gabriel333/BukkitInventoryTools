@@ -49,8 +49,7 @@ public class BITDigiLockInputListener extends InputListener {
 			if (keypressed.equals(G333Config.LIBRARY_SORTKEY)
 					&& BIT.spoutbackpack
 					&& BIT.spoutBackpackHandler.isOpenSpoutBackpack(sPlayer)) {
-				Inventory inventory = sPlayer.getInventory();
-				inventory = BIT.spoutBackpackHandler
+				Inventory inventory = BIT.spoutBackpackHandler
 						.getOpenedSpoutBackpack(sPlayer);
 				if (inventory != null) {
 					BITSortInventory.sortInventoryItems(sPlayer, inventory);
@@ -63,6 +62,14 @@ public class BITDigiLockInputListener extends InputListener {
 				}
 			}
 		} else
+			
+			if (BIT.isOpenBackpack(sPlayer)){
+				Inventory inventory = BIT.getOpenedBackpack(sPlayer);
+				if (inventory != null) {
+					BITSortInventory.sortInventoryItems(sPlayer, inventory);
+				}
+				BITSortInventory.sortPlayerInventoryItems(sPlayer);
+			}
 
 		// PLAYER_INVENTORY
 		if (screentype == ScreenType.PLAYER_INVENTORY) {

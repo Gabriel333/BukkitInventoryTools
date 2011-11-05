@@ -155,6 +155,8 @@ public class SBInputListener extends InputListener {
 					}
 				}
 			}
+		} else if (keypressed.equalsIgnoreCase(G333Config.LIBRARY_SORTKEY)) {
+			
 		}
 	}
 

@@ -106,9 +106,8 @@ public class BIT extends JavaPlugin {
 			addCommands();
 			setupBook();
 			setupMobArena();
-			// loadOrReloadConfiguration();
 			li = new SBLanguageInterface(loadLanguage());
-			// BITPlayer.clearAllUserData();
+			//SpoutBackpack
 			for (Player player : Bukkit.getServer().getOnlinePlayers()) {
 				BIT.loadInventory(player, player.getWorld());
 			}
@@ -792,11 +791,11 @@ public class BIT extends JavaPlugin {
 		}
 	}
 
-	public boolean isOpenBackpack(Player player) {
+	public static boolean isOpenBackpack(Player player) {
 		return BIT.openedInventories.containsKey(player.getName());
 	}
 
-	public Inventory getOpenedBackpack(Player player) {
+	public static Inventory getOpenedBackpack(Player player) {
 		return BIT.openedInventories.get(player.getName());
 	}
 
@@ -860,59 +859,6 @@ public class BIT extends JavaPlugin {
 		}
 		BIT.inventories.put(player.getName(), inv.getContents());
 	}
-
-	// public void loadOrReloadConfiguration() {
-	// config = getConfiguration();
-	// config.load();
-	// config.getString("Language", "English");
-	// config.getBoolean("Permissions.UsePermissions?", true);
-	// config.getBoolean("Permissions.UsePermissionsBukkit?", false);
-	// config.getBoolean("Permissions.UsePermissionsEx?", false);
-	// config.getBoolean("Permissions.UseGroupManager?", false);
-	// config.getString("Backpack.Key", "B");
-	// inventoryName = config.getString("Backpack.Name", "Backpack");
-	// config.getBoolean("Backpack.world_name.InventoriesShare?", true);
-	// noBackpackRegions = config.getStringList(
-	// "Backpack.RegionWhereBackpacksAreDisabled", null);
-	// if (noBackpackRegions.size() == 0) {
-	// noBackpackRegions.add("region1");
-	// noBackpackRegions.add("region2");
-	// config.setProperty("Backpack.RegionWhereBackpacksAreDisabled",
-	// noBackpackRegions);
-	// }
-	// price18 = config.getDouble("Backpack.Price.18", 10.00);
-	// price27 = config.getDouble("Backpack.Price.27", 20.00);
-	// price36 = config.getDouble("Backpack.Price.36", 30.00);
-	// price45 = config.getDouble("Backpack.Price.45", 40.00);
-	// price54 = config.getDouble("Backpack.Price.54", 50.00);
-	// plugin.blackOrWhiteList = plugin.config.getInt(
-	// "Backpack.NoneBlackOrWhiteList?", 0);
-	// if (plugin.blackOrWhiteList != 1 && plugin.blackOrWhiteList != 2) {
-	// plugin.blackOrWhiteList = 0;
-	// }
-	// plugin.whitelist = plugin.config.getIntList("Backpack.Whitelist", null);
-	// if (plugin.whitelist.size() == 0) {
-	// plugin.whitelist.add(262);
-	// plugin.config.setProperty("Backpack.Whitelist", plugin.whitelist);
-	// }
-	// plugin.blacklist = plugin.config.getIntList("Backpack.Blacklist", null);
-	// if (plugin.blacklist.size() == 0) {
-	// plugin.blacklist.add(264);
-	// plugin.config.setProperty("Backpack.Blacklist", plugin.blacklist);
-	// }
-	// plugin.workbenchEnabled = plugin.config.getBoolean("Workbench.Enabled?",
-	// true);
-	// plugin.config.getString("Workbench.Key", "N");
-	// plugin.workbenchInventory =
-	// plugin.config.getBoolean("Workbench.NeededInInventory?",
-	// false);
-	// plugin.useWidget = plugin.config.getBoolean("Widget.Enabled?", true);
-	// plugin.widgetX = plugin.config.getInt("Widget.PositionX", 3);
-	// plugin.widgetY = plugin.config.getInt("Widget.PositionY", 5);
-	// logSaves = plugin.config.getBoolean("Saves.Log?", false);
-	// saveTime = plugin.config.getInt("Saves.Interval(InMinutes)", 5);
-	// plugin.config.save();
-	// }
 
 	public Language loadLanguage() {
 		if (G333Config.SBP_language.equalsIgnoreCase("EN")) {

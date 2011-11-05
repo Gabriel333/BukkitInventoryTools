@@ -33,6 +33,8 @@ import org.getspout.spoutapi.gui.GenericLabel;
 import com.alta189.sqlLibrary.MySQL.mysqlCore;
 import com.alta189.sqlLibrary.SQLite.sqlCore;
 import com.garbagemule.MobArena.MobArenaHandler;
+import com.matejdro.bukkit.jail.Jail;
+import com.matejdro.bukkit.jail.JailAPI;
 import com.sk89q.worldguard.bukkit.WorldGuardPlugin;
 import com.sk89q.worldguard.protection.regions.ProtectedRegion;
 
@@ -106,8 +108,9 @@ public class BIT extends JavaPlugin {
 			addCommands();
 			setupBook();
 			setupMobArena();
+			setupJail();
 			li = new SBLanguageInterface(loadLanguage());
-			//SpoutBackpack
+			// SpoutBackpack
 			for (Player player : Bukkit.getServer().getOnlinePlayers()) {
 				BIT.loadInventory(player, player.getWorld());
 			}
@@ -632,8 +635,22 @@ public class BIT extends JavaPlugin {
 			return;
 		}
 		mobArenaHandler = new MobArenaHandler();
-		G333Messages.showInfo("MobArena detected");
+		G333Messages.showInfo("MobArena detected.");
 		return;
+	}
+
+	// long delay = 20L * 60 * saveTime;
+	public static JailAPI jail;
+
+	private void setupJail() {
+		Plugin jailPlugin = getServer().getPluginManager().getPlugin("Jail");
+		if (jailPlugin != null) {
+			jail = ((Jail) jailPlugin).API;
+			G333Messages.showInfo("Jail detected.");
+			return;
+		} else {
+			return;
+		}
 	}
 
 	public static int allowedSize(World world, Player player,
@@ -711,11 +728,11 @@ public class BIT extends JavaPlugin {
 				canOpenBackpack = false;
 			}
 		}
-		// CLJif (jail != null) {
-		// CLJ if (jail.isPlayerJailed(player.getName()) == true) {
-		// CLJ canOpenBackpack = false;
-		// CLJ }
-		// CLJ}
+		if (jail != null) {
+			if (jail.isPlayerJailed(player.getName()) == true) {
+				canOpenBackpack = false;
+			}
+		}
 		return canOpenBackpack;
 	}
 
@@ -736,8 +753,9 @@ public class BIT extends JavaPlugin {
 		try {
 			config.load(saveFile);
 		} catch (FileNotFoundException e) {
-			G333Messages.showInfo("The workbench file did not exist for player:"
-					+ player.getName());
+			G333Messages
+					.showInfo("The workbench file did not exist for player:"
+							+ player.getName());
 			// TODO Auto-generated catch block
 			// e.printStackTrace();
 		} catch (IOException e) {

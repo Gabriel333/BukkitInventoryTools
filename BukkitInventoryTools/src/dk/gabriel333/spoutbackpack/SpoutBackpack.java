@@ -31,22 +31,7 @@ public class SpoutBackpack implements CommandExecutor {
 
 	public BIT plugin;
 
-	// CLJpublic static JailAPI jail;
 
-	// CLJsetupJail();
-
-	// long delay = 20L * 60 * saveTime;
-
-	// CLJprivate void setupJail() {
-	// CLJ Plugin jailPlugin = getServer().getPluginManager().getPlugin("Jail");
-	// CLJ if (jailPlugin != null) {
-	// CLJ jail = ((Jail) jailPlugin).API;
-	// CLJ logger.info(plugin.logTag + li.getMessage("jailfound"));
-	// CLJ return;
-	// CLJ } else {
-	// CLJ return;
-	// CLJ }
-	// CLJ}
 
 	public boolean onCommand(CommandSender sender, Command cmd,
 			String commandLabel, String[] args) {

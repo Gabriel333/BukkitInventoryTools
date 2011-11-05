@@ -23,5 +23,6 @@
 	<classpathentry kind="lib" path="C:/Private/Dropbox/Libraries/Newest/WorldGuard.jar"/>
 	<classpathentry kind="lib" path="C:/Private/Dropbox/Libraries/Newest/WorldEdit.jar"/>
 	<classpathentry kind="lib" path="C:/Private/Dropbox/Libraries/Newest/EssentialsGroupManager.jar"/>
+	<classpathentry kind="lib" path="C:/Private/Dropbox/Libraries/Newest/Jail.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

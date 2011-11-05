@@ -101,7 +101,6 @@ public class BIT extends JavaPlugin {
 			setupSQL();
 			setupRegister();
 			setupSpoutBackpack();
-			setupSpoutBackpack2();
 			setupMyWolf();
 			registerEvents();
 			addCommands();
@@ -284,11 +283,6 @@ public class BIT extends JavaPlugin {
 				}
 			}
 		}
-	}
-
-	private void setupSpoutBackpack2() {
-		// TODO Auto-generated method stub
-
 	}
 
 	private void setupMyWolf() {

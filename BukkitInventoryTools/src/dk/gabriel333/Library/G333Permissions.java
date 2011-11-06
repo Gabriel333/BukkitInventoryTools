@@ -21,8 +21,8 @@ import ru.tehkode.permissions.bukkit.PermissionsEx;
 public class G333Permissions {
 
 	public static String PERMISSION_NODE;
-	public final static Boolean QUIET = true;
-	public final static Boolean NOT_QUIET = false;
+	public final static Boolean QUIET = false;
+	public final static Boolean NOT_QUIET = true;
 
 	// Hook into Permissions 3.xxx
 	private static Plugin permissions3Plugin;
@@ -121,6 +121,10 @@ public class G333Permissions {
 	// Test if the player has permissions to do the action
 	public static boolean hasPerm(CommandSender sender, String label,
 			Boolean quiet) {
+		if (G333Config.DEBUG_PERMISSIONS) {
+			sender.sendMessage("Testing permission: "
+					+ (PERMISSION_NODE + label).toLowerCase());
+		}
 
 		// How to hook into PermissionsBukkit
 		// Basic Permission Check
@@ -182,11 +186,7 @@ public class G333Permissions {
 						+ "G333Permissions: You have permission to: "
 						+ (PERMISSION_NODE + label).toLowerCase());
 			return true;
-		} else if (NOT_QUIET) {
-			if (G333Config.DEBUG_PERMISSIONS)
-				sPlayer.sendMessage(ChatColor.RED
-						+ "G333Permissions: You DONT have permission to: "
-						+ (PERMISSION_NODE + label).toLowerCase());
+		} else if (quiet) {
 			sPlayer.sendMessage(ChatColor.RED
 					+ "You to dont have permission to do this." + " ("
 					+ (G333Plugin.PLUGIN_NAME + "." + label).toLowerCase()

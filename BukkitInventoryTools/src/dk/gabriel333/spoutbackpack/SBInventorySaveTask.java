@@ -50,17 +50,17 @@ public class SBInventorySaveTask implements Runnable {
 		}
 		YamlConfiguration config = new YamlConfiguration();
 		if (BIT.inventories.containsKey(player.getName())) {
-			CustomInventory inv = new CustomInventory(BIT.allowedSize(world,
+			CustomInventory inv = new CustomInventory(SpoutBackpack.allowedSize(world,
 					player, true), BIT.inventoryName);
 			inv.setContents(BIT.inventories.get(player.getName()));
 			Integer i = 0;
-			for (i = 0; i < BIT.allowedSize(world, player, true); i++) {
+			for (i = 0; i < SpoutBackpack.allowedSize(world, player, true); i++) {
 				ItemStack item = inv.getItem(i);
 				config.set(i.toString() + ".amount", item.getAmount());
 				Short durab = item.getDurability();
 				config.set(i.toString() + ".durability", durab.intValue());
 				config.set(i.toString() + ".type", item.getTypeId());
-				config.set("Size", BIT.allowedSize(world, player, true));
+				config.set("Size", SpoutBackpack.allowedSize(world, player, true));
 				try {
 					config.save(saveFile);
 				} catch (IOException e) {

@@ -203,7 +203,7 @@ public class BITDigiLockSpoutListener extends SpoutListener {
 				// ************************************
 				else {
 					if (G333Config.DEBUG_GUI)
-						sPlayer.sendMessage("BITSpoutListener: Unknow button:"
+						sPlayer.sendMessage("BITDigiLockListener: Unknow button:"
 								+ BITDigiLock.BITDigiLockButtons.get(uuid));
 				}
 			}

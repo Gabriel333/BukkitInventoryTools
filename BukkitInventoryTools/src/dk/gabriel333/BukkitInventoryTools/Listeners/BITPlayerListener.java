@@ -46,6 +46,7 @@ public class BITPlayerListener extends PlayerListener {
 		}
 		SpoutPlayer sPlayer = (SpoutPlayer) event.getPlayer();
 		ItemStack itemInHand = sPlayer.getInventory().getItemInHand();
+		//sPlayer.sendMessage("BITPlayerListener:"+itemInHand.getTypeId());
 		if (itemInHand.getType().equals(sBlock.getType())) {
 			// This allows the user to place a new Bookshelf on a Bookshelf
 			// where the Inventory is created.

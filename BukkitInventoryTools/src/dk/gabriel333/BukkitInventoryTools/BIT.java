@@ -656,55 +656,9 @@ public class BIT extends JavaPlugin {
 		}
 	}
 
-	public static int allowedSize(World world, Player player,
-			boolean configurationCheck) {
-		int size = 9;
-		if (G333Permissions.hasPerm(player, "backpack.size54",
-				G333Permissions.QUIET)) {
-			size = 54;
-		} else if (G333Permissions.hasPerm(player, "backpack.size45",
-				G333Permissions.QUIET)) {
-			size = 45;
-		} else if (G333Permissions.hasPerm(player, "backpack.size36",
-				G333Permissions.QUIET)) {
-			size = 36;
-		} else if (G333Permissions.hasPerm(player, "backpack.size27",
-				G333Permissions.QUIET)) {
-			size = 27;
-		} else if (G333Permissions.hasPerm(player, "backpack.size18",
-				G333Permissions.QUIET)) {
-			size = 18;
-		} else if (G333Permissions.hasPerm(player, "backpack.size9",
-				G333Permissions.QUIET)) {
-			size = 9;
-		}
-		if (configurationCheck) {
-			if (allowedSizeInConfig(world, player) < size) {
-				size = allowedSizeInConfig(world, player);
-			}
-		}
-		return size;
-	}
+
 	
-	public static int allowedSizeInConfig(World world, Player player) {
-		File saveFile;
-		if (G333Config.SBP_InventoriesShare) {
-			saveFile = new File(BIT.plugin.getDataFolder() + File.separator + "inventories", player.getName() + ".yml");
-		} else {
-			saveFile = new File(BIT.plugin.getDataFolder() + File.separator + "inventories", player.getName() + "_" + world.getName() + ".yml");
-		}
-		YamlConfiguration config = new YamlConfiguration();
-		try {
-			config.load(saveFile);
-		} catch (FileNotFoundException e) {
-			//e.printStackTrace();
-		} catch (IOException e) {
-			e.printStackTrace();
-		} catch (InvalidConfigurationException e) {
-			e.printStackTrace();
-		}
-		return config.getInt("Size", 0);
-	}
+
 
 	public void updateInventory(Player player, ItemStack[] is) {
 		BIT.inventories.put(player.getName(), is);
@@ -839,7 +793,7 @@ public class BIT extends JavaPlugin {
 
 	public Inventory getClosedBackpack(Player player) {
 		Inventory inventory = SpoutManager.getInventoryBuilder().construct(
-				BIT.allowedSize(
+				SpoutBackpack.allowedSize(
 						player.getWorld(), player, true), BIT.inventoryName);
 		if (BIT.inventories.containsKey(player.getName())) {
 			inventory.setContents(BIT.inventories.get(player.getName()));
@@ -879,7 +833,7 @@ public class BIT extends JavaPlugin {
 		} catch (InvalidConfigurationException e) {
 			e.printStackTrace();
 		}
-		int size = BIT.allowedSize(world, player, true);
+		int size = SpoutBackpack.allowedSize(world, player, true);
 		Inventory inv = SpoutManager.getInventoryBuilder().construct(
 				size, BIT.inventoryName);
 		if (saveFile.exists()) {

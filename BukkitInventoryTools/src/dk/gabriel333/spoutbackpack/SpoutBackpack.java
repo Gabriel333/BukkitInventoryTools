@@ -35,9 +35,11 @@ public class SpoutBackpack implements CommandExecutor {
 			String commandLabel, String[] args) {
 		if (sender instanceof Player) {
 			Player player = (Player) sender;
-			if (commandLabel.equalsIgnoreCase("backpack")
-					|| commandLabel.equalsIgnoreCase("bp")) {
-				if (BIT.canOpenBackpack(player.getWorld(), player) == true) {
+			if (G333Permissions.hasPerm(sender, "backpack.use",
+					G333Permissions.NOT_QUIET)) {
+				// if (commandLabel.equalsIgnoreCase("backpack")
+				// || commandLabel.equalsIgnoreCase("bp")) {
+				if (BIT.canOpenBackpack(player.getWorld(), player)) {
 					if (args.length == 0) {
 						showHelp(player);
 					} else if (args.length == 1) {
@@ -46,7 +48,7 @@ public class SpoutBackpack implements CommandExecutor {
 							if (G333Permissions.hasPerm(player,
 									"backpack.reload",
 									G333Permissions.NOT_QUIET)) {
-								//BIT.loadOrReloadConfiguration();
+								// BIT.loadOrReloadConfiguration();
 								player.sendMessage(BIT.li
 										.getMessage("configreloaded1"));
 								player.sendMessage(BIT.li
@@ -60,8 +62,8 @@ public class SpoutBackpack implements CommandExecutor {
 							showHelp(player);
 							return true;
 						} else if (argument.equalsIgnoreCase("info")) {
-							int size = BIT.allowedSize(player.getWorld(),
-									player, true);
+							int size = allowedSize(player.getWorld(), player,
+									true);
 							if (size == 54) {
 								player.sendMessage(BIT.li
 										.getMessage("youvegotthebiggest")
@@ -89,17 +91,21 @@ public class SpoutBackpack implements CommandExecutor {
 								}
 							}
 							return true;
-						} else if (argument.equalsIgnoreCase("upgrade")) {
-							if (BIT.allowedSize(player.getWorld(), player,
-									false) > upgradeAllowedSize(
-									player.getWorld(), player)) {
+						} else if (argument.equalsIgnoreCase("upgrade")
+								|| argument.equalsIgnoreCase("buy")) {
+							if (allowedSize(player.getWorld(), player, false) > SizeInConfig(
+									player.getWorld(), player)
+									&& upgradeAllowedSize(player.getWorld(),
+											player) > SizeInConfig(
+											player.getWorld(), player)) {
 								if (BIT.useEconomy) {
-									startUpgradeProcedure(BIT.allowedSize(
-											player.getWorld(), player, true),
-											player, player);
+									startUpgradeProcedure(
+											allowedSize(player.getWorld(),
+													player, true), player,
+											player);
 								}
-							} else if (BIT.allowedSize(player.getWorld(),
-									player, true) == 54) {
+							} else if (allowedSize(player.getWorld(), player,
+									true) == 54) {
 								player.sendMessage(BIT.li
 										.getMessage("youvegotthebiggest")
 										+ ChatColor.RED
@@ -155,7 +161,7 @@ public class SpoutBackpack implements CommandExecutor {
 								if (BIT.inventories.containsKey(playerName)) {
 									Player playerCmd = Bukkit.getServer()
 											.getPlayer(playerName);
-									int size = BIT.allowedSize(
+									int size = allowedSize(
 											playerCmd.getWorld(), playerCmd,
 											true);
 									if (size == 54) {
@@ -208,19 +214,17 @@ public class SpoutBackpack implements CommandExecutor {
 									if (BIT.inventories.containsKey(playerName)) {
 										Player playerCmd = Bukkit.getServer()
 												.getPlayer(playerName);
-										if (BIT.allowedSize(
-												playerCmd.getWorld(),
+										if (allowedSize(playerCmd.getWorld(),
 												playerCmd, false) < upgradeAllowedSize(
 												playerCmd.getWorld(), playerCmd)) {
 											if (BIT.useEconomy) {
 												startUpgradeProcedure(
-														BIT.allowedSize(
-																playerCmd
-																		.getWorld(),
+														allowedSize(playerCmd
+																.getWorld(),
 																playerCmd, true),
 														playerCmd, player);
 											}
-										} else if (BIT.allowedSize(
+										} else if (allowedSize(
 												playerCmd.getWorld(),
 												playerCmd, true) == 54) {
 											player.sendMessage(BIT.li
@@ -274,8 +278,7 @@ public class SpoutBackpack implements CommandExecutor {
 									if (!BIT.openedInventories
 											.containsKey(playerName)) {
 										CustomInventory inv = new CustomInventory(
-												BIT.allowedSize(
-														player.getWorld(),
+												allowedSize(player.getWorld(),
 														player, true),
 												BIT.inventoryName);
 										BIT.openedInventories.put(playerName,
@@ -306,7 +309,11 @@ public class SpoutBackpack implements CommandExecutor {
 				} else {
 					showHelp(player);
 				}
+				// }
 			}
+		} else {
+			// the user has not permission to use the SputBackpack.
+			return true;
 		}
 		return false;
 	}
@@ -314,86 +321,81 @@ public class SpoutBackpack implements CommandExecutor {
 	private void startUpgradeProcedure(int sizeBefore, Player player,
 			Player notificationsAndMoneyPlayer) {
 		int sizeAfter = sizeBefore + 9;
-			double cost = calculateCost(sizeBefore);
+		double cost = calculateCost(sizeBefore);
+		if (BIT.plugin.Method.hasAccount(notificationsAndMoneyPlayer.getName())) {
+			MethodAccount account = BIT.plugin.Method
+					.getAccount(notificationsAndMoneyPlayer.getName());
 			if (BIT.plugin.Method.hasAccount(notificationsAndMoneyPlayer
 					.getName())) {
-				MethodAccount account = BIT.plugin.Method
-						.getAccount(notificationsAndMoneyPlayer.getName());
-				if (BIT.plugin.Method.hasAccount(notificationsAndMoneyPlayer
-						.getName())) {
-					if (account.hasEnough(cost)) {
-						account.subtract(cost);
-						notificationsAndMoneyPlayer
-								.sendMessage("Your account ("
-										+ BIT.plugin.Method.getAccount(
-												notificationsAndMoneyPlayer
-														.getName()).balance()
-										+ ") has been deducted " + cost
-										+ " bucks");
-						if (!player.getName().equals(
-								notificationsAndMoneyPlayer.getName())) {
-							player.sendMessage(player.getName()
-									+ "'s account has been deducted " + cost
-									+ " bucks");
-						}
-					} else {
-						if (player.equals(notificationsAndMoneyPlayer)) {
-							notificationsAndMoneyPlayer.sendMessage(BIT.li
-									.getMessage("notenoughmoneyyour")
-									+ ChatColor.RED
-									+ BIT.inventoryName
-									+ ChatColor.WHITE + ".");
-						} else {
-							notificationsAndMoneyPlayer.sendMessage(BIT.li
-									.getMessage("notenoughmoneyplayer")
-									+ ChatColor.RED
-									+ BIT.inventoryName
-									+ ChatColor.WHITE + ".");
-						}
-						return;
+				if (account.hasEnough(cost)) {
+					account.subtract(cost);
+					notificationsAndMoneyPlayer.sendMessage("Your account ("
+							+ BIT.plugin.Method.getAccount(
+									notificationsAndMoneyPlayer.getName())
+									.balance() + ") has been deducted " + cost
+							+ " bucks");
+					if (!player.getName().equals(
+							notificationsAndMoneyPlayer.getName())) {
+						player.sendMessage(player.getName()
+								+ "'s account has been deducted " + cost
+								+ " bucks");
 					}
 				} else {
-					notificationsAndMoneyPlayer.sendMessage(ChatColor.RED
-							+ BIT.li.getMessage("noaccount"));
+					if (player.equals(notificationsAndMoneyPlayer)) {
+						notificationsAndMoneyPlayer.sendMessage(BIT.li
+								.getMessage("notenoughmoneyyour")
+								+ ChatColor.RED
+								+ BIT.inventoryName
+								+ ChatColor.WHITE + ".");
+					} else {
+						notificationsAndMoneyPlayer.sendMessage(BIT.li
+								.getMessage("notenoughmoneyplayer")
+								+ ChatColor.RED
+								+ BIT.inventoryName
+								+ ChatColor.WHITE + ".");
+					}
 					return;
 				}
-			}
-			SBInventorySaveTask.saveInventory(player, player.getWorld());
-			BIT.inventories.remove(player.getName());
-			File saveFile;
-			if (G333Config.SBP_InventoriesShare) {
-				saveFile = new File(BIT.plugin.getDataFolder() + File.separator
-						+ "inventories", player.getName() + ".yml");
 			} else {
-				saveFile = new File(BIT.plugin.getDataFolder() + File.separator
-						+ "inventories", player.getName() + "_"
-						+ player.getWorld().getName() + ".yml");
+				notificationsAndMoneyPlayer.sendMessage(ChatColor.RED
+						+ BIT.li.getMessage("noaccount"));
+				return;
 			}
-			YamlConfiguration config = new YamlConfiguration();
-			try {
-				config.load(saveFile);
-			} catch (FileNotFoundException e) {
-				//e.printStackTrace();
-			} catch (IOException e) {
-				e.printStackTrace();
-			} catch (InvalidConfigurationException e) {
-				e.printStackTrace();
-			}
-			config.set("Size", sizeAfter);
-			try {
-				config.save(saveFile);
-			} catch (IOException e) {
-				e.printStackTrace();
-			}
-			BIT.loadInventory(player, player.getWorld());
-			notificationsAndMoneyPlayer.sendMessage(BIT.li.getMessage("your")
-					+ ChatColor.RED + BIT.inventoryName + ChatColor.WHITE
-					+ BIT.li.getMessage("hasbeenupgraded"));
-			notificationsAndMoneyPlayer.sendMessage(BIT.li
-					.getMessage("ithasnow")
-					+ ChatColor.RED
-					+ sizeAfter
-					+ ChatColor.WHITE + BIT.li.getMessage("slots"));
+		}
+		SBInventorySaveTask.saveInventory(player, player.getWorld());
+		BIT.inventories.remove(player.getName());
+		File saveFile;
+		if (G333Config.SBP_InventoriesShare) {
+			saveFile = new File(BIT.plugin.getDataFolder() + File.separator
+					+ "inventories", player.getName() + ".yml");
+		} else {
+			saveFile = new File(BIT.plugin.getDataFolder() + File.separator
+					+ "inventories", player.getName() + "_"
+					+ player.getWorld().getName() + ".yml");
+		}
+		YamlConfiguration config = new YamlConfiguration();
+		try {
+			config.load(saveFile);
+		} catch (FileNotFoundException e) {
+			// e.printStackTrace();
+		} catch (IOException e) {
+			e.printStackTrace();
+		} catch (InvalidConfigurationException e) {
+			e.printStackTrace();
+		}
+		config.set("Size", sizeAfter);
+		try {
+			config.save(saveFile);
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		BIT.loadInventory(player, player.getWorld());
+		notificationsAndMoneyPlayer.sendMessage(BIT.li.getMessage("your")
+				+ ChatColor.RED + BIT.inventoryName + ChatColor.WHITE
+				+ BIT.li.getMessage("hasbeenupgraded"));
+		notificationsAndMoneyPlayer.sendMessage(BIT.li.getMessage("ithasnow")
+				+ ChatColor.RED + sizeAfter + ChatColor.WHITE
+				+ BIT.li.getMessage("slots"));
 	}
 
 	public void showHelp(Player player) {
@@ -403,7 +405,7 @@ public class SpoutBackpack implements CommandExecutor {
 		}
 		player.sendMessage(BIT.li.getMessage("infocommand") + ChatColor.RED
 				+ BIT.inventoryName + ChatColor.WHITE + ".");
-		if (BIT.allowedSize(player.getWorld(), player, true) < upgradeAllowedSize(
+		if (allowedSize(player.getWorld(), player, true) < upgradeAllowedSize(
 				player.getWorld(), player) && BIT.useEconomy) {
 			player.sendMessage(BIT.li.getMessage("upgradecommand")
 					+ ChatColor.RED + BIT.inventoryName + ChatColor.WHITE + ".");
@@ -443,6 +445,59 @@ public class SpoutBackpack implements CommandExecutor {
 		} else if (G333Permissions.hasPerm(player, "backpack.upgrade18",
 				G333Permissions.QUIET)) {
 			size = 18;
+		}
+		return size;
+	}
+
+	public static int SizeInConfig(World world, Player player) {
+		File saveFile;
+		if (G333Config.SBP_InventoriesShare) {
+			saveFile = new File(BIT.plugin.getDataFolder() + File.separator
+					+ "inventories", player.getName() + ".yml");
+		} else {
+			saveFile = new File(BIT.plugin.getDataFolder() + File.separator
+					+ "inventories", player.getName() + "_" + world.getName()
+					+ ".yml");
+		}
+		YamlConfiguration config = new YamlConfiguration();
+		try {
+			config.load(saveFile);
+		} catch (FileNotFoundException e) {
+			// e.printStackTrace();
+		} catch (IOException e) {
+			e.printStackTrace();
+		} catch (InvalidConfigurationException e) {
+			e.printStackTrace();
+		}
+		return config.getInt("Size", 0);
+	}
+
+	public static int allowedSize(World world, Player player,
+			boolean configurationCheck) {
+		int size = 9;
+		if (G333Permissions.hasPerm(player, "backpack.size54",
+				G333Permissions.QUIET)) {
+			size = 54;
+		} else if (G333Permissions.hasPerm(player, "backpack.size45",
+				G333Permissions.QUIET)) {
+			size = 45;
+		} else if (G333Permissions.hasPerm(player, "backpack.size36",
+				G333Permissions.QUIET)) {
+			size = 36;
+		} else if (G333Permissions.hasPerm(player, "backpack.size27",
+				G333Permissions.QUIET)) {
+			size = 27;
+		} else if (G333Permissions.hasPerm(player, "backpack.size18",
+				G333Permissions.QUIET)) {
+			size = 18;
+		} else if (G333Permissions.hasPerm(player, "backpack.size9",
+				G333Permissions.QUIET)) {
+			size = 9;
+		}
+		if (configurationCheck) {
+			if (SizeInConfig(world, player) < size) {
+				size = SizeInConfig(world, player);
+			}
 		}
 		return size;
 	}

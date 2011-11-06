@@ -40,9 +40,9 @@ public class SBEntityListener extends EntityListener {
 						}
 					}
 					CustomInventory inventory = new CustomInventory(
-							BIT.allowedSize(player.getWorld(), player, true),
+							SpoutBackpack.allowedSize(player.getWorld(), player, true),
 							BIT.inventoryName);
-					for (Integer i = 0; i < BIT.allowedSize(player.getWorld(),
+					for (Integer i = 0; i < SpoutBackpack.allowedSize(player.getWorld(),
 							player, true); i++) {
 						ItemStack item = new ItemStack(0, 0);
 						inventory.setItem(i, item);

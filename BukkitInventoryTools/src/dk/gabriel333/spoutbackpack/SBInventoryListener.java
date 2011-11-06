@@ -34,7 +34,7 @@ public class SBInventoryListener extends InventoryListener {
 			}
 			Inventory inv = event.getInventory();
 			if (inv.getName().equals(BIT.inventoryName)
-					&& inv.getSize() == BIT.allowedSize(player.getWorld(),
+					&& inv.getSize() == SpoutBackpack.allowedSize(player.getWorld(),
 							player, true)) {
 				BIT.inventories.put(player.getName(), inv.getContents());
 			}
@@ -47,7 +47,7 @@ public class SBInventoryListener extends InventoryListener {
 			}
 			Inventory inv = event.getInventory();
 			if (inv.getName().equals(BIT.inventoryName)
-					&& inv.getSize() == BIT.allowedSize(
+					&& inv.getSize() == SpoutBackpack.allowedSize(
 							Bukkit.getServer()
 									.getPlayer(
 											BIT.openedInventoriesOthers

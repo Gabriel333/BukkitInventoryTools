@@ -130,6 +130,7 @@ Book:
 #           worlds. (true or false)
 # RegionWhereBackpacksAreDisabled: WorldGuard Regions where
 #           the backpack can NOT be opened.
+# PRICE9: price to buy the Backpack 1. time.
 # PRICE18 - PRINCE54: Upgrade price.
 # NoneBlackOrWhiteList: (0,1,2) 0: none. 1= Whitelist items
 #           2= blacklist item in backpack
@@ -150,6 +151,7 @@ SBP:
     Language: EN
     InventoriesShare: true
     RegionWhereBackpacksAreDisabled: region1, region2
+    Price9: 100.0
     Price18: 10.0
     Price27: 20.0
     Price36: 30.0

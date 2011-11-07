@@ -52,33 +52,41 @@ public class SpoutBackpack implements CommandExecutor {
 				if (canOpenBackpack(player.getWorld(), player)) {
 					if (args.length == 0) {
 						// showHelp(player);
-						//open inventory
-						String playerName = sender.getName();
-						if (BIT.inventories.containsKey(playerName)) {
-							if (!BIT.openedInventories.containsKey(playerName)) {
-								Inventory inv = SpoutManager
-										.getInventoryBuilder().construct(
-												SpoutBackpack.allowedSize(
-														player.getWorld(),
-														player, true),
-												BIT.inventoryName);
-								BIT.openedInventories.put(playerName, inv);
-								//BIT.openedInventoriesOthers.put(
-								//		player.getName(), playerName);
-								inv.setContents(BIT.inventories.get(playerName));
-								((org.getspout.spoutapi.player.SpoutPlayer) player)
-										.openInventoryWindow((Inventory) inv);
+						// open inventory
+						if (allowedSize(player.getWorld(), player, true) > 0) {
+							String playerName = sender.getName();
+							if (BIT.inventories.containsKey(playerName)) {
+								if (!BIT.openedInventories
+										.containsKey(playerName)) {
+									Inventory inv = SpoutManager
+											.getInventoryBuilder().construct(
+													SpoutBackpack.allowedSize(
+															player.getWorld(),
+															player, true),
+													BIT.inventoryName);
+									BIT.openedInventories.put(playerName, inv);
+									// BIT.openedInventoriesOthers.put(
+									// player.getName(), playerName);
+									inv.setContents(BIT.inventories
+											.get(playerName));
+									((org.getspout.spoutapi.player.SpoutPlayer) player)
+											.openInventoryWindow((Inventory) inv);
+								} else {
+									player.sendMessage(BIT.li
+											.getMessage("playerhasalreadyhis")
+											+ ChatColor.RED
+											+ BIT.inventoryName
+											+ ChatColor.WHITE
+											+ BIT.li.getMessage("opened"));
+								}
 							} else {
-								player.sendMessage(BIT.li
-										.getMessage("playerhasalreadyhis")
-										+ ChatColor.RED
-										+ BIT.inventoryName
-										+ ChatColor.WHITE
-										+ BIT.li.getMessage("opened"));
+								player.sendMessage(ChatColor.RED
+										+ BIT.li.getMessage("playernotfound"));
 							}
 						} else {
-							player.sendMessage(ChatColor.RED
-									+ BIT.li.getMessage("playernotfound"));
+							player.sendMessage(
+									"You need to buy a backpack. Use /backpack buy");
+							return true;
 						}
 					} else if (args.length == 1) {
 						String argument = args[0];
@@ -461,7 +469,7 @@ public class SpoutBackpack implements CommandExecutor {
 	}
 
 	public double calculateCost(int size) {
-		double cost = G333Config.SBP_price54;
+		double cost = G333Config.SBP_price9;
 		if (size == 9) {
 			cost = G333Config.SBP_price18;
 		} else if (size == 18) {
@@ -549,11 +557,11 @@ public class SpoutBackpack implements CommandExecutor {
 		}
 		return size;
 	}
-	
+
 	public static Inventory getClosedBackpack(Player player) {
 		Inventory inventory = SpoutManager.getInventoryBuilder().construct(
-				SpoutBackpack.allowedSize(
-						player.getWorld(), player, true), BIT.inventoryName);
+				SpoutBackpack.allowedSize(player.getWorld(), player, true),
+				BIT.inventoryName);
 		if (BIT.inventories.containsKey(player.getName())) {
 			inventory.setContents(BIT.inventories.get(player.getName()));
 		}
@@ -564,7 +572,7 @@ public class SpoutBackpack implements CommandExecutor {
 		BIT.inventories.put(player.getName(), inventory.getContents());
 		return;
 	}
-	
+
 	public static boolean isOpenBackpack(Player player) {
 		return BIT.openedInventories.containsKey(player.getName());
 	}
@@ -572,9 +580,6 @@ public class SpoutBackpack implements CommandExecutor {
 	public static Inventory getOpenedBackpack(Player player) {
 		return BIT.openedInventories.get(player.getName());
 	}
-
-	
-
 
 	public static void updateInventory(Player player, ItemStack[] is) {
 		BIT.inventories.put(player.getName(), is);
@@ -651,9 +656,9 @@ public class SpoutBackpack implements CommandExecutor {
 		try {
 			config.load(saveFile);
 		} catch (FileNotFoundException e) {
-			//G333Messages
-			//		.showInfo("The workbench file did not exist for player:"
-			//				+ player.getName());
+			// G333Messages
+			// .showInfo("The workbench file did not exist for player:"
+			// + player.getName());
 			// e.printStackTrace();
 		} catch (IOException e) {
 			e.printStackTrace();
@@ -685,7 +690,7 @@ public class SpoutBackpack implements CommandExecutor {
 		try {
 			config.load(saveFile);
 		} catch (FileNotFoundException e) {
-			//e.printStackTrace();
+			// e.printStackTrace();
 		} catch (IOException e) {
 			e.printStackTrace();
 		} catch (InvalidConfigurationException e) {
@@ -717,9 +722,9 @@ public class SpoutBackpack implements CommandExecutor {
 		try {
 			config.load(saveFile);
 		} catch (FileNotFoundException e) {
-			//G333Messages
-			//		.showWarning("The Inventoryfile was not found for user:"
-			//				+ player.getName());
+			// G333Messages
+			// .showWarning("The Inventoryfile was not found for user:"
+			// + player.getName());
 			// e.printStackTrace();
 		} catch (IOException e) {
 			e.printStackTrace();
@@ -727,8 +732,8 @@ public class SpoutBackpack implements CommandExecutor {
 			e.printStackTrace();
 		}
 		int size = SpoutBackpack.allowedSize(world, player, true);
-		Inventory inv = SpoutManager.getInventoryBuilder().construct(
-				size, BIT.inventoryName);
+		Inventory inv = SpoutManager.getInventoryBuilder().construct(size,
+				BIT.inventoryName);
 		if (saveFile.exists()) {
 			Integer i = 0;
 			for (i = 0; i < size; i++) {
@@ -755,7 +760,5 @@ public class SpoutBackpack implements CommandExecutor {
 			return Language.ENGLISH;
 		}
 	}
-
-
 
 }

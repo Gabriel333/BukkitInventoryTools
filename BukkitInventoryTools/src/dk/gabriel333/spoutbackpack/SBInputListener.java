@@ -32,105 +32,115 @@ public class SBInputListener extends InputListener {
 	@Override
 	public void onKeyPressedEvent(KeyPressedEvent event) {
 		String keypressed = event.getKey().name();
+		ScreenType screentype = event.getScreenType();
+		if (!(screentype == ScreenType.GAME_SCREEN
+				|| screentype == ScreenType.PLAYER_INVENTORY
+				|| screentype == ScreenType.DISPENSER_INVENTORY
+				|| screentype == ScreenType.FURNACE_INVENTORY
+				|| screentype == ScreenType.WORKBENCH_INVENTORY || screentype == ScreenType.CHEST_INVENTORY)) {
+			return;
+		}
 		if (keypressed.equalsIgnoreCase(G333Config.LIBRARY_BACKPACK)) {
-			if (SpoutBackpack.SizeInConfig(event.getPlayer().getWorld(), event.getPlayer())>0){
-			if (G333Permissions.hasPerm(event.getPlayer(), "backpack.use",
-					G333Permissions.NOT_QUIET)) {
-				ScreenType screentype = event.getScreenType();
-				if (screentype == ScreenType.WORKBENCH_INVENTORY) {
-					return;
-				}
-				if (!SpoutBackpack.canOpenBackpack(event.getPlayer().getWorld(),
-						event.getPlayer())) {
-					return;
-				}
-				if (screentype == ScreenType.CHEST_INVENTORY) {
-					CraftPlayer player = (CraftPlayer) event.getPlayer();
-					if (!BIT.openedInventoriesOthers.containsKey(player
-							.getName())) {
-						if (BIT.openedInventories.containsKey(player.getName())) {
-							if (BIT.widgets.containsKey(player.getName())
-									&& G333Config.SBP_useWidget == true) {
-								BIT.widgets.get(player.getName())
-										.setVisible(false).setDirty(true);
+			if (SpoutBackpack.SizeInConfig(event.getPlayer().getWorld(),
+					event.getPlayer()) > 0) {
+				if (G333Permissions.hasPerm(event.getPlayer(), "backpack.use",
+						G333Permissions.NOT_QUIET)) {
+					if (!SpoutBackpack.canOpenBackpack(event.getPlayer()
+							.getWorld(), event.getPlayer())) {
+						return;
+					}
+					if (screentype == ScreenType.CHEST_INVENTORY) {
+						CraftPlayer player = (CraftPlayer) event.getPlayer();
+						if (!BIT.openedInventoriesOthers.containsKey(player
+								.getName())) {
+							if (BIT.openedInventories.containsKey(player
+									.getName())) {
+								if (BIT.widgets.containsKey(player.getName())
+										&& G333Config.SBP_useWidget == true) {
+									BIT.widgets.get(player.getName())
+											.setVisible(false).setDirty(true);
+								}
+								Inventory inv = BIT.openedInventories
+										.get(player.getName());
+								BIT.inventories.put(player.getName(),
+										inv.getContents());
+								event.getPlayer().closeActiveWindow();
 							}
-							Inventory inv = BIT.openedInventories.get(player
-									.getName());
-							BIT.inventories.put(player.getName(),
-									inv.getContents());
-							event.getPlayer().closeActiveWindow();
+						} else {
+							if (BIT.openedInventories
+									.containsKey(BIT.openedInventoriesOthers
+											.get(player.getName()))) {
+								Inventory inv = BIT.openedInventories
+										.get(BIT.openedInventoriesOthers
+												.get(player.getName()));
+								BIT.inventories.put(BIT.openedInventoriesOthers
+										.get(player.getName()), inv
+										.getContents());
+								BIT.openedInventoriesOthers.remove(player
+										.getName());
+								event.getPlayer().closeActiveWindow();
+							}
+						}
+					}
+					if (!BIT.openedInventoriesOthers.containsValue(event
+							.getPlayer().getName())) {
+						if (screentype != null
+								&& (screentype == ScreenType.GAME_SCREEN
+										|| screentype == ScreenType.PLAYER_INVENTORY
+										|| screentype == ScreenType.DISPENSER_INVENTORY
+										|| screentype == ScreenType.FURNACE_INVENTORY || screentype == ScreenType.WORKBENCH_INVENTORY)) {
+							SpoutPlayer player = event.getPlayer();
+							if (BIT.plugin.Method != null
+									&& G333Config.SBP_useWidget == true) {
+								if (BIT.widgets.containsKey(player.getName())) {
+									BIT.widgets.get(player.getName())
+											.setVisible(true).setDirty(true);
+								} else {
+									GenericLabel widget = new GenericLabel("");
+									if (!BIT.plugin.Method.hasAccount(player
+											.getName())) {
+										return;
+									}
+									widget.setText(
+											BIT.li.getMessage("money")
+													+ String.format(BIT.plugin.Method
+															.format(BIT.plugin.Method
+																	.getAccount(
+																			player.getName())
+																	.balance())))
+											.setTextColor(
+													new Color(1.0F, 1.0F, 1.0F,
+															1.0F))
+											.setX(G333Config.SBP_widgetX)
+											.setY(G333Config.SBP_widgetY);
+									player.getMainScreen().attachWidget(
+											BIT.plugin, widget);
+									BIT.widgets.put(player.getName(), widget);
+								}
+							}
+							Inventory inv = SpoutManager.getInventoryBuilder()
+									.construct(
+											SpoutBackpack.allowedSize(
+													player.getWorld(), player,
+													true), BIT.inventoryName);
+							BIT.openedInventories.put(player.getName(), inv);
+							if (BIT.inventories.containsKey(player.getName())) {
+								inv.setContents(BIT.inventories.get(player
+										.getName()));
+							}
+							player.openInventoryWindow((Inventory) inv);
 						}
 					} else {
-						if (BIT.openedInventories
-								.containsKey(BIT.openedInventoriesOthers
-										.get(player.getName()))) {
-							Inventory inv = BIT.openedInventories
-									.get(BIT.openedInventoriesOthers.get(player
-											.getName()));
-							BIT.inventories.put(BIT.openedInventoriesOthers
-									.get(player.getName()), inv.getContents());
-							BIT.openedInventoriesOthers
-									.remove(player.getName());
-							event.getPlayer().closeActiveWindow();
-						}
+						event.getPlayer().sendMessage(
+								BIT.li.getMessage("someoneisusingyour")
+										+ ChatColor.RED + BIT.inventoryName
+										+ ChatColor.WHITE
+										+ BIT.li.getMessage("!"));
 					}
 				}
-				if (!BIT.openedInventoriesOthers.containsValue(event
-						.getPlayer().getName())) {
-					if (screentype != null
-							&& (screentype == ScreenType.GAME_SCREEN
-									|| screentype == ScreenType.PLAYER_INVENTORY
-									|| screentype == ScreenType.DISPENSER_INVENTORY
-									|| screentype == ScreenType.FURNACE_INVENTORY || screentype == ScreenType.WORKBENCH_INVENTORY)) {
-						SpoutPlayer player = event.getPlayer();
-						if (BIT.plugin.Method != null
-								&& G333Config.SBP_useWidget == true) {
-							if (BIT.widgets.containsKey(player.getName())) {
-								BIT.widgets.get(player.getName())
-										.setVisible(true).setDirty(true);
-							} else {
-								GenericLabel widget = new GenericLabel("");
-								if (!BIT.plugin.Method.hasAccount(player
-										.getName())) {
-									return;
-								}
-								widget.setText(
-										BIT.li.getMessage("money")
-												+ String.format(BIT.plugin.Method
-														.format(BIT.plugin.Method
-																.getAccount(
-																		player.getName())
-																.balance())))
-										.setTextColor(
-												new Color(1.0F, 1.0F, 1.0F,
-														1.0F))
-										.setX(G333Config.SBP_widgetX)
-										.setY(G333Config.SBP_widgetY);
-								player.getMainScreen().attachWidget(BIT.plugin,
-										widget);
-								BIT.widgets.put(player.getName(), widget);
-							}
-						}
-						Inventory inv = SpoutManager.getInventoryBuilder()
-								.construct(
-										SpoutBackpack.allowedSize(player.getWorld(),
-												player, true),
-										BIT.inventoryName);
-						BIT.openedInventories.put(player.getName(), inv);
-						if (BIT.inventories.containsKey(player.getName())) {
-							inv.setContents(BIT.inventories.get(player
-									.getName()));
-						}
-						player.openInventoryWindow((Inventory) inv);
-					}
-				} else {
-					event.getPlayer().sendMessage(
-							BIT.li.getMessage("someoneisusingyour")
-									+ ChatColor.RED + BIT.inventoryName
-									+ ChatColor.WHITE + BIT.li.getMessage("!"));
-				}
-			}} else {
-				event.getPlayer().sendMessage("You need to buy a backpack. Use /backpack buy");
+			} else {
+				event.getPlayer().sendMessage(
+						"You need to buy a backpack. Use /backpack buy");
 			}
 		} else if (keypressed.equalsIgnoreCase(G333Config.LIBRARY_WORKBENCH)) {
 			if (G333Config.SBP_workbenchEnabled) {
@@ -149,7 +159,6 @@ public class SBInputListener extends InputListener {
 								return;
 							}
 							final int windowNumber = 1;
-							ScreenType screentype = event.getScreenType();
 							if (screentype == ScreenType.WORKBENCH_INVENTORY) {
 								SpoutPlayer player = event.getPlayer();
 								final EntityPlayer entityPlayer = ((CraftPlayer) player)
@@ -176,7 +185,8 @@ public class SBInputListener extends InputListener {
 				}
 			} else {
 				if (G333Config.DEBUG_PERMISSIONS) {
-					event.getPlayer().sendMessage("SBP_workbenchEnabled is false in config.yml");
+					event.getPlayer().sendMessage(
+							"SBP_workbenchEnabled is false in config.yml");
 				}
 			}
 		} else if (keypressed.equalsIgnoreCase(G333Config.LIBRARY_SORTKEY)) {

@@ -22,7 +22,7 @@ import dk.gabriel333.Library.*;
 import dk.gabriel333.spoutbackpack.SpoutBackpack;
 
 public class BITDigiLockInputListener extends InputListener {
-	
+
 	public BIT plugin;
 
 	public BITDigiLockInputListener(BIT plugin) {
@@ -36,10 +36,8 @@ public class BITDigiLockInputListener extends InputListener {
 		String keypressed = event.getKey().name();
 		if (!(keypressed.equals(G333Config.LIBRARY_SORTKEY)
 				|| keypressed.equals(G333Config.LIBRARY_LOCKKEY)
-				|| keypressed.equals("KEY_ESCAPE")
-				|| keypressed.equals("KEY_RETURN") 
-				)
-					)
+				|| keypressed.equals("KEY_ESCAPE") || keypressed
+					.equals("KEY_RETURN")))
 			return;
 		SpoutBlock targetblock = (SpoutBlock) sPlayer.getTargetBlock(null, 5);
 
@@ -62,14 +60,13 @@ public class BITDigiLockInputListener extends InputListener {
 					}
 				}
 			}
-		} else
-			if (SpoutBackpack.isOpenBackpack(sPlayer)){
-				Inventory inventory = SpoutBackpack.getOpenedBackpack(sPlayer);
-				if (inventory != null) {
-					BITSortInventory.sortInventoryItems(sPlayer, inventory);
-				}
-				BITSortInventory.sortPlayerInventoryItems(sPlayer);
+		} else if (SpoutBackpack.isOpenBackpack(sPlayer)) {
+			Inventory inventory = SpoutBackpack.getOpenedBackpack(sPlayer);
+			if (inventory != null) {
+				BITSortInventory.sortInventoryItems(sPlayer, inventory);
 			}
+			BITSortInventory.sortPlayerInventoryItems(sPlayer);
+		}
 
 		// PLAYER_INVENTORY
 		if (screentype == ScreenType.PLAYER_INVENTORY) {
@@ -118,26 +115,28 @@ public class BITDigiLockInputListener extends InputListener {
 							int id = sPlayer.getEntityId();
 							BITInventory bitInventory = BITInventory.openedInventories
 									.get(id);
-							Inventory inventory = bitInventory.getInventory();
-							BITSortInventory.sortInventoryItems(sPlayer,
-									inventory);
-							bitInventory.setInventory(targetblock,
-									bitInventory.getOwner(),
-									bitInventory.getName(),
-									bitInventory.getCoOwners(), inventory,
-									bitInventory.getUseCost());
-							BITInventory
-									.saveBitInventory(sPlayer, bitInventory);
-							BITInventory.openedInventories.remove(id);
-							BITInventory.openedInventories
-									.put(id, bitInventory);
-							if (G333Config.SORT_DISPLAYSORTARCHIEVEMENT) {
-								G333Messages.sendNotification(sPlayer,
-										"Bookshelf sorted.");
+							if (bitInventory != null) {
+								Inventory inventory = bitInventory
+										.getInventory();
+								BITSortInventory.sortInventoryItems(sPlayer,
+										inventory);
+								bitInventory.setInventory(targetblock,
+										bitInventory.getOwner(),
+										bitInventory.getName(),
+										bitInventory.getCoOwners(), inventory,
+										bitInventory.getUseCost());
+								BITInventory.saveBitInventory(sPlayer,
+										bitInventory);
+								BITInventory.openedInventories.remove(id);
+								BITInventory.openedInventories.put(id,
+										bitInventory);
+								if (G333Config.SORT_DISPLAYSORTARCHIEVEMENT) {
+									G333Messages.sendNotification(sPlayer,
+											"Bookshelf sorted.");
+								}
 							}
 						}
-					} else if (keypressed.equals("KEY_ESCAPE")
-							) {
+					} else if (keypressed.equals("KEY_ESCAPE")) {
 						int id = sPlayer.getEntityId();
 						BITInventory bitInventory = BITInventory.openedInventories
 								.get(id);
@@ -297,7 +296,8 @@ public class BITDigiLockInputListener extends InputListener {
 
 			// CUSTOM_SCREEN
 			else if (screentype == ScreenType.CUSTOM_SCREEN) {
-				if (keypressed.equals("KEY_ESCAPE")||keypressed.equals("KEY_E")) {
+				if (keypressed.equals("KEY_ESCAPE")
+						|| keypressed.equals("KEY_E")) {
 					// TODO: the lever must swing back to off, when the
 					// player press ESC. Next lines does not work. :-(
 					// if (BITDigiLock.isLever(targetblock)) {

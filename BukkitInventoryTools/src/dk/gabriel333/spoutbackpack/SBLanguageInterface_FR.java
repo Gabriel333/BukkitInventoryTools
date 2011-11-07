@@ -60,7 +60,7 @@ public class SBLanguageInterface_FR {
 		if (string.equalsIgnoreCase("savinginventories")) { return " Sauvegardes des inventaires !"; }
 		if (string.equalsIgnoreCase("yourenotallowedtomovethis")) { return "Vous n'êtes pas autorisé à mettre ça dans votre "; }
 		if (string.equalsIgnoreCase("money")) { return "Argent : "; }
-		if (string.equalsIgnoreCase("hasbroken")) { return " est cassé ! Utilisez Spout à nouveau pour le réparer."; }
+		if (string.equalsIgnoreCase("hasbroken")) { return " est cassé !"; }
 		if (string.equalsIgnoreCase("someoneisusingyour")) { return "Quelqu'un utilise votre "; }
 		if (string.equalsIgnoreCase("youalreadyhaveaccesstotheworkbench")) { return "Vous avez déjà accès à la table de crafting !"; }
 		return "";

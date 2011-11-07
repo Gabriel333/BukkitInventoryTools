@@ -73,12 +73,6 @@ public class BITSortInventory {
 			inv = SpoutBackpack.getClosedBackpack(sPlayer);
 			BITSortInventory.sortInventoryItems(sPlayer, inv);
 			BIT.inventories.put(sPlayer.getName(), inv.getContents());
-			//inv.setContents(BIT.inventories.get(sPlayer.getName()));
-			//SpoutBackpack.setClosedBackpack(sPlayer, inv);
-			
-			//BIT.inventories.put(sPlayer.getName(), inv.getContents());
-			//BITSortInventory.sortInventoryItems(sPlayer,
-			//		BIT.getOpenedBackpack(sPlayer));
 		}
 
 		// sort the players MyWolfInventory if exists and if is open.

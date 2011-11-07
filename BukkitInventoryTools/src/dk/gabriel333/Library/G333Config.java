@@ -63,6 +63,7 @@ public class G333Config {
 	public static Boolean SBP_InventoriesShare;
 	private static String noBackpackRegions;
 	public static String[] SBP_noBackpackRegions;
+	public static double SBP_price9;
 	public static double SBP_price18;
 	public static double SBP_price27;
 	public static double SBP_price36;
@@ -173,6 +174,7 @@ public class G333Config {
 		SBP_InventoriesShare = getBooleanParm("SBP.InventoriesShare",true);
 		noBackpackRegions = getStringParm("SBP.RegionWhereBackpacksAreDisabled", "region1,region2");
 		SBP_noBackpackRegions = noBackpackRegions.split(",");
+		SBP_price9 = getDoubleParm("SBP.Price9", 100.00);
 		SBP_price18 = getDoubleParm("SBP.Price18", 10.00);
 		SBP_price27 = getDoubleParm("SBP.Price27", 20.00);
 		SBP_price36 = getDoubleParm("SBP.Price36", 30.00);

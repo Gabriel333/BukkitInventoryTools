@@ -72,11 +72,11 @@ public class BITCommandDigiLock implements CommandExecutor {
 							} else if (action.equalsIgnoreCase("closetimer")) {
 								if (n + 1 <= args.length)
 									closetimer = Integer
-											.getInteger(args[n + 1]);
+											.getInteger(args[n + 1],0);
 								n++;
 							} else if (action.equalsIgnoreCase("usecost")) {
 								if (n + 1 <= args.length)
-									usecost = Integer.getInteger(args[n + 1]);
+									usecost = Integer.getInteger(args[n + 1],0);
 								n++;
 							} else if (action.equalsIgnoreCase("coowners")) {
 								if (n + 1 <= args.length)
@@ -170,7 +170,7 @@ public class BITCommandDigiLock implements CommandExecutor {
 									.hasPerm(sPlayer, "digilock.admin",
 											G333Permissions.NOT_QUIET))
 							&& args.length == 2) {
-						digilock.setClosetimer(Integer.valueOf(args[1]));
+						digilock.setClosetimer(Integer.getInteger(args[1],0));
 						BITDigiLock.SaveDigiLock(sPlayer, digilock.getBlock(),
 								digilock.getPincode(), digilock.getOwner(),
 								digilock.getClosetimer(),
@@ -245,7 +245,7 @@ public class BITCommandDigiLock implements CommandExecutor {
 									.hasPerm(sPlayer, "digilock.admin",
 											G333Permissions.NOT_QUIET))
 							&& args.length == 2) {
-						digilock.setUseCost(Integer.parseInt(args[1]));
+						digilock.setUseCost(Integer.getInteger(args[1],0));
 						BITDigiLock.SaveDigiLock(sPlayer, digilock.getBlock(),
 								digilock.getPincode(), digilock.getOwner(),
 								digilock.getClosetimer(),

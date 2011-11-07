@@ -14,11 +14,11 @@ import dk.gabriel333.BukkitInventoryTools.BIT;
 import dk.gabriel333.Library.G333Config;
 
 public class SBInventoryListener extends InventoryListener {
-	private BIT plugin;
+	//private BIT plugin;
 
-	public SBInventoryListener(BIT plugin) {
-		this.plugin = plugin;
-	}
+	//public SBInventoryListener(BIT plugin) {
+	//	this.plugin = plugin;
+	//}
 
 	@Override
 	public void onInventoryClose(InventoryCloseEvent event) {
@@ -98,7 +98,7 @@ public class SBInventoryListener extends InventoryListener {
 					&& clickedItem != null) {
 				ItemStack is = inv.getItem(slot);
 				is.setAmount(is.getAmount() - clickedItem.getAmount());
-				plugin.updateInventory(player, inv.getContents());
+				SpoutBackpack.updateInventory(player, inv.getContents());
 			}
 		} catch (NullPointerException e) {
 		}

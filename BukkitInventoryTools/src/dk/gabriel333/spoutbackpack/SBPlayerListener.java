@@ -21,7 +21,7 @@ public class SBPlayerListener extends PlayerListener {
 	public void onPlayerJoin(PlayerJoinEvent event) {
 		try {
 			Player player = event.getPlayer();
-			BIT.loadInventory(player, player.getWorld());
+			SpoutBackpack.loadInventory(player, player.getWorld());
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -39,7 +39,7 @@ public class SBPlayerListener extends PlayerListener {
 				SBInventorySaveTask.saveInventory(player, event.getFrom()
 						.getWorld());
 				BIT.inventories.remove(player.getName());
-				BIT.loadInventory(player, event.getTo().getWorld());
+				SpoutBackpack.loadInventory(player, event.getTo().getWorld());
 			} catch (Exception e) {
 				e.printStackTrace();
 			}

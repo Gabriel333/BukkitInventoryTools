@@ -9,8 +9,10 @@ import org.bukkit.Bukkit;
 import org.bukkit.World;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
+import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
-import org.getspout.spout.inventory.CustomInventory;
+import org.getspout.spoutapi.SpoutManager;
+//import org.getspout.spout.inventory.CustomInventory;
 
 import dk.gabriel333.BukkitInventoryTools.BIT;
 import dk.gabriel333.Library.G333Config;
@@ -50,8 +52,13 @@ public class SBInventorySaveTask implements Runnable {
 		}
 		YamlConfiguration config = new YamlConfiguration();
 		if (BIT.inventories.containsKey(player.getName())) {
-			CustomInventory inv = new CustomInventory(SpoutBackpack.allowedSize(world,
-					player, true), BIT.inventoryName);
+			Inventory inv = SpoutManager.getInventoryBuilder()
+					.construct(
+							SpoutBackpack.allowedSize(player.getWorld(),
+									player, true),
+							BIT.inventoryName);
+			//CustomInventory inv = new CustomInventory(SpoutBackpack.allowedSize(world,
+			//		player, true), BIT.inventoryName);
 			inv.setContents(BIT.inventories.get(player.getName()));
 			Integer i = 0;
 			for (i = 0; i < SpoutBackpack.allowedSize(world, player, true); i++) {

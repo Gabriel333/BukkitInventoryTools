@@ -9,7 +9,7 @@ import dk.gabriel333.BukkitInventoryTools.BIT;
 
 public class SBHandler {
 	BIT	plugin;
-	boolean	spoutBackpackEnabled = false;
+	public static boolean spoutBackpackEnabled = true;
 
 	/**
 	 * Primary constructor. If 'spoutBackpackEnabled' equal true and 'plugin' is initialized, the server is running
@@ -30,7 +30,7 @@ public class SBHandler {
 	 * @return open Player's Backpack opened or not.
 	 */
 	public boolean isOpenSpoutBackpack(Player player) {
-		return BIT.isOpenBackpack(player);
+		return SpoutBackpack.isOpenBackpack(player);
 	}
 
 	/**
@@ -41,7 +41,7 @@ public class SBHandler {
 	 * @return inventory The SpoutBackpack inventory of this player.
 	 */
 	public Inventory getOpenedSpoutBackpack(Player player) {
-		return BIT.getOpenedBackpack(player);
+		return SpoutBackpack.getOpenedBackpack(player);
 	}
 
 	/**
@@ -52,7 +52,7 @@ public class SBHandler {
 	 * @return inventory The SpoutBackpack inventory of this player.
 	 */
 	public Inventory getClosedSpoutBackpack(Player player) {
-		return plugin.getClosedBackpack(player);
+		return SpoutBackpack.getClosedBackpack(player);
 	}
 
 	/**
@@ -64,7 +64,7 @@ public class SBHandler {
 	 *            The SpoutBackpack inventory of this player.
 	 */
 	public void setClosedSpoutBackpack(Player player, Inventory inventory) {
-		plugin.setClosedBackpack(player, inventory);
+		SpoutBackpack.setClosedBackpack(player, inventory);
 		return;
 	}
 

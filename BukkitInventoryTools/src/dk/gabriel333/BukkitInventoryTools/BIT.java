@@ -1,8 +1,5 @@
 package dk.gabriel333.BukkitInventoryTools;
 
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.IOException;
 import java.lang.reflect.Field;
 import java.net.MalformedURLException;
 import java.util.ArrayList;
@@ -12,10 +9,7 @@ import java.util.Map;
 import java.util.logging.Logger;
 
 import org.bukkit.Bukkit;
-import org.bukkit.Location;
-import org.bukkit.World;
 import org.bukkit.command.CommandSender;
-import org.bukkit.configuration.InvalidConfigurationException;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Event;
@@ -27,8 +21,6 @@ import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.PluginDescriptionFile;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
-//import org.getspout.spout.inventory.CustomInventory;
-import org.getspout.spoutapi.SpoutManager;
 import org.getspout.spoutapi.gui.GenericLabel;
 
 import com.alta189.sqlLibrary.MySQL.mysqlCore;
@@ -37,8 +29,6 @@ import com.garbagemule.MobArena.MobArenaHandler;
 import com.matejdro.bukkit.jail.Jail;
 import com.matejdro.bukkit.jail.JailAPI;
 import com.sk89q.worldguard.bukkit.WorldGuardPlugin;
-import com.sk89q.worldguard.protection.regions.ProtectedRegion;
-
 import dk.gabriel333.register.payment.Method;
 import dk.gabriel333.register.payment.Methods;
 import dk.gabriel333.spoutbackpack.SBEntityListener;
@@ -47,7 +37,6 @@ import dk.gabriel333.spoutbackpack.SBInventoryListener;
 import dk.gabriel333.spoutbackpack.SBInventorySaveTask;
 import dk.gabriel333.spoutbackpack.SBLanguageInterface;
 import dk.gabriel333.spoutbackpack.SBPlayerListener;
-import dk.gabriel333.spoutbackpack.SBLanguageInterface.Language;
 import dk.gabriel333.spoutbackpack.SpoutBackpack;
 import de.Keyle.MyWolf.MyWolfPlugin;
 import dk.gabriel333.BukkitInventoryTools.Commands.*;
@@ -57,7 +46,6 @@ import dk.gabriel333.BukkitInventoryTools.Book.*;
 import dk.gabriel333.BukkitInventoryTools.DigiLock.*;
 import dk.gabriel333.Library.G333Config;
 import dk.gabriel333.Library.G333Messages;
-import dk.gabriel333.Library.G333Permissions;
 import dk.gabriel333.Library.G333Plugin;
 
 import me.neatmonster.spoutbackpack.SBHandler;
@@ -110,10 +98,10 @@ public class BIT extends JavaPlugin {
 			setupBook();
 			setupMobArena();
 			setupJail();
-			li = new SBLanguageInterface(loadLanguage());
+			li = new SBLanguageInterface(SpoutBackpack.loadLanguage());
 			// SpoutBackpack
 			for (Player player : Bukkit.getServer().getOnlinePlayers()) {
-				BIT.loadInventory(player, player.getWorld());
+				SpoutBackpack.loadInventory(player, player.getWorld());
 			}
 			G333Messages.showInfo("BIT version " + pdfFile.getVersion()
 					+ " is enabled!");
@@ -200,7 +188,7 @@ public class BIT extends JavaPlugin {
 		// SpoutBackpack Listeners
 		pm.registerEvent(Type.CUSTOM_EVENT, new SBInputListener(),
 				Priority.Normal, this);
-		pm.registerEvent(Type.CUSTOM_EVENT, new SBInventoryListener(this),
+		pm.registerEvent(Type.CUSTOM_EVENT, new SBInventoryListener(),
 				Priority.Normal, this);
 		pm.registerEvent(Type.PLAYER_JOIN, new SBPlayerListener(this),
 				Priority.Normal, this);
@@ -619,7 +607,7 @@ public class BIT extends JavaPlugin {
 
 	}
 
-	static WorldGuardPlugin getWorldGuard() {
+	public static WorldGuardPlugin getWorldGuard() {
 		Plugin plugin = Bukkit.getServer().getPluginManager()
 				.getPlugin("WorldGuard");
 		if (plugin == null || !(plugin instanceof WorldGuardPlugin)) {
@@ -657,210 +645,5 @@ public class BIT extends JavaPlugin {
 	}
 
 
-	
-
-
-	public void updateInventory(Player player, ItemStack[] is) {
-		BIT.inventories.put(player.getName(), is);
-	}
-
-	public static boolean canOpenBackpack(World world, Player player) {
-		boolean canOpenBackpack = false;
-
-		if (G333Permissions.hasPerm(player, "backpack.size54",
-				G333Permissions.QUIET)
-				|| G333Permissions.hasPerm(player, "backpack.size45",
-						G333Permissions.QUIET)
-				|| G333Permissions.hasPerm(player, "backpack.size36",
-						G333Permissions.QUIET)
-				|| G333Permissions.hasPerm(player, "backpack.size27",
-						G333Permissions.QUIET)
-				|| G333Permissions.hasPerm(player, "backpack.size18",
-						G333Permissions.QUIET)
-				|| G333Permissions.hasPerm(player, "backpack.size9",
-						G333Permissions.QUIET)) {
-
-			canOpenBackpack = true;
-		} else {
-			canOpenBackpack = false;
-		}
-
-		if (getWorldGuard() != null) {
-			Location location = player.getLocation();
-			com.sk89q.worldedit.Vector vector = new com.sk89q.worldedit.Vector(
-					location.getX(), location.getY(), location.getZ());
-			Map<String, ProtectedRegion> regions = getWorldGuard()
-					.getGlobalRegionManager().get(location.getWorld())
-					.getRegions();
-			List<String> inRegions = new ArrayList<String>();
-			for (String key_ : regions.keySet()) {
-				ProtectedRegion region = regions.get(key_);
-				if (region.contains(vector)) {
-					inRegions.add(key_);
-				}
-			}
-			for (String region : G333Config.SBP_noBackpackRegions) {
-				if (inRegions.contains(region)) {
-					canOpenBackpack = false;
-				}
-			}
-		}
-		if (mobArenaHandler != null) {
-			if (mobArenaHandler.inRegion(player.getLocation())) {
-				canOpenBackpack = false;
-			}
-		}
-		if (jail != null) {
-			if (jail.isPlayerJailed(player.getName()) == true) {
-				canOpenBackpack = false;
-			}
-		}
-		return canOpenBackpack;
-	}
-
-	public static boolean hasWorkbench(Player player) {
-		if (G333Permissions.hasPerm(player, "backpack.workbench",
-				G333Permissions.NOT_QUIET))
-			return true;
-		File saveFile;
-		if (G333Config.SBP_InventoriesShare) {
-			saveFile = new File(plugin.getDataFolder() + File.separator
-					+ "inventories", player.getName() + ".yml");
-		} else {
-			saveFile = new File(plugin.getDataFolder() + File.separator
-					+ "inventories", player.getName() + "_"
-					+ player.getWorld().getName() + ".yml");
-		}
-		YamlConfiguration config = new YamlConfiguration();
-		try {
-			config.load(saveFile);
-		} catch (FileNotFoundException e) {
-			//G333Messages
-			//		.showInfo("The workbench file did not exist for player:"
-			//				+ player.getName());
-			// e.printStackTrace();
-		} catch (IOException e) {
-			e.printStackTrace();
-		} catch (InvalidConfigurationException e) {
-			e.printStackTrace();
-		}
-		boolean enabled = config.getBoolean("Workbench", false);
-		try {
-			config.save(saveFile);
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-		if (enabled)
-			return true;
-		return false;
-	}
-
-	public static void setWorkbench(Player player, boolean enabled) {
-		File saveFile;
-		if (G333Config.SBP_InventoriesShare) {
-			saveFile = new File(plugin.getDataFolder() + File.separator
-					+ "inventories", player.getName() + ".yml");
-		} else {
-			saveFile = new File(plugin.getDataFolder() + File.separator
-					+ "inventories", player.getName() + "_"
-					+ player.getWorld().getName() + ".yml");
-		}
-		YamlConfiguration config = new YamlConfiguration();
-		try {
-			config.load(saveFile);
-		} catch (FileNotFoundException e) {
-			//e.printStackTrace();
-		} catch (IOException e) {
-			e.printStackTrace();
-		} catch (InvalidConfigurationException e) {
-			e.printStackTrace();
-		}
-		config.set("Workbench", enabled);
-		try {
-			config.save(saveFile);
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-	}
-
-	public static boolean isOpenBackpack(Player player) {
-		return BIT.openedInventories.containsKey(player.getName());
-	}
-
-	public static Inventory getOpenedBackpack(Player player) {
-		return BIT.openedInventories.get(player.getName());
-	}
-
-	public Inventory getClosedBackpack(Player player) {
-		Inventory inventory = SpoutManager.getInventoryBuilder().construct(
-				SpoutBackpack.allowedSize(
-						player.getWorld(), player, true), BIT.inventoryName);
-		if (BIT.inventories.containsKey(player.getName())) {
-			inventory.setContents(BIT.inventories.get(player.getName()));
-		}
-		return inventory;
-	}
-
-	public void setClosedBackpack(Player player, Inventory inventory) {
-		BIT.inventories.put(player.getName(), inventory.getContents());
-		return;
-	}
-
-	public static void loadInventory(Player player, World world) {
-		if (BIT.inventories.containsKey(player.getName())) {
-			return;
-		}
-		File saveFile;
-		if (G333Config.SBP_InventoriesShare) {
-			saveFile = new File(BIT.plugin.getDataFolder() + File.separator
-					+ "inventories", player.getName() + ".yml");
-		} else {
-			saveFile = new File(BIT.plugin.getDataFolder() + File.separator
-					+ "inventories", player.getName() + "_" + world.getName()
-					+ ".yml");
-		}
-		@SuppressWarnings({})
-		YamlConfiguration config = new YamlConfiguration();
-		try {
-			config.load(saveFile);
-		} catch (FileNotFoundException e) {
-			//G333Messages
-			//		.showWarning("The Inventoryfile was not found for user:"
-			//				+ player.getName());
-			// e.printStackTrace();
-		} catch (IOException e) {
-			e.printStackTrace();
-		} catch (InvalidConfigurationException e) {
-			e.printStackTrace();
-		}
-		int size = SpoutBackpack.allowedSize(world, player, true);
-		Inventory inv = SpoutManager.getInventoryBuilder().construct(
-				size, BIT.inventoryName);
-		if (saveFile.exists()) {
-			Integer i = 0;
-			for (i = 0; i < size; i++) {
-				ItemStack item = new ItemStack(0, 0);
-				item.setAmount(config.getInt(i.toString() + ".amount", 0));
-				item.setTypeId(config.getInt(i.toString() + ".type", 0));
-				Integer durability = config.getInt(
-						i.toString() + ".durability", 0);
-				item.setDurability(Short.parseShort(durability.toString()));
-				inv.setItem(i, item);
-			}
-		}
-		BIT.inventories.put(player.getName(), inv.getContents());
-	}
-
-	public Language loadLanguage() {
-		if (G333Config.SBP_language.equalsIgnoreCase("EN")) {
-			return Language.ENGLISH;
-		} else if (G333Config.SBP_language.equalsIgnoreCase("FR")) {
-			return Language.FRENCH;
-		} else {
-			G333Messages
-					.showInfo("SpoutBackpack: language set to ENGLISH by default.");
-			return Language.ENGLISH;
-		}
-	}
 
 }

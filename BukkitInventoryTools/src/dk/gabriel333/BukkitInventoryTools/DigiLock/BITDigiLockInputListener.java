@@ -19,6 +19,7 @@ import dk.gabriel333.BukkitInventoryTools.BIT;
 import dk.gabriel333.BukkitInventoryTools.Inventory.BITInventory;
 import dk.gabriel333.BukkitInventoryTools.Sort.BITSortInventory;
 import dk.gabriel333.Library.*;
+import dk.gabriel333.spoutbackpack.SpoutBackpack;
 
 public class BITDigiLockInputListener extends InputListener {
 	
@@ -62,9 +63,8 @@ public class BITDigiLockInputListener extends InputListener {
 				}
 			}
 		} else
-			
-			if (BIT.isOpenBackpack(sPlayer)){
-				Inventory inventory = BIT.getOpenedBackpack(sPlayer);
+			if (SpoutBackpack.isOpenBackpack(sPlayer)){
+				Inventory inventory = SpoutBackpack.getOpenedBackpack(sPlayer);
 				if (inventory != null) {
 					BITSortInventory.sortInventoryItems(sPlayer, inventory);
 				}

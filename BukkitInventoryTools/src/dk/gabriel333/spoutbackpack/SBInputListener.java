@@ -40,7 +40,7 @@ public class SBInputListener extends InputListener {
 				if (screentype == ScreenType.WORKBENCH_INVENTORY) {
 					return;
 				}
-				if (!BIT.canOpenBackpack(event.getPlayer().getWorld(),
+				if (!SpoutBackpack.canOpenBackpack(event.getPlayer().getWorld(),
 						event.getPlayer())) {
 					return;
 				}
@@ -140,7 +140,7 @@ public class SBInputListener extends InputListener {
 							.getPlayer().getName())) {
 						if (!BIT.openedInventories.containsKey(event
 								.getPlayer().getName())) {
-							if (!BIT.hasWorkbench(event.getPlayer())) {
+							if (!SpoutBackpack.hasWorkbench(event.getPlayer())) {
 								return;
 							}
 							if (G333Config.SBP_workbenchInventory == true

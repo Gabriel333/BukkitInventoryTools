@@ -6,6 +6,7 @@ import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 
 import org.getspout.spout.inventory.CustomMCInventory;
+import org.getspout.spoutapi.SpoutManager;
 import org.getspout.spoutapi.gui.ScreenType;
 import org.getspout.spoutapi.player.SpoutPlayer;
 
@@ -14,10 +15,12 @@ import dk.gabriel333.BukkitInventoryTools.BIT;
 import dk.gabriel333.Library.G333Config;
 import dk.gabriel333.Library.G333Messages;
 import dk.gabriel333.Library.G333Permissions;
+import dk.gabriel333.spoutbackpack.SBHandler;
+import dk.gabriel333.spoutbackpack.SpoutBackpack;
 
 public class BITSortInventory {
 
-	//TODO: code should be moved to BITInventory
+	// TODO: code should be moved to BITInventory
 	public static void sortInventoryItems(SpoutPlayer sPlayer,
 			Inventory inventory) {
 		stackInventoryItems(sPlayer, inventory);
@@ -31,13 +34,9 @@ public class BITSortInventory {
 			ItemStack item1 = inventory.getItem(i);
 			if ((item1.getAmount() == 64)
 			// Food must be alone in slot 0-8 so you can eat it.
-					|| (i < 9 && (item1.getAmount() == 0
-							|| isTool(item1)
-							|| isWeapon(item1)
-							|| isArmor(item1)
-							||  isFood(item1)
-							|| isBucket(item1)
-							|| isVehicle(item1)))) {
+					|| (i < 9 && (item1.getAmount() == 0 || isTool(item1)
+							|| isWeapon(item1) || isArmor(item1)
+							|| isFood(item1) || isBucket(item1) || isVehicle(item1)))) {
 				continue;
 			} else {
 				for (j = i + 1; j < inventory.getSize(); j++) {
@@ -47,7 +46,7 @@ public class BITSortInventory {
 		}
 		orderInventoryItems(inventory, 9);
 	}
-	
+
 	/**
 	 * Method to sort the players inventory, his backpack or wolfs pack
 	 * 
@@ -56,17 +55,30 @@ public class BITSortInventory {
 	 */
 	public static void sortinventory(SpoutPlayer sPlayer, ScreenType screentype) {
 		// sort the ordinary player inventory
-		Inventory inventory = sPlayer.getInventory();
 		BITSortInventory.sortPlayerInventoryItems(sPlayer);
 
 		// sort the SpoutBackpack if it exists and if it is opened.
 		if (BIT.spoutbackpack
 				&& BIT.spoutBackpackHandler.isOpenSpoutBackpack(sPlayer)) {
-			inventory = BIT.spoutBackpackHandler
-					.getOpenedSpoutBackpack(sPlayer);
-			if (inventory != null) {
-				BITSortInventory.sortInventoryItems(sPlayer, inventory);
-			}
+			
+				BITSortInventory.sortInventoryItems(sPlayer, BIT.spoutBackpackHandler
+						.getOpenedSpoutBackpack(sPlayer));
+		} else if (SBHandler.spoutBackpackEnabled) {
+			Inventory inv = SpoutManager
+					.getInventoryBuilder().construct(
+							SpoutBackpack.allowedSize(
+									sPlayer.getWorld(),
+									sPlayer, true),
+							BIT.inventoryName);
+			inv = SpoutBackpack.getClosedBackpack(sPlayer);
+			BITSortInventory.sortInventoryItems(sPlayer, inv);
+			BIT.inventories.put(sPlayer.getName(), inv.getContents());
+			//inv.setContents(BIT.inventories.get(sPlayer.getName()));
+			//SpoutBackpack.setClosedBackpack(sPlayer, inv);
+			
+			//BIT.inventories.put(sPlayer.getName(), inv.getContents());
+			//BITSortInventory.sortInventoryItems(sPlayer,
+			//		BIT.getOpenedBackpack(sPlayer));
 		}
 
 		// sort the players MyWolfInventory if exists and if is open.
@@ -79,12 +91,12 @@ public class BITSortInventory {
 				// test if myWolfInventory is opened and open it
 				// this on fails... can not be cast to ... Inventory
 
-				// BITSortInventory.sortInventoryItems(sPlayer, (Inventory) inv);
+				// BITSortInventory.sortInventoryItems(sPlayer, (Inventory)
+				// inv);
 
 			}
 		}
 	}
-
 
 	private static void stackInventoryItems(SpoutPlayer sPlayer,
 			Inventory inventory) {
@@ -123,20 +135,24 @@ public class BITSortInventory {
 		} else {
 			// Here is to_amt > and from_amt>0 so move all what's possible if
 			// it is the same kind of item.
-			if (G333Permissions.hasPerm(p, "sortinventory.stack.*", G333Permissions.QUIET)) {
+			if (G333Permissions.hasPerm(p, "sortinventory.stack.*",
+					G333Permissions.QUIET)) {
 				// okay...
 			} else if ((isTool(fromitem) && !G333Permissions.hasPerm(p,
 					"sortinventory.stack.tools", G333Permissions.QUIET))
 					|| (isWeapon(fromitem) && !G333Permissions.hasPerm(p,
-							"sortinventory.stack.weapons", G333Permissions.QUIET))
+							"sortinventory.stack.weapons",
+							G333Permissions.QUIET))
 					|| (isBucket(fromitem) && !G333Permissions.hasPerm(p,
-							"sortinventory.stack.buckets", G333Permissions.QUIET))
+							"sortinventory.stack.buckets",
+							G333Permissions.QUIET))
 					|| (isArmor(fromitem) && !G333Permissions.hasPerm(p,
 							"sortinventory.stack.armor", G333Permissions.QUIET))
 					|| (isFood(fromitem) && !G333Permissions.hasPerm(p,
 							"sortinventory.stack.food", G333Permissions.QUIET))
 					|| (isVehicle(fromitem) && !G333Permissions.hasPerm(p,
-							"sortinventory.stack.vehicles", G333Permissions.QUIET))) {
+							"sortinventory.stack.vehicles",
+							G333Permissions.QUIET))) {
 				return;
 			}
 			if (fromitem.getTypeId() == toitem.getTypeId()
@@ -178,8 +194,7 @@ public class BITSortInventory {
 	public static void orderInventoryItems(Inventory inventory, int startslot) {
 		int n = startslot;
 		for (int m = 0; m < G333Config.SORTSEQ.length; m++) {
-			Material mat = Material
-					.matchMaterial(G333Config.SORTSEQ[m]);
+			Material mat = Material.matchMaterial(G333Config.SORTSEQ[m]);
 			if (mat == null) {
 				G333Messages.showError("Configuration error i config.yml.");
 				G333Messages.showError(" Unknown material in SORTSEQ:"
@@ -276,6 +291,5 @@ public class BITSortInventory {
 		}
 		return false;
 	}
-
 
 }

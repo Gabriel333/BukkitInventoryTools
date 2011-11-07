@@ -1,6 +1,6 @@
 name: BukkitInventoryTools
 main: dk.gabriel333.BukkitInventoryTools.BIT
-version: 2.8.5
+version: 2.8.6
 author: Gabriel333
 authors: [Rocoloco]
 website: http://dev.bukkit.org/server-mods/bukkitinventorytools/
@@ -12,22 +12,22 @@ commands:
     sort:
         description: Rebuild all item stack in your inventory.
         usage: /sort
-        aliases: /si 
+        aliases: si 
         permission: bukkitinventorytools.sortinventory.use
     digilock:
         description: Lock the item with a digital pincode.
         usage: /digilock [pincode]|[unlock pincode]|[lock pincode]|[owner playername]|[closetimer seconds]|[usecost cost]|[remove]|[addcoowner name]|[remcoowner name]|[adduser name]|[remuser name]|[info]
-        aliases: /dlock
+        aliases: dlock
         permission: bukkitinventorytools.digilock.use
     bookshelf:
         description: Create and use a Bookshelf inventory.
         usage: /bookshelf []|[create inventoryname]|[owner playername]|[usecost cost]|[remove]|[addcoowner name]|[remcoowner name]|[info]
-        aliases: /bshelf
+        aliases: bs
         permission: bukkitinventorytools.bookshelf.use
     backpack:
         description: Wear a backpack.
         usage: /backpack
-        aliases: /bp
+        aliases: bp
         permission: bukkitinventorytools.backpack.use
 permissions:
     bukkitinventorytools.sortinventory.use:

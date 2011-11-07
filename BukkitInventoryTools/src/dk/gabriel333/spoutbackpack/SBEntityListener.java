@@ -5,8 +5,10 @@ import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.entity.EntityDeathEvent;
 import org.bukkit.event.entity.EntityListener;
+import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
-import org.getspout.spout.inventory.CustomInventory;
+//import org.getspout.spout.inventory.CustomInventory;
+import org.getspout.spoutapi.SpoutManager;
 import org.getspout.spoutapi.player.SpoutPlayer;
 
 import dk.gabriel333.BukkitInventoryTools.BIT;
@@ -26,9 +28,9 @@ public class SBEntityListener extends EntityListener {
 			Player player = (Player) entity;
 			if (!G333Permissions.hasPerm(player, "backpack.nodrop",
 					G333Permissions.QUIET)
-					&& BIT.canOpenBackpack(player.getWorld(), player)) {
+					&& SpoutBackpack.canOpenBackpack(player.getWorld(), player)) {
 				if (!((SpoutPlayer) player).isSpoutCraftEnabled()) {
-					BIT.loadInventory(player, player.getWorld());
+					SpoutBackpack.loadInventory(player, player.getWorld());
 				}
 				if (BIT.inventories.containsKey(player.getName())) {
 					ItemStack[] items = BIT.inventories
@@ -39,9 +41,14 @@ public class SBEntityListener extends EntityListener {
 									item);
 						}
 					}
-					CustomInventory inventory = new CustomInventory(
-							SpoutBackpack.allowedSize(player.getWorld(), player, true),
-							BIT.inventoryName);
+					Inventory inventory = SpoutManager.getInventoryBuilder()
+							.construct(
+									SpoutBackpack.allowedSize(player.getWorld(),
+											player, true),
+									BIT.inventoryName);
+					//CustomInventory inventory = new CustomInventory(
+					//		SpoutBackpack.allowedSize(player.getWorld(), player, true),
+					//		BIT.inventoryName);
 					for (Integer i = 0; i < SpoutBackpack.allowedSize(player.getWorld(),
 							player, true); i++) {
 						ItemStack item = new ItemStack(0, 0);

@@ -9,6 +9,7 @@ import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.event.player.PlayerTeleportEvent;
 
 import dk.gabriel333.BukkitInventoryTools.BIT;
+import dk.gabriel333.Library.G333Config;
 
 public class SBPlayerListener extends PlayerListener {
 	private BIT plugin;
@@ -31,9 +32,12 @@ public class SBPlayerListener extends PlayerListener {
 	public void onPlayerTeleport(PlayerTeleportEvent event) {
 		if (((event.getFrom().getWorld().getName() != event.getTo().getWorld()
 				.getName()) || plugin.portals.contains(event.getPlayer())
-				&& plugin.config.getBoolean("Backpack."
-						+ event.getTo().getWorld().getName()
-						+ ".InventoriesShare?", true) == false)) {
+				&& G333Config.SBP_InventoriesShare)) { 
+				
+				//plugin.config.getBoolean("Backpack."
+				//		+ event.getTo().getWorld().getName()
+				//		+ ".InventoriesShare?", true) == false)) {
+			
 			try {
 				Player player = event.getPlayer();
 				SBInventorySaveTask.saveInventory(player, event.getFrom()

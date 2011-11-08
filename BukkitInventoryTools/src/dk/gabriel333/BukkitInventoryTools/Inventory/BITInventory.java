@@ -82,6 +82,7 @@ public class BITInventory {
 	public static Map<Integer, GenericTextField> useCostGUI = new HashMap<Integer, GenericTextField>();
 
 	public static HashMap<UUID, String> BITBookButtons = new HashMap<UUID, String>();
+	public static Map<Integer, SpoutBlock> clickedBlock = new HashMap<Integer, SpoutBlock>();
 
 	public Inventory getInventory() {
 		return this.inventory;
@@ -506,6 +507,7 @@ public class BITInventory {
 		int height = 20;
 		int x, y, w1, w2, w3, w4;
 		addUserData(id);
+		clickedBlock.put(id, sBlock);
 		if (BITInventory.isBitInventoryCreated(sBlock)) {
 			BITDigiLock digilock = BITDigiLock.loadDigiLock(sBlock);
 			ownerGUI.get(id).setText(digilock.getOwner());
@@ -695,15 +697,17 @@ public class BITInventory {
 			ownerGUI.put(id, new GenericTextField());
 			coOwnersGUI.put(id, new GenericTextField());
 			useCostGUI.put(id, new GenericTextField());
+			clickedBlock.put(id, null);
 		}
 	}
 
 	public static void cleanupPopupScreen(SpoutPlayer sPlayer) {
-		int playerId = sPlayer.getEntityId();
-		if (popupScreen.containsKey(playerId)) {
-			popupScreen.get(playerId).removeWidgets(BIT.plugin);
-			popupScreen.get(playerId).setDirty(true);
+		int id = sPlayer.getEntityId();
+		if (popupScreen.containsKey(id)) {
+			popupScreen.get(id).removeWidgets(BIT.plugin);
+			popupScreen.get(id).setDirty(true);
 			sPlayer.getMainScreen().removeWidgets(BIT.plugin);
+			clickedBlock.remove(id);
 		}
 	}
 

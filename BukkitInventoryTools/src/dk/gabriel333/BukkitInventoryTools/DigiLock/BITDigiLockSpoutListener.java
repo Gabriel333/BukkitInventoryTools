@@ -28,8 +28,13 @@ public class BITDigiLockSpoutListener extends SpoutListener {
 			Button button = ((ButtonClickEvent) event).getButton();
 			UUID uuid = button.getId();
 			SpoutPlayer sPlayer = ((ButtonClickEvent) event).getPlayer();
-			SpoutBlock sBlock = (SpoutBlock) sPlayer.getTargetBlock(null, 5);
+			//SpoutBlock sBlock = (SpoutBlock) sPlayer.getTargetBlock(null, 5);
 			int id = sPlayer.getEntityId();
+			SpoutBlock sBlock;
+			sBlock = BITDigiLock.clickedBlock.get(id);
+			if (sBlock == null) {
+				sBlock = (SpoutBlock) sPlayer.getTargetBlock(null, 5);
+			}
 			if (BITDigiLock.isLockable(sBlock)) {
 				BITDigiLock digilock = BITDigiLock.loadDigiLock(sBlock);
 				// ************************************

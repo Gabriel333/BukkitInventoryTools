@@ -1447,6 +1447,7 @@ public class BITDigiLock {
 	public static Map<Integer, GenericTextField> usersGUI = new HashMap<Integer, GenericTextField>();
 	public static Map<Integer, GenericTextField> useCostGUI = new HashMap<Integer, GenericTextField>();
 	public static Map<Integer, GenericTextField> connectedToGUI = new HashMap<Integer, GenericTextField>();
+	public static Map<Integer, SpoutBlock> clickedBlock = new HashMap<Integer, SpoutBlock>();
 
 	// Buttons for DigiLock
 	public static HashMap<UUID, String> BITDigiLockButtons = new HashMap<UUID, String>();
@@ -1461,6 +1462,7 @@ public class BITDigiLock {
 			popupScreen.get(playerId).removeWidgets(BIT.plugin);
 			popupScreen.get(playerId).setDirty(true);
 			sPlayer.getMainScreen().removeWidgets(BIT.plugin);
+			BITDigiLock.clickedBlock.remove(sPlayer.getEntityId());
 		}
 	}
 
@@ -1531,6 +1533,7 @@ public class BITDigiLock {
 		int x = 170;
 		int id = sPlayer.getEntityId();
 		addUserData(id);
+		clickedBlock.put(id,sBlock);
 
 		GenericItemWidget itemwidget = new GenericItemWidget(new ItemStack(
 				getPincodeBlock(sBlock)));
@@ -1580,6 +1583,7 @@ public class BITDigiLock {
 		int height = 20;
 		int x, y, w1, w2, w3, w4;
 		addUserData(id);
+		clickedBlock.put(id,sBlock);
 		if (BITDigiLock.isLocked(sBlock)) {
 			BITDigiLock digilock = BITDigiLock.loadDigiLock(sBlock);
 			pincodeGUI.get(id).setText(digilock.getPincode());
@@ -1763,6 +1767,7 @@ public class BITDigiLock {
 			useCostGUI.remove(id);
 			connectedToGUI.remove(id);
 			userno.remove(id);
+			clickedBlock.remove(id);
 		}
 	}
 
@@ -1778,6 +1783,8 @@ public class BITDigiLock {
 			closetimerGUI.put(id, new GenericTextField());
 			useCostGUI.put(id, new GenericTextField());
 			connectedToGUI.put(id, new GenericTextField());
+			clickedBlock.put(id, null);
+			
 		}
 	}
 

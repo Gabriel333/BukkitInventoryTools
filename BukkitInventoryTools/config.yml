@@ -132,8 +132,8 @@ Book:
 #           the backpack can NOT be opened.
 # PRICE9: price to buy the Backpack 1. time.
 # PRICE18 - PRINCE54: Upgrade price.
-# NoneBlackOrWhiteList: (0,1,2) 0: none. 1= Whitelist items
-#           2= blacklist item in backpack
+# NoneBlackOrWhiteList: (0,1,2) 0: none. 1= Blacklist items
+#           2= whitelist item in backpack
 # Whitelist: The list of whitelisted items (seperated by comma)
 # Blacklist: 
 # WorkbenchEnabled: Allows the user to carry a workbench-Backpack

@@ -58,31 +58,23 @@ public class BITInventoryListener extends InventoryListener {
 	}
 
 	public void onInventoryClick(InventoryClickEvent event) {
-		/*
-		 * SpoutPlayer sPlayer = (SpoutPlayer) event.getPlayer(); ItemStack
-		 * itemClicked = event.getItem(); ItemStack itemHolding =
-		 * event.getCursor(); short bookId =
-		 * sPlayer.getItemInHand().getDurability(); if (itemClicked != null &&
-		 * BIT.holdingKey.equals("KEY_LCONTROL")) {
-		 * sPlayer.sendMessage("(1)ItemClicked:" + itemClicked.getType() +
-		 * " bookId:" + bookId); } if (itemHolding != null &&
-		 * BIT.holdingKey.equals("KEY_LCONTROL")) {
-		 * sPlayer.sendMessage("(2)ItemClicked:" + itemHolding.getType() +
-		 * " bookId:" + bookId); } if (itemClicked != null) {
-		 * sPlayer.sendMessage("(3)ItemClicked:" + itemClicked.getType() + "id:"
-		 * + itemClicked.getDurability());
-		 * 
-		 * } if (itemHolding != null) { sPlayer.sendMessage("(4)itemHolding:" +
-		 * itemHolding.getType() + " id:" + itemHolding.getDurability()); }
-		 */
+		
+		//SpoutPlayer sPlayer = (SpoutPlayer) event.getPlayer();
+		//ItemStack itemClicked = event.getItem();
+		//ItemStack itemHolding = event.getCursor();
+		//short bookId = sPlayer.getItemInHand().getDurability();
+		//if (itemHolding != null && BIT.holdingKey.equals("KEY_R")) {
+		//	sPlayer.sendMessage("ItemClicked:" + itemHolding.getType()
+		//			+ " bookId:" + bookId);
+		//	event.setCancelled(true);
+		//}
+		
 	}
 
 	public void onInventoryCraft(InventoryCraftEvent event) {
-
 	}
 
 	public void onCustumEvent(Event event) {
-
 	}
 
 }

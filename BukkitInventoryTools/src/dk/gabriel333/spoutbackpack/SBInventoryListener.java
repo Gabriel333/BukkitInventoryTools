@@ -14,11 +14,11 @@ import dk.gabriel333.BukkitInventoryTools.BIT;
 import dk.gabriel333.Library.G333Config;
 
 public class SBInventoryListener extends InventoryListener {
-	//private BIT plugin;
+	// private BIT plugin;
 
-	//public SBInventoryListener(BIT plugin) {
-	//	this.plugin = plugin;
-	//}
+	// public SBInventoryListener(BIT plugin) {
+	// this.plugin = plugin;
+	// }
 
 	@Override
 	public void onInventoryClose(InventoryCloseEvent event) {
@@ -34,14 +34,13 @@ public class SBInventoryListener extends InventoryListener {
 			}
 			Inventory inv = event.getInventory();
 			if (inv.getName().equals(BIT.inventoryName)
-					&& inv.getSize() == SpoutBackpack.allowedSize(player.getWorld(),
-							player, true)) {
+					&& inv.getSize() == SpoutBackpack.allowedSize(
+							player.getWorld(), player, true)) {
 				BIT.inventories.put(player.getName(), inv.getContents());
 			}
 		} else {
-			if (BIT.openedInventories
-					.containsKey(BIT.openedInventoriesOthers.get(player
-							.getName()))) {
+			if (BIT.openedInventories.containsKey(BIT.openedInventoriesOthers
+					.get(player.getName()))) {
 				BIT.openedInventories.remove(BIT.openedInventoriesOthers
 						.get(player.getName()));
 			}
@@ -67,40 +66,55 @@ public class SBInventoryListener extends InventoryListener {
 	@Override
 	public void onInventoryClick(InventoryClickEvent event) {
 		Player player = event.getPlayer();
-		if (BIT.openedInventoriesOthers.containsKey(event.getPlayer()
-				.getName())) {
+		if (BIT.openedInventoriesOthers
+				.containsKey(event.getPlayer().getName())) {
 			player = Bukkit.getServer().getPlayer(
 					BIT.openedInventoriesOthers.get(event.getPlayer()));
 		}
 		InventorySlotType clickedSlotType = event.getSlotType();
 		Inventory inv = event.getInventory();
 		String invName = inv.getName();
-		ItemStack clickedItem = event.getItem();
-		int slot = event.getSlot();
-		try {
-			if ((BIT.openedInventories.containsKey(player.getName()) || BIT.openedInventoriesOthers
-					.containsKey(player.getName()))
-					&& clickedSlotType != InventorySlotType.CONTAINER
-					&& invName.equals("Inventory")
-					&& (G333Config.SBP_blackOrWhiteList == 1
-							&& G333Config.blacklist.contains(String
-									.valueOf(clickedItem.getTypeId())) || G333Config.SBP_blackOrWhiteList == 2
-							&& !G333Config.whitelist.contains(String
-									.valueOf(clickedItem.getTypeId())))) {
-				event.setCancelled(true);
-				player.sendMessage(ChatColor.RED
-						+ BIT.li.getMessage("yourenotallowedtomovethis")
-						+ BIT.inventoryName + "!");
-				return;
+		// ItemStack clickedItem = event.getItem();
+		ItemStack placedItem = event.getCursor();
+		// int slot = event.getSlot();
+		// try {
+		if (invName.equals("Backpack")
+				&& clickedSlotType == InventorySlotType.CONTAINER
+				&& (BIT.openedInventories.containsKey(player.getName()) || BIT.openedInventoriesOthers
+						.containsKey(player.getName()))) {
+			// 1=blacklist
+			if (G333Config.SBP_blackOrWhiteList == 1) {
+				if (placedItem != null) {
+					if (G333Config.blacklist.contains(String.valueOf(placedItem
+							.getTypeId()))) {
+						event.setCancelled(true);
+						player.sendMessage(ChatColor.RED
+								+ BIT.li.getMessage("yourenotallowedtomovethis")
+								+ BIT.inventoryName + "!");
+						return;
+					}
+				}
+				// 2=whitelist
+			} else if (G333Config.SBP_blackOrWhiteList == 2) {
+				if (placedItem != null) {
+					if (!G333Config.whitelist.contains(String
+							.valueOf(placedItem.getTypeId()))) {
+						event.setCancelled(true);
+						player.sendMessage(ChatColor.RED
+								+ BIT.li.getMessage("yourenotallowedtomovethis")
+								+ BIT.inventoryName + "!");
+						return;
+					}
+				}
 			}
-			if (clickedSlotType == InventorySlotType.CONTAINER
-					&& invName.equals(BIT.inventoryName)
-					&& clickedItem != null) {
-				ItemStack is = inv.getItem(slot);
-				is.setAmount(is.getAmount() - clickedItem.getAmount());
-				SpoutBackpack.updateInventory(player, inv.getContents());
-			}
-		} catch (NullPointerException e) {
 		}
+		// if (clickedSlotType == InventorySlotType.CONTAINER
+		// && invName.equals(BIT.inventoryName) && placedItem != null) {
+		// ItemStack is = inv.getItem(slot);
+		// is.setAmount(is.getAmount() - clickedItem.getAmount());
+		// SpoutBackpack.updateInventory(player, inv.getContents());
+		// }
+		// } catch (NullPointerException e) {
+		// }
 	}
 }

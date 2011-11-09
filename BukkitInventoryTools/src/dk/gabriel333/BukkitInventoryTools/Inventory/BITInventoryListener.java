@@ -45,6 +45,23 @@ public class BITInventoryListener extends InventoryListener {
 				}
 			}
 		}
+
+		if (!inv.getName().equals(sPlayer.getInventory().getName())){
+			inv = sPlayer.getInventory();
+			bookId = 0;
+			if (inv.contains(Material.BOOK)) {
+				BITBook bitBook = new BITBook();
+				for (int i = 0; i < inv.getSize(); i++) {
+					if (inv.getItem(i).getType() == Material.BOOK) {
+						bookId = inv.getItem(i).getDurability();
+						if (bookId > 1000) {
+							bitBook = BITBook.loadBook(sPlayer, bookId);
+							BITBook.setBookName(bookId, bitBook.getTitle());
+						}
+					}
+				}
+			}
+		}
 	}
 
 	public void onInventoryClose(InventoryCloseEvent event) {

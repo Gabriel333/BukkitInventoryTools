@@ -26,6 +26,7 @@ import org.getspout.spoutapi.gui.PopupScreen;
 import org.getspout.spoutapi.player.SpoutPlayer;
 
 import dk.gabriel333.BukkitInventoryTools.BIT;
+import dk.gabriel333.BukkitInventoryTools.Book.BITBook;
 import dk.gabriel333.BukkitInventoryTools.DigiLock.BITDigiLock;
 import dk.gabriel333.Library.G333Config;
 import dk.gabriel333.Library.G333Messages;
@@ -314,8 +315,23 @@ public class BITInventory {
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
+		
+		short bookId = 0;
+		if (inventory.contains(Material.BOOK)) {
+			BITBook bitBook = new BITBook();
+			for (int j = 0; j < inventory.getSize(); j++) {
+				if (inventory.getItem(j).getType() == Material.BOOK) {
+					bookId = inventory.getItem(j).getDurability();
+					if (bookId > 1000) {
+						bitBook = BITBook.loadBook(sPlayer, bookId);
+						BITBook.setBookName(bookId, bitBook.getTitle());
+					}
+				}
+			}
+		}
 		BITInventory inv = new BITInventory(sBlock, owner, name, coOwners,
 				inventory, useCost);
+
 		return inv;
 	}
 

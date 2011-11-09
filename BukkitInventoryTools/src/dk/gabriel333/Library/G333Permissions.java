@@ -120,7 +120,7 @@ public class G333Permissions {
 
 	// Test if the player has permissions to do the action
 	public static boolean hasPerm(CommandSender sender, String label,
-			Boolean quiet) {
+			Boolean not_quiet) {
 		if (G333Config.DEBUG_PERMISSIONS) {
 			sender.sendMessage("Testing permission: "
 					+ (PERMISSION_NODE + label).toLowerCase());
@@ -192,7 +192,7 @@ public class G333Permissions {
 						+ "G333Permissions: You have permission to: "
 						+ (PERMISSION_NODE + label).toLowerCase());
 			return true;
-		} else if (quiet) {
+		} else if (not_quiet) {
 			sPlayer.sendMessage(ChatColor.RED
 					+ "You to dont have permission to do this." + " ("
 					+ (G333Plugin.PLUGIN_NAME + "." + label).toLowerCase()

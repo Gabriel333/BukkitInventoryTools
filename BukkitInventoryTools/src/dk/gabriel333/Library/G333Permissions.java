@@ -158,10 +158,11 @@ public class G333Permissions {
 		SpoutPlayer sPlayer = (SpoutPlayer) sender;
 		Boolean hasPermission = false;
 
-		// Fallback builtin Permission system / PermissionsBukkit system
-		if (sPlayer.hasPermission((PERMISSION_NODE + label).toLowerCase())
-				|| sPlayer.hasPermission((PERMISSION_NODE + "*").toLowerCase())) {
-			hasPermission = true;
+		// PermissionsBukkit system (with fallback builtin Permission system)
+		if (permissionsBukkit) {
+			hasPermission = (sPlayer.hasPermission((PERMISSION_NODE + label)
+					.toLowerCase()) || sPlayer
+					.hasPermission((PERMISSION_NODE + "*").toLowerCase()));
 		} else if (permissionsex) {
 			hasPermission = permissionsexManager.has(sPlayer,
 					(PERMISSION_NODE + label).toLowerCase());
@@ -177,6 +178,11 @@ public class G333Permissions {
 			// or SuperpermBridge
 			hasPermission = permission3Handler.has(sPlayer,
 					(PERMISSION_NODE + label).toLowerCase());
+		} else {
+			// fallback builtin Permission system
+			hasPermission = (sPlayer.hasPermission((PERMISSION_NODE + label)
+					.toLowerCase()) || sPlayer
+					.hasPermission((PERMISSION_NODE + "*").toLowerCase()));
 		}
 
 		// return permission

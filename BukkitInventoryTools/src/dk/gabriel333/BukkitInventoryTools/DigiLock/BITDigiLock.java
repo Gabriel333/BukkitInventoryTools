@@ -142,12 +142,14 @@ public class BITDigiLock {
 						sPlayer.sendMessage("Your account ("
 								+ BIT.plugin.Method.getAccount(
 										sPlayer.getName()).balance()
-								+ ") has been deducted " + cost + " bucks");
+								+ ") has been deducted "
+								+ BIT.plugin.Method.format(cost) + ".");
 					} else {
 						sPlayer.sendMessage("You dont have enough money ("
 								+ BIT.plugin.Method.getAccount(
 										sPlayer.getName()).balance()
-								+ "). Cost is:" + cost);
+								+ "). Cost is:"
+								+ BIT.plugin.Method.format(cost));
 						createlock = false;
 					}
 				}
@@ -493,13 +495,18 @@ public class BITDigiLock {
 							G333Config.DIGILOCK_DESTROYCOST);
 					sPlayer.sendMessage("Your account ("
 							+ BIT.plugin.Method.getAccount(sPlayer.getName())
-									.balance() + ") has been deducted "
-							+ G333Config.DIGILOCK_DESTROYCOST + " bucks");
+									.balance()
+							+ ") has been deducted "
+							+ BIT.plugin.Method
+									.format(G333Config.DIGILOCK_DESTROYCOST)
+							+ ".");
 				} else {
 					sPlayer.sendMessage("You dont have enough money ("
 							+ BIT.plugin.Method.getAccount(sPlayer.getName())
-									.balance() + "). Cost is:"
-							+ G333Config.DIGILOCK_DESTROYCOST);
+									.balance()
+							+ "). Cost is:"
+							+ BIT.plugin.Method
+									.format(G333Config.DIGILOCK_DESTROYCOST));
 					deletelock = false;
 				}
 			}
@@ -698,17 +705,22 @@ public class BITDigiLock {
 							.hasEnough(cost)) {
 						BIT.plugin.Method.getAccount(sPlayer.getName())
 								.subtract(cost);
-						BIT.plugin.Method.getAccount(nextDigilock.getOwner())
-								.add(cost);
+						if (BIT.plugin.Method.hasAccount(nextDigilock.getOwner())) {
+							BIT.plugin.Method.getAccount(nextDigilock.getOwner())
+							.add(cost);
+						}
+						
 						sPlayer.sendMessage("Your account ("
 								+ BIT.plugin.Method.getAccount(
 										sPlayer.getName()).balance()
-								+ ") has been deducted " + cost + " bucks");
+								+ ") has been deducted "
+								+ BIT.plugin.Method.format(cost) + ".");
 					} else {
 						sPlayer.sendMessage("You dont have enough money ("
 								+ BIT.plugin.Method.getAccount(
 										sPlayer.getName()).balance()
-								+ "). Cost is:" + cost);
+								+ "). Cost is:"
+								+ BIT.plugin.Method.format(cost));
 						pressButton = false;
 					}
 				}
@@ -809,17 +821,21 @@ public class BITDigiLock {
 								.hasEnough(cost)) {
 							BIT.plugin.Method.getAccount(sPlayer.getName())
 									.subtract(cost);
-							BIT.plugin.Method.getAccount(
-									nextDigilock.getOwner()).add(cost);
+							if (BIT.plugin.Method.hasAccount(nextDigilock.getOwner())) {
+								BIT.plugin.Method.getAccount(nextDigilock.getOwner())
+								.add(cost);
+							}
 							sPlayer.sendMessage("Your account ("
 									+ BIT.plugin.Method.getAccount(
 											sPlayer.getName()).balance()
-									+ ") has been deducted " + cost + " bucks");
+									+ ") has been deducted "
+									+ BIT.plugin.Method.format(cost) + ".");
 						} else {
 							sPlayer.sendMessage("You dont have enough money ("
 									+ BIT.plugin.Method.getAccount(
 											sPlayer.getName()).balance()
-									+ "). Cost is:" + cost);
+									+ "). Cost is:"
+									+ BIT.plugin.Method.format(cost));
 							setleveron = false;
 						}
 					}
@@ -936,15 +952,19 @@ public class BITDigiLock {
 						cost)) {
 					BIT.plugin.Method.getAccount(sPlayer.getName()).subtract(
 							cost);
-					BIT.plugin.Method.getAccount(digilock.getOwner()).add(cost);
+					if (BIT.plugin.Method.hasAccount(digilock.getOwner())) {
+						BIT.plugin.Method.getAccount(digilock.getOwner()).add(
+								cost);
+					}
 					sPlayer.sendMessage("Your account ("
 							+ BIT.plugin.Method.getAccount(sPlayer.getName())
-									.balance() + ") has been deducted " + cost
-							+ " bucks");
+									.balance() + ") has been deducted "
+							+ BIT.plugin.Method.format(cost) + ".");
 				} else {
 					sPlayer.sendMessage("You dont have enough money ("
 							+ BIT.plugin.Method.getAccount(sPlayer.getName())
-									.balance() + "). Cost is:" + cost);
+									.balance() + "). Cost is:"
+							+ BIT.plugin.Method.format(cost));
 					opendoor = false;
 				}
 
@@ -986,15 +1006,19 @@ public class BITDigiLock {
 						cost)) {
 					BIT.plugin.Method.getAccount(sPlayer.getName()).subtract(
 							cost);
-					BIT.plugin.Method.getAccount(digilock.getOwner()).add(cost);
+					if (BIT.plugin.Method.hasAccount(digilock.getOwner())) {
+						BIT.plugin.Method.getAccount(digilock.getOwner()).add(cost);
+					}
+					
 					sPlayer.sendMessage("Your account ("
 							+ BIT.plugin.Method.getAccount(sPlayer.getName())
-									.balance() + ") has been deducted " + cost
-							+ " bucks");
+									.balance() + ") has been deducted "
+							+ BIT.plugin.Method.format(cost) + ".");
 				} else {
 					sPlayer.sendMessage("You dont have enough money ("
 							+ BIT.plugin.Method.getAccount(sPlayer.getName())
-									.balance() + "). Cost is:" + cost);
+									.balance() + "). Cost is:"
+							+ BIT.plugin.Method.format(cost));
 					closedoor = false;
 				}
 			}
@@ -1108,15 +1132,19 @@ public class BITDigiLock {
 						cost)) {
 					BIT.plugin.Method.getAccount(sPlayer.getName()).subtract(
 							cost);
-					BIT.plugin.Method.getAccount(digilock.getOwner()).add(cost);
+					if (BIT.plugin.Method.hasAccount(digilock.getOwner())) {
+						BIT.plugin.Method.getAccount(digilock.getOwner()).add(
+								cost);
+					}
 					sPlayer.sendMessage("Your account ("
 							+ BIT.plugin.Method.getAccount(sPlayer.getName())
-									.balance() + ") has been deducted " + cost
-							+ " bucks");
+									.balance() + ") has been deducted "
+							+ BIT.plugin.Method.format(cost) + ".");
 				} else {
 					sPlayer.sendMessage("You dont have enough money ("
 							+ BIT.plugin.Method.getAccount(sPlayer.getName())
-									.balance() + "). Cost is:" + cost);
+									.balance() + "). Cost is:"
+							+ BIT.plugin.Method.format(cost));
 					opentrapdoor = false;
 				}
 			}
@@ -1198,15 +1226,19 @@ public class BITDigiLock {
 						cost)) {
 					BIT.plugin.Method.getAccount(sPlayer.getName()).subtract(
 							cost);
-					BIT.plugin.Method.getAccount(digilock.getOwner()).add(cost);
+					if (BIT.plugin.Method.hasAccount(digilock.getOwner())) {
+						BIT.plugin.Method.getAccount(digilock.getOwner()).add(
+								cost);
+					}
 					sPlayer.sendMessage("Your account ("
 							+ BIT.plugin.Method.getAccount(sPlayer.getName())
-									.balance() + ") has been deducted " + cost
-							+ " bucks");
+									.balance() + ") has been deducted "
+							+ BIT.plugin.Method.format(cost) + ".");
 				} else {
 					sPlayer.sendMessage("You dont have enough money ("
 							+ BIT.plugin.Method.getAccount(sPlayer.getName())
-									.balance() + "). Cost is:" + cost);
+									.balance() + "). Cost is:"
+							+ BIT.plugin.Method.format(cost));
 					openFenceGate = false;
 				}
 			}
@@ -1502,7 +1534,7 @@ public class BITDigiLock {
 		case 96:
 			return 95; // Trap_door
 		case 107:
-			return 95; //FENCEGATE
+			return 95; // FENCEGATE
 		}
 		return 95;
 	}
@@ -1533,7 +1565,7 @@ public class BITDigiLock {
 		int x = 170;
 		int id = sPlayer.getEntityId();
 		addUserData(id);
-		clickedBlock.put(id,sBlock);
+		clickedBlock.put(id, sBlock);
 
 		GenericItemWidget itemwidget = new GenericItemWidget(new ItemStack(
 				getPincodeBlock(sBlock)));
@@ -1583,7 +1615,7 @@ public class BITDigiLock {
 		int height = 20;
 		int x, y, w1, w2, w3, w4;
 		addUserData(id);
-		clickedBlock.put(id,sBlock);
+		clickedBlock.put(id, sBlock);
 		if (BITDigiLock.isLocked(sBlock)) {
 			BITDigiLock digilock = BITDigiLock.loadDigiLock(sBlock);
 			pincodeGUI.get(id).setText(digilock.getPincode());
@@ -1784,7 +1816,7 @@ public class BITDigiLock {
 			useCostGUI.put(id, new GenericTextField());
 			connectedToGUI.put(id, new GenericTextField());
 			clickedBlock.put(id, null);
-			
+
 		}
 	}
 

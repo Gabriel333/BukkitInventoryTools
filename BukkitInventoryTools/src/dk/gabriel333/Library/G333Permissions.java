@@ -193,10 +193,15 @@ public class G333Permissions {
 						+ (PERMISSION_NODE + label).toLowerCase());
 			return true;
 		} else if (not_quiet) {
-			sPlayer.sendMessage(ChatColor.RED
-					+ "You to dont have permission to do this." + " ("
-					+ (G333Plugin.PLUGIN_NAME + "." + label).toLowerCase()
-					+ ")");
+			if (G333Config.DEBUG_PERMISSIONS) {
+				sPlayer.sendMessage(ChatColor.RED
+						+ "You to dont have permission to do this." + " ("
+						+ (G333Plugin.PLUGIN_NAME + "." + label).toLowerCase()
+						+ ")");
+			} else {
+				sPlayer.sendMessage(ChatColor.RED
+						+ "You to dont have permission to do this.");
+			}
 		}
 		return false;
 	}

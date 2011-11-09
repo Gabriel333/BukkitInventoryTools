@@ -174,12 +174,12 @@ public class BITInventory {
 						sPlayer.sendMessage("Your account ("
 								+ BIT.plugin.Method.getAccount(
 										sPlayer.getName()).balance()
-								+ ") has been deducted " + cost + " bucks");
+								+ ") has been deducted " + BIT.plugin.Method.format(cost) + ".");
 					} else {
 						sPlayer.sendMessage("You dont have enough money ("
 								+ BIT.plugin.Method.getAccount(
 										sPlayer.getName()).balance()
-								+ "). Cost is:" + cost);
+								+ "). Cost is:" + BIT.plugin.Method.format(cost));
 						createBookshelf = false;
 					}
 				}
@@ -394,11 +394,11 @@ public class BITInventory {
 					sPlayer.sendMessage("Your account ("
 							+ BIT.plugin.Method.getAccount(sPlayer.getName())
 									.balance() + ") has been deducted "
-							+ destroycost + " bucks");
+							+ BIT.plugin.Method.format(destroycost) + ".");
 				} else {
 					sPlayer.sendMessage("You dont have enough money ("
 							+ BIT.plugin.Method.getAccount(sPlayer.getName())
-									.balance() + "). Cost is:" + destroycost);
+									.balance() + "). Cost is:" + BIT.plugin.Method.format(destroycost));
 					deleteInventory = false;
 				}
 			}

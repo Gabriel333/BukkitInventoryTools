@@ -42,10 +42,10 @@ Storage:
     # Storage supports [MYSQL|SQLITE]
     Type: SQLITE
 
-    # MySQL Settings - Will only be used if Storage: is set
-    # to MYSQL
-    # mysql: true
-    Host: localhost
+    # MySQL Settings - Will only be used if Storage.Type: is
+    # set to MYSQL
+    # Host: servername:portnumber. Std port is 3306.
+    Host: localhost:3306
     Username: root
     Password: Changethis
     Database: BukkitInventoryTools

@@ -388,12 +388,12 @@ public class SpoutBackpack implements CommandExecutor {
 					notificationsAndMoneyPlayer.sendMessage("Your account ("
 							+ BIT.plugin.Method.getAccount(
 									notificationsAndMoneyPlayer.getName())
-									.balance() + ") has been deducted " + cost
+									.balance() + ") has been deducted " + BIT.plugin.Method.format(cost)
 							+ " bucks");
 					if (!player.getName().equals(
 							notificationsAndMoneyPlayer.getName())) {
 						player.sendMessage(player.getName()
-								+ "'s account has been deducted " + cost
+								+ "'s account has been deducted " + BIT.plugin.Method.format(cost)
 								+ " bucks");
 					}
 				} else {

@@ -310,27 +310,38 @@ public class BITBook {
 		int cost = G333Config.BOOK_COST;
 		if (isWritten(sPlayer, bookId)) {
 			for (int i = 0; i < bitBooks.get(bookId).getNumberOfPages(); i++) {
-				query = "UPDATE " + BIT.bookTable + " SET bookid=" + bookId
-						+ ", title='" + bitBooks.get(bookId).getTitle()
-						+ "', author='" + bitBooks.get(bookId).getAuthor()
+				query = "UPDATE "
+						+ BIT.bookTable
+						+ " SET bookid="
+						+ bookId
+						+ ", title='"
+						+ bitBooks.get(bookId).getTitle()
+						+ "', author='"
+						+ bitBooks.get(bookId).getAuthor()
 						+ "', coauthors='"
 						+ bitBooks.get(bookId).getCoAuthors()
 						+ "', numberofpages="
-						+ bitBooks.get(bookId).getNumberOfPages() + ", pageno="
-						+ i + ", bodytext='"
+						+ bitBooks.get(bookId).getNumberOfPages()
+						+ ", pageno="
+						+ i
+						+ ", bodytext='"
 						+ bitBooks.get(bookId).getBodytext(i)
 						+ "', mastercopy='"
-						+ convertBooleanToInt(bitBooks.get(bookId).getMasterCopy())
+						+ convertBooleanToInt(bitBooks.get(bookId)
+								.getMasterCopy())
 						+ "', mastercopyid="
 						+ bitBooks.get(bookId).getMasterCopyId()
 						+ ", forcebook='"
-						+ convertBooleanToInt(bitBooks.get(bookId).getForceBookToPlayerInventory())
+						+ convertBooleanToInt(bitBooks.get(bookId)
+								.getForceBookToPlayerInventory())
 						+ "', moved='"
-						+ convertBooleanToInt(bitBooks.get(bookId).getCanBeMovedFromInventory())
+						+ convertBooleanToInt(bitBooks.get(bookId)
+								.getCanBeMovedFromInventory())
 						+ "', copy='"
-						+ convertBooleanToInt(bitBooks.get(bookId).getCopyTheBookWhenMoved())
-						+ "', usecost=" + bitBooks.get(bookId).getUseCost()
-						+ " WHERE bookid=" + bookId + " AND pageno=" + i + ";";
+						+ convertBooleanToInt(bitBooks.get(bookId)
+								.getCopyTheBookWhenMoved()) + "', usecost="
+						+ bitBooks.get(bookId).getUseCost() + " WHERE bookid="
+						+ bookId + " AND pageno=" + i + ";";
 				if (G333Config.DEBUG_SQL)
 					sPlayer.sendMessage(ChatColor.YELLOW + "Updating book: "
 							+ query);
@@ -363,12 +374,14 @@ public class BITBook {
 						sPlayer.sendMessage("Your account ("
 								+ BIT.plugin.Method.getAccount(
 										sPlayer.getName()).balance()
-								+ ") has been deducted " + cost + " bucks");
+								+ ") has been deducted "
+								+ BIT.plugin.Method.format(cost) + ".");
 					} else {
 						sPlayer.sendMessage("You dont have enough money ("
 								+ BIT.plugin.Method.getAccount(
 										sPlayer.getName()).balance()
-								+ "). Cost is:" + cost);
+								+ "). Cost is:"
+								+ BIT.plugin.Method.format(cost));
 						createBook = false;
 					}
 				}
@@ -411,11 +424,12 @@ public class BITBook {
 									.get(id))
 							+ "', '"
 							// +bitBooks.get(bookId).getCanBeMovedFromInventory()
-							+ convertBooleanToInt(canBeMovedFromInventoryGUI.get(id))
+							+ convertBooleanToInt(canBeMovedFromInventoryGUI
+									.get(id))
 							+ "', '"
 							// + bitBooks.get(bookId).getCopyTheBookWhenMoved()
-							+ convertBooleanToInt(copyTheBookWhenMovedGUI.get(id))
-							+ "', "
+							+ convertBooleanToInt(copyTheBookWhenMovedGUI
+									.get(id)) + "', "
 							// + bitBooks.get(bookId).getUseCost()
 							+ Integer.valueOf(useCostGUI.get(id).getText())
 							+ " );";
@@ -540,11 +554,12 @@ public class BITBook {
 					sPlayer.sendMessage("Your account ("
 							+ BIT.plugin.Method.getAccount(sPlayer.getName())
 									.balance() + ") has been deducted "
-							+ destroycost + " bucks");
+							+ BIT.plugin.Method.format(destroycost) + ".");
 				} else {
 					sPlayer.sendMessage("You dont have enough money ("
 							+ BIT.plugin.Method.getAccount(sPlayer.getName())
-									.balance() + "). Cost is:" + destroycost);
+									.balance() + "). Cost is:"
+							+ BIT.plugin.Method.format(destroycost));
 					deleteBook = false;
 				}
 			}

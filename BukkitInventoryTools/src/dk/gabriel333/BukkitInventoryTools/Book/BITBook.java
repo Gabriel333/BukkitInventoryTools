@@ -320,16 +320,17 @@ public class BITBook {
 						+ i + ", bodytext='"
 						+ bitBooks.get(bookId).getBodytext(i)
 						+ "', mastercopy='"
-						+ bitBooks.get(bookId).getMasterCopy()
+						+ convertBooleanToInt(bitBooks.get(bookId).getMasterCopy())
 						+ "', mastercopyid="
-						+ bitBooks.get(bookId).getMasterCopyId() + ", forcebook='"
-						+ bitBooks.get(bookId).getForceBookToPlayerInventory()
+						+ bitBooks.get(bookId).getMasterCopyId()
+						+ ", forcebook='"
+						+ convertBooleanToInt(bitBooks.get(bookId).getForceBookToPlayerInventory())
 						+ "', moved='"
-						+ bitBooks.get(bookId).getCanBeMovedFromInventory()
+						+ convertBooleanToInt(bitBooks.get(bookId).getCanBeMovedFromInventory())
 						+ "', copy='"
-						+ bitBooks.get(bookId).getCopyTheBookWhenMoved()
+						+ convertBooleanToInt(bitBooks.get(bookId).getCopyTheBookWhenMoved())
 						+ "', usecost=" + bitBooks.get(bookId).getUseCost()
-						+ " WHERE bookid=" + bookId + " AND pageno="+i+ ";";
+						+ " WHERE bookid=" + bookId + " AND pageno=" + i + ";";
 				if (G333Config.DEBUG_SQL)
 					sPlayer.sendMessage(ChatColor.YELLOW + "Updating book: "
 							+ query);
@@ -381,13 +382,13 @@ public class BITBook {
 							+ "mastercopyid,forcebook,moved,copy,usecost) VALUES ("
 							+ bookId
 							+ ", '"
-							//+ bitBooks.get(bookId).getTitle()
+							// + bitBooks.get(bookId).getTitle()
 							+ titleGUI.get(id).getText()
 							+ "', '"
-							//+ bitBooks.get(bookId).getAuthor()
+							// + bitBooks.get(bookId).getAuthor()
 							+ authorGUI.get(id).getText()
 							+ "', '"
-							//+ bitBooks.get(bookId).getCoAuthors()
+							// + bitBooks.get(bookId).getCoAuthors()
 							+ coAuthorsGUI.get(id).getText()
 							+ "', "
 							// + bitBooks.get(bookId).getNumberOfPages()
@@ -396,24 +397,26 @@ public class BITBook {
 							+ i
 							+ ", '"
 							// + bitBooks.get(bookId).getBodytext(i)
-							+bodytextGUI2.get(id)[i]
+							+ bodytextGUI2.get(id)[i]
 							+ "', '"
-							//+ bitBooks.get(bookId).getMasterCopy()
-							+ masterCopyGUI.get(id)
+							// + bitBooks.get(bookId).getMasterCopy()
+							+ convertBooleanToInt(masterCopyGUI.get(id))
 							+ "', "
 							// + bitBooks.get(bookId).getMasterCopyId()
 							+ masterCopyIdGUI.get(id)
 							+ ", '"
-							//+ bitBooks.get(bookId).getForceBookToPlayerInventory() 
-							+ forceBookToPlayerInventoryGUI.get(id)
+							// +
+							// bitBooks.get(bookId).getForceBookToPlayerInventory()
+							+ convertBooleanToInt(forceBookToPlayerInventoryGUI
+									.get(id))
 							+ "', '"
 							// +bitBooks.get(bookId).getCanBeMovedFromInventory()
-							+ canBeMovedFromInventoryGUI.get(id)
+							+ convertBooleanToInt(canBeMovedFromInventoryGUI.get(id))
 							+ "', '"
 							// + bitBooks.get(bookId).getCopyTheBookWhenMoved()
-							+ copyTheBookWhenMovedGUI.get(id)
+							+ convertBooleanToInt(copyTheBookWhenMovedGUI.get(id))
 							+ "', "
-							//+ bitBooks.get(bookId).getUseCost() 
+							// + bitBooks.get(bookId).getUseCost()
 							+ Integer.valueOf(useCostGUI.get(id).getText())
 							+ " );";
 					if (G333Config.DEBUG_SQL)
@@ -444,6 +447,13 @@ public class BITBook {
 			}
 		}
 		BITBook.currentBookId.put(id, (short) 1000);
+	}
+
+	private static int convertBooleanToInt(Boolean b) {
+		if (b)
+			return 1;
+		else
+			return 0;
 	}
 
 	public static BITBook loadBook(SpoutPlayer sPlayer, short bookId) {
@@ -506,9 +516,9 @@ public class BITBook {
 			setBookName(bookId, resTitle);
 		} else {
 			// TODO: if bookid not found then set durability to 0 ???
-			if (bookId>=1000) {
+			if (bookId >= 1000) {
 				ItemStack itemStack = sPlayer.getItemInHand();
-				G333Messages.showWarning("Bookdata missing ID:"+bookId);
+				G333Messages.showWarning("Bookdata missing ID:" + bookId);
 				itemStack.setDurability((short) 0);
 				BITBook.currentBookId.remove(id);
 				setBookName(bookId, "Book");
@@ -595,10 +605,11 @@ public class BITBook {
 		popupScreen.get(id).attachWidget(BIT.plugin, itemwidget);
 
 		// Label - PageNo
-		//pageNoLabelGUI.get(id)
-		pageNoLabelGUI.get(id).setX(x + textFieldWidth - 2 * buttonHeight - 5).setY(
-				y + 2 * itemHeight - buttonHeight - 1).setHeight(buttonHeight);
-		pageNoLabelGUI.get(id).setText("Page:"+(currentPageNo.get(id)+1));
+		// pageNoLabelGUI.get(id)
+		pageNoLabelGUI.get(id).setX(x + textFieldWidth - 2 * buttonHeight - 5)
+				.setY(y + 2 * itemHeight - buttonHeight - 1)
+				.setHeight(buttonHeight);
+		pageNoLabelGUI.get(id).setText("Page:" + (currentPageNo.get(id) + 1));
 		popupScreen.get(id).attachWidget(BIT.plugin, pageNoLabelGUI.get(id));
 
 		// + Button
@@ -825,7 +836,7 @@ public class BITBook {
 		}
 		currentPageNo.put(id, i);
 		bodytextGUI.get(id).setText(bodytextGUI2.get(id)[i]);
-		pageNoLabelGUI.get(id).setText("Page:" + (i+1));
+		pageNoLabelGUI.get(id).setText("Page:" + (i + 1));
 		bodytextGUI.get(id).setFocus(true);
 		popupScreen.get(id).setDirty(true);
 
@@ -842,14 +853,14 @@ public class BITBook {
 		}
 		currentPageNo.put(id, i);
 		bodytextGUI.get(id).setText(bodytextGUI2.get(id)[i]);
-		pageNoLabelGUI.get(id).setText("Page:" + (i+1));
+		pageNoLabelGUI.get(id).setText("Page:" + (i + 1));
 		bodytextGUI.get(id).setFocus(true);
 		popupScreen.get(id).setDirty(true);
 
 	}
 
 	public static void setBookName(short bookId, String title) {
-		//TODO: use getMaterialManager
+		// TODO: use getMaterialManager
 		// String str = "Book:"+title;
 		// SpoutManager.getMaterialManager().setItemName(Material.BOOK, str);
 		// SpoutManager.getItemManager().setItemName(Material.BOOK,
@@ -864,13 +875,13 @@ public class BITBook {
 			}
 		}
 	}
-	
+
 	public void updateAllBooknames(SpoutPlayer sPlayer, Inventory inventory) {
 		ItemStack itemStack;
-		for (int i=0; i<inventory.getSize();i++) {
+		for (int i = 0; i < inventory.getSize(); i++) {
 			itemStack = inventory.getItem(i);
-			if (itemStack.getType()==Material.BOOK) {
-				
+			if (itemStack.getType() == Material.BOOK) {
+
 			}
 		}
 	}

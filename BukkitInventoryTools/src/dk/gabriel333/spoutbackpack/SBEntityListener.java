@@ -55,12 +55,13 @@ public class SBEntityListener extends EntityListener {
 								inventory.getContents());
 						SBInventorySaveTask.saveInventory(player,
 								player.getWorld());
+						player.sendMessage(plugin.logTag + BIT.li.getMessage("your")
+								+ ChatColor.RED + BIT.inventoryName + ChatColor.WHITE
+								+ BIT.li.getMessage("hasbroken"));
 					}
 				}
 			} else {
-				player.sendMessage(plugin.logTag + BIT.li.getMessage("your")
-						+ ChatColor.RED + BIT.inventoryName + ChatColor.WHITE
-						+ BIT.li.getMessage("hasbroken"));
+				
 			}
 		}
 	}

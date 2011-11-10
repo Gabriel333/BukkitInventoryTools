@@ -47,12 +47,8 @@ public class SpoutBackpack implements CommandExecutor {
 			Player player = (Player) sender;
 			if (G333Permissions.hasPerm(sender, "backpack.use",
 					G333Permissions.NOT_QUIET)) {
-				// if (commandLabel.equalsIgnoreCase("backpack")
-				// || commandLabel.equalsIgnoreCase("bp")) {
 				if (canOpenBackpack(player.getWorld(), player)) {
 					if (args.length == 0) {
-						// showHelp(player);
-						// open inventory
 						if (allowedSize(player.getWorld(), player, true) > 0) {
 							String playerName = sender.getName();
 							if (BIT.inventories.containsKey(playerName)) {
@@ -65,6 +61,8 @@ public class SpoutBackpack implements CommandExecutor {
 															player, true),
 													BIT.inventoryName);
 									BIT.openedInventories.put(playerName, inv);
+									// TODO: I dont know if these two lines
+									// should be here.
 									// BIT.openedInventoriesOthers.put(
 									// player.getName(), playerName);
 									inv.setContents(BIT.inventories
@@ -84,8 +82,7 @@ public class SpoutBackpack implements CommandExecutor {
 										+ BIT.li.getMessage("playernotfound"));
 							}
 						} else {
-							player.sendMessage(
-									"You need to buy a backpack. Use /backpack buy");
+							player.sendMessage("You need to buy a backpack. Use /backpack buy");
 							return true;
 						}
 					} else if (args.length == 1) {
@@ -94,7 +91,6 @@ public class SpoutBackpack implements CommandExecutor {
 							if (G333Permissions.hasPerm(player,
 									"backpack.reload",
 									G333Permissions.NOT_QUIET)) {
-								// BIT.loadOrReloadConfiguration();
 								player.sendMessage(BIT.li
 										.getMessage("configreloaded1"));
 								player.sendMessage(BIT.li
@@ -128,7 +124,7 @@ public class SpoutBackpack implements CommandExecutor {
 								if (size < upgradeAllowedSize(
 										player.getWorld(), player)
 										&& BIT.useEconomy) {
-									double cost = calculateCost(size);
+									double cost = calculateCostToUpgrade(size);
 									player.sendMessage(BIT.li
 											.getMessage("nextupgradecost")
 											+ ChatColor.RED
@@ -229,7 +225,7 @@ public class SpoutBackpack implements CommandExecutor {
 										if (size < upgradeAllowedSize(
 												player.getWorld(), player)
 												&& BIT.useEconomy) {
-											double cost = calculateCost(size);
+											double cost = calculateCostToUpgrade(size);
 											player.sendMessage(BIT.li
 													.getMessage("nextupgradecost")
 													+ ChatColor.RED
@@ -332,11 +328,6 @@ public class SpoutBackpack implements CommandExecutor {
 																		player,
 																		true),
 														BIT.inventoryName);
-										// CustomInventory inv = new
-										// CustomInventory(
-										// allowedSize(player.getWorld(),
-										// player, true),
-										// BIT.inventoryName);
 										BIT.openedInventories.put(playerName,
 												inv);
 										BIT.openedInventoriesOthers.put(
@@ -360,12 +351,10 @@ public class SpoutBackpack implements CommandExecutor {
 							}
 						}
 						return true;
-
 					}
 				} else {
 					showHelp(player);
 				}
-				// }
 			}
 		} else {
 			// the user has not permission to use the SputBackpack.
@@ -377,7 +366,7 @@ public class SpoutBackpack implements CommandExecutor {
 	private void startUpgradeProcedure(int sizeBefore, Player player,
 			Player notificationsAndMoneyPlayer) {
 		int sizeAfter = sizeBefore + 9;
-		double cost = calculateCost(sizeBefore);
+		double cost = calculateCostToUpgrade(sizeBefore);
 		if (BIT.plugin.Method.hasAccount(notificationsAndMoneyPlayer.getName())) {
 			MethodAccount account = BIT.plugin.Method
 					.getAccount(notificationsAndMoneyPlayer.getName());
@@ -388,13 +377,13 @@ public class SpoutBackpack implements CommandExecutor {
 					notificationsAndMoneyPlayer.sendMessage("Your account ("
 							+ BIT.plugin.Method.getAccount(
 									notificationsAndMoneyPlayer.getName())
-									.balance() + ") has been deducted " + BIT.plugin.Method.format(cost)
-							+ " bucks");
+									.balance() + ") has been deducted "
+							+ BIT.plugin.Method.format(cost) + " bucks");
 					if (!player.getName().equals(
 							notificationsAndMoneyPlayer.getName())) {
 						player.sendMessage(player.getName()
-								+ "'s account has been deducted " + BIT.plugin.Method.format(cost)
-								+ " bucks");
+								+ "'s account has been deducted "
+								+ BIT.plugin.Method.format(cost) + " bucks");
 					}
 				} else {
 					if (player.equals(notificationsAndMoneyPlayer)) {
@@ -468,7 +457,7 @@ public class SpoutBackpack implements CommandExecutor {
 		}
 	}
 
-	public double calculateCost(int size) {
+	public static double calculateCostToUpgrade(int size) {
 		double cost = G333Config.SBP_price9;
 		if (size == 9) {
 			cost = G333Config.SBP_price18;
@@ -530,6 +519,7 @@ public class SpoutBackpack implements CommandExecutor {
 
 	public static int allowedSize(World world, Player player,
 			boolean configurationCheck) {
+		// Finding permitted size
 		int size = 9;
 		if (G333Permissions.hasPerm(player, "backpack.size54",
 				G333Permissions.QUIET)) {
@@ -550,11 +540,21 @@ public class SpoutBackpack implements CommandExecutor {
 				G333Permissions.QUIET)) {
 			size = 9;
 		}
+		// Finding actual size
 		if (configurationCheck) {
 			if (SizeInConfig(world, player) < size) {
 				size = SizeInConfig(world, player);
 			}
 		}
+
+		// Automatic upgrading BP if its free
+		double upgradePrice = 0;
+		while (upgradePrice == 0) {
+			upgradePrice = calculateCostToUpgrade(size);
+			if (upgradePrice == 0)
+				size = size + 9;
+		}
+
 		return size;
 	}
 
@@ -587,7 +587,6 @@ public class SpoutBackpack implements CommandExecutor {
 
 	public static boolean canOpenBackpack(World world, Player player) {
 		boolean canOpenBackpack = false;
-
 		if (G333Permissions.hasPerm(player, "backpack.size54",
 				G333Permissions.QUIET)
 				|| G333Permissions.hasPerm(player, "backpack.size45",
@@ -600,7 +599,6 @@ public class SpoutBackpack implements CommandExecutor {
 						G333Permissions.QUIET)
 				|| G333Permissions.hasPerm(player, "backpack.size9",
 						G333Permissions.QUIET)) {
-
 			canOpenBackpack = true;
 		} else {
 			canOpenBackpack = false;

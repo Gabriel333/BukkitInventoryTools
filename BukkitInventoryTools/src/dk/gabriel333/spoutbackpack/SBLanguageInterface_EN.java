@@ -59,7 +59,7 @@ public class SBLanguageInterface_EN {
 		if (string.equalsIgnoreCase("savinginventories")) { return " Saving inventories!"; }
 		if (string.equalsIgnoreCase("yourenotallowedtomovethis")) { return "You aren't allowed to move this into your "; }
 		if (string.equalsIgnoreCase("money")) { return "Money: "; }
-		if (string.equalsIgnoreCase("hasbroken")) { return " has broken!"; }
+		if (string.equalsIgnoreCase("hasbroken")) { return " has broken and your items was dropped!"; }
 		if (string.equalsIgnoreCase("someoneisusingyour")) { return "Someone is using your "; }
 		if (string.equalsIgnoreCase("youalreadyhaveaccesstotheworkbench")) { return "You already have access to the workench!"; }
 		return "";

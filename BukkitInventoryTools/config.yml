@@ -126,24 +126,34 @@ Book:
 # +------------------------------------------------------+ #
 ############################################################
 # Language: EN or FR
+#
 # InventoriesShare: whether to share the backpack across 
 #           worlds. (true or false)
+#
 # RegionWhereBackpacksAreDisabled: WorldGuard Regions where
 #           the backpack can NOT be opened.
+#
 # PRICE9: price to buy the Backpack 1. time.
-# PRICE18 - PRINCE54: Upgrade price.
+# PRICE18 - PRICE54: Upgrade price. 
+# If PRICEXX is 0, the backpack will be upgrade automatically. 
+# If PRICE9 is 0, the user does need to buy the backpack with
+# /bp buy
+#
 # NoneBlackOrWhiteList: (0,1,2) 0: none. 1= Blacklist items
 #           2= whitelist item in backpack
 # Whitelist: The list of whitelisted items (seperated by comma)
 # Blacklist: 
+#
 # WorkbenchEnabled: Allows the user to carry a workbench-Backpack
 # WorkbenchBuyable: Allows the user to buy an Workbench
 # WorkbenchNeedInInventory: if the user can only open the 
 #           Workbench if the user carry an Workbench in his
 #           inventory/backpack
+#
 # WidgetEnabled: Show the available amount of money
 # WidgetPositionX,WidgetPositionY: Position of the Widget on
 #           inGame Screen.
+#
 # SavesLog: true/false.
 # SaveInterval(InMinutes): Specifies how often the inventories  
 #           is saved to disk.

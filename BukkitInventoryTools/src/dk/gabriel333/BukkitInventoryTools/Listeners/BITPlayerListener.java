@@ -660,11 +660,11 @@ public class BITPlayerListener extends PlayerListener {
 
 			}
 			// HANDLING TRAP_DOOR
-			else if (sBlock.getType().equals(Material.TRAP_DOOR)) {
+			else if (BITDigiLock.isTrapdoor(sBlock)) {
 
 			}
 			// HANDLING DISPENCER
-			else if (sBlock.getType().equals(Material.DISPENSER)) {
+			else if (BITDigiLock.isDispenser(sBlock)) {
 
 			}
 			// HANDLING FURNACE
@@ -672,7 +672,7 @@ public class BITPlayerListener extends PlayerListener {
 
 			}
 			// HANDLING LEVER
-			else if (sBlock.getType().equals(Material.LEVER)) {
+			else if (BITDigiLock.isLever(sBlock)) {
 				Lever lever = (Lever) sBlock.getState().getData();
 				if (lever.isPowered()) {
 
@@ -683,7 +683,7 @@ public class BITPlayerListener extends PlayerListener {
 
 			}
 			// HANDLING STONE_BUTTON
-			else if (sBlock.getType().equals(Material.STONE_BUTTON)) {
+			else if (BITDigiLock.isButton(sBlock)) {
 
 			}
 
@@ -698,7 +698,7 @@ public class BITPlayerListener extends PlayerListener {
 			}
 
 			// BOOKSHELF
-			else if (sBlock.getType().equals(Material.BOOKSHELF)
+			else if (BITDigiLock.isBookshelf(sBlock)
 					&& event.getAction().equals(Action.RIGHT_CLICK_BLOCK)
 					&& !BIT.holdingKey.equals("L-CONTROL")) {
 				if (BITInventory.isBitInventoryCreated(sBlock)

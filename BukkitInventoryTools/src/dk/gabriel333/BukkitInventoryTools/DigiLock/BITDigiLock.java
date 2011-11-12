@@ -185,36 +185,37 @@ public class BITDigiLock {
 	public static Boolean isLocked(SpoutBlock block) {
 		// TODO: Implement a HASHMAP for testing if the block is locked.
 		// G333Messages.showInfo("isLocked was called");
-		if (isLockable(block)) {
-			block = getDigiLockBlock(block);
-			String query = "SELECT * FROM " + BIT.digilockTable
-					+ " WHERE (x = " + block.getX() + " AND y = "
-					+ block.getY() + " AND z = " + block.getZ()
-					+ " AND world='" + block.getWorld().getName() + "');";
-			ResultSet result = null;
-			if (G333Config.STORAGE_TYPE.equals("MYSQL")) {
+		if (block != null)
+			if (isLockable(block)) {
+				block = getDigiLockBlock(block);
+				String query = "SELECT * FROM " + BIT.digilockTable
+						+ " WHERE (x = " + block.getX() + " AND y = "
+						+ block.getY() + " AND z = " + block.getZ()
+						+ " AND world='" + block.getWorld().getName() + "');";
+				ResultSet result = null;
+				if (G333Config.STORAGE_TYPE.equals("MYSQL")) {
+					try {
+						result = BIT.manageMySQL.sqlQuery(query);
+					} catch (MalformedURLException e) {
+						e.printStackTrace();
+					} catch (InstantiationException e) {
+						e.printStackTrace();
+					} catch (IllegalAccessException e) {
+						e.printStackTrace();
+					}
+				} else { // SQLLITE
+					result = BIT.manageSQLite.sqlQuery(query);
+				}
 				try {
-					result = BIT.manageMySQL.sqlQuery(query);
-				} catch (MalformedURLException e) {
-					e.printStackTrace();
-				} catch (InstantiationException e) {
-					e.printStackTrace();
-				} catch (IllegalAccessException e) {
+					if (result != null && result.next()) {
+						return true;
+					} else {
+						return false;
+					}
+				} catch (SQLException e) {
 					e.printStackTrace();
 				}
-			} else { // SQLLITE
-				result = BIT.manageSQLite.sqlQuery(query);
 			}
-			try {
-				if (result != null && result.next()) {
-					return true;
-				} else {
-					return false;
-				}
-			} catch (SQLException e) {
-				e.printStackTrace();
-			}
-		}
 		return false;
 	}
 
@@ -297,9 +298,10 @@ public class BITDigiLock {
 	 * @return true or false
 	 */
 	public static boolean isOwner(SpoutPlayer sPlayer, SpoutBlock sBlock) {
-		if (BITDigiLock.loadDigiLock(sBlock).getOwner().toLowerCase()
-				.equals(sPlayer.getName().toLowerCase()))
-			return true;
+		if (sBlock != null)
+			if (BITDigiLock.loadDigiLock(sBlock).getOwner().toLowerCase()
+					.equals(sPlayer.getName().toLowerCase()))
+				return true;
 		return false;
 	}
 
@@ -345,18 +347,20 @@ public class BITDigiLock {
 	 * @return true or false
 	 */
 	public static boolean isLockable(Block block) {
-		for (Material i : lockablematerials) {
-			if (i == block.getType())
-				return true;
-		}
+		if (block != null)
+			for (Material i : lockablematerials) {
+				if (i == block.getType())
+					return true;
+			}
 		return false;
 	}
 
 	static boolean isLockable(Material material) {
-		for (Material i : lockablematerials) {
-			if (i == material)
-				return true;
-		}
+		if (material != null)
+			for (Material i : lockablematerials) {
+				if (i == material)
+					return true;
+			}
 		return false;
 	}
 
@@ -541,28 +545,27 @@ public class BITDigiLock {
 	}
 
 	public static boolean isChest(Block block) {
-		if (block.getType().equals(Material.CHEST)
-				|| block.getType().equals(Material.LOCKED_CHEST))
-			return true;
-		else
-			return false;
+		if (block != null)
+			if (block.getType().equals(Material.CHEST)
+					|| block.getType().equals(Material.LOCKED_CHEST))
+				return true;
+		return false;
 	}
 
 	public static boolean isSign(Block block) {
-		if (block.getType().equals(Material.SIGN)
-				|| block.getType().equals(Material.WALL_SIGN)
-				|| block.getType().equals(Material.SIGN_POST))
-			return true;
-		else
-			return false;
+		if (block != null)
+			if (block.getType().equals(Material.SIGN)
+					|| block.getType().equals(Material.WALL_SIGN)
+					|| block.getType().equals(Material.SIGN_POST))
+				return true;
+		return false;
 	}
 
 	public static boolean isBookshelf(SpoutBlock sBlock) {
-		if (sBlock.getType().equals(Material.BOOKSHELF)) {
-			return true;
-		} else {
-			return false;
-		}
+		if (sBlock != null)
+			if (sBlock.getType().equals(Material.BOOKSHELF))
+				return true;
+		return false;
 	}
 
 	public static void playDigiLockSound(SpoutBlock sBlock) {
@@ -575,11 +578,12 @@ public class BITDigiLock {
 	}
 
 	public static boolean isNeighbourLocked(SpoutBlock block) {
-		for (BlockFace bf : BlockFace.values()) {
-			if (isLocked(block.getRelative(bf))) {
-				return true;
+		if (block != null)
+			for (BlockFace bf : BlockFace.values()) {
+				if (isLocked(block.getRelative(bf))) {
+					return true;
+				}
 			}
-		}
 		return false;
 	}
 
@@ -652,11 +656,10 @@ public class BITDigiLock {
 	 * @return true or false
 	 */
 	public static boolean isButton(SpoutBlock sBlock) {
-		if (sBlock.getType().equals(Material.STONE_BUTTON)) {
-			return true;
-		} else {
-			return false;
-		}
+		if (sBlock != null)
+			if (sBlock.getType().equals(Material.STONE_BUTTON))
+				return true;
+		return false;
 	}
 
 	/**
@@ -705,11 +708,12 @@ public class BITDigiLock {
 							.hasEnough(cost)) {
 						BIT.plugin.Method.getAccount(sPlayer.getName())
 								.subtract(cost);
-						if (BIT.plugin.Method.hasAccount(nextDigilock.getOwner())) {
-							BIT.plugin.Method.getAccount(nextDigilock.getOwner())
-							.add(cost);
+						if (BIT.plugin.Method.hasAccount(nextDigilock
+								.getOwner())) {
+							BIT.plugin.Method.getAccount(
+									nextDigilock.getOwner()).add(cost);
 						}
-						
+
 						sPlayer.sendMessage("Your account ("
 								+ BIT.plugin.Method.getAccount(
 										sPlayer.getName()).balance()
@@ -756,11 +760,10 @@ public class BITDigiLock {
 	 * @return
 	 */
 	public static boolean isDispenser(SpoutBlock sBlock) {
-		if (sBlock.getType().equals(Material.DISPENSER)) {
-			return true;
-		} else {
-			return false;
-		}
+		if (sBlock != null)
+			if (sBlock.getType().equals(Material.DISPENSER))
+				return true;
+		return false;
 	}
 
 	// *******************************************************
@@ -776,11 +779,10 @@ public class BITDigiLock {
 	 * @return
 	 */
 	public static boolean isLever(SpoutBlock sBlock) {
-		if (sBlock.getType().equals(Material.LEVER)) {
-			return true;
-		} else {
-			return false;
-		}
+		if (sBlock != null)
+			if (sBlock.getType().equals(Material.LEVER))
+				return true;
+		return false;
 	}
 
 	/**
@@ -821,9 +823,10 @@ public class BITDigiLock {
 								.hasEnough(cost)) {
 							BIT.plugin.Method.getAccount(sPlayer.getName())
 									.subtract(cost);
-							if (BIT.plugin.Method.hasAccount(nextDigilock.getOwner())) {
-								BIT.plugin.Method.getAccount(nextDigilock.getOwner())
-								.add(cost);
+							if (BIT.plugin.Method.hasAccount(nextDigilock
+									.getOwner())) {
+								BIT.plugin.Method.getAccount(
+										nextDigilock.getOwner()).add(cost);
 							}
 							sPlayer.sendMessage("Your account ("
 									+ BIT.plugin.Method.getAccount(
@@ -923,14 +926,15 @@ public class BITDigiLock {
 	// *******************************************************
 
 	public static boolean isDoor(Block block) {
-		if (block.getType().equals(Material.WOOD_DOOR))
-			return true;
-		else if (block.getType().equals(Material.WOODEN_DOOR))
-			return true;
-		else if (block.getType().equals(Material.IRON_DOOR))
-			return true;
-		else if (block.getType().equals(Material.IRON_DOOR_BLOCK))
-			return true;
+		if (block != null)
+			if (block.getType().equals(Material.WOOD_DOOR))
+				return true;
+			else if (block.getType().equals(Material.WOODEN_DOOR))
+				return true;
+			else if (block.getType().equals(Material.IRON_DOOR))
+				return true;
+			else if (block.getType().equals(Material.IRON_DOOR_BLOCK))
+				return true;
 		return false;
 	}
 
@@ -1007,9 +1011,10 @@ public class BITDigiLock {
 					BIT.plugin.Method.getAccount(sPlayer.getName()).subtract(
 							cost);
 					if (BIT.plugin.Method.hasAccount(digilock.getOwner())) {
-						BIT.plugin.Method.getAccount(digilock.getOwner()).add(cost);
+						BIT.plugin.Method.getAccount(digilock.getOwner()).add(
+								cost);
 					}
-					
+
 					sPlayer.sendMessage("Your account ("
 							+ BIT.plugin.Method.getAccount(sPlayer.getName())
 									.balance() + ") has been deducted "
@@ -1107,9 +1112,9 @@ public class BITDigiLock {
 	// *******************************************************
 
 	public static boolean isTrapdoor(Block block) {
-		if (block.getType().equals(Material.TRAP_DOOR)) {
-			return true;
-		}
+		if (block != null)
+			if (block.getType().equals(Material.TRAP_DOOR))
+				return true;
 		return false;
 	}
 
@@ -1201,9 +1206,9 @@ public class BITDigiLock {
 	// *******************************************************
 
 	public static boolean isFenceGate(Block block) {
-		if (block.getType().equals(Material.FENCE_GATE)) {
-			return true;
-		}
+		if (block != null)
+			if (block.getType().equals(Material.FENCE_GATE))
+				return true;
 		return false;
 	}
 
@@ -1294,14 +1299,15 @@ public class BITDigiLock {
 	//
 	// *******************************************************
 	public static boolean isDoubleDoor(SpoutBlock sBlock) {
-		if (isDoor(sBlock)) {
-			if (isDoor(sBlock.getFace(BlockFace.EAST))
-					|| isDoor(sBlock.getFace(BlockFace.NORTH))
-					|| isDoor(sBlock.getFace(BlockFace.SOUTH))
-					|| isDoor(sBlock.getFace(BlockFace.WEST))) {
-				return true;
+		if (sBlock != null)
+			if (isDoor(sBlock)) {
+				if (isDoor(sBlock.getFace(BlockFace.EAST))
+						|| isDoor(sBlock.getFace(BlockFace.NORTH))
+						|| isDoor(sBlock.getFace(BlockFace.SOUTH))
+						|| isDoor(sBlock.getFace(BlockFace.WEST))) {
+					return true;
+				}
 			}
-		}
 		return false;
 	}
 

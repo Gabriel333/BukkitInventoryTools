@@ -110,6 +110,21 @@ public class BIT extends JavaPlugin {
 					+ pdfFile.getVersion() + " could not be installed!");
 		}
 	}
+	
+	@Override
+	public void onDisable() {
+		Bukkit.getServer().getScheduler().cancelTask(saveTaskId);
+		SBInventorySaveTask.saveAll();
+		
+		inventories.clear();
+		openedInventories.clear();
+		openedInventoriesOthers.clear();
+		//widgets.clear();
+
+		PluginDescriptionFile pdfFile = this.getDescription();
+		G333Messages.showInfo(pdfFile.getName() + " version "
+				+ pdfFile.getVersion() + " is disabled!");
+	}
 
 	// Test for SortInventory
 	private Boolean isSortInventoryInstalled() {
@@ -203,21 +218,6 @@ public class BIT extends JavaPlugin {
 		pm.registerEvent(Type.ENTITY_DEATH, new SBEntityListener(this),
 				Priority.Normal, this);
 
-	}
-
-	@Override
-	public void onDisable() {
-		Bukkit.getServer().getScheduler().cancelTask(saveTaskId);
-		SBInventorySaveTask.saveAll();
-		
-		inventories.clear();
-		openedInventories.clear();
-		openedInventoriesOthers.clear();
-		//widgets.clear();
-
-		PluginDescriptionFile pdfFile = this.getDescription();
-		G333Messages.showInfo(pdfFile.getName() + " version "
-				+ pdfFile.getVersion() + " is disabled!");
 	}
 
 	public void addCommands() {

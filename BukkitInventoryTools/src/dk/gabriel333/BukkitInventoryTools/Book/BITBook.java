@@ -97,6 +97,7 @@ public class BITBook {
 
 	// Parameters for the bookPopupScreen
 	public static Map<Integer, Short> currentBookId = new HashMap<Integer, Short>();
+	public static Map<Integer, Boolean> hasOpenedBook = new HashMap<Integer, Boolean>();
 
 	public static Map<Integer, GenericTextField> titleGUI = new HashMap<Integer, GenericTextField>();
 	public static Map<Integer, Integer> currentPageNo = new HashMap<Integer, Integer>();
@@ -220,6 +221,13 @@ public class BITBook {
 				return true;
 		}
 		return false;
+	}
+
+	public static boolean hasPlayerOpenedBook(SpoutPlayer sPlayer) {
+		if (BITBook.hasOpenedBook.containsKey(sPlayer.getEntityId()))
+			return BITBook.hasOpenedBook.get(sPlayer.getEntityId());
+		else
+			return false;
 	}
 
 	public static short getNextBookId() {
@@ -454,13 +462,13 @@ public class BITBook {
 				ItemStack item = sPlayer.getItemInHand();
 				item.setDurability(bookId);
 				sPlayer.setItemInHand(item);
-				// BITBook.currentBookId.put(id, (short) bookId);
+				BITBook.currentBookId.put(id, (short) bookId);
 			} else {
 				sPlayer.sendMessage("You dont have enough money. Cost is:"
 						+ cost);
 			}
 		}
-		BITBook.currentBookId.put(id, (short) 1000);
+		//BITBook.currentBookId.put(id, (short) 1000);
 	}
 
 	private static int convertBooleanToInt(Boolean b) {
@@ -532,9 +540,10 @@ public class BITBook {
 			// TODO: if bookid not found then set durability to 0 ???
 			if (bookId >= 1000) {
 				ItemStack itemStack = sPlayer.getItemInHand();
-				G333Messages.showWarning("Bookdata missing ID:" + bookId);
+				G333Messages.showWarning("BITBook:Bookdata missing ID:"
+						+ bookId);
 				itemStack.setDurability((short) 0);
-				BITBook.currentBookId.remove(id);
+				BITBook.currentBookId.put(id, (short) 1000);
 				setBookName(bookId, "Book");
 				return null;
 			}
@@ -808,7 +817,8 @@ public class BITBook {
 			copyTheBookWhenMovedGUI.remove(id);
 			copyTheBookWhenMovedButtonGUI.remove(id);
 			useCostGUI.remove(id);
-			currentBookId.remove(id);
+			// currentBookId.remove(id);
+			//currentBookId.put(id, (short) 1000);
 			pageNoLabelGUI.remove(id);
 		}
 	}
@@ -837,6 +847,7 @@ public class BITBook {
 			pageNoLabelGUI.put(id, new GenericLabel());
 			// currentBookId is set when the book is created.
 			// currentBookId.put(id, 0);
+			//currentBookId.put(id, (short) 1000);
 		}
 	}
 

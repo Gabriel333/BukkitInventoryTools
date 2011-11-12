@@ -28,7 +28,10 @@ public class BITBookInputListener extends InputListener {
 		if (BITBook.isWriteable(itemInHand.getType())) {
 			if (keypressed.equals(G333Config.LIBRARY_READKEY)
 					&& screentype != ScreenType.CHAT_SCREEN) {
-				handleItemInHand(sPlayer);
+				if (!BITBook.hasPlayerOpenedBook(sPlayer)) {
+
+					handleItemInHand(sPlayer);
+				}
 			} else if (keypressed.equals("KEY_ESCAPE")
 					&& screentype != ScreenType.GAME_SCREEN) {
 				BITInventory.openedInventories.remove(id);
@@ -36,6 +39,7 @@ public class BITBookInputListener extends InputListener {
 				BITBook.cleanupPopupScreen(sPlayer);
 				BITBook.bitBooks.remove(BITBook.currentBookId.get(id));
 				BITBook.currentBookId.put(id, (short) 1000);
+				BITBook.hasOpenedBook.put(id, false);
 			}
 		}
 	}
@@ -46,6 +50,7 @@ public class BITBookInputListener extends InputListener {
 				&& itemInHand.getAmount() == 1) {
 			short bookId = itemInHand.getDurability();
 			BITBook bitBook = new BITBook();
+			int id = sPlayer.getEntityId();
 			if (bookId > 1000) {
 				if (G333Permissions.hasPerm(sPlayer, "book.use",
 						G333Permissions.NOT_QUIET)
@@ -53,6 +58,7 @@ public class BITBookInputListener extends InputListener {
 								G333Permissions.NOT_QUIET)) {
 					bitBook = BITBook.loadBook(sPlayer, bookId);
 					if (bitBook != null) {
+						BITBook.hasOpenedBook.put(id, true);
 						bitBook.openBook(sPlayer, bookId);
 					} else {
 						handleItemInHand(sPlayer);
@@ -62,7 +68,6 @@ public class BITBookInputListener extends InputListener {
 				// new book
 				if (G333Permissions.hasPerm(sPlayer, "book.create",
 						G333Permissions.NOT_QUIET)) {
-					int id = sPlayer.getEntityId();
 					bookId = BITBook.getNextBookId();
 					// sPlayer.sendMessage("Creating new book with id:" +
 					// bookId);
@@ -87,7 +92,9 @@ public class BITBookInputListener extends InputListener {
 							canBeMovedFromInventory, copyTheBookWhenMoved,
 							useCost);
 					BITBook.bitBooks.put(bookId, bitBook);
+					BITBook.hasOpenedBook.put(id, true);
 					bitBook.openBook(sPlayer, bookId);
+					
 
 				}
 			} else {

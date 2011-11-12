@@ -64,7 +64,6 @@ public class SBInputListener extends InputListener {
 										.get(player.getName());
 								BIT.inventories.put(player.getName(),
 										inv.getContents());
-								player.sendMessage("(1)Length: "+BIT.inventories.get(player.getName()).length);
 								event.getPlayer().closeActiveWindow();
 							}
 						} else {

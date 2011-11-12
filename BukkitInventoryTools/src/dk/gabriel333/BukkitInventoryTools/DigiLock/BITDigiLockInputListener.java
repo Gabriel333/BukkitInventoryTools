@@ -174,13 +174,7 @@ public class BITDigiLockInputListener extends InputListener {
 									"Dispenser sorted.");
 						}
 					}
-				} else
-				// targetblock is NOT a chest/Bookshelf/SpoutBackpack
-				{
-					if (!keypressed.equals("KEY_ESCAPE"))
-						sPlayer.sendMessage("I cant sort this Inventory. Make a Ticket to Rocologo.");
-				}
-
+				} 
 			}
 		}
 

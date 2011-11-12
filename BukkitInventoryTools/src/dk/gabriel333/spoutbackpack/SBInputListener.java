@@ -64,6 +64,7 @@ public class SBInputListener extends InputListener {
 										.get(player.getName());
 								BIT.inventories.put(player.getName(),
 										inv.getContents());
+								player.sendMessage("(1)Length: "+BIT.inventories.get(player.getName()).length);
 								event.getPlayer().closeActiveWindow();
 							}
 						} else {
@@ -76,6 +77,8 @@ public class SBInputListener extends InputListener {
 								BIT.inventories.put(BIT.openedInventoriesOthers
 										.get(player.getName()), inv
 										.getContents());
+								player.sendMessage("(3)Length: "+BIT.inventories.get(player.getName()).length);
+								
 								BIT.openedInventoriesOthers.remove(player
 										.getName());
 								event.getPlayer().closeActiveWindow();
@@ -118,17 +121,18 @@ public class SBInputListener extends InputListener {
 									BIT.widgets.put(player.getName(), widget);
 								}
 							}
+							SpoutBackpack.loadInventory(player, player.getWorld());
 							Inventory inv = SpoutManager.getInventoryBuilder()
 									.construct(
 											SpoutBackpack.allowedSize(
 													player.getWorld(), player,
 													true), BIT.inventoryName);
-							BIT.openedInventories.put(player.getName(), inv);
 							if (BIT.inventories.containsKey(player.getName())) {
 								inv.setContents(BIT.inventories.get(player
 										.getName()));
+								BIT.openedInventories.put(player.getName(), inv);
 							}
-							player.openInventoryWindow((Inventory) inv);
+							player.openInventoryWindow(inv);
 						}
 					} else {
 						event.getPlayer().sendMessage(

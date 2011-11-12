@@ -46,11 +46,17 @@ public class BITPlayerListener extends PlayerListener {
 		}
 		SpoutPlayer sPlayer = (SpoutPlayer) event.getPlayer();
 		ItemStack itemInHand = sPlayer.getInventory().getItemInHand();
-		//sPlayer.sendMessage("BITPlayerListener:"+itemInHand.getTypeId());
-		if (itemInHand.getType().equals(sBlock.getType())) {
-			// This allows the user to place a new Bookshelf on a Bookshelf
-			// where the Inventory is created.
-			return;
+		// sPlayer.sendMessage("BITPlayerListener:"+itemInHand.getTypeId());
+		if (sBlock.getType()==Material.BOOKSHELF
+				//&& sBlock.getType()==itemInHand.getType()
+				&& !BIT.holdingKey.equals("L-CONTROL"))
+				//&& (BITDigiLock.isLocked(sBlock)
+				//||BITInventory.isBitInventoryCreated(sBlock)))
+			{
+			 // This allows the user to place a new Bookshelf on a Bookshelf
+			 // where the Inventory is created.
+			event.setCancelled(true);
+			//return;
 		}
 		int id = sPlayer.getEntityId();
 
@@ -255,52 +261,52 @@ public class BITPlayerListener extends PlayerListener {
 			}
 
 			// HANDLING A FENCE GATE
-						else if (sBlock.getType().equals(Material.FENCE_GATE)) {
-							event.setCancelled(true);
-							if (digilock.getPincode().equals("")
-									|| digilock.getPincode()
-											.equalsIgnoreCase("fingerprint")
-									&& G333Permissions.hasPerm(sPlayer, "digilock.use",
-											G333Permissions.NOT_QUIET)) {
-								// TOGGLE DOOR BY FINGERPRINT / NAME
-								if (digilock.isOwner(sPlayer)
-										|| digilock.isCoowner(sPlayer)
-										|| digilock.isUser(sPlayer)) {
-									BITDigiLock.playDigiLockSound(sBlock);
-									if (BITDigiLock.isFenceGateOpen(sPlayer, sBlock)) {
-										BITDigiLock.closeFenceGate(sPlayer, sBlock);
-									} else {
-										BITDigiLock.openFenceGate(sPlayer, sBlock,
-												digilock.getUseCost());
-									}
-									G333Messages.sendNotification(sPlayer,
-											"Used with fingerprint");
-								} else {
-									sPlayer.sendMessage("Your fingerprint does not match the DigiLock");
-									if (BITDigiLock.isFenceGateOpen(sPlayer, sBlock)) {
-										BITDigiLock.playDigiLockSound(sBlock);
-										BITDigiLock.closeFenceGate(sPlayer, sBlock);
-									}
-								}
-							} else {
-								// ASK FOR PINCODE
-								if (!BITDigiLock.isFenceGateOpen(sPlayer, sBlock)) {
-									if (sPlayer.isSpoutCraftEnabled()
-											&& G333Permissions.hasPerm(sPlayer,
-													"digilock.use",
-													G333Permissions.NOT_QUIET)) {
-										BITDigiLock.getPincode(sPlayer, sBlock);
-									} else {
-										sPlayer.sendMessage("Digilock'ed by "
-												+ sPlayer.getName());
-									}
-								} else {
-									BITDigiLock.closeFenceGate(sPlayer, sBlock);
-									BITDigiLock.playDigiLockSound(sBlock);
-								}
-							}
+			else if (sBlock.getType().equals(Material.FENCE_GATE)) {
+				event.setCancelled(true);
+				if (digilock.getPincode().equals("")
+						|| digilock.getPincode()
+								.equalsIgnoreCase("fingerprint")
+						&& G333Permissions.hasPerm(sPlayer, "digilock.use",
+								G333Permissions.NOT_QUIET)) {
+					// TOGGLE DOOR BY FINGERPRINT / NAME
+					if (digilock.isOwner(sPlayer)
+							|| digilock.isCoowner(sPlayer)
+							|| digilock.isUser(sPlayer)) {
+						BITDigiLock.playDigiLockSound(sBlock);
+						if (BITDigiLock.isFenceGateOpen(sPlayer, sBlock)) {
+							BITDigiLock.closeFenceGate(sPlayer, sBlock);
+						} else {
+							BITDigiLock.openFenceGate(sPlayer, sBlock,
+									digilock.getUseCost());
 						}
-			
+						G333Messages.sendNotification(sPlayer,
+								"Used with fingerprint");
+					} else {
+						sPlayer.sendMessage("Your fingerprint does not match the DigiLock");
+						if (BITDigiLock.isFenceGateOpen(sPlayer, sBlock)) {
+							BITDigiLock.playDigiLockSound(sBlock);
+							BITDigiLock.closeFenceGate(sPlayer, sBlock);
+						}
+					}
+				} else {
+					// ASK FOR PINCODE
+					if (!BITDigiLock.isFenceGateOpen(sPlayer, sBlock)) {
+						if (sPlayer.isSpoutCraftEnabled()
+								&& G333Permissions.hasPerm(sPlayer,
+										"digilock.use",
+										G333Permissions.NOT_QUIET)) {
+							BITDigiLock.getPincode(sPlayer, sBlock);
+						} else {
+							sPlayer.sendMessage("Digilock'ed by "
+									+ sPlayer.getName());
+						}
+					} else {
+						BITDigiLock.closeFenceGate(sPlayer, sBlock);
+						BITDigiLock.playDigiLockSound(sBlock);
+					}
+				}
+			}
+
 			// HANDLING A LOCKED DISPENCER
 			else if (sBlock.getType().equals(Material.DISPENSER)) {
 				if ((digilock.getPincode().equals("") || digilock.getPincode()
@@ -638,7 +644,7 @@ public class BITPlayerListener extends PlayerListener {
 			// HANDLING THE DOUBLEDOOR
 			else if (BITDigiLock.isDoubleDoor(sBlock)) {
 				// if LEFT_CLICK_BLOCK is canceled the double door cant be
-				// broken. 
+				// broken.
 				if (event.getAction().equals(Action.RIGHT_CLICK_BLOCK)) {
 					event.setCancelled(true);
 					if (BITDigiLock.isDoubleDoorOpen(sBlock)) {
@@ -693,7 +699,8 @@ public class BITPlayerListener extends PlayerListener {
 
 			// BOOKSHELF
 			else if (sBlock.getType().equals(Material.BOOKSHELF)
-					&& event.getAction().equals(Action.RIGHT_CLICK_BLOCK)) {
+					&& event.getAction().equals(Action.RIGHT_CLICK_BLOCK)
+					&& !BIT.holdingKey.equals("L-CONTROL")) {
 				if (BITInventory.isBitInventoryCreated(sBlock)
 						&& G333Permissions.hasPerm(sPlayer, "bookshelf.use",
 								G333Permissions.NOT_QUIET)) {

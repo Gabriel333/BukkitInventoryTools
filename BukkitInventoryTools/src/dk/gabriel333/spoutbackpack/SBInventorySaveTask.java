@@ -57,8 +57,6 @@ public class SBInventorySaveTask implements Runnable {
 							SpoutBackpack.allowedSize(player.getWorld(),
 									player, true),
 							BIT.inventoryName);
-			//CustomInventory inv = new CustomInventory(SpoutBackpack.allowedSize(world,
-			//		player, true), BIT.inventoryName);
 			inv.setContents(BIT.inventories.get(player.getName()));
 			Integer i = 0;
 			for (i = 0; i < SpoutBackpack.allowedSize(world, player, true); i++) {

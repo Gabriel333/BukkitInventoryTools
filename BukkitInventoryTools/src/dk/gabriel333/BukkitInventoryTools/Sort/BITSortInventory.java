@@ -60,16 +60,14 @@ public class BITSortInventory {
 		// sort the SpoutBackpack if it exists and if it is opened.
 		if (BIT.spoutbackpack
 				&& BIT.spoutBackpackHandler.isOpenSpoutBackpack(sPlayer)) {
-			
-				BITSortInventory.sortInventoryItems(sPlayer, BIT.spoutBackpackHandler
-						.getOpenedSpoutBackpack(sPlayer));
+
+			BITSortInventory.sortInventoryItems(sPlayer,
+					BIT.spoutBackpackHandler.getOpenedSpoutBackpack(sPlayer));
 		} else if (SBHandler.spoutBackpackEnabled) {
-			Inventory inv = SpoutManager
-					.getInventoryBuilder().construct(
-							SpoutBackpack.allowedSize(
-									sPlayer.getWorld(),
-									sPlayer, true),
-							BIT.inventoryName);
+			Inventory inv = SpoutManager.getInventoryBuilder()
+					.construct(
+							SpoutBackpack.allowedSize(sPlayer.getWorld(),
+									sPlayer, true), BIT.inventoryName);
 			inv = SpoutBackpack.getClosedBackpack(sPlayer);
 			BITSortInventory.sortInventoryItems(sPlayer, inv);
 			BIT.inventories.put(sPlayer.getName(), inv.getContents());
@@ -132,6 +130,8 @@ public class BITSortInventory {
 			if (G333Permissions.hasPerm(p, "sortinventory.stack.*",
 					G333Permissions.QUIET)) {
 				// okay...
+				if (G333Config.DEBUG_PERMISSIONS)
+					p.sendMessage("You have permission to stack all items!");
 			} else if ((isTool(fromitem) && !G333Permissions.hasPerm(p,
 					"sortinventory.stack.tools", G333Permissions.QUIET))
 					|| (isWeapon(fromitem) && !G333Permissions.hasPerm(p,
@@ -147,6 +147,9 @@ public class BITSortInventory {
 					|| (isVehicle(fromitem) && !G333Permissions.hasPerm(p,
 							"sortinventory.stack.vehicles",
 							G333Permissions.QUIET))) {
+				if (G333Config.DEBUG_PERMISSIONS)
+					p.sendMessage("You dont have permission to stack:"
+							+ fromitem.getType());
 				return;
 			}
 			if (fromitem.getTypeId() == toitem.getTypeId()
@@ -154,7 +157,7 @@ public class BITSortInventory {
 				if (fromitem.getData() != null && toitem.getData() != null) {
 					if (!fromitem.getData().equals(toitem.getData())) {
 						// DONT MOVE ANYTHING
-						G333Messages.showInfo("DONT do anything");
+						// G333Messages.showInfo("DONT do anything");
 						return;
 					}
 				}
@@ -228,7 +231,7 @@ public class BITSortInventory {
 
 	// Check if it is a tool
 	public static boolean isTool(ItemStack item) {
-		for (String i : G333Config.vehicles) {
+		for (String i : G333Config.tools) {
 			if (item.getTypeId() == Integer.valueOf(i)) {
 				return true;
 			}

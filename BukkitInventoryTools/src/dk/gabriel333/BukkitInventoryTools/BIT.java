@@ -99,7 +99,7 @@ public class BIT extends JavaPlugin {
 			setupMobArena();
 			setupJail();
 			li = new SBLanguageInterface(SpoutBackpack.loadLanguage());
-			// SpoutBackpack
+			// Load SpoutBackpack
 			for (Player player : Bukkit.getServer().getOnlinePlayers()) {
 				SpoutBackpack.loadInventory(player, player.getWorld());
 			}
@@ -209,6 +209,11 @@ public class BIT extends JavaPlugin {
 	public void onDisable() {
 		Bukkit.getServer().getScheduler().cancelTask(saveTaskId);
 		SBInventorySaveTask.saveAll();
+		
+		inventories.clear();
+		openedInventories.clear();
+		openedInventoriesOthers.clear();
+		//widgets.clear();
 
 		PluginDescriptionFile pdfFile = this.getDescription();
 		G333Messages.showInfo(pdfFile.getName() + " version "

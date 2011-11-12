@@ -180,12 +180,14 @@ public class G333Permissions {
 					(PERMISSION_NODE + label).toLowerCase());
 		} else {
 			// fallback builtin Permission system
-			hasPermission = (sPlayer.hasPermission((PERMISSION_NODE + label)
-					.toLowerCase()) || sPlayer
-					.hasPermission((PERMISSION_NODE + "*").toLowerCase()));
+			hasPermission = sPlayer.hasPermission((PERMISSION_NODE + label)
+					.toLowerCase());
 		}
 
 		// return permission
+		if (G333Config.DEBUG_PERMISSIONS)
+			sPlayer.sendMessage(ChatColor.RED + "The result is:"
+					+ hasPermission);
 		if (hasPermission) {
 			if (G333Config.DEBUG_PERMISSIONS)
 				sPlayer.sendMessage(ChatColor.GREEN
@@ -203,6 +205,7 @@ public class G333Permissions {
 						+ "You to dont have permission to do this.");
 			}
 		}
+
 		return false;
 	}
 }

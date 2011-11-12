@@ -63,8 +63,7 @@ public class SpoutBackpack implements CommandExecutor {
 									BIT.openedInventories.put(playerName, inv);
 									// TODO: I dont know if these two lines
 									// should be here.
-									// BIT.openedInventoriesOthers.put(
-									// player.getName(), playerName);
+									BIT.openedInventoriesOthers.put(player.getName(), playerName);
 									inv.setContents(BIT.inventories
 											.get(playerName));
 									((org.getspout.spoutapi.player.SpoutPlayer) player)
@@ -378,12 +377,12 @@ public class SpoutBackpack implements CommandExecutor {
 							+ BIT.plugin.Method.getAccount(
 									notificationsAndMoneyPlayer.getName())
 									.balance() + ") has been deducted "
-							+ BIT.plugin.Method.format(cost) + " bucks");
+							+ BIT.plugin.Method.format(cost) + ".");
 					if (!player.getName().equals(
 							notificationsAndMoneyPlayer.getName())) {
 						player.sendMessage(player.getName()
 								+ "'s account has been deducted "
-								+ BIT.plugin.Method.format(cost) + " bucks");
+								+ BIT.plugin.Method.format(cost) + ".");
 					}
 				} else {
 					if (player.equals(notificationsAndMoneyPlayer)) {
@@ -554,7 +553,6 @@ public class SpoutBackpack implements CommandExecutor {
 			if (upgradePrice == 0)
 				size = size + 9;
 		}
-
 		return size;
 	}
 
@@ -729,7 +727,7 @@ public class SpoutBackpack implements CommandExecutor {
 		} catch (InvalidConfigurationException e) {
 			e.printStackTrace();
 		}
-		int size = SpoutBackpack.allowedSize(world, player, true);
+		int size = config.getInt("Size",SpoutBackpack.allowedSize(world, player, true));
 		Inventory inv = SpoutManager.getInventoryBuilder().construct(size,
 				BIT.inventoryName);
 		if (saveFile.exists()) {

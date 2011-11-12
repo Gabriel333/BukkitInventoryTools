@@ -1557,8 +1557,7 @@ public class BITDigiLock {
 	 * @param sPlayer
 	 * @param sBlock
 	 * 
-	 * @author Gabriel333
-	 * @author Christian.L.Jensen
+	 * @author Gabriel333 / Rocologo
 	 */
 	public static void getPincode(SpoutPlayer sPlayer, SpoutBlock sBlock) {
 		int y = 50, height = 20, width = 100;

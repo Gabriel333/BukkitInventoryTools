@@ -29,6 +29,8 @@ import com.garbagemule.MobArena.MobArenaHandler;
 import com.matejdro.bukkit.jail.Jail;
 import com.matejdro.bukkit.jail.JailAPI;
 import com.sk89q.worldguard.bukkit.WorldGuardPlugin;
+
+import dk.gabriel333.register.BITServerListener;
 import dk.gabriel333.register.payment.Method;
 import dk.gabriel333.register.payment.Methods;
 import de.Keyle.MyWolf.MyWolfPlugin;
@@ -39,8 +41,7 @@ import dk.gabriel333.BITBackpack.BITBackpackInventorySaveTask;
 import dk.gabriel333.BITBackpack.BITBackpackLanguageInterface;
 import dk.gabriel333.BITBackpack.BITBackpackPlayerListener;
 import dk.gabriel333.BITBackpack.BITBackpack;
-import dk.gabriel333.BukkitInventoryTools.Commands.*;
-import dk.gabriel333.BukkitInventoryTools.Listeners.*;
+import dk.gabriel333.BukkitInventoryTools.Sort.BITCommandSort;
 import dk.gabriel333.BukkitInventoryTools.Inventory.*;
 import dk.gabriel333.BukkitInventoryTools.Book.*;
 import dk.gabriel333.BukkitInventoryTools.DigiLock.*;

@@ -1,4 +1,4 @@
-package dk.gabriel333.BukkitInventoryTools.Listeners;
+package dk.gabriel333.BukkitInventoryTools.DigiLock;
 
 import org.bukkit.Material;
 import org.bukkit.block.Dispenser;
@@ -22,7 +22,6 @@ import org.getspout.spoutapi.block.SpoutChest;
 import org.getspout.spoutapi.player.SpoutPlayer;
 
 import dk.gabriel333.BukkitInventoryTools.BIT;
-import dk.gabriel333.BukkitInventoryTools.DigiLock.BITDigiLock;
 import dk.gabriel333.BukkitInventoryTools.Inventory.BITInventory;
 import dk.gabriel333.Library.BITConfig;
 import dk.gabriel333.Library.BITMessages;

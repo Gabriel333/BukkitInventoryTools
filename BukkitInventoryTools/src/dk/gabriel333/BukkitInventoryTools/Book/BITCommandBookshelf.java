@@ -1,4 +1,4 @@
-package dk.gabriel333.BukkitInventoryTools.Commands;
+package dk.gabriel333.BukkitInventoryTools.Book;
 
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;

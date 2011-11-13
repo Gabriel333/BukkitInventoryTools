@@ -1,4 +1,4 @@
-package dk.gabriel333.BukkitInventoryTools.Listeners;
+package dk.gabriel333.BukkitInventoryTools.DigiLock;
 
 import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.block.BlockListener;
@@ -18,7 +18,6 @@ import org.bukkit.event.block.SignChangeEvent;
 import org.getspout.spoutapi.block.SpoutBlock;
 import org.getspout.spoutapi.player.SpoutPlayer;
 
-import dk.gabriel333.BukkitInventoryTools.DigiLock.BITDigiLock;
 import dk.gabriel333.BukkitInventoryTools.Inventory.BITInventory;
 import dk.gabriel333.Library.BITConfig;
 import dk.gabriel333.Library.BITMessages;

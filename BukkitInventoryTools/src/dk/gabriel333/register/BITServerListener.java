@@ -1,4 +1,4 @@
-package dk.gabriel333.BukkitInventoryTools.Listeners;
+package dk.gabriel333.register;
 
 import org.bukkit.event.server.PluginDisableEvent;
 import org.bukkit.event.server.PluginEnableEvent;

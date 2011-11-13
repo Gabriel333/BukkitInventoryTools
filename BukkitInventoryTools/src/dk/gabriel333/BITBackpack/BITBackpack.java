@@ -63,7 +63,8 @@ public class BITBackpack implements CommandExecutor {
 									BIT.openedInventories.put(playerName, inv);
 									// TODO: I dont know if these two lines
 									// should be here.
-									BIT.openedInventoriesOthers.put(player.getName(), playerName);
+									BIT.openedInventoriesOthers.put(
+											player.getName(), playerName);
 									inv.setContents(BIT.inventories
 											.get(playerName));
 									((org.getspout.spoutapi.player.SpoutPlayer) player)
@@ -87,9 +88,9 @@ public class BITBackpack implements CommandExecutor {
 					} else if (args.length == 1) {
 						String argument = args[0];
 						if (argument.equalsIgnoreCase("reload")) {
-							if (BITPermissions.hasPerm(player,
-									"backpack.reload",
-									BITPermissions.NOT_QUIET)) {
+							if (BITPermissions
+									.hasPerm(player, "backpack.reload",
+											BITPermissions.NOT_QUIET)) {
 								player.sendMessage(BIT.li
 										.getMessage("configreloaded1"));
 								player.sendMessage(BIT.li
@@ -164,9 +165,8 @@ public class BITBackpack implements CommandExecutor {
 							return true;
 
 						} else if (argument.equalsIgnoreCase("clear")) {
-							if (BITPermissions
-									.hasPerm(player, "backpack.clear",
-											BITPermissions.NOT_QUIET)) {
+							if (BITPermissions.hasPerm(player,
+									"backpack.clear", BITPermissions.NOT_QUIET)) {
 								if (BIT.inventories.containsKey(player
 										.getName())) {
 									BIT.inventories.remove(player.getName());
@@ -409,7 +409,7 @@ public class BITBackpack implements CommandExecutor {
 		BITBackpackInventorySaveTask.saveInventory(player, player.getWorld());
 		BIT.inventories.remove(player.getName());
 		File saveFile;
-		if (BITConfig.getBooleanParm("Backpack.InventoriesShare."
+		if (BITConfig.getBooleanParm("SBP.InvventoriesShare."
 				+ player.getWorld().getName(), true)) {
 			saveFile = new File(BIT.plugin.getDataFolder() + File.separator
 					+ "inventories", player.getName() + ".yml");
@@ -496,7 +496,7 @@ public class BITBackpack implements CommandExecutor {
 
 	public static int SizeInConfig(World world, Player player) {
 		File saveFile;
-		if (BITConfig.getBooleanParm("Backpack.InventoriesShare."
+		if (BITConfig.getBooleanParm("SBP.InventoriesShare."
 				+ player.getWorld().getName(), true)) {
 			saveFile = new File(BIT.plugin.getDataFolder() + File.separator
 					+ "inventories", player.getName() + ".yml");
@@ -521,7 +521,7 @@ public class BITBackpack implements CommandExecutor {
 	public static int allowedSize(World world, Player player,
 			boolean configurationCheck) {
 		// Finding permitted size
-		int size = 9;
+		int size = 0;
 		if (BITPermissions.hasPerm(player, "backpack.size54",
 				BITPermissions.QUIET)) {
 			size = 54;
@@ -642,7 +642,7 @@ public class BITBackpack implements CommandExecutor {
 				BITPermissions.NOT_QUIET))
 			return true;
 		File saveFile;
-		if (BITConfig.getBooleanParm("Backpack.InventoriesShare."
+		if (BITConfig.getBooleanParm("SBP.InventoriesShare."
 				+ player.getWorld().getName(), true)) {
 			saveFile = new File(BIT.plugin.getDataFolder() + File.separator
 					+ "inventories", player.getName() + ".yml");
@@ -677,7 +677,7 @@ public class BITBackpack implements CommandExecutor {
 
 	public static void setWorkbench(Player player, boolean enabled) {
 		File saveFile;
-		if (BITConfig.getBooleanParm("Backpack.InventoriesShare."
+		if (BITConfig.getBooleanParm("SBP.InventoriesShare."
 				+ player.getWorld().getName(), true)) {
 			saveFile = new File(BIT.plugin.getDataFolder() + File.separator
 					+ "inventories", player.getName() + ".yml");
@@ -706,10 +706,12 @@ public class BITBackpack implements CommandExecutor {
 
 	public static void loadInventory(Player player, World world) {
 		if (BIT.inventories.containsKey(player.getName())) {
-			return;
+			if (BIT.inventories.get(player.getName()).length > 0) {
+				return;
+			}
 		}
 		File saveFile;
-		if (BITConfig.getBooleanParm("Backpack.InventoriesShare."
+		if (BITConfig.getBooleanParm("SBP.InventoriesShare."
 				+ player.getWorld().getName(), true)) {
 			saveFile = new File(BIT.plugin.getDataFolder() + File.separator
 					+ "inventories", player.getName() + ".yml");
@@ -732,7 +734,8 @@ public class BITBackpack implements CommandExecutor {
 		} catch (InvalidConfigurationException e) {
 			e.printStackTrace();
 		}
-		int size = config.getInt("Size",BITBackpack.allowedSize(world, player, true));
+		int size = config.getInt("Size",
+				BITBackpack.allowedSize(world, player, true));
 		Inventory inv = SpoutManager.getInventoryBuilder().construct(size,
 				BIT.inventoryName);
 		if (saveFile.exists()) {

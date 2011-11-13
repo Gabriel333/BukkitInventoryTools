@@ -42,6 +42,7 @@ import dk.gabriel333.BITBackpack.BITBackpackLanguageInterface;
 import dk.gabriel333.BITBackpack.BITBackpackPlayerListener;
 import dk.gabriel333.BITBackpack.BITBackpack;
 import dk.gabriel333.BukkitInventoryTools.Sort.BITCommandSort;
+import dk.gabriel333.BukkitInventoryTools.Sort.BITSortInputListener;
 import dk.gabriel333.BukkitInventoryTools.Inventory.*;
 import dk.gabriel333.BukkitInventoryTools.Book.*;
 import dk.gabriel333.BukkitInventoryTools.DigiLock.*;
@@ -73,7 +74,6 @@ public class BIT extends JavaPlugin {
 	public static BITBackpackLanguageInterface li;
 	public static MobArenaHandler mobArenaHandler;
 	public List<Player> portals = new ArrayList<Player>();
-	public String logTag = "[BITSpoutBackpack]";
 	public YamlConfiguration config;
 	public static int saveTaskId;
 
@@ -142,6 +142,15 @@ public class BIT extends JavaPlugin {
 	public void registerEvents() {
 		// Register our events
 		PluginManager pm = getServer().getPluginManager();
+
+		// BITKeyboardListener
+		pm.registerEvent(Event.Type.CUSTOM_EVENT, new BITKeyboardListener(),
+				Event.Priority.Normal, this);
+
+		pm.registerEvent(Event.Type.CUSTOM_EVENT, new BITSortInputListener(
+				this), Event.Priority.Normal, this);
+		
+		// BITDigiLock Listeners
 		pm.registerEvent(Event.Type.BLOCK_BREAK, new BITBlockListener(),
 				Priority.Normal, this);
 		pm.registerEvent(Event.Type.BLOCK_DAMAGE, new BITBlockListener(),
@@ -179,11 +188,11 @@ public class BIT extends JavaPlugin {
 				Priority.Normal, this);
 		pm.registerEvent(Event.Type.PLAYER_KICK, new BITPlayerListener(),
 				Priority.Normal, this);
-		// BITDigiLock Listeners
 		pm.registerEvent(Event.Type.CUSTOM_EVENT, new BITDigiLockInputListener(
 				this), Event.Priority.Normal, this);
 		pm.registerEvent(Event.Type.CUSTOM_EVENT,
 				new BITDigiLockSpoutListener(), Event.Priority.Normal, this);
+
 		// BITIventory Listeners
 		pm.registerEvent(Event.Type.CUSTOM_EVENT,
 				new BITInventorySpoutListener(this), Event.Priority.Normal,
@@ -195,10 +204,6 @@ public class BIT extends JavaPlugin {
 		pm.registerEvent(Event.Type.CUSTOM_EVENT, new BITBookInputListener(),
 				Event.Priority.Normal, this);
 		pm.registerEvent(Event.Type.CUSTOM_EVENT, new BITBookSpoutListener(),
-				Event.Priority.Normal, this);
-
-		// BITKeyboardListener
-		pm.registerEvent(Event.Type.CUSTOM_EVENT, new BITKeyboardListener(),
 				Event.Priority.Normal, this);
 
 		// SpoutBackpack Listeners
@@ -218,7 +223,6 @@ public class BIT extends JavaPlugin {
 				Priority.Normal, this);
 		pm.registerEvent(Type.ENTITY_DEATH, new BITBackpackEntityListener(this),
 				Priority.Normal, this);
-
 	}
 
 	public void addCommands() {

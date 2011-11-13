@@ -15,6 +15,7 @@ import org.getspout.spoutapi.gui.ScreenType;
 import org.getspout.spoutapi.player.SpoutPlayer;
 
 import dk.gabriel333.BukkitInventoryTools.BIT;
+import dk.gabriel333.BukkitInventoryTools.DigiLock.BITDigiLock;
 import dk.gabriel333.BukkitInventoryTools.Inventory.BITInventory;
 import dk.gabriel333.Library.*;
 
@@ -39,7 +40,7 @@ public class BITCommandSort implements CommandExecutor {
 							sChest.getLargestInventory());
 					BITMessages.sendNotification(sPlayer, "Chest sorted.");
 
-				} else if (targetblock.getType() == Material.DISPENSER) {
+				} else if (BITDigiLock.isDispenser((SpoutBlock) targetblock)) {
 					Dispenser dispenser = (Dispenser) targetblock.getState();
 					Inventory inventory = dispenser.getInventory();
 					BITSortInventory.sortInventoryItems(sPlayer, inventory);
@@ -50,7 +51,7 @@ public class BITCommandSort implements CommandExecutor {
 					BITSortInventory.sortPlayerInventoryItems(sPlayer);
 					BITMessages.sendNotification(sPlayer, "Items sorted.");
 
-				} else if (targetblock.getType() == Material.BOOKSHELF) {
+				} else if (BITDigiLock.isBookshelf((SpoutBlock) targetblock)) {
 					if (BITInventory
 							.isBitInventoryCreated((SpoutBlock) targetblock)) {
 						BITInventory bInv = BITInventory.loadBitInventory(

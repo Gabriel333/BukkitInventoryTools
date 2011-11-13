@@ -42,7 +42,7 @@ public class BITBackpackInventorySaveTask implements Runnable {
 
 	public static void saveInventory(Player player, World world) {
 		File saveFile;
-		if (BITConfig.getBooleanParm("Backpack.InventoriesShare."
+		if (BITConfig.getBooleanParm("SBP.InventoriesShare."
 				+ player.getWorld().getName(), true)) {
 			saveFile = new File(BIT.plugin.getDataFolder() + File.separator
 					+ "inventories", player.getName() + ".yml");
@@ -53,27 +53,30 @@ public class BITBackpackInventorySaveTask implements Runnable {
 		}
 		YamlConfiguration config = new YamlConfiguration();
 		if (BIT.inventories.containsKey(player.getName())) {
-			Inventory inv = SpoutManager.getInventoryBuilder()
-					.construct(
-							BITBackpack.allowedSize(player.getWorld(),
-									player, true),
-							BIT.inventoryName);
-			inv.setContents(BIT.inventories.get(player.getName()));
-			Integer i = 0;
-			for (i = 0; i < BITBackpack.allowedSize(world, player, true); i++) {
-				ItemStack item = inv.getItem(i);
-				config.set(i.toString() + ".amount", item.getAmount());
-				Short durab = item.getDurability();
-				config.set(i.toString() + ".durability", durab.intValue());
-				config.set(i.toString() + ".type", item.getTypeId());
-				config.set("Size", BITBackpack.allowedSize(world, player, true));
-				try {
-					config.save(saveFile);
-				} catch (IOException e) {
-					player.sendMessage("The backpack could not be saved.");
-					e.printStackTrace();
+			int size = BITBackpack.allowedSize(player.getWorld(), player, true);
+			if (size > 0) {
+				Inventory inv = SpoutManager.getInventoryBuilder().construct(
+						size, BIT.inventoryName);
+				inv.setContents(BIT.inventories.get(player.getName()));
+				Integer i = 0;
+				for (i = 0; i < BITBackpack.allowedSize(world, player, true); i++) {
+					ItemStack item = inv.getItem(i);
+					config.set(i.toString() + ".amount", item.getAmount());
+					Short durab = item.getDurability();
+					config.set(i.toString() + ".durability", durab.intValue());
+					config.set(i.toString() + ".type", item.getTypeId());
+					config.set("Size",
+							BITBackpack.allowedSize(world, player, true));
+					try {
+						config.save(saveFile);
+					} catch (IOException e) {
+						player.sendMessage("The backpack could not be saved.");
+						e.printStackTrace();
+					}
 				}
 			}
+		} else {
+			BIT.inventories.remove(player.getName());
 		}
 	}
 

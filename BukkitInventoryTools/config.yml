@@ -164,7 +164,7 @@ SBP:
     Language: EN
     InventoriesShare:
         world: true
-        world_Nether: true
+        world_nether: true
         creative: false
     RegionWhereBackpacksAreDisabled: region1, region2
     Price9: 100.0

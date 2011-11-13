@@ -13,6 +13,7 @@ import dk.gabriel333.BukkitInventoryTools.BIT;
 import dk.gabriel333.Library.BITPermissions;
 
 public class BITBackpackEntityListener extends EntityListener {
+	@SuppressWarnings("unused")
 	private BIT plugin;
 
 	public BITBackpackEntityListener(BIT plugin) {
@@ -55,7 +56,7 @@ public class BITBackpackEntityListener extends EntityListener {
 								inventory.getContents());
 						BITBackpackInventorySaveTask.saveInventory(player,
 								player.getWorld());
-						player.sendMessage(plugin.logTag + BIT.li.getMessage("your")
+						player.sendMessage(BIT.li.getMessage("your")
 								+ ChatColor.RED + BIT.inventoryName + ChatColor.WHITE
 								+ BIT.li.getMessage("hasbroken"));
 					}

@@ -21,11 +21,10 @@ import dk.gabriel333.Library.BITConfig;
 import dk.gabriel333.Library.BITPermissions;
 
 public class BITBackpackInputListener extends InputListener {
+
 	// private BIT plugin;
 
-	// public static Logger logger = Logger.getLogger("minecraft");
-
-	// public SBInputListener(Plugin plugin) {
+	// public BITBackpackInputListener(Plugin plugin) {
 	// this.plugin = plugin;
 	// }
 
@@ -33,6 +32,7 @@ public class BITBackpackInputListener extends InputListener {
 	public void onKeyPressedEvent(KeyPressedEvent event) {
 		String keypressed = event.getKey().name();
 		ScreenType screentype = event.getScreenType();
+		SpoutPlayer sPlayer = event.getPlayer();
 		if (!(screentype == ScreenType.GAME_SCREEN
 				|| screentype == ScreenType.PLAYER_INVENTORY
 				|| screentype == ScreenType.DISPENSER_INVENTORY
@@ -56,7 +56,7 @@ public class BITBackpackInputListener extends InputListener {
 							if (BIT.openedInventories.containsKey(player
 									.getName())) {
 								if (BIT.widgets.containsKey(player.getName())
-										&& BITConfig.SBP_useWidget == true) {
+										&& BITConfig.SBP_useWidget) {
 									BIT.widgets.get(player.getName())
 											.setVisible(false).setDirty(true);
 								}
@@ -76,8 +76,6 @@ public class BITBackpackInputListener extends InputListener {
 								BIT.inventories.put(BIT.openedInventoriesOthers
 										.get(player.getName()), inv
 										.getContents());
-								player.sendMessage("(3)Length: "+BIT.inventories.get(player.getName()).length);
-								
 								BIT.openedInventoriesOthers.remove(player
 										.getName());
 								event.getPlayer().closeActiveWindow();
@@ -86,23 +84,23 @@ public class BITBackpackInputListener extends InputListener {
 					}
 					if (!BIT.openedInventoriesOthers.containsValue(event
 							.getPlayer().getName())) {
-						if (screentype != null
-								&& (screentype == ScreenType.GAME_SCREEN
-										|| screentype == ScreenType.PLAYER_INVENTORY
-										|| screentype == ScreenType.DISPENSER_INVENTORY
-										|| screentype == ScreenType.FURNACE_INVENTORY || screentype == ScreenType.WORKBENCH_INVENTORY)) {
+						if (screentype == ScreenType.GAME_SCREEN
+								|| screentype == ScreenType.PLAYER_INVENTORY
+								|| screentype == ScreenType.DISPENSER_INVENTORY
+								|| screentype == ScreenType.FURNACE_INVENTORY
+								|| screentype == ScreenType.WORKBENCH_INVENTORY) {
 							SpoutPlayer player = event.getPlayer();
 							if (BIT.plugin.Method != null
-									&& BITConfig.SBP_useWidget == true) {
+									&& BITConfig.SBP_useWidget) {
 								if (BIT.widgets.containsKey(player.getName())) {
 									BIT.widgets.get(player.getName())
 											.setVisible(true).setDirty(true);
 								} else {
-									GenericLabel widget = new GenericLabel("");
 									if (!BIT.plugin.Method.hasAccount(player
 											.getName())) {
 										return;
 									}
+									GenericLabel widget = new GenericLabel("");
 									widget.setText(
 											BIT.li.getMessage("money")
 													+ String.format(BIT.plugin.Method
@@ -120,7 +118,8 @@ public class BITBackpackInputListener extends InputListener {
 									BIT.widgets.put(player.getName(), widget);
 								}
 							}
-							BITBackpack.loadInventory(player, player.getWorld());
+							BITBackpack
+									.loadInventory(player, player.getWorld());
 							Inventory inv = SpoutManager.getInventoryBuilder()
 									.construct(
 											BITBackpack.allowedSize(
@@ -129,7 +128,8 @@ public class BITBackpackInputListener extends InputListener {
 							if (BIT.inventories.containsKey(player.getName())) {
 								inv.setContents(BIT.inventories.get(player
 										.getName()));
-								BIT.openedInventories.put(player.getName(), inv);
+								BIT.openedInventories
+										.put(player.getName(), inv);
 							}
 							player.openInventoryWindow(inv);
 						}
@@ -151,39 +151,44 @@ public class BITBackpackInputListener extends InputListener {
 						"backpack.workbench", BITPermissions.NOT_QUIET)) {
 					if (!BIT.openedInventoriesOthers.containsKey(event
 							.getPlayer().getName())) {
-						if (!BIT.openedInventories.containsKey(event
-								.getPlayer().getName())) {
-							if (!BITBackpack.hasWorkbench(event.getPlayer())) {
-								return;
-							}
-							if (BITConfig.SBP_workbenchInventory == true
-									&& !event.getPlayer().getInventory()
-											.contains(Material.WORKBENCH)) {
-								return;
-							}
-							final int windowNumber = 1;
-							if (screentype == ScreenType.WORKBENCH_INVENTORY) {
-								SpoutPlayer player = event.getPlayer();
-								final EntityPlayer entityPlayer = ((CraftPlayer) player)
-										.getHandle();
-								entityPlayer.netServerHandler
-										.sendPacket(new Packet101CloseWindow(
-												windowNumber));
-							} else if (screentype != null
-									&& (screentype == ScreenType.GAME_SCREEN
-											|| screentype == ScreenType.PLAYER_INVENTORY
-											|| screentype == ScreenType.DISPENSER_INVENTORY
-											|| screentype == ScreenType.FURNACE_INVENTORY || screentype == ScreenType.CHEST_INVENTORY)) {
-								SpoutPlayer player = event.getPlayer();
-								final EntityPlayer entityPlayer = ((CraftPlayer) player)
-										.getHandle();
-								entityPlayer.netServerHandler
-										.sendPacket(new Packet100OpenWindow(
-												windowNumber, 1, "Crafting", 9));
-								entityPlayer.activeContainer = new BITWorkbench(
-										entityPlayer, windowNumber);
-							}
+						// if (!BIT.openedInventories.containsKey(event
+						// .getPlayer().getName())) {
+						if (!BITBackpack.hasWorkbench(event.getPlayer())) {
+							return;
 						}
+						if (BITConfig.SBP_workbenchInventory
+								&& !event.getPlayer().getInventory()
+										.contains(Material.WORKBENCH)) {
+							return;
+						}
+						final int windowNumber = 1;
+						if (screentype == ScreenType.WORKBENCH_INVENTORY) {
+							SpoutPlayer player = event.getPlayer();
+							final EntityPlayer entityPlayer = ((CraftPlayer) player)
+									.getHandle();
+							entityPlayer.netServerHandler
+									.sendPacket(new Packet101CloseWindow(
+											windowNumber));
+						} else if (screentype == ScreenType.GAME_SCREEN
+								|| screentype == ScreenType.PLAYER_INVENTORY
+								|| screentype == ScreenType.DISPENSER_INVENTORY
+								|| screentype == ScreenType.FURNACE_INVENTORY
+								|| screentype == ScreenType.CHEST_INVENTORY) {
+							SpoutPlayer player = event.getPlayer();
+							if (BIT.openedInventories.containsKey(player
+									.getName())) {
+								BIT.openedInventories.remove(player.getName());
+								player.closeActiveWindow();
+							}
+							final EntityPlayer entityPlayer = ((CraftPlayer) player)
+									.getHandle();
+							entityPlayer.netServerHandler
+									.sendPacket(new Packet100OpenWindow(
+											windowNumber, 1, "Crafting", 9));
+							entityPlayer.activeContainer = new BITWorkbench(
+									entityPlayer, windowNumber);
+						}
+						// }
 					}
 				}
 			} else {
@@ -194,6 +199,19 @@ public class BITBackpackInputListener extends InputListener {
 			}
 		} else if (keypressed.equalsIgnoreCase(BITConfig.LIBRARY_SORTKEY)) {
 
+		} else if (keypressed.equalsIgnoreCase(sPlayer.getInventoryKey()
+				.toString())) {
+			if (screentype == ScreenType.GAME_SCREEN
+					|| screentype == ScreenType.PLAYER_INVENTORY
+					|| screentype == ScreenType.DISPENSER_INVENTORY
+					|| screentype == ScreenType.FURNACE_INVENTORY
+					|| screentype == ScreenType.CHEST_INVENTORY) {
+				if (BIT.openedInventories.containsKey(sPlayer.getName())) {
+					BIT.openedInventories.remove(sPlayer.getName());
+				}
+				// sPlayer.getInventory().
+				// sPlayer.openInventoryWindow(null);
+			}
 		}
 	}
 

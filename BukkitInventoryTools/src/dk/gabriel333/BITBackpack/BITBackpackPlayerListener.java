@@ -32,7 +32,7 @@ public class BITBackpackPlayerListener extends PlayerListener {
 	public void onPlayerTeleport(PlayerTeleportEvent event) {
 		if (((event.getFrom().getWorld().getName() != event.getTo().getWorld()
 				.getName()) || plugin.portals.contains(event.getPlayer())
-				&& !BITConfig.getBooleanParm("Backpack.InventoriesShare."
+				&& !BITConfig.getBooleanParm("SBP.InventoriesShare."
 						+ event.getTo().getWorld().getName(), true))) {
 
 			// plugin.config.getBoolean("Backpack."
@@ -41,9 +41,11 @@ public class BITBackpackPlayerListener extends PlayerListener {
 			// TODO: check for null = no backpack
 			try {
 				Player player = event.getPlayer();
-				BITBackpackInventorySaveTask.saveInventory(player, event
-						.getFrom().getWorld());
-				BIT.inventories.remove(player.getName());
+				if (BIT.inventories.containsKey(player.getName())) {
+					BITBackpackInventorySaveTask.saveInventory(player, event
+							.getFrom().getWorld());
+					BIT.inventories.remove(player.getName());
+				}
 				BITBackpack.loadInventory(player, event.getTo().getWorld());
 			} catch (Exception e) {
 				e.printStackTrace();

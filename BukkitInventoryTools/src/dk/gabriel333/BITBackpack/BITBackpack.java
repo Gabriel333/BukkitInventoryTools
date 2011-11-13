@@ -409,7 +409,8 @@ public class BITBackpack implements CommandExecutor {
 		BITBackpackInventorySaveTask.saveInventory(player, player.getWorld());
 		BIT.inventories.remove(player.getName());
 		File saveFile;
-		if (BITConfig.SBP_InventoriesShare) {
+		if (BITConfig.getBooleanParm("Backpack.InventoriesShare."
+				+ player.getWorld().getName(), true)) {
 			saveFile = new File(BIT.plugin.getDataFolder() + File.separator
 					+ "inventories", player.getName() + ".yml");
 		} else {
@@ -495,7 +496,8 @@ public class BITBackpack implements CommandExecutor {
 
 	public static int SizeInConfig(World world, Player player) {
 		File saveFile;
-		if (BITConfig.SBP_InventoriesShare) {
+		if (BITConfig.getBooleanParm("Backpack.InventoriesShare."
+				+ player.getWorld().getName(), true)) {
 			saveFile = new File(BIT.plugin.getDataFolder() + File.separator
 					+ "inventories", player.getName() + ".yml");
 		} else {
@@ -640,7 +642,8 @@ public class BITBackpack implements CommandExecutor {
 				BITPermissions.NOT_QUIET))
 			return true;
 		File saveFile;
-		if (BITConfig.SBP_InventoriesShare) {
+		if (BITConfig.getBooleanParm("Backpack.InventoriesShare."
+				+ player.getWorld().getName(), true)) {
 			saveFile = new File(BIT.plugin.getDataFolder() + File.separator
 					+ "inventories", player.getName() + ".yml");
 		} else {
@@ -674,7 +677,8 @@ public class BITBackpack implements CommandExecutor {
 
 	public static void setWorkbench(Player player, boolean enabled) {
 		File saveFile;
-		if (BITConfig.SBP_InventoriesShare) {
+		if (BITConfig.getBooleanParm("Backpack.InventoriesShare."
+				+ player.getWorld().getName(), true)) {
 			saveFile = new File(BIT.plugin.getDataFolder() + File.separator
 					+ "inventories", player.getName() + ".yml");
 		} else {
@@ -705,7 +709,8 @@ public class BITBackpack implements CommandExecutor {
 			return;
 		}
 		File saveFile;
-		if (BITConfig.SBP_InventoriesShare) {
+		if (BITConfig.getBooleanParm("Backpack.InventoriesShare."
+				+ player.getWorld().getName(), true)) {
 			saveFile = new File(BIT.plugin.getDataFolder() + File.separator
 					+ "inventories", player.getName() + ".yml");
 		} else {

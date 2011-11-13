@@ -60,7 +60,7 @@ public class BITConfig {
 	public static int BOOK_DESTROYCOST;
 	
 	public static String SBP_language;
-	public static Boolean SBP_InventoriesShare;
+	//public static Boolean SBP_InventoriesShare;
 	private static String noBackpackRegions;
 	public static String[] SBP_noBackpackRegions;
 	public static double SBP_price9;
@@ -171,7 +171,7 @@ public class BITConfig {
 		
 		//SpoutBackpack
 		SBP_language = getStringParm("SBP.Language","EN");
-		SBP_InventoriesShare = getBooleanParm("SBP.InventoriesShare",true);
+		//SBP_InventoriesShare = getBooleanParm("SBP.InventoriesShare",true);
 		noBackpackRegions = getStringParm("SBP.RegionWhereBackpacksAreDisabled", "region1,region2");
 		SBP_noBackpackRegions = noBackpackRegions.split(",");
 		SBP_price9 = getDoubleParm("SBP.Price9", 100.00);
@@ -262,7 +262,7 @@ public class BITConfig {
 		return config.getString(path, def);
 	}
 
-	private static Boolean getBooleanParm(String path, Boolean def) {
+	public static Boolean getBooleanParm(String path, Boolean def) {
 		if (!config.contains(path)) {
 			config.set(path, def);
 			dosave=true;

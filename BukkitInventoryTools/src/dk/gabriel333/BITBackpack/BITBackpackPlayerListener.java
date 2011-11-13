@@ -32,16 +32,17 @@ public class BITBackpackPlayerListener extends PlayerListener {
 	public void onPlayerTeleport(PlayerTeleportEvent event) {
 		if (((event.getFrom().getWorld().getName() != event.getTo().getWorld()
 				.getName()) || plugin.portals.contains(event.getPlayer())
-				&& BITConfig.SBP_InventoriesShare)) { 
-				
-				//plugin.config.getBoolean("Backpack."
-				//		+ event.getTo().getWorld().getName()
-				//		+ ".InventoriesShare?", true) == false)) {
-			
+				&& !BITConfig.getBooleanParm("Backpack.InventoriesShare."
+						+ event.getTo().getWorld().getName(), true))) {
+
+			// plugin.config.getBoolean("Backpack."
+			// + event.getTo().getWorld().getName()
+			// + ".InventoriesShare?", true) == false)) {
+			// TODO: check for null = no backpack
 			try {
 				Player player = event.getPlayer();
-				BITBackpackInventorySaveTask.saveInventory(player, event.getFrom()
-						.getWorld());
+				BITBackpackInventorySaveTask.saveInventory(player, event
+						.getFrom().getWorld());
 				BIT.inventories.remove(player.getName());
 				BITBackpack.loadInventory(player, event.getTo().getWorld());
 			} catch (Exception e) {
@@ -60,7 +61,8 @@ public class BITBackpackPlayerListener extends PlayerListener {
 	public void onPlayerKick(PlayerKickEvent event) {
 		try {
 			Player player = event.getPlayer();
-			BITBackpackInventorySaveTask.saveInventory(player, player.getWorld());
+			BITBackpackInventorySaveTask.saveInventory(player,
+					player.getWorld());
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -70,7 +72,8 @@ public class BITBackpackPlayerListener extends PlayerListener {
 	public void onPlayerQuit(PlayerQuitEvent event) {
 		try {
 			Player player = event.getPlayer();
-			BITBackpackInventorySaveTask.saveInventory(player, player.getWorld());
+			BITBackpackInventorySaveTask.saveInventory(player,
+					player.getWorld());
 			if (BIT.inventories.containsKey(player)) {
 				BIT.inventories.remove(player);
 			}

@@ -128,7 +128,10 @@ Book:
 # Language: EN or FR
 #
 # InventoriesShare: whether to share the backpack across 
-#           worlds. (true or false)
+#           world: (true or false)
+#           world_nether: true or false
+#           creative: true or false
+# Add your own worlds with same syntax.
 #
 # RegionWhereBackpacksAreDisabled: WorldGuard Regions where
 #           the backpack can NOT be opened.
@@ -159,7 +162,10 @@ Book:
 #           is saved to disk.
 SBP:
     Language: EN
-    InventoriesShare: true
+    InventoriesShare:
+        world: true
+        world_Nether: true
+        creative: false
     RegionWhereBackpacksAreDisabled: region1, region2
     Price9: 100.0
     Price18: 10.0

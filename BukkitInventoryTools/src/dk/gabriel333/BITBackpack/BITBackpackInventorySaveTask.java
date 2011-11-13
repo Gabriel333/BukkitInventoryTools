@@ -42,7 +42,8 @@ public class BITBackpackInventorySaveTask implements Runnable {
 
 	public static void saveInventory(Player player, World world) {
 		File saveFile;
-		if (BITConfig.SBP_InventoriesShare) {
+		if (BITConfig.getBooleanParm("Backpack.InventoriesShare."
+				+ player.getWorld().getName(), true)) {
 			saveFile = new File(BIT.plugin.getDataFolder() + File.separator
 					+ "inventories", player.getName() + ".yml");
 		} else {

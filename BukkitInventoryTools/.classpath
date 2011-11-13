@@ -2,27 +2,30 @@
 <classpath>
 	<classpathentry kind="src" path="src"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-1.6"/>
-	<classpathentry kind="lib" path="C:/Private/Dropbox/Libraries/Newest/PermissionsSql.jar"/>
-	<classpathentry kind="lib" path="C:/Private/Dropbox/Libraries/Newest/SortInventory.jar"/>
-	<classpathentry kind="lib" path="C:/Private/Dropbox/Libraries/Newest/MyWolf.jar"/>
-	<classpathentry kind="lib" path="C:/Private/Dropbox/git/Register/lib/BOSEconomy7.jar"/>
-	<classpathentry kind="lib" path="C:/Private/Dropbox/git/Register/lib/Essentials.jar"/>
-	<classpathentry kind="lib" path="C:/Private/Dropbox/git/Register/lib/iCo4.jar"/>
-	<classpathentry kind="lib" path="C:/Private/Dropbox/git/Register/lib/iCo5.jar"/>
-	<classpathentry kind="lib" path="C:/Private/Dropbox/git/Register/lib/iCo6.jar"/>
-	<classpathentry kind="lib" path="C:/Private/Dropbox/git/Register/lib/MultiCurrency.jar"/>
-	<classpathentry kind="lib" path="C:/Private/Dropbox/Libraries/Newest/SpoutBackpack.jar"/>
-	<classpathentry kind="lib" path="C:/Private/Dropbox/Libraries/Newest/bpermissions.jar"/>
-	<classpathentry kind="lib" path="C:/Private/Dropbox/Libraries/Newest/PermissionsBukkit.jar"/>
-	<classpathentry kind="lib" path="C:/Private/Dropbox/Libraries/Newest/PermissionsEx.jar"/>
-	<classpathentry kind="lib" path="C:/Private/Dropbox/Libraries/Newest/bukkit-0.0.1-SNAPSHOT.jar"/>
-	<classpathentry kind="lib" path="C:/Private/Dropbox/Libraries/Newest/craftbukkit-0.0.1-SNAPSHOT.jar"/>
-	<classpathentry kind="lib" path="C:/Private/Dropbox/Libraries/Newest/MobArena.jar"/>
-	<classpathentry kind="lib" path="C:/Private/Dropbox/Libraries/Newest/SpoutAPI.jar"/>
-	<classpathentry kind="lib" path="C:/Private/Dropbox/Libraries/Newest/WorldGuard.jar"/>
-	<classpathentry kind="lib" path="C:/Private/Dropbox/Libraries/Newest/WorldEdit.jar"/>
-	<classpathentry kind="lib" path="C:/Private/Dropbox/Libraries/Newest/EssentialsGroupManager.jar"/>
-	<classpathentry kind="lib" path="C:/Private/Dropbox/Libraries/Newest/Jail.jar"/>
-	<classpathentry kind="lib" path="C:/Private/Dropbox/Libraries/Newest/Spout.jar"/>
+	<classpathentry kind="lib" path="lib/Jail.jar"/>
+	<classpathentry kind="lib" path="lib/bpermissions.jar"/>
+	<classpathentry kind="lib" path="lib/bukkit-0.0.1-SNAPSHOT.jar"/>
+	<classpathentry kind="lib" path="lib/craftbukkit-0.0.1-SNAPSHOT.jar"/>
+	<classpathentry kind="lib" path="lib/iConomy.jar"/>
+	<classpathentry kind="lib" path="lib/MobArena.jar"/>
+	<classpathentry kind="lib" path="lib/MyWolf.jar"/>
+	<classpathentry kind="lib" path="lib/Permissions.jar"/>
+	<classpathentry kind="lib" path="lib/PermissionsBukkit.jar"/>
+	<classpathentry kind="lib" path="lib/PermissionsEx.jar"/>
+	<classpathentry kind="lib" path="lib/PermissionsSql.jar"/>
+	<classpathentry kind="lib" path="lib/SortInventory.jar"/>
+	<classpathentry kind="lib" path="lib/SpoutAPI.jar"/>
+	<classpathentry kind="lib" path="lib/SpoutBackpack.jar"/>
+	<classpathentry kind="lib" path="lib/WorldEdit.jar"/>
+	<classpathentry kind="lib" path="lib/WorldGuard.jar"/>
+	<classpathentry kind="lib" path="lib/Spout.jar"/>
+	<classpathentry kind="lib" path="lib/EssentialsGroupBridge.jar"/>
+	<classpathentry kind="lib" path="lib/EssentialsGroupManager.jar"/>
+	<classpathentry kind="lib" path="lib/lib/BOSEconomy7.jar"/>
+	<classpathentry kind="lib" path="lib/lib/Essentials.jar"/>
+	<classpathentry kind="lib" path="lib/lib/iCo4.jar"/>
+	<classpathentry kind="lib" path="lib/lib/iCo5.jar"/>
+	<classpathentry kind="lib" path="lib/lib/iCo6.jar"/>
+	<classpathentry kind="lib" path="lib/lib/MultiCurrency.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

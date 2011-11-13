@@ -1,13 +1,9 @@
 package dk.gabriel333.BukkitInventoryTools.DigiLock;
 
-import org.bukkit.ChatColor;
-import org.bukkit.Material;
-import org.bukkit.block.Dispenser;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.material.Lever;
 import org.getspout.spoutapi.SpoutManager;
 import org.getspout.spoutapi.block.SpoutBlock;
-import org.getspout.spoutapi.block.SpoutChest;
 import org.getspout.spoutapi.event.input.InputListener;
 import org.getspout.spoutapi.event.input.KeyPressedEvent;
 import org.getspout.spoutapi.event.input.KeyReleasedEvent;
@@ -15,10 +11,8 @@ import org.getspout.spoutapi.event.input.RenderDistanceChangeEvent;
 import org.getspout.spoutapi.gui.ScreenType;
 import org.getspout.spoutapi.player.SpoutPlayer;
 
-import dk.gabriel333.BITBackpack.BITBackpack;
 import dk.gabriel333.BukkitInventoryTools.BIT;
 import dk.gabriel333.BukkitInventoryTools.Inventory.BITInventory;
-import dk.gabriel333.BukkitInventoryTools.Sort.BITSortInventory;
 import dk.gabriel333.Library.*;
 
 public class BITDigiLockInputListener extends InputListener {
@@ -34,163 +28,31 @@ public class BITDigiLockInputListener extends InputListener {
 		SpoutPlayer sPlayer = event.getPlayer();
 		ScreenType screentype = event.getScreenType();
 		String keypressed = event.getKey().name();
-		if (!(keypressed.equals(BITConfig.LIBRARY_SORTKEY)
-				|| keypressed.equals(BITConfig.LIBRARY_LOCKKEY)
+		if (!(keypressed.equals(BITConfig.LIBRARY_LOCKKEY)
 				|| keypressed.equals("KEY_ESCAPE") || keypressed
 					.equals("KEY_RETURN")))
 			return;
 		SpoutBlock targetblock = (SpoutBlock) sPlayer.getTargetBlock(null, 5);
-
-		if (BITPermissions.hasPerm(sPlayer, "SortInventory.use",
-				BITPermissions.QUIET)) {
-			// External SpoutBackpack
-			if (keypressed.equals(BITConfig.LIBRARY_SORTKEY)
-					&& (BIT.spoutbackpack && BIT.spoutBackpackHandler
-							.isOpenSpoutBackpack(sPlayer))
-					&& screentype == ScreenType.CHEST_INVENTORY) {
-				if (BIT.spoutBackpackHandler.isOpenSpoutBackpack(sPlayer)) {
-					Inventory inventory = BIT.spoutBackpackHandler
-							.getOpenedSpoutBackpack(sPlayer);
-					if (inventory != null) {
-						BITSortInventory.sortInventoryItems(sPlayer, inventory);
-					}
-					BITSortInventory.sortPlayerInventoryItems(sPlayer);
-					if (keypressed.equals(BITConfig.LIBRARY_SORTKEY)) {
-						if (BITConfig.SORT_DISPLAYSORTARCHIEVEMENT) {
-							BITMessages.sendNotification(sPlayer,
-									"Items sorted.");
-						}
-					}
-				}
-			} else
-			// Internal SpoutBacpack
-			if (keypressed.equals(BITConfig.LIBRARY_SORTKEY)
-					&& BITBackpack.isOpenBackpack(sPlayer)) {
-				Inventory inventory = BITBackpack.getOpenedBackpack(sPlayer);
-				if (inventory != null) {
-					BITSortInventory.sortInventoryItems(sPlayer, inventory);
-				}
-				BITSortInventory.sortPlayerInventoryItems(sPlayer);
-			}
-
-			// PLAYER_INVENTORY
-			if (keypressed.equals(BITConfig.LIBRARY_SORTKEY)
-					&& screentype == ScreenType.PLAYER_INVENTORY) {
-				BITSortInventory.sortPlayerInventoryItems(sPlayer);
-				if (BITConfig.SORT_DISPLAYSORTARCHIEVEMENT) {
-					BITMessages.sendNotification(sPlayer, "Items sorted.");
-				}
-				// Inventories connected to a block
-
-			}
-			// CRAFTING_INVENTORY SCREEN
-			else if (keypressed.equals(BITConfig.LIBRARY_SORTKEY)
-					&& screentype == ScreenType.WORKBENCH_INVENTORY) {
-				BITSortInventory.sortPlayerInventoryItems(sPlayer);
-				if (BITConfig.SORT_DISPLAYSORTARCHIEVEMENT) {
-					BITMessages.sendNotification(sPlayer, "Inventory sorted.");
-				}
-			} 
-
-			// CRAFTING_INVENTORY SCREEN
-			else if (BITDigiLock.isLockable(targetblock)) {
-
-				// CHEST_INVENTORY
-				if (screentype == ScreenType.CHEST_INVENTORY) {
-
-					// CHEST or DOUBLECHEST
-					if (keypressed.equals(BITConfig.LIBRARY_SORTKEY)
-							&& BITDigiLock.isChest(targetblock)) {
-						SpoutChest sChest = (SpoutChest) targetblock.getState();
-						if (targetblock.getType() == Material.CHEST) {
-							BITSortInventory.sortInventoryItems(sPlayer,
-									sChest.getLargestInventory());
-							BITSortInventory.sortPlayerInventoryItems(sPlayer);
-							if (BITConfig.SORT_DISPLAYSORTARCHIEVEMENT) {
-								BITMessages.sendNotification(sPlayer,
-										"Chest sorted.");
-							}
-						}
-
-					} else if (BITDigiLock.isBookshelf(targetblock)) {
-
-						// BOOKSHELF INVENTORY
-						if (keypressed.equals(BITConfig.LIBRARY_SORTKEY)) {
-							BITSortInventory.sortPlayerInventoryItems(sPlayer);
-							int id = sPlayer.getEntityId();
-							BITInventory bitInventory = BITInventory.openedInventories
-									.get(id);
-							if (bitInventory != null) {
-								Inventory inventory = bitInventory
-										.getInventory();
-								BITSortInventory.sortInventoryItems(sPlayer,
-										inventory);
-								bitInventory.setInventory(targetblock,
-										bitInventory.getOwner(),
-										bitInventory.getName(),
-										bitInventory.getCoOwners(), inventory,
-										bitInventory.getUseCost());
-								BITInventory.saveBitInventory(sPlayer,
-										bitInventory);
-								BITInventory.openedInventories.remove(id);
-								BITInventory.openedInventories.put(id,
-										bitInventory);
-								if (BITConfig.SORT_DISPLAYSORTARCHIEVEMENT) {
-									BITMessages.sendNotification(sPlayer,
-											"Bookshelf sorted.");
-								}
-							}
-						} else if (keypressed.equals("KEY_ESCAPE")) {
-							int id = sPlayer.getEntityId();
-							BITInventory bitInventory = BITInventory.openedInventories
-									.get(id);
-							BITInventory
-									.saveBitInventory(sPlayer, bitInventory);
-							BITInventory.openedInventories.remove(id);
-						}
-					}
-				}
-				// FURNACE_INVENTORY SCREEN
-				else if (keypressed.equals(BITConfig.LIBRARY_SORTKEY)
-						&& screentype == ScreenType.FURNACE_INVENTORY) {
-					BITSortInventory.sortPlayerInventoryItems(sPlayer);
-					if (BITConfig.SORT_DISPLAYSORTARCHIEVEMENT) {
-						BITMessages.sendNotification(sPlayer,
-								"Inventory sorted.");
-					}
-				}
-
-				// DISPENCER_INVENTORY SCREEN
-				else if (keypressed.equals(BITConfig.LIBRARY_SORTKEY)
-						&& screentype == ScreenType.DISPENSER_INVENTORY) {
-					if (targetblock.getType() == Material.DISPENSER) {
-						Dispenser dispenser = (Dispenser) targetblock
-								.getState();
-						Inventory inventory = dispenser.getInventory();
-						BITSortInventory.sortInventoryItems(sPlayer, inventory);
-						BITSortInventory.sortPlayerInventoryItems(sPlayer);
-						if (BITConfig.SORT_DISPLAYSORTARCHIEVEMENT) {
-							BITMessages.sendNotification(sPlayer,
-									"Dispenser sorted.");
-						}
-					}
-				} 
-			}
+		// External SpoutBackpack
+		
+		// Remove broken DigiLocks
+		if (BITDigiLock.isLocked(targetblock)
+				&& !BITDigiLock.isLockable(targetblock)) {
+			BITDigiLock digilock = BITDigiLock.loadDigiLock(targetblock);
+			digilock.RemoveDigiLock(sPlayer);
+			sPlayer.sendMessage("Warning: You had an DigiLock on a illegal block. The DigiLock has been removed.");
+			sPlayer.sendMessage("Make a ticket and tell the developer how it happened on:");
+			sPlayer.sendMessage("http://dev.bukkit.org/server-mods/bukkitinventorytools/tickets/");
 		}
 
 		// GAME_SCREEN
-		else if (screentype == ScreenType.GAME_SCREEN) {
-			if (keypressed.equals(BITConfig.LIBRARY_LOCKKEY)) {
-				if (BITDigiLock.isLocked(targetblock)
-						&& !BITDigiLock.isLockable(targetblock)) {
-					BITDigiLock digilock = BITDigiLock
-							.loadDigiLock(targetblock);
-					digilock.RemoveDigiLock(sPlayer);
-					sPlayer.sendMessage("Warning: You had an DigiLock on a illegal block. The DigiLock has been removed.");
-					sPlayer.sendMessage("Make a ticket and tell the developer how it happened on:");
-					sPlayer.sendMessage("http://dev.bukkit.org/server-mods/bukkitinventorytools/tickets/");
-				}
-				if (BITDigiLock.isLockable(targetblock)) {
+		else if (BITDigiLock.isLockable(targetblock)) {
+			if (screentype == ScreenType.GAME_SCREEN) {
+				if (keypressed.equals(BITConfig.LIBRARY_LOCKKEY)
+						&& (BITPermissions.hasPerm(sPlayer, "digilock.create",
+								BITPermissions.QUIET) || BITPermissions
+								.hasPerm(sPlayer, "digilock.admin",
+										BITPermissions.QUIET))) {
 					if (BITDigiLock.isLocked(targetblock)) {
 						BITDigiLock digilock = BITDigiLock
 								.loadDigiLock(targetblock);
@@ -202,78 +64,42 @@ public class BITDigiLockInputListener extends InputListener {
 						} else if (BITDigiLock.isTrapdoor(targetblock)) {
 							BITDigiLock.closeTrapdoor(sPlayer, targetblock);
 						}
-						if ((sPlayer.getName().equals(digilock.getOwner()) && BITPermissions
-								.hasPerm(sPlayer, "digilock.create",
-										BITPermissions.NOT_QUIET))
-								|| BITPermissions.hasPerm(sPlayer,
-										"digilock.admin",
-										BITPermissions.NOT_QUIET)) {
-							if (BITConfig.DEBUG_PERMISSIONS)
-								sPlayer.sendMessage(ChatColor.GREEN
-										+ "1) BITInputlistener: You have permission to open a locked door/chest");
+						if (sPlayer.getName().equals(digilock.getOwner())) {
 							BITMessages.sendNotification(sPlayer,
 									"You are the owner");
 							BITDigiLock.setPincode(sPlayer, targetblock);
 						} else {
 							BITMessages.sendNotification(sPlayer,
 									"Locked with Digilock");
-							if (BITConfig.DEBUG_PERMISSIONS) {
-								sPlayer.sendMessage(ChatColor.GREEN
-										+ "2) BITInputlistener: You DONT have permission to open a locked door/chest");
-							}
 						}
 					} else { // TARGETBLOCK IS NOT LOCKED
 						if (sPlayer.isSpoutCraftEnabled()) {
-							if (BITPermissions.hasPerm(sPlayer,
-									"bookshelf.create",
-									BITPermissions.NOT_QUIET)
-									|| BITPermissions.hasPerm(sPlayer,
-											"digilock.admin",
-											BITPermissions.NOT_QUIET)) {
-								if (BITDigiLock.isBookshelf(targetblock)) {
-									if (!BITInventory
-											.isBitInventoryCreated(targetblock)) {
-										String coowners = "";
-										String name = "";
-										String owner = sPlayer.getName();
-										int usecost = 0;
-										Inventory inventory = SpoutManager
-												.getInventoryBuilder()
-												.construct(
-														BITConfig.BOOKSHELF_SIZE,
-														name);
-										BITInventory.saveBitInventory(sPlayer,
-												targetblock, owner, name,
-												coowners, inventory, usecost);
-									}
+							if (BITDigiLock.isBookshelf(targetblock)) {
+								if (!BITInventory
+										.isBitInventoryCreated(targetblock)) {
+									String coowners = "";
+									String name = "";
+									String owner = sPlayer.getName();
+									int usecost = 0;
+									Inventory inventory = SpoutManager
+											.getInventoryBuilder().construct(
+													BITConfig.BOOKSHELF_SIZE,
+													name);
+									BITInventory.saveBitInventory(sPlayer,
+											targetblock, owner, name, coowners,
+											inventory, usecost);
 								}
-
-							}
-							if (BITPermissions.hasPerm(sPlayer,
-									"digilock.create",
-									BITPermissions.NOT_QUIET)
-									|| BITPermissions.hasPerm(sPlayer,
-											"digilock.admin",
-											BITPermissions.NOT_QUIET)) {
-								if (BITConfig.DEBUG_PERMISSIONS) {
-									sPlayer.sendMessage(ChatColor.GREEN
-											+ "3) BITInputlistener: You have permission to open a locked door/chest");
-								}
-								if (BITDigiLock.isDoubleDoor(targetblock)) {
-									SpoutBlock leftdoor = BITDigiLock
-											.getLeftDoubleDoor(targetblock);
-									BITDigiLock.closeDoubleDoor(sPlayer,
-											leftdoor, 0);
-									BITDigiLock.setPincode(sPlayer, leftdoor);
-								} else if (BITDigiLock.isDoor(targetblock)) {
-									BITDigiLock.closeDoor(targetblock);
-									BITDigiLock
-											.setPincode(sPlayer, targetblock);
-								} else {
-									BITDigiLock
-											.setPincode(sPlayer, targetblock);
-								}
-
+							} else if (BITDigiLock.isDoubleDoor(targetblock)) {
+								SpoutBlock leftdoor = BITDigiLock
+										.getLeftDoubleDoor(targetblock);
+								BITDigiLock.closeDoubleDoor(sPlayer, leftdoor,
+										0);
+								BITDigiLock.setPincode(sPlayer, leftdoor);
+							} else if (BITDigiLock.isDoor(targetblock)) {
+								BITDigiLock.closeDoor(targetblock);
+								BITDigiLock.setPincode(sPlayer, targetblock);
+							} else {
+								BITDigiLock.setPincode(sPlayer, targetblock);
 							}
 						} else {
 							sPlayer.sendMessage("Install SpoutCraft or use command /dlock to create lock.");

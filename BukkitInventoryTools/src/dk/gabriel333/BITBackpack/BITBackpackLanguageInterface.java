@@ -1,11 +1,10 @@
 package dk.gabriel333.BITBackpack;
 
-
 public class BITBackpackLanguageInterface {
 	public Language					language	= Language.ENGLISH;
 
-	private BITLanguageInterface_EN	languageEN	= new BITLanguageInterface_EN();
-	private BITLanguageInterface_FR	languageFR	= new BITLanguageInterface_FR();
+	private BITBackpackLanguageInterface_EN	languageEN	= new BITBackpackLanguageInterface_EN();
+	private BITBackpackLanguageInterface_FR	languageFR	= new BITBackpackLanguageInterface_FR();
 
 	public Language getLanguage() {
 		return language;

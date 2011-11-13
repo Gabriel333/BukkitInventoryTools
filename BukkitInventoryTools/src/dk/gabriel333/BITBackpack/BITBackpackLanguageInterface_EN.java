@@ -1,6 +1,6 @@
 package dk.gabriel333.BITBackpack;
 
-public class BITLanguageInterface_EN {
+public class BITBackpackLanguageInterface_EN {
 
 	public String getString(String string) {
 		return parseString(string);

@@ -1,6 +1,6 @@
 name: BukkitInventoryTools
 main: dk.gabriel333.BukkitInventoryTools.BIT
-version: 2.9.8
+version: 2.9.9
 author: Gabriel333
 authors: [Rocoloco]
 website: http://dev.bukkit.org/server-mods/bukkitinventorytools/
@@ -27,7 +27,7 @@ commands:
     backpack:
         description: Wear a backpack.
         usage: /backpack
-        aliases: bp
+        aliases: bpack
         permission: bukkitinventorytools.backpack.use
 permissions:
     bukkitinventorytools.sortinventory.use:

@@ -23,7 +23,7 @@ import org.bukkit.inventory.ItemStack;
 import org.getspout.spoutapi.SpoutManager;
 
 import com.sk89q.worldguard.protection.regions.ProtectedRegion;
-
+//import org.getspout.spout.inventory.CustomInventory;
 import dk.gabriel333.BITBackpack.BITBackpackLanguageInterface.Language;
 import dk.gabriel333.BukkitInventoryTools.BIT;
 import dk.gabriel333.Library.BITConfig;

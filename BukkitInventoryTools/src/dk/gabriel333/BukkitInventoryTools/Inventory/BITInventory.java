@@ -123,7 +123,7 @@ public class BITInventory {
 			saveBitInventory(sPlayer, inv.getBlock(), inv.getOwner(),
 					inv.getName(), inv.getCoOwners(), inv.getInventory(),
 					inv.getUseCost());
-		} 
+		}
 	}
 
 	public static void saveBitInventory(SpoutPlayer sPlayer, SpoutBlock block,
@@ -147,8 +147,8 @@ public class BITInventory {
 						+ block.getWorld().getName() + "' AND slotno=" + i
 						+ ";";
 				if (BITConfig.DEBUG_SQL)
-					sPlayer.sendMessage(ChatColor.YELLOW + "Updating Bookshelf: "
-							+ query);
+					sPlayer.sendMessage(ChatColor.YELLOW
+							+ "Updating Bookshelf: " + query);
 				if (BITConfig.STORAGE_TYPE.equals("MYSQL")) {
 					try {
 						BIT.manageMySQL.insertQuery(query);
@@ -175,12 +175,14 @@ public class BITInventory {
 						sPlayer.sendMessage("Your account ("
 								+ BIT.plugin.Method.getAccount(
 										sPlayer.getName()).balance()
-								+ ") has been deducted " + BIT.plugin.Method.format(cost) + ".");
+								+ ") has been deducted "
+								+ BIT.plugin.Method.format(cost) + ".");
 					} else {
 						sPlayer.sendMessage("You dont have enough money ("
 								+ BIT.plugin.Method.getAccount(
 										sPlayer.getName()).balance()
-								+ "). Cost is:" + BIT.plugin.Method.format(cost));
+								+ "). Cost is:"
+								+ BIT.plugin.Method.format(cost));
 						createBookshelf = false;
 					}
 				}
@@ -315,7 +317,7 @@ public class BITInventory {
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
-		
+
 		short bookId = 0;
 		if (inventory.contains(Material.BOOK)) {
 			BITBook bitBook = new BITBook();
@@ -324,7 +326,8 @@ public class BITInventory {
 					bookId = inventory.getItem(j).getDurability();
 					if (bookId > 1000) {
 						bitBook = BITBook.loadBook(sPlayer, bookId);
-						BITBook.setBookName(bookId, bitBook.getTitle());
+						BITBook.setBookName(bookId, bitBook.getTitle(),
+								bitBook.getAuthor());
 					}
 				}
 			}
@@ -414,7 +417,8 @@ public class BITInventory {
 				} else {
 					sPlayer.sendMessage("You dont have enough money ("
 							+ BIT.plugin.Method.getAccount(sPlayer.getName())
-									.balance() + "). Cost is:" + BIT.plugin.Method.format(destroycost));
+									.balance() + "). Cost is:"
+							+ BIT.plugin.Method.format(destroycost));
 					deleteInventory = false;
 				}
 			}
@@ -502,8 +506,8 @@ public class BITInventory {
 			bitInventory.RemoveBitInventory(sPlayer,
 					BITConfig.BOOKSHELF_DESTROYCOST);
 		}
-		if (BITConfig.BOOKSHELF_RECOVER_ON_BREAK){
-			ItemStack item = new ItemStack(Material.BOOKSHELF,1);
+		if (BITConfig.BOOKSHELF_RECOVER_ON_BREAK) {
+			ItemStack item = new ItemStack(Material.BOOKSHELF, 1);
 			world.dropItemNaturally(location, item);
 		}
 	}

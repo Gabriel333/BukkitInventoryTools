@@ -86,7 +86,7 @@ public class BITBook {
 		this.canBeMovedFromInventory = canBeMovedFromInventory;
 		this.copyTheBookWhenMoved = copyTheBookWhenMoved;
 		this.useCost = useCost;
-		setBookName(bookId, title);
+		setBookName(bookId, title, author);
 	}
 
 	public static HashMap<Short, BITBook> bitBooks = new HashMap<Short, BITBook>();
@@ -136,7 +136,7 @@ public class BITBook {
 		this.canBeMovedFromInventory = canBeMovedFromInventory;
 		this.copyTheBookWhenMoved = copyTheBookWhenMoved;
 		this.useCost = useCost;
-		setBookName(bookId, title);
+		setBookName(bookId, title, author);
 	}
 
 	public short getBookId() {
@@ -162,37 +162,40 @@ public class BITBook {
 	public void setTitle(String title) {
 		this.title = title;
 	}
+	
+	public void setBookId(short bookId){
+		this.bookId = bookId;
+	}
 
-	private int getUseCost() {
+	public int getUseCost() {
 		return useCost;
 	}
 
-	private Boolean getCopyTheBookWhenMoved() {
+	public Boolean getCopyTheBookWhenMoved() {
 		return copyTheBookWhenMoved;
 	}
 
-	private Boolean getCanBeMovedFromInventory() {
+	public Boolean getCanBeMovedFromInventory() {
 		return canBeMovedFromInventory;
 	}
 
-	private Boolean getForceBookToPlayerInventory() {
+	public Boolean getForceBookToPlayerInventory() {
 		return forceBookToPlayerInventory;
 	}
 
-	private int getMasterCopyId() {
+	public int getMasterCopyId() {
 		return masterCopyId;
 	}
 
-	private Boolean getMasterCopy() {
+	public Boolean getMasterCopy() {
 		return masterCopy;
 	}
 
-	@SuppressWarnings("unused")
-	private String[] getBodytext() {
+	public String[] getBodytext() {
 		return bodytext;
 	}
 
-	private String getBodytext(int i) {
+	public String getBodytext(int i) {
 		return bodytext[i];
 	}
 
@@ -236,7 +239,7 @@ public class BITBook {
 		return nextId;
 	}
 
-	public static short getMaxBookId() {
+	private static short getMaxBookId() {
 		String query = "SELECT MAX(bookId) as max FROM " + BIT.bookTable + " ;";
 		short max = 1000;
 		ResultSet result = null;
@@ -262,7 +265,6 @@ public class BITBook {
 		}
 		if (max < 1000)
 			max = 1000;
-		// G333Messages.showInfo("Max=" + max);
 		return max;
 	}
 
@@ -535,16 +537,15 @@ public class BITBook {
 					resCanBeMovedFromInventory, resCopyTheBookWhenMoved,
 					resUseCost));
 			BITBook.currentBookId.put(id, bookId);
-			setBookName(bookId, resTitle);
+			setBookName(bookId, resTitle, resAuthor);
 		} else {
-			// TODO: if bookid not found then set durability to 0 ???
 			if (bookId >= 1000) {
 				ItemStack itemStack = sPlayer.getItemInHand();
-				BITMessages.showWarning("BITBook:Bookdata missing ID:"
-						+ bookId);
+				BITMessages.showWarning("BITBook:Bookdata missing in DB (ID:"
+						+ bookId+")");
 				itemStack.setDurability((short) 0);
 				BITBook.currentBookId.put(id, (short) 1000);
-				setBookName(bookId, "Book");
+				setBookName(bookId, "Book","");
 				return null;
 			}
 		}
@@ -629,7 +630,6 @@ public class BITBook {
 		popupScreen.get(id).attachWidget(BIT.plugin, itemwidget);
 
 		// Label - PageNo
-		// pageNoLabelGUI.get(id)
 		pageNoLabelGUI.get(id).setX(x + textFieldWidth - 2 * buttonHeight - 5)
 				.setY(y + 2 * itemHeight - buttonHeight - 1)
 				.setHeight(buttonHeight);
@@ -730,7 +730,7 @@ public class BITBook {
 		canBeMovedFromInventoryButtonGUI.get(id).setAuto(false).setX(x).setY(y)
 				.setHeight(buttonHeight).setWidth(buttonWidth);
 		canBeMovedFromInventoryButtonGUI.get(id).setTooltip(
-				"If this is 'No', the user cant take a copy.");
+				"If false, only the Author can move the book.");
 		popupScreen.get(id).attachWidget(BIT.plugin,
 				canBeMovedFromInventoryButtonGUI.get(id));
 		BITButtons.put(canBeMovedFromInventoryButtonGUI.get(id).getId(),
@@ -885,7 +885,7 @@ public class BITBook {
 
 	}
 
-	public static void setBookName(short bookId, String title) {
+	public static void setBookName(short bookId, String title, String author) {
 		// TODO: use getMaterialManager
 		// String str = "Book:"+title;
 		// SpoutManager.getMaterialManager().setItemName(Material.BOOK, str);
@@ -895,7 +895,7 @@ public class BITBook {
 			SpoutPlayer sp = (SpoutPlayer) p;
 			if (sp.isSpoutCraftEnabled()) {
 				sp.sendPacket(new PacketItemName(Material.BOOK.getId(), bookId,
-						"Book:" + title));
+						title + " written by "+author));
 				sp.sendPacket(new PacketItemName(Material.BOOK.getId(),
 						(short) 0, "Book")); // don't know why this is needed
 			}

@@ -46,9 +46,9 @@ Storage:
     # set to MYSQL
     # Host: servername:portnumber. Std port is 3306.
     Host: localhost:3306
-    Username: root
-    Password: Changethis
-    Database: BukkitInventoryTools
+    Username: 'root'
+    Password: 'password'
+    Database: minecraft
 
 ############################################################
 # +------------------------------------------------------+ #
@@ -193,3 +193,4 @@ Debug:
     SQL: false
     GUI: false
     Events: false
+

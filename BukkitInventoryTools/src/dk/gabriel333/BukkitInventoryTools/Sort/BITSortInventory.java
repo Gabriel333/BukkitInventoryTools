@@ -11,8 +11,8 @@ import org.getspout.spoutapi.gui.ScreenType;
 import org.getspout.spoutapi.player.SpoutPlayer;
 
 import de.Keyle.MyWolf.MyWolfPlugin;
-import dk.gabriel333.BITBackpack.BITBackpack;
 import dk.gabriel333.BITBackpack.BITBackpackAPI;
+import dk.gabriel333.BITBackpack.BITBackpack;
 import dk.gabriel333.BukkitInventoryTools.BIT;
 import dk.gabriel333.Library.BITConfig;
 import dk.gabriel333.Library.BITMessages;

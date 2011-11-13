@@ -15,8 +15,8 @@ import org.getspout.spoutapi.player.SpoutPlayer;
 import dk.gabriel333.BukkitInventoryTools.BIT;
 import dk.gabriel333.BukkitInventoryTools.DigiLock.BITDigiLock;
 import dk.gabriel333.BukkitInventoryTools.Inventory.BITInventory;
-import dk.gabriel333.Library.G333Config;
-import dk.gabriel333.Library.G333Messages;
+import dk.gabriel333.Library.BITConfig;
+import dk.gabriel333.Library.BITMessages;
 
 public class BITInventorySpoutListener extends SpoutListener {
 	
@@ -66,7 +66,7 @@ public class BITInventorySpoutListener extends SpoutListener {
 					String owner = sPlayer.getName();
 					int usecost = 0;
 					Inventory inventory = SpoutManager.getInventoryBuilder()
-							.construct(G333Config.BOOKSHELF_SIZE, name);
+							.construct(BITConfig.BOOKSHELF_SIZE, name);
 					BITInventory.saveBitInventory(sPlayer, sBlock, owner, name,
 							coowners, inventory, usecost);
 					sPlayer.closeActiveWindow();
@@ -83,7 +83,7 @@ public class BITInventorySpoutListener extends SpoutListener {
 			// This only happens if I have forgot to handle a button
 			// ************************************
 			else {
-				if (G333Config.DEBUG_GUI)
+				if (BITConfig.DEBUG_GUI)
 					sPlayer.sendMessage("BITSpoutListener: Unknow button:"
 							+ BITInventory.BITBookButtons.get(uuid));
 			}
@@ -98,15 +98,15 @@ public class BITInventorySpoutListener extends SpoutListener {
 		}
 
 		int useCost = Integer.valueOf(BITInventory.useCostGUI.get(id).getText());
-		if (useCost > G333Config.DIGILOCK_USEMAXCOST) {
-			G333Messages.sendNotification(sPlayer, "Cost must be less "
-					+ G333Config.DIGILOCK_USEMAXCOST);
+		if (useCost > BITConfig.DIGILOCK_USEMAXCOST) {
+			BITMessages.sendNotification(sPlayer, "Cost must be less "
+					+ BITConfig.DIGILOCK_USEMAXCOST);
 			BITInventory.useCostGUI.get(id).setText(
-					String.valueOf(G333Config.DIGILOCK_USEMAXCOST));
+					String.valueOf(BITConfig.DIGILOCK_USEMAXCOST));
 			BITInventory.popupScreen.get(id).setDirty(true);
 			return false;
 		} else if (useCost < 0) {
-			G333Messages.sendNotification(sPlayer, "Cost must be >= 0");
+			BITMessages.sendNotification(sPlayer, "Cost must be >= 0");
 			BITInventory.useCostGUI.get(id).setText("0");
 			BITInventory.popupScreen.get(id).setDirty(true);
 			return false;

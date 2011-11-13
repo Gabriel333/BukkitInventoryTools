@@ -31,25 +31,25 @@ public class BITCommandSort implements CommandExecutor {
 		// BITPlayer bPlayer = new BITPlayer(sPlayer);
 		Block targetblock = sPlayer.getTargetBlock(null, 5);
 		if (BIT.isPlayer(sender)) {
-			if (G333Permissions.hasPerm(sender, "sortinventory.use",
-					G333Permissions.NOT_QUIET)) {
+			if (BITPermissions.hasPerm(sender, "sortinventory.use",
+					BITPermissions.NOT_QUIET)) {
 
 				if (targetblock.getType() == Material.CHEST) {
 					SpoutChest sChest = (SpoutChest) targetblock.getState();
 					BITSortInventory.sortInventoryItems(sPlayer,
 							sChest.getLargestInventory());
-					G333Messages.sendNotification(sPlayer, "Chest sorted.");
+					BITMessages.sendNotification(sPlayer, "Chest sorted.");
 
 				} else if (targetblock.getType() == Material.DISPENSER) {
 					Dispenser dispenser = (Dispenser) targetblock.getState();
 					Inventory inventory = dispenser.getInventory();
 					BITSortInventory.sortInventoryItems(sPlayer, inventory);
 					BITSortInventory.sortPlayerInventoryItems(sPlayer);
-					G333Messages.sendNotification(sPlayer, "Items sorted.");
+					BITMessages.sendNotification(sPlayer, "Items sorted.");
 
 				} else if (targetblock.getType() == Material.FURNACE) {
 					BITSortInventory.sortPlayerInventoryItems(sPlayer);
-					G333Messages.sendNotification(sPlayer, "Items sorted.");
+					BITMessages.sendNotification(sPlayer, "Items sorted.");
 
 				} else if (targetblock.getType() == Material.BOOKSHELF) {
 					if (BITInventory
@@ -60,19 +60,19 @@ public class BITCommandSort implements CommandExecutor {
 							BITSortInventory.sortInventoryItems(sPlayer,
 									inventory);
 							BITSortInventory.sortPlayerInventoryItems(sPlayer);
-							G333Messages.sendNotification(sPlayer,
+							BITMessages.sendNotification(sPlayer,
 									"Items sorted.");
 					}
 				} else {
 					// player inventory
 					BITSortInventory.sortinventory(sPlayer,
 							ScreenType.CHAT_SCREEN);
-					G333Messages.sendNotification(sPlayer, "Items sorted.");
+					BITMessages.sendNotification(sPlayer, "Items sorted.");
 				}
 			}
 			return true;
 		} else {
-			G333Messages.showWarning("You can't use /sort in the console.");
+			BITMessages.showWarning("You can't use /sort in the console.");
 			return false;
 		}
 	}

@@ -9,8 +9,8 @@ import org.getspout.spoutapi.event.spout.SpoutListener;
 import org.getspout.spoutapi.gui.Button;
 import org.getspout.spoutapi.player.SpoutPlayer;
 
-import dk.gabriel333.Library.G333Config;
-import dk.gabriel333.Library.G333Messages;
+import dk.gabriel333.Library.BITConfig;
+import dk.gabriel333.Library.BITMessages;
 
 public class BITBookSpoutListener extends SpoutListener {
 
@@ -114,7 +114,7 @@ public class BITBookSpoutListener extends SpoutListener {
 			// This only happens if I have forgot to handle a button
 			// ************************************
 			else {
-				if (G333Config.DEBUG_GUI)
+				if (BITConfig.DEBUG_GUI)
 					sPlayer.sendMessage("BITBookSpoutListener: Unknow button:"
 							+ BITBook.BITButtons.get(uuid));
 			}
@@ -129,15 +129,15 @@ public class BITBookSpoutListener extends SpoutListener {
 		}
 		int useCost = Integer.valueOf(BITBook.useCostGUI.get(id).getText());
 
-		if (useCost > G333Config.BOOK_USEMAXCOST) {
-			G333Messages.sendNotification(sPlayer, "Cost must be less "
-					+ G333Config.BOOK_USEMAXCOST);
+		if (useCost > BITConfig.BOOK_USEMAXCOST) {
+			BITMessages.sendNotification(sPlayer, "Cost must be less "
+					+ BITConfig.BOOK_USEMAXCOST);
 			BITBook.useCostGUI.get(id).setText(
-					String.valueOf(G333Config.BOOK_USEMAXCOST));
+					String.valueOf(BITConfig.BOOK_USEMAXCOST));
 			BITBook.popupScreen.get(id).setDirty(true);
 			return false;
 		} else if (useCost < 0) {
-			G333Messages.sendNotification(sPlayer, "Cost must be >= 0");
+			BITMessages.sendNotification(sPlayer, "Cost must be >= 0");
 			BITBook.useCostGUI.get(id).setText("0");
 			BITBook.popupScreen.get(id).setDirty(true);
 			return false;

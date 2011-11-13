@@ -1,13 +1,13 @@
-package dk.gabriel333.spoutbackpack;
+package dk.gabriel333.BITBackpack;
 
 import net.minecraft.server.ContainerWorkbench;
 import net.minecraft.server.EntityHuman;
 import net.minecraft.server.EntityPlayer;
 import net.minecraft.server.ICrafting;
 
-public class SBWorkbench extends ContainerWorkbench {
+public class BITWorkbench extends ContainerWorkbench {
 
-	public SBWorkbench(EntityPlayer entityPlayer, int windowNumber) {
+	public BITWorkbench(EntityPlayer entityPlayer, int windowNumber) {
 		super(entityPlayer.inventory, entityPlayer.world, 0, 0, 0);
 		super.windowId = windowNumber;
 		super.a((ICrafting) entityPlayer);

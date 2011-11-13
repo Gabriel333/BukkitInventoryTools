@@ -20,8 +20,8 @@ import org.getspout.spoutapi.player.SpoutPlayer;
 
 import dk.gabriel333.BukkitInventoryTools.DigiLock.BITDigiLock;
 import dk.gabriel333.BukkitInventoryTools.Inventory.BITInventory;
-import dk.gabriel333.Library.G333Config;
-import dk.gabriel333.Library.G333Messages;
+import dk.gabriel333.Library.BITConfig;
+import dk.gabriel333.Library.BITMessages;
 
 public class BITBlockListener extends BlockListener {
 
@@ -55,8 +55,8 @@ public class BITBlockListener extends BlockListener {
 			return;
 		if (BITDigiLock.isLocked(sBlock)) {
 			event.setCancelled(true);
-			if (G333Config.DEBUG_EVENTS) {
-				G333Messages.showInfo("BlockPhysicsEvt:"
+			if (BITConfig.DEBUG_EVENTS) {
+				BITMessages.showInfo("BlockPhysicsEvt:"
 						+ event.getBlock().getType() + " getCT:"
 						+ event.getChangedType());
 			}
@@ -73,11 +73,11 @@ public class BITBlockListener extends BlockListener {
 			return;
 		if (BITDigiLock.isLocked(sBlock)) {
 			if (BITDigiLock.isDoubleDoor(sBlock)){
-				G333Messages.showInfo("Tried to break doubledoor");
+				BITMessages.showInfo("Tried to break doubledoor");
 			}
 			event.setCancelled(true);
-			if (G333Config.DEBUG_EVENTS) {
-				G333Messages.showInfo("BlockFromTo:"
+			if (BITConfig.DEBUG_EVENTS) {
+				BITMessages.showInfo("BlockFromTo:"
 						+ event.getBlock().getType() + " ToBlk:"
 						+ event.getToBlock().getType());
 			}
@@ -189,7 +189,7 @@ public class BITBlockListener extends BlockListener {
 		if (!BITDigiLock.isLockable(sBlock))
 			return;
 		if (BITDigiLock.isLocked(sBlock)) {
-			if (!G333Config.LIBRARY_USESIGNEDITGUI) {
+			if (!BITConfig.LIBRARY_USESIGNEDITGUI) {
 				event.setCancelled(true);
 			}
 		}

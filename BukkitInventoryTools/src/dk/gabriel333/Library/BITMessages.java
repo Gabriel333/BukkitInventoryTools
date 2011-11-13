@@ -6,13 +6,13 @@ import java.util.logging.Logger;
 import org.bukkit.Material;
 import org.getspout.spoutapi.player.SpoutPlayer;
 
-import dk.gabriel333.Library.G333Plugin;
+import dk.gabriel333.Library.BITPlugin;
 
-public class G333Messages {
+public class BITMessages {
 	
     public static final Logger l = Logger.getLogger("Minecraft");
     
-    private static String PLUGIN_NAME=G333Plugin.PLUGIN_NAME;
+    private static String PLUGIN_NAME=BITPlugin.PLUGIN_NAME;
       	   	
     public static void showInfo(String message) {
     	l.log(Level.INFO, "["+PLUGIN_NAME+"] " + message);

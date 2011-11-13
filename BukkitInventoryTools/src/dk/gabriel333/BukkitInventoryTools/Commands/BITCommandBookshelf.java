@@ -23,7 +23,7 @@ public class BITCommandBookshelf implements CommandExecutor {
 			String label, String[] args) {
 		SpoutPlayer sPlayer = (SpoutPlayer) sender;
 		if (!BIT.isPlayer(sender)) {
-			G333Messages
+			BITMessages
 					.showWarning("You can't use /bookshelf in the console.");
 			return false;
 		} else {
@@ -33,16 +33,16 @@ public class BITCommandBookshelf implements CommandExecutor {
 			String owner = sPlayer.getName();
 			int usecost = 0;
 			if (BITDigiLock.isBookshelf((SpoutBlock) sBlock)) {
-				if (G333Permissions.hasPerm(sPlayer, "bookshelf.create",
-						G333Permissions.NOT_QUIET)
-						|| G333Permissions.hasPerm(sPlayer, "bookshelf.use",
-								G333Permissions.NOT_QUIET)
-						|| G333Permissions.hasPerm(sPlayer, "bookshelf.admin",
-								G333Permissions.NOT_QUIET)
-						|| G333Permissions.hasPerm(sPlayer, "bookshelf.*",
-								G333Permissions.NOT_QUIET)
-						|| G333Permissions.hasPerm(sPlayer, "*",
-								G333Permissions.NOT_QUIET)) {
+				if (BITPermissions.hasPerm(sPlayer, "bookshelf.create",
+						BITPermissions.NOT_QUIET)
+						|| BITPermissions.hasPerm(sPlayer, "bookshelf.use",
+								BITPermissions.NOT_QUIET)
+						|| BITPermissions.hasPerm(sPlayer, "bookshelf.admin",
+								BITPermissions.NOT_QUIET)
+						|| BITPermissions.hasPerm(sPlayer, "bookshelf.*",
+								BITPermissions.NOT_QUIET)
+						|| BITPermissions.hasPerm(sPlayer, "*",
+								BITPermissions.NOT_QUIET)) {
 					// BITInventory is not created.
 					if (!BITInventory.isBitInventoryCreated(sBlock)) {
 						if (args.length == 0) {
@@ -80,13 +80,13 @@ public class BITCommandBookshelf implements CommandExecutor {
 									return false;
 								}
 							}
-							if (G333Permissions.hasPerm(sPlayer,
+							if (BITPermissions.hasPerm(sPlayer,
 									"bookshelf.create",
-									G333Permissions.NOT_QUIET)
+									BITPermissions.NOT_QUIET)
 									&& args[0].equalsIgnoreCase("create")) {
 								Inventory inventory = SpoutManager
 										.getInventoryBuilder()
-										.construct(G333Config.BOOKSHELF_SIZE,
+										.construct(BITConfig.BOOKSHELF_SIZE,
 												name);
 								BITInventory.saveBitInventory(sPlayer, sBlock,
 										owner, name, coowners, inventory,
@@ -124,10 +124,10 @@ public class BITCommandBookshelf implements CommandExecutor {
 							else if (action.equalsIgnoreCase("remove")
 									&& (bitInventory
 											.getOwner()
-											.equalsIgnoreCase(sPlayer.getName()) || G333Permissions
+											.equalsIgnoreCase(sPlayer.getName()) || BITPermissions
 											.hasPerm(sPlayer,
 													"bookshelf.admin",
-													G333Permissions.NOT_QUIET))
+													BITPermissions.NOT_QUIET))
 									&& args.length == 1) {
 									BITInventory.removeBookshelfAndDropItems(sPlayer, sBlock);
 								return true;
@@ -137,10 +137,10 @@ public class BITCommandBookshelf implements CommandExecutor {
 							else if (action.equalsIgnoreCase("addcoowner")
 									&& (bitInventory
 											.getOwner()
-											.equalsIgnoreCase(sPlayer.getName()) || G333Permissions
+											.equalsIgnoreCase(sPlayer.getName()) || BITPermissions
 											.hasPerm(sPlayer,
 													"bookshelf.admin",
-													G333Permissions.NOT_QUIET))
+													BITPermissions.NOT_QUIET))
 									&& args.length == 2) {
 								bitInventory.addCoowner(args[1]);
 								BITInventory.saveBitInventory(sPlayer, sBlock,
@@ -153,10 +153,10 @@ public class BITCommandBookshelf implements CommandExecutor {
 							else if (action.equalsIgnoreCase("remcoowner")
 									&& (bitInventory
 											.getOwner()
-											.equalsIgnoreCase(sPlayer.getName()) || G333Permissions
+											.equalsIgnoreCase(sPlayer.getName()) || BITPermissions
 											.hasPerm(sPlayer,
 													"bookshelf.admin",
-													G333Permissions.NOT_QUIET))
+													BITPermissions.NOT_QUIET))
 									&& args.length == 2) {
 								bitInventory.removeCoowner(args[1]);
 								BITInventory.saveBitInventory(sPlayer, sBlock,
@@ -168,10 +168,10 @@ public class BITCommandBookshelf implements CommandExecutor {
 							else if (action.equalsIgnoreCase("usecost")
 									&& (bitInventory
 											.getOwner()
-											.equalsIgnoreCase(sPlayer.getName()) || G333Permissions
+											.equalsIgnoreCase(sPlayer.getName()) || BITPermissions
 											.hasPerm(sPlayer,
 													"bookshelf.admin",
-													G333Permissions.NOT_QUIET))
+													BITPermissions.NOT_QUIET))
 									&& args.length == 2) {
 								bitInventory.setUseCost(Integer
 										.parseInt(args[1]));

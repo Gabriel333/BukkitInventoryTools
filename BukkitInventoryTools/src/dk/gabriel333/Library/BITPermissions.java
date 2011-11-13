@@ -18,7 +18,7 @@ import de.bananaco.permissions.worlds.WorldPermissionsManager;
 import ru.tehkode.permissions.PermissionManager;
 import ru.tehkode.permissions.bukkit.PermissionsEx;
 
-public class G333Permissions {
+public class BITPermissions {
 
 	public static String PERMISSION_NODE;
 	public final static Boolean QUIET = false;
@@ -50,7 +50,7 @@ public class G333Permissions {
 	public static void setupPermissions(Plugin plugin) {
 		PERMISSION_NODE = plugin.getDescription().getName() + ".";
 		if (permissions3 || permissionsBukkit || permissionsex || bPermissions) {
-			G333Messages
+			BITMessages
 					.showWarning("Your permission system is allready detected!");
 			return;
 		} else {
@@ -59,14 +59,14 @@ public class G333Permissions {
 					.getPlugin("PermissionsBukkit");
 			if (permissionsBukkitPlugin != null) {
 				permissionsBukkit = true;
-				G333Messages.showInfo("PermissionsBukkit is detected.");
+				BITMessages.showInfo("PermissionsBukkit is detected.");
 			} else
 
 			// PermissionEx
 			if (Bukkit.getServer().getPluginManager()
 					.isPluginEnabled("PermissionsEx")) {
 				permissionsexManager = PermissionsEx.getPermissionManager();
-				G333Messages.showInfo("PermissionsEx is detected.");
+				BITMessages.showInfo("PermissionsEx is detected.");
 				permissionsex = true;
 			} else
 
@@ -78,7 +78,7 @@ public class G333Permissions {
 					wpm = de.bananaco.permissions.Permissions
 							.getWorldPermissionsManager();
 					bPermissions = true;
-					G333Messages.showInfo("bPermissions is detected.");
+					BITMessages.showInfo("bPermissions is detected.");
 				} catch (Exception e) {
 
 				}
@@ -90,7 +90,7 @@ public class G333Permissions {
 						.getPlugin("GroupManager");
 				if (groupManagerPlugin != null) {
 					groupManager = (GroupManager) groupManagerPlugin;
-					G333Messages.showInfo("GroupManager is detected.");
+					BITMessages.showInfo("GroupManager is detected.");
 					essentialsGroupManager = true;
 				}
 
@@ -103,7 +103,7 @@ public class G333Permissions {
 					permission3Handler = ((Permissions) permissions3Plugin)
 							.getHandler();
 					permissions3 = true;
-					G333Messages
+					BITMessages
 							.showInfo("Permissions3/SuperpermBridge is detected. "
 									+ ((Permissions) permissions3Plugin)
 											.getDescription().getFullName());
@@ -112,7 +112,7 @@ public class G333Permissions {
 
 			// No permission systems found
 			if (!(permissions3 || permissionsBukkit || permissionsex || bPermissions)) {
-				G333Messages.showInfo("Defaulting to build-in permissions.");
+				BITMessages.showInfo("Defaulting to build-in permissions.");
 				return;
 			}
 		}
@@ -121,7 +121,7 @@ public class G333Permissions {
 	// Test if the player has permissions to do the action
 	public static boolean hasPerm(CommandSender sender, String label,
 			Boolean not_quiet) {
-		if (G333Config.DEBUG_PERMISSIONS) {
+		if (BITConfig.DEBUG_PERMISSIONS) {
 			sender.sendMessage("Testing permission: "
 					+ (PERMISSION_NODE + label).toLowerCase());
 		}
@@ -185,20 +185,20 @@ public class G333Permissions {
 		}
 
 		// return permission
-		if (G333Config.DEBUG_PERMISSIONS)
+		if (BITConfig.DEBUG_PERMISSIONS)
 			sPlayer.sendMessage(ChatColor.RED + "The result is:"
 					+ hasPermission);
 		if (hasPermission) {
-			if (G333Config.DEBUG_PERMISSIONS)
+			if (BITConfig.DEBUG_PERMISSIONS)
 				sPlayer.sendMessage(ChatColor.GREEN
 						+ "G333Permissions: You have permission to: "
 						+ (PERMISSION_NODE + label).toLowerCase());
 			return true;
 		} else if (not_quiet) {
-			if (G333Config.DEBUG_PERMISSIONS) {
+			if (BITConfig.DEBUG_PERMISSIONS) {
 				sPlayer.sendMessage(ChatColor.RED
 						+ "You to dont have permission to do this." + " ("
-						+ (G333Plugin.PLUGIN_NAME + "." + label).toLowerCase()
+						+ (BITPlugin.PLUGIN_NAME + "." + label).toLowerCase()
 						+ ")");
 			} else {
 				sPlayer.sendMessage(ChatColor.RED

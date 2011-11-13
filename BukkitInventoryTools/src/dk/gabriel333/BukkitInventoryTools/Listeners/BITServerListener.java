@@ -6,7 +6,7 @@ import org.bukkit.event.server.ServerListener;
 import dk.gabriel333.register.payment.Methods;
 
 import dk.gabriel333.BukkitInventoryTools.BIT;
-import dk.gabriel333.Library.G333Messages;
+import dk.gabriel333.Library.BITMessages;
 
 public class BITServerListener extends ServerListener {
 	private BIT plugin;
@@ -23,7 +23,7 @@ public class BITServerListener extends ServerListener {
 			if (dk.gabriel333.register.payment.Methods.checkDisabled(event
 					.getPlugin())) {
 				this.plugin.Method = null;
-				G333Messages.showInfo("Economy plugin is disabled");
+				BITMessages.showInfo("Economy plugin is disabled");
 				BIT.useEconomy=false;
 				// Message when payment method is disabled.
 			}
@@ -38,12 +38,12 @@ public class BITServerListener extends ServerListener {
 			this.plugin.Method = dk.gabriel333.register.payment.Methods
 					.getMethod();
 			if (dk.gabriel333.register.payment.Methods.getMethod() != null) {
-				G333Messages.showInfo("Register enabled: "
+				BITMessages.showInfo("Register enabled: "
 						+ this.plugin.Method.getName() + " v"
 						+ this.plugin.Method.getVersion() + ").");
 				BIT.useEconomy=true;
 			} else {
-				G333Messages
+				BITMessages
 						.showWarning("Register could not find a economy plugin.");
 				BIT.useEconomy=false;
 			}

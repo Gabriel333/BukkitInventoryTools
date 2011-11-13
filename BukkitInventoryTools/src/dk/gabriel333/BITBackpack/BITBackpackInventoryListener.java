@@ -1,4 +1,4 @@
-package dk.gabriel333.spoutbackpack;
+package dk.gabriel333.BITBackpack;
 
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -11,9 +11,9 @@ import org.getspout.spoutapi.event.inventory.InventoryListener;
 import org.getspout.spoutapi.event.inventory.InventorySlotType;
 
 import dk.gabriel333.BukkitInventoryTools.BIT;
-import dk.gabriel333.Library.G333Config;
+import dk.gabriel333.Library.BITConfig;
 
-public class SBInventoryListener extends InventoryListener {
+public class BITBackpackInventoryListener extends InventoryListener {
 	// private BIT plugin;
 
 	// public SBInventoryListener(BIT plugin) {
@@ -26,7 +26,7 @@ public class SBInventoryListener extends InventoryListener {
 		if (!BIT.openedInventoriesOthers.containsKey(player.getName())) {
 			if (BIT.openedInventories.containsKey(player.getName())) {
 				if (BIT.widgets.containsKey(player.getName())
-						&& G333Config.SBP_useWidget == true) {
+						&& BITConfig.SBP_useWidget == true) {
 					BIT.widgets.get(player.getName()).setVisible(false)
 							.setDirty(true);
 				}
@@ -34,7 +34,7 @@ public class SBInventoryListener extends InventoryListener {
 			}
 			Inventory inv = event.getInventory();
 			if (inv.getName().equals(BIT.inventoryName)
-					&& inv.getSize() == SpoutBackpack.allowedSize(
+					&& inv.getSize() == BITBackpack.allowedSize(
 							player.getWorld(), player, true)) {
 				BIT.inventories.put(player.getName(), inv.getContents());
 			}
@@ -46,7 +46,7 @@ public class SBInventoryListener extends InventoryListener {
 			}
 			Inventory inv = event.getInventory();
 			if (inv.getName().equals(BIT.inventoryName)
-					&& inv.getSize() == SpoutBackpack.allowedSize(
+					&& inv.getSize() == BITBackpack.allowedSize(
 							Bukkit.getServer()
 									.getPlayer(
 											BIT.openedInventoriesOthers
@@ -83,9 +83,9 @@ public class SBInventoryListener extends InventoryListener {
 				&& (BIT.openedInventories.containsKey(player.getName()) || BIT.openedInventoriesOthers
 						.containsKey(player.getName()))) {
 			// 1=blacklist
-			if (G333Config.SBP_blackOrWhiteList == 1) {
+			if (BITConfig.SBP_blackOrWhiteList == 1) {
 				if (placedItem != null) {
-					if (G333Config.blacklist.contains(String.valueOf(placedItem
+					if (BITConfig.blacklist.contains(String.valueOf(placedItem
 							.getTypeId()))) {
 						event.setCancelled(true);
 						player.sendMessage(ChatColor.RED
@@ -95,9 +95,9 @@ public class SBInventoryListener extends InventoryListener {
 					}
 				}
 				// 2=whitelist
-			} else if (G333Config.SBP_blackOrWhiteList == 2) {
+			} else if (BITConfig.SBP_blackOrWhiteList == 2) {
 				if (placedItem != null) {
-					if (!G333Config.whitelist.contains(String
+					if (!BITConfig.whitelist.contains(String
 							.valueOf(placedItem.getTypeId()))) {
 						event.setCancelled(true);
 						player.sendMessage(ChatColor.RED

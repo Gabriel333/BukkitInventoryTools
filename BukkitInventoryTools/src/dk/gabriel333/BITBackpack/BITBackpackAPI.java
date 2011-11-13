@@ -1,4 +1,4 @@
-package dk.gabriel333.spoutbackpack;
+package dk.gabriel333.BITBackpack;
 
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
@@ -7,7 +7,7 @@ import org.bukkit.plugin.Plugin;
 
 import dk.gabriel333.BukkitInventoryTools.BIT;
 
-public class SBHandler {
+public class BITBackpackAPI {
 	BIT	plugin;
 	public static boolean spoutBackpackEnabled = true;
 
@@ -15,7 +15,7 @@ public class SBHandler {
 	 * Primary constructor. If 'spoutBackpackEnabled' equal true and 'plugin' is initialized, the server is running
 	 * SpoutBackpack.
 	 */
-	public SBHandler() {
+	public BITBackpackAPI() {
 		Plugin SpoutBackpackPlugin = (Plugin) Bukkit.getServer().getPluginManager().getPlugin("BukkitInventoryTools");
 		if (SpoutBackpackPlugin == null) { return; }
 		spoutBackpackEnabled = true;
@@ -30,7 +30,7 @@ public class SBHandler {
 	 * @return open Player's Backpack opened or not.
 	 */
 	public boolean isOpenSpoutBackpack(Player player) {
-		return SpoutBackpack.isOpenBackpack(player);
+		return BITBackpack.isOpenBackpack(player);
 	}
 
 	/**
@@ -41,7 +41,7 @@ public class SBHandler {
 	 * @return inventory The SpoutBackpack inventory of this player.
 	 */
 	public Inventory getOpenedSpoutBackpack(Player player) {
-		return SpoutBackpack.getOpenedBackpack(player);
+		return BITBackpack.getOpenedBackpack(player);
 	}
 
 	/**
@@ -52,7 +52,7 @@ public class SBHandler {
 	 * @return inventory The SpoutBackpack inventory of this player.
 	 */
 	public Inventory getClosedSpoutBackpack(Player player) {
-		return SpoutBackpack.getClosedBackpack(player);
+		return BITBackpack.getClosedBackpack(player);
 	}
 
 	/**
@@ -64,7 +64,7 @@ public class SBHandler {
 	 *            The SpoutBackpack inventory of this player.
 	 */
 	public void setClosedSpoutBackpack(Player player, Inventory inventory) {
-		SpoutBackpack.setClosedBackpack(player, inventory);
+		BITBackpack.setClosedBackpack(player, inventory);
 		return;
 	}
 

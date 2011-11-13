@@ -1,4 +1,4 @@
-package dk.gabriel333.spoutbackpack;
+package dk.gabriel333.BITBackpack;
 
 import net.minecraft.server.EntityPlayer;
 import net.minecraft.server.Packet100OpenWindow;
@@ -17,10 +17,10 @@ import org.getspout.spoutapi.gui.ScreenType;
 import org.getspout.spoutapi.player.SpoutPlayer;
 
 import dk.gabriel333.BukkitInventoryTools.BIT;
-import dk.gabriel333.Library.G333Config;
-import dk.gabriel333.Library.G333Permissions;
+import dk.gabriel333.Library.BITConfig;
+import dk.gabriel333.Library.BITPermissions;
 
-public class SBInputListener extends InputListener {
+public class BITBackpackInputListener extends InputListener {
 	// private BIT plugin;
 
 	// public static Logger logger = Logger.getLogger("minecraft");
@@ -40,12 +40,12 @@ public class SBInputListener extends InputListener {
 				|| screentype == ScreenType.WORKBENCH_INVENTORY || screentype == ScreenType.CHEST_INVENTORY)) {
 			return;
 		}
-		if (keypressed.equalsIgnoreCase(G333Config.LIBRARY_BACKPACK)) {
-			if (SpoutBackpack.SizeInConfig(event.getPlayer().getWorld(),
+		if (keypressed.equalsIgnoreCase(BITConfig.LIBRARY_BACKPACK)) {
+			if (BITBackpack.SizeInConfig(event.getPlayer().getWorld(),
 					event.getPlayer()) > 0) {
-				if (G333Permissions.hasPerm(event.getPlayer(), "backpack.use",
-						G333Permissions.NOT_QUIET)) {
-					if (!SpoutBackpack.canOpenBackpack(event.getPlayer()
+				if (BITPermissions.hasPerm(event.getPlayer(), "backpack.use",
+						BITPermissions.NOT_QUIET)) {
+					if (!BITBackpack.canOpenBackpack(event.getPlayer()
 							.getWorld(), event.getPlayer())) {
 						return;
 					}
@@ -56,7 +56,7 @@ public class SBInputListener extends InputListener {
 							if (BIT.openedInventories.containsKey(player
 									.getName())) {
 								if (BIT.widgets.containsKey(player.getName())
-										&& G333Config.SBP_useWidget == true) {
+										&& BITConfig.SBP_useWidget == true) {
 									BIT.widgets.get(player.getName())
 											.setVisible(false).setDirty(true);
 								}
@@ -93,7 +93,7 @@ public class SBInputListener extends InputListener {
 										|| screentype == ScreenType.FURNACE_INVENTORY || screentype == ScreenType.WORKBENCH_INVENTORY)) {
 							SpoutPlayer player = event.getPlayer();
 							if (BIT.plugin.Method != null
-									&& G333Config.SBP_useWidget == true) {
+									&& BITConfig.SBP_useWidget == true) {
 								if (BIT.widgets.containsKey(player.getName())) {
 									BIT.widgets.get(player.getName())
 											.setVisible(true).setDirty(true);
@@ -113,17 +113,17 @@ public class SBInputListener extends InputListener {
 											.setTextColor(
 													new Color(1.0F, 1.0F, 1.0F,
 															1.0F))
-											.setX(G333Config.SBP_widgetX)
-											.setY(G333Config.SBP_widgetY);
+											.setX(BITConfig.SBP_widgetX)
+											.setY(BITConfig.SBP_widgetY);
 									player.getMainScreen().attachWidget(
 											BIT.plugin, widget);
 									BIT.widgets.put(player.getName(), widget);
 								}
 							}
-							SpoutBackpack.loadInventory(player, player.getWorld());
+							BITBackpack.loadInventory(player, player.getWorld());
 							Inventory inv = SpoutManager.getInventoryBuilder()
 									.construct(
-											SpoutBackpack.allowedSize(
+											BITBackpack.allowedSize(
 													player.getWorld(), player,
 													true), BIT.inventoryName);
 							if (BIT.inventories.containsKey(player.getName())) {
@@ -145,18 +145,18 @@ public class SBInputListener extends InputListener {
 				event.getPlayer().sendMessage(
 						"You need to buy a backpack. Use /backpack buy");
 			}
-		} else if (keypressed.equalsIgnoreCase(G333Config.LIBRARY_WORKBENCH)) {
-			if (G333Config.SBP_workbenchEnabled) {
-				if (G333Permissions.hasPerm(event.getPlayer(),
-						"backpack.workbench", G333Permissions.NOT_QUIET)) {
+		} else if (keypressed.equalsIgnoreCase(BITConfig.LIBRARY_WORKBENCH)) {
+			if (BITConfig.SBP_workbenchEnabled) {
+				if (BITPermissions.hasPerm(event.getPlayer(),
+						"backpack.workbench", BITPermissions.NOT_QUIET)) {
 					if (!BIT.openedInventoriesOthers.containsKey(event
 							.getPlayer().getName())) {
 						if (!BIT.openedInventories.containsKey(event
 								.getPlayer().getName())) {
-							if (!SpoutBackpack.hasWorkbench(event.getPlayer())) {
+							if (!BITBackpack.hasWorkbench(event.getPlayer())) {
 								return;
 							}
-							if (G333Config.SBP_workbenchInventory == true
+							if (BITConfig.SBP_workbenchInventory == true
 									&& !event.getPlayer().getInventory()
 											.contains(Material.WORKBENCH)) {
 								return;
@@ -180,19 +180,19 @@ public class SBInputListener extends InputListener {
 								entityPlayer.netServerHandler
 										.sendPacket(new Packet100OpenWindow(
 												windowNumber, 1, "Crafting", 9));
-								entityPlayer.activeContainer = new SBWorkbench(
+								entityPlayer.activeContainer = new BITWorkbench(
 										entityPlayer, windowNumber);
 							}
 						}
 					}
 				}
 			} else {
-				if (G333Config.DEBUG_PERMISSIONS) {
+				if (BITConfig.DEBUG_PERMISSIONS) {
 					event.getPlayer().sendMessage(
 							"SBP_workbenchEnabled is false in config.yml");
 				}
 			}
-		} else if (keypressed.equalsIgnoreCase(G333Config.LIBRARY_SORTKEY)) {
+		} else if (keypressed.equalsIgnoreCase(BITConfig.LIBRARY_SORTKEY)) {
 
 		}
 	}

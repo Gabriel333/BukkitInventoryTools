@@ -1,4 +1,4 @@
-package dk.gabriel333.spoutbackpack;
+package dk.gabriel333.BITBackpack;
 
 import java.io.File;
 import java.io.IOException;
@@ -15,9 +15,9 @@ import org.getspout.spoutapi.SpoutManager;
 //import org.getspout.spout.inventory.CustomInventory;
 
 import dk.gabriel333.BukkitInventoryTools.BIT;
-import dk.gabriel333.Library.G333Config;
+import dk.gabriel333.Library.BITConfig;
 
-public class SBInventorySaveTask implements Runnable {
+public class BITBackpackInventorySaveTask implements Runnable {
 
 	// private static BIT plugin;
 
@@ -42,7 +42,7 @@ public class SBInventorySaveTask implements Runnable {
 
 	public static void saveInventory(Player player, World world) {
 		File saveFile;
-		if (G333Config.SBP_InventoriesShare) {
+		if (BITConfig.SBP_InventoriesShare) {
 			saveFile = new File(BIT.plugin.getDataFolder() + File.separator
 					+ "inventories", player.getName() + ".yml");
 		} else {
@@ -54,18 +54,18 @@ public class SBInventorySaveTask implements Runnable {
 		if (BIT.inventories.containsKey(player.getName())) {
 			Inventory inv = SpoutManager.getInventoryBuilder()
 					.construct(
-							SpoutBackpack.allowedSize(player.getWorld(),
+							BITBackpack.allowedSize(player.getWorld(),
 									player, true),
 							BIT.inventoryName);
 			inv.setContents(BIT.inventories.get(player.getName()));
 			Integer i = 0;
-			for (i = 0; i < SpoutBackpack.allowedSize(world, player, true); i++) {
+			for (i = 0; i < BITBackpack.allowedSize(world, player, true); i++) {
 				ItemStack item = inv.getItem(i);
 				config.set(i.toString() + ".amount", item.getAmount());
 				Short durab = item.getDurability();
 				config.set(i.toString() + ".durability", durab.intValue());
 				config.set(i.toString() + ".type", item.getTypeId());
-				config.set("Size", SpoutBackpack.allowedSize(world, player, true));
+				config.set("Size", BITBackpack.allowedSize(world, player, true));
 				try {
 					config.save(saveFile);
 				} catch (IOException e) {

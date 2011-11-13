@@ -25,8 +25,8 @@ import org.getspout.spoutapi.packet.PacketItemName;
 import org.getspout.spoutapi.player.SpoutPlayer;
 
 import dk.gabriel333.BukkitInventoryTools.BIT;
-import dk.gabriel333.Library.G333Config;
-import dk.gabriel333.Library.G333Messages;
+import dk.gabriel333.Library.BITConfig;
+import dk.gabriel333.Library.BITMessages;
 
 public class BITBook {
 
@@ -240,7 +240,7 @@ public class BITBook {
 		String query = "SELECT MAX(bookId) as max FROM " + BIT.bookTable + " ;";
 		short max = 1000;
 		ResultSet result = null;
-		if (G333Config.STORAGE_TYPE.equals("MYSQL")) {
+		if (BITConfig.STORAGE_TYPE.equals("MYSQL")) {
 			try {
 				result = BIT.manageMySQL.sqlQuery(query);
 			} catch (MalformedURLException e) {
@@ -270,7 +270,7 @@ public class BITBook {
 		String query = "SELECT * FROM " + BIT.bookTable + " WHERE (bookId = "
 				+ bookId + ");";
 		ResultSet result = null;
-		if (G333Config.STORAGE_TYPE.equals("MYSQL")) {
+		if (BITConfig.STORAGE_TYPE.equals("MYSQL")) {
 			try {
 				result = BIT.manageMySQL.sqlQuery(query);
 			} catch (MalformedURLException e) {
@@ -285,12 +285,12 @@ public class BITBook {
 		}
 		try {
 			if (result != null && result.next()) {
-				if (G333Config.DEBUG_SQL)
+				if (BITConfig.DEBUG_SQL)
 					sPlayer.sendMessage(ChatColor.YELLOW + "IsWritten: "
 							+ query + "(true)");
 				return true;
 			} else {
-				if (G333Config.DEBUG_SQL)
+				if (BITConfig.DEBUG_SQL)
 					sPlayer.sendMessage(ChatColor.YELLOW + "IsWritten: "
 							+ query + "(false)");
 				return false;
@@ -315,7 +315,7 @@ public class BITBook {
 								.valueOf(useCostGUI.get(id).getText())));
 		String query = "";
 		boolean createBook = true;
-		int cost = G333Config.BOOK_COST;
+		int cost = BITConfig.BOOK_COST;
 		if (isWritten(sPlayer, bookId)) {
 			for (int i = 0; i < bitBooks.get(bookId).getNumberOfPages(); i++) {
 				query = "UPDATE "
@@ -350,10 +350,10 @@ public class BITBook {
 								.getCopyTheBookWhenMoved()) + "', usecost="
 						+ bitBooks.get(bookId).getUseCost() + " WHERE bookid="
 						+ bookId + " AND pageno=" + i + ";";
-				if (G333Config.DEBUG_SQL)
+				if (BITConfig.DEBUG_SQL)
 					sPlayer.sendMessage(ChatColor.YELLOW + "Updating book: "
 							+ query);
-				if (G333Config.STORAGE_TYPE.equals("MYSQL")) {
+				if (BITConfig.STORAGE_TYPE.equals("MYSQL")) {
 					try {
 						BIT.manageMySQL.insertQuery(query);
 					} catch (MalformedURLException e) {
@@ -370,7 +370,7 @@ public class BITBook {
 			ItemStack item = sPlayer.getItemInHand();
 			item.setDurability(bookId);
 			sPlayer.setItemInHand(item);
-			G333Messages.sendNotification(sPlayer, "Book updated.");
+			BITMessages.sendNotification(sPlayer, "Book updated.");
 		} else {
 			// NEW BOOK
 			if (BIT.useEconomy) {
@@ -441,10 +441,10 @@ public class BITBook {
 							// + bitBooks.get(bookId).getUseCost()
 							+ Integer.valueOf(useCostGUI.get(id).getText())
 							+ " );";
-					if (G333Config.DEBUG_SQL)
+					if (BITConfig.DEBUG_SQL)
 						sPlayer.sendMessage(ChatColor.YELLOW
 								+ "Insert to bookTable: " + query);
-					if (G333Config.STORAGE_TYPE.equals("MYSQL")) {
+					if (BITConfig.STORAGE_TYPE.equals("MYSQL")) {
 						try {
 							BIT.manageMySQL.insertQuery(query);
 						} catch (MalformedURLException e) {
@@ -458,7 +458,7 @@ public class BITBook {
 						BIT.manageSQLite.insertQuery(query);
 					}
 				}
-				G333Messages.sendNotification(sPlayer, "Book created.");
+				BITMessages.sendNotification(sPlayer, "Book created.");
 				ItemStack item = sPlayer.getItemInHand();
 				item.setDurability(bookId);
 				sPlayer.setItemInHand(item);
@@ -495,7 +495,7 @@ public class BITBook {
 		String query = "select * FROM " + BIT.bookTable + " WHERE bookId="
 				+ bookId + ";";
 		ResultSet result = null;
-		if (G333Config.STORAGE_TYPE.equals("MYSQL")) {
+		if (BITConfig.STORAGE_TYPE.equals("MYSQL")) {
 			try {
 				result = BIT.manageMySQL.sqlQuery(query);
 			} catch (MalformedURLException e) {
@@ -540,7 +540,7 @@ public class BITBook {
 			// TODO: if bookid not found then set durability to 0 ???
 			if (bookId >= 1000) {
 				ItemStack itemStack = sPlayer.getItemInHand();
-				G333Messages.showWarning("BITBook:Bookdata missing ID:"
+				BITMessages.showWarning("BITBook:Bookdata missing ID:"
 						+ bookId);
 				itemStack.setDurability((short) 0);
 				BITBook.currentBookId.put(id, (short) 1000);
@@ -576,10 +576,10 @@ public class BITBook {
 		String query = "DELETE FROM " + BIT.bookTable + " WHERE (bookid = "
 				+ bookId + ");";
 		if (deleteBook) {
-			if (G333Config.DEBUG_SQL)
+			if (BITConfig.DEBUG_SQL)
 				sPlayer.sendMessage(ChatColor.YELLOW + "Removing book: "
 						+ query);
-			if (G333Config.STORAGE_TYPE.equals("MYSQL")) {
+			if (BITConfig.STORAGE_TYPE.equals("MYSQL")) {
 				try {
 					BIT.manageMySQL.deleteQuery(query);
 				} catch (MalformedURLException e) {
@@ -593,9 +593,9 @@ public class BITBook {
 				BIT.manageSQLite.deleteQuery(query);
 			}
 			bitBooks.remove(bookId);
-			G333Messages.sendNotification(sPlayer, "Book removed.");
+			BITMessages.sendNotification(sPlayer, "Book removed.");
 		} else {
-			G333Messages.sendNotification(sPlayer, "You need more money ("
+			BITMessages.sendNotification(sPlayer, "You need more money ("
 					+ destroycost + ")");
 		}
 	}

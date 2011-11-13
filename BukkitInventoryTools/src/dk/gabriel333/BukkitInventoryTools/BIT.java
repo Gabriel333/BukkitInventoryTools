@@ -31,22 +31,16 @@ import com.matejdro.bukkit.jail.JailAPI;
 import com.sk89q.worldguard.bukkit.WorldGuardPlugin;
 import dk.gabriel333.register.payment.Method;
 import dk.gabriel333.register.payment.Methods;
-import dk.gabriel333.spoutbackpack.SBEntityListener;
-import dk.gabriel333.spoutbackpack.SBInputListener;
-import dk.gabriel333.spoutbackpack.SBInventoryListener;
-import dk.gabriel333.spoutbackpack.SBInventorySaveTask;
-import dk.gabriel333.spoutbackpack.SBLanguageInterface;
-import dk.gabriel333.spoutbackpack.SBPlayerListener;
-import dk.gabriel333.spoutbackpack.SpoutBackpack;
 import de.Keyle.MyWolf.MyWolfPlugin;
+import dk.gabriel333.BITBackpack.*;
 import dk.gabriel333.BukkitInventoryTools.Commands.*;
 import dk.gabriel333.BukkitInventoryTools.Listeners.*;
 import dk.gabriel333.BukkitInventoryTools.Inventory.*;
 import dk.gabriel333.BukkitInventoryTools.Book.*;
 import dk.gabriel333.BukkitInventoryTools.DigiLock.*;
-import dk.gabriel333.Library.G333Config;
-import dk.gabriel333.Library.G333Messages;
-import dk.gabriel333.Library.G333Plugin;
+import dk.gabriel333.Library.BITConfig;
+import dk.gabriel333.Library.BITMessages;
+import dk.gabriel333.Library.BITPlugin;
 
 import me.neatmonster.spoutbackpack.SBHandler;
 
@@ -69,7 +63,7 @@ public class BIT extends JavaPlugin {
 	public static Map<String, String> openedInventoriesOthers = new HashMap<String, String>();
 	public static Map<String, GenericLabel> widgets = new HashMap<String, GenericLabel>();
 	public static String inventoryName = "Backpack";
-	public static SBLanguageInterface li;
+	public static BITBackpackLanguageInterface li;
 	public static MobArenaHandler mobArenaHandler;
 	public List<Player> portals = new ArrayList<Player>();
 	public String logTag = "[BITSpoutBackpack]";
@@ -86,8 +80,8 @@ public class BIT extends JavaPlugin {
 		PluginDescriptionFile pdfFile = this.getDescription();
 
 		if (!isSortInventoryInstalled()) {
-			G333Plugin.setupPlugin(this);
-			G333Config.bitSetupConfig();
+			BITPlugin.setupPlugin(this);
+			BITConfig.bitSetupConfig();
 			setupSpout();
 			setupSQL();
 			setupRegister();
@@ -98,15 +92,15 @@ public class BIT extends JavaPlugin {
 			setupBook();
 			setupMobArena();
 			setupJail();
-			li = new SBLanguageInterface(SpoutBackpack.loadLanguage());
+			li = new BITBackpackLanguageInterface(BITBackpack.loadLanguage());
 			// Load SpoutBackpack
 			for (Player player : Bukkit.getServer().getOnlinePlayers()) {
-				SpoutBackpack.loadInventory(player, player.getWorld());
+				BITBackpack.loadInventory(player, player.getWorld());
 			}
-			G333Messages.showInfo("BIT version " + pdfFile.getVersion()
+			BITMessages.showInfo("BIT version " + pdfFile.getVersion()
 					+ " is enabled!");
 		} else {
-			G333Messages.showError(pdfFile.getName() + " version "
+			BITMessages.showError(pdfFile.getName() + " version "
 					+ pdfFile.getVersion() + " could not be installed!");
 		}
 	}
@@ -114,7 +108,7 @@ public class BIT extends JavaPlugin {
 	@Override
 	public void onDisable() {
 		Bukkit.getServer().getScheduler().cancelTask(saveTaskId);
-		SBInventorySaveTask.saveAll();
+		BITBackpackInventorySaveTask.saveAll();
 		
 		inventories.clear();
 		openedInventories.clear();
@@ -122,7 +116,7 @@ public class BIT extends JavaPlugin {
 		//widgets.clear();
 
 		PluginDescriptionFile pdfFile = this.getDescription();
-		G333Messages.showInfo(pdfFile.getName() + " version "
+		BITMessages.showInfo(pdfFile.getName() + " version "
 				+ pdfFile.getVersion() + " is disabled!");
 	}
 
@@ -131,7 +125,7 @@ public class BIT extends JavaPlugin {
 		Plugin sortInventoryPlugin = this.getServer().getPluginManager()
 				.getPlugin("SortInventory");
 		if (sortInventoryPlugin != null) {
-			G333Messages
+			BITMessages
 					.showError("SortInventory is outdated and conflicts with BukkitInventoryTools!");
 			return true;
 		}
@@ -201,21 +195,21 @@ public class BIT extends JavaPlugin {
 				Event.Priority.Normal, this);
 
 		// SpoutBackpack Listeners
-		pm.registerEvent(Type.CUSTOM_EVENT, new SBInputListener(),
+		pm.registerEvent(Type.CUSTOM_EVENT, new BITBackpackInputListener(),
 				Priority.Normal, this);
-		pm.registerEvent(Type.CUSTOM_EVENT, new SBInventoryListener(),
+		pm.registerEvent(Type.CUSTOM_EVENT, new BITBackpackInventoryListener(),
 				Priority.Normal, this);
-		pm.registerEvent(Type.PLAYER_JOIN, new SBPlayerListener(this),
+		pm.registerEvent(Type.PLAYER_JOIN, new BITBackpackPlayerListener(this),
 				Priority.Normal, this);
-		pm.registerEvent(Type.PLAYER_TELEPORT, new SBPlayerListener(this),
+		pm.registerEvent(Type.PLAYER_TELEPORT, new BITBackpackPlayerListener(this),
 				Priority.Monitor, this);
-		pm.registerEvent(Type.PLAYER_PORTAL, new SBPlayerListener(this),
+		pm.registerEvent(Type.PLAYER_PORTAL, new BITBackpackPlayerListener(this),
 				Priority.Monitor, this);
-		pm.registerEvent(Type.PLAYER_KICK, new SBPlayerListener(this),
+		pm.registerEvent(Type.PLAYER_KICK, new BITBackpackPlayerListener(this),
 				Priority.Normal, this);
-		pm.registerEvent(Type.PLAYER_QUIT, new SBPlayerListener(this),
+		pm.registerEvent(Type.PLAYER_QUIT, new BITBackpackPlayerListener(this),
 				Priority.Normal, this);
-		pm.registerEvent(Type.ENTITY_DEATH, new SBEntityListener(this),
+		pm.registerEvent(Type.ENTITY_DEATH, new BITBackpackEntityListener(this),
 				Priority.Normal, this);
 
 	}
@@ -225,7 +219,7 @@ public class BIT extends JavaPlugin {
 		getCommand("Sort").setExecutor(new BITCommandSort(this));
 		getCommand("Digilock").setExecutor(new BITCommandDigiLock(this));
 		getCommand("Bookshelf").setExecutor(new BITCommandBookshelf(this));
-		getCommand("Backpack").setExecutor(new SpoutBackpack(this));
+		getCommand("Backpack").setExecutor(new BITBackpack(this));
 	}
 
 	private void setupSpout() {
@@ -233,9 +227,9 @@ public class BIT extends JavaPlugin {
 				.getPlugin("Spout");
 		if (spoutPlugin != null) {
 			spout = true;
-			G333Messages.showInfo("Spout is detected.");
+			BITMessages.showInfo("Spout is detected.");
 		} else {
-			G333Messages.showError("BIT is dependend on Spout!");
+			BITMessages.showError("BIT is dependend on Spout!");
 		}
 	}
 
@@ -273,9 +267,9 @@ public class BIT extends JavaPlugin {
 				if (spout == true) {
 					spoutBackpackHandler = new SBHandler();
 					spoutbackpack = true;
-					G333Messages.showInfo("SpoutBackpack is detected.");
+					BITMessages.showInfo("SpoutBackpack is detected.");
 				} else {
-					G333Messages
+					BITMessages
 							.showWarning("SpoutBackpack is detected, but spout is not detected.");
 					spoutbackpack = false;
 				}
@@ -290,9 +284,9 @@ public class BIT extends JavaPlugin {
 			if (myWolfPlugin != null) {
 				if (spout == true) {
 					mywolf = true;
-					G333Messages.showInfo("MyWolf is detected.");
+					BITMessages.showInfo("MyWolf is detected.");
 				} else {
-					G333Messages
+					BITMessages
 							.showWarning("MyWolf is detected, but spout is not detected.");
 					mywolf = false;
 				}
@@ -314,25 +308,25 @@ public class BIT extends JavaPlugin {
 	public static String oldBookTable = "Book";
 
 	private void setupSQL() {
-		if (G333Config.STORAGE_TYPE.equals("MYSQL")) {
+		if (BITConfig.STORAGE_TYPE.equals("MYSQL")) {
 			// Declare MySQL Handler
 			manageMySQL = new mysqlCore(log,
-					"[" + G333Plugin.PLUGIN_NAME + "]",
-					G333Config.STORAGE_HOST, G333Config.STORAGE_DATABASE,
-					G333Config.STORAGE_USERNAME, G333Config.STORAGE_PASSWORD);
-			G333Messages.showInfo("MySQL Initializing");
+					"[" + BITPlugin.PLUGIN_NAME + "]",
+					BITConfig.STORAGE_HOST, BITConfig.STORAGE_DATABASE,
+					BITConfig.STORAGE_USERNAME, BITConfig.STORAGE_PASSWORD);
+			BITMessages.showInfo("MySQL Initializing");
 			// Initialize MySQL Handler
 			manageMySQL.initialize();
 			try {
 				if (manageMySQL.checkConnection()) {
 					// Check if the Connection was successful
 					String query;
-					G333Messages.showInfo("MySQL connection successful");
+					BITMessages.showInfo("MySQL connection successful");
 
 					// Check DigiLockTable
 					if (!manageMySQL.checkTable(digilockTable)) {
 						if (manageMySQL.checkTable(oldDigilockTable)) {
-							G333Messages.showInfo("Upgrade " + oldDigilockTable
+							BITMessages.showInfo("Upgrade " + oldDigilockTable
 									+ " to " + digilockTable + ".");
 							query = "CREATE TABLE "
 									+ digilockTable
@@ -344,7 +338,7 @@ public class BIT extends JavaPlugin {
 									+ "'none', coowners, closetimer, typeid, connectedto, usecost FROM "
 									+ oldDigilockTable + ";";
 						} else {
-							G333Messages.showInfo("Creating table "
+							BITMessages.showInfo("Creating table "
 									+ digilockTable);
 							query = "CREATE TABLE "
 									+ digilockTable
@@ -358,7 +352,7 @@ public class BIT extends JavaPlugin {
 					// Check BookshelfTable
 					if (!manageMySQL.checkTable(bitInventoryTable)) {
 						if (manageMySQL.checkTable(oldBitInventoryTable)) {
-							G333Messages.showInfo("Upgrade "
+							BITMessages.showInfo("Upgrade "
 									+ oldBitInventoryTable + " to "
 									+ bitInventoryTable + ".");
 							query = "CREATE TABLE "
@@ -373,7 +367,7 @@ public class BIT extends JavaPlugin {
 									+ "itemstack_type, itemstack_amount, itemstack_durability FROM "
 									+ oldBitInventoryTable + ";";
 						} else {
-							G333Messages.showInfo("Creating table "
+							BITMessages.showInfo("Creating table "
 									+ bitInventoryTable);
 							query = "CREATE TABLE "
 									+ bitInventoryTable
@@ -391,7 +385,7 @@ public class BIT extends JavaPlugin {
 					// Check BooksTable
 					if (!manageMySQL.checkTable(bookTable)) {
 						if (manageMySQL.checkTable(oldBookTable)) {
-							G333Messages.showInfo("Upgrade " + oldBookTable
+							BITMessages.showInfo("Upgrade " + oldBookTable
 									+ " to " + bookTable + ".");
 							query = "CREATE TABLE "
 									+ bookTable
@@ -407,7 +401,7 @@ public class BIT extends JavaPlugin {
 									+ " forcebook, moved, copy, usecost FROM "
 									+ oldBookTable + ";";
 						} else {
-							G333Messages
+							BITMessages
 									.showInfo("Creating table " + bookTable);
 							query = "CREATE TABLE "
 									+ bookTable
@@ -420,8 +414,8 @@ public class BIT extends JavaPlugin {
 						manageMySQL.createTable(query);
 					}
 				} else {
-					G333Messages.showError("MySQL connection failed");
-					G333Config.STORAGE_HOST = "SQLITE";
+					BITMessages.showError("MySQL connection failed");
+					BITConfig.STORAGE_HOST = "SQLITE";
 				}
 			} catch (MalformedURLException e) {
 				e.printStackTrace();
@@ -432,10 +426,10 @@ public class BIT extends JavaPlugin {
 			}
 		} else {
 			// SQLite
-			G333Messages.showInfo("SQLite Initializing");
+			BITMessages.showInfo("SQLite Initializing");
 			// Declare SQLite handler
-			manageSQLite = new sqlCore(log, "[" + G333Plugin.PLUGIN_NAME + "]",
-					G333Plugin.PLUGIN_NAME, G333Plugin.PLUGIN_FOLDER);
+			manageSQLite = new sqlCore(log, "[" + BITPlugin.PLUGIN_NAME + "]",
+					BITPlugin.PLUGIN_NAME, BITPlugin.PLUGIN_FOLDER);
 			// Initialize SQLite handler
 			manageSQLite.initialize();
 			// Check if the table exists, if it doesn't create it
@@ -443,7 +437,7 @@ public class BIT extends JavaPlugin {
 			String insert = "";
 			if (!manageSQLite.checkTable(digilockTable)) {
 				if (manageSQLite.checkTable(oldDigilockTable)) {
-					G333Messages.showInfo("Upgrade table " + oldDigilockTable
+					BITMessages.showInfo("Upgrade table " + oldDigilockTable
 							+ " to " + digilockTable + ".");
 					query = "CREATE TABLE "
 							+ digilockTable
@@ -464,7 +458,7 @@ public class BIT extends JavaPlugin {
 					manageSQLite.insertQuery(insert);
 
 				} else {
-					G333Messages.showInfo("Creating table " + digilockTable);
+					BITMessages.showInfo("Creating table " + digilockTable);
 					query = "CREATE TABLE "
 							+ digilockTable
 							+ " (x INTEGER, y INTEGER, z INTEGER, world TEXT, owner TEXT,"
@@ -480,7 +474,7 @@ public class BIT extends JavaPlugin {
 			// Check BookshelfTable
 			if (!manageSQLite.checkTable(bitInventoryTable)) {
 				if (manageSQLite.checkTable(oldBitInventoryTable)) {
-					G333Messages.showInfo("Upgrade " + oldBitInventoryTable
+					BITMessages.showInfo("Upgrade " + oldBitInventoryTable
 							+ " to " + bitInventoryTable + ".");
 					query = "CREATE TABLE "
 							+ bitInventoryTable
@@ -505,7 +499,7 @@ public class BIT extends JavaPlugin {
 					manageSQLite.createTable(query);
 					manageSQLite.insertQuery(insert);
 				} else {
-					G333Messages
+					BITMessages
 							.showInfo("Creating table " + bitInventoryTable);
 					query = "CREATE TABLE "
 							+ bitInventoryTable
@@ -524,7 +518,7 @@ public class BIT extends JavaPlugin {
 			// Check BooksTable
 			if (!manageSQLite.checkTable(bookTable)) {
 				if (manageSQLite.checkTable(oldBookTable)) {
-					G333Messages.showInfo("Upgrade " + oldBookTable + " to "
+					BITMessages.showInfo("Upgrade " + oldBookTable + " to "
 							+ bookTable + ".");
 					query = "CREATE TABLE "
 							+ bookTable
@@ -546,7 +540,7 @@ public class BIT extends JavaPlugin {
 					manageSQLite.createTable(query);
 					manageSQLite.insertQuery(insert);
 				} else {
-					G333Messages.showInfo("Creating table " + bookTable);
+					BITMessages.showInfo("Creating table " + bookTable);
 					query = "CREATE TABLE "
 							+ bookTable
 							+ " (bookid INT, title TEXT,"
@@ -631,7 +625,7 @@ public class BIT extends JavaPlugin {
 			return;
 		}
 		mobArenaHandler = new MobArenaHandler();
-		G333Messages.showInfo("MobArena detected.");
+		BITMessages.showInfo("MobArena detected.");
 		return;
 	}
 
@@ -642,7 +636,7 @@ public class BIT extends JavaPlugin {
 		Plugin jailPlugin = getServer().getPluginManager().getPlugin("Jail");
 		if (jailPlugin != null) {
 			jail = ((Jail) jailPlugin).API;
-			G333Messages.showInfo("Jail detected.");
+			BITMessages.showInfo("Jail detected.");
 			return;
 		} else {
 			return;

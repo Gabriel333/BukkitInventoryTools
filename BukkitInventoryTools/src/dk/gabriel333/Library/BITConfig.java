@@ -9,7 +9,7 @@ import org.bukkit.configuration.InvalidConfigurationException;
 import org.bukkit.configuration.file.YamlConfiguration;
 import dk.gabriel333.BukkitInventoryTools.BIT;
 
-public class G333Config {
+public class BITConfig {
 	
 	final static int LATEST_VERSION=1;
 	
@@ -104,7 +104,7 @@ public class G333Config {
 		File configfile = new File(BIT.plugin.getDataFolder(),
 				CONFIG_FILE);
 		if (!configfile.exists()) {
-			G333Messages.showInfo("Loading config.yml from BukkitInventoryTools.jar");
+			BITMessages.showInfo("Loading config.yml from BukkitInventoryTools.jar");
 			loadFileFromJar(CONFIG_FILE);
 		}
 		config = new YamlConfiguration();
@@ -224,7 +224,7 @@ public class G333Config {
 					"                                                         #\n"+
 					"                                                         #\n"+
 					"##########################################################");
-			G333Messages.showWarning("YOUR CONFIG.YML IS NOT UP TO DATE!");
+			BITMessages.showWarning("YOUR CONFIG.YML IS NOT UP TO DATE!");
 			try {
 				config.save(configfile);
 			} catch (IOException e) {
@@ -239,7 +239,7 @@ public class G333Config {
 		if (!config.contains(path)) {
 			config.set(path, def);
 			dosave=true;
-			G333Messages.showWarning("Missing parameter:" +path);
+			BITMessages.showWarning("Missing parameter:" +path);
 		} 
 		return config.getInt(path, def);
 	}
@@ -248,7 +248,7 @@ public class G333Config {
 		if (!config.contains(path)) {
 			config.set(path, def);
 			dosave=true;
-			G333Messages.showWarning("Missing parameter:" +path);
+			BITMessages.showWarning("Missing parameter:" +path);
 		} 
 		return config.getDouble(path, def);
 	}
@@ -257,7 +257,7 @@ public class G333Config {
 		if (!config.contains(path)) {
 			config.set(path, def);
 			dosave=true;
-			G333Messages.showWarning("Missing parameter:" +path);
+			BITMessages.showWarning("Missing parameter:" +path);
 		} 
 		return config.getString(path, def);
 	}
@@ -266,15 +266,15 @@ public class G333Config {
 		if (!config.contains(path)) {
 			config.set(path, def);
 			dosave=true;
-			G333Messages.showWarning("Missing parameter:" +path);
+			BITMessages.showWarning("Missing parameter:" +path);
 		} 
 		return config.getBoolean(path, def);
 	}
 	
 	private static File loadFileFromJar(String filename) {
-		File actual = new File(G333Plugin.PLUGIN_FOLDER, filename);
+		File actual = new File(BITPlugin.PLUGIN_FOLDER, filename);
 		if (!actual.exists()) {
-			InputStream input = G333Config.class.getResourceAsStream("/"
+			InputStream input = BITConfig.class.getResourceAsStream("/"
 					+ filename);
 			if (input != null) {
 				FileOutputStream output = null;
@@ -286,10 +286,10 @@ public class G333Config {
 					while ((length = input.read(buf)) > 0) {
 						output.write(buf, 0, length);
 					}
-					G333Messages.showInfo("The file: " + filename
+					BITMessages.showInfo("The file: " + filename
 							+ " has been created.");
 				} catch (Exception e) {
-					G333Messages.showStackTrace(e);
+					BITMessages.showStackTrace(e);
 				} finally {
 					try {
 						input.close();

@@ -1,4 +1,4 @@
-package dk.gabriel333.spoutbackpack;
+package dk.gabriel333.BITBackpack;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -23,18 +23,18 @@ import org.bukkit.inventory.ItemStack;
 import org.getspout.spoutapi.SpoutManager;
 
 import com.sk89q.worldguard.protection.regions.ProtectedRegion;
-//import org.getspout.spout.inventory.CustomInventory;
+
+import dk.gabriel333.BITBackpack.BITBackpackLanguageInterface.Language;
 import dk.gabriel333.BukkitInventoryTools.BIT;
-import dk.gabriel333.Library.G333Config;
-import dk.gabriel333.Library.G333Messages;
-import dk.gabriel333.Library.G333Permissions;
+import dk.gabriel333.Library.BITConfig;
+import dk.gabriel333.Library.BITMessages;
+import dk.gabriel333.Library.BITPermissions;
 import dk.gabriel333.register.payment.Method.MethodAccount;
-import dk.gabriel333.spoutbackpack.SBLanguageInterface.Language;
 
 @SuppressWarnings({})
-public class SpoutBackpack implements CommandExecutor {
+public class BITBackpack implements CommandExecutor {
 
-	public SpoutBackpack(BIT instance) {
+	public BITBackpack(BIT instance) {
 	}
 
 	public static Logger logger = Logger.getLogger("minecraft");
@@ -45,8 +45,8 @@ public class SpoutBackpack implements CommandExecutor {
 			String commandLabel, String[] args) {
 		if (sender instanceof Player) {
 			Player player = (Player) sender;
-			if (G333Permissions.hasPerm(sender, "backpack.use",
-					G333Permissions.NOT_QUIET)) {
+			if (BITPermissions.hasPerm(sender, "backpack.use",
+					BITPermissions.NOT_QUIET)) {
 				if (canOpenBackpack(player.getWorld(), player)) {
 					if (args.length == 0) {
 						if (allowedSize(player.getWorld(), player, true) > 0) {
@@ -56,7 +56,7 @@ public class SpoutBackpack implements CommandExecutor {
 										.containsKey(playerName)) {
 									Inventory inv = SpoutManager
 											.getInventoryBuilder().construct(
-													SpoutBackpack.allowedSize(
+													BITBackpack.allowedSize(
 															player.getWorld(),
 															player, true),
 													BIT.inventoryName);
@@ -87,9 +87,9 @@ public class SpoutBackpack implements CommandExecutor {
 					} else if (args.length == 1) {
 						String argument = args[0];
 						if (argument.equalsIgnoreCase("reload")) {
-							if (G333Permissions.hasPerm(player,
+							if (BITPermissions.hasPerm(player,
 									"backpack.reload",
-									G333Permissions.NOT_QUIET)) {
+									BITPermissions.NOT_QUIET)) {
 								player.sendMessage(BIT.li
 										.getMessage("configreloaded1"));
 								player.sendMessage(BIT.li
@@ -164,9 +164,9 @@ public class SpoutBackpack implements CommandExecutor {
 							return true;
 
 						} else if (argument.equalsIgnoreCase("clear")) {
-							if (G333Permissions
+							if (BITPermissions
 									.hasPerm(player, "backpack.clear",
-											G333Permissions.NOT_QUIET)) {
+											BITPermissions.NOT_QUIET)) {
 								if (BIT.inventories.containsKey(player
 										.getName())) {
 									BIT.inventories.remove(player.getName());
@@ -196,9 +196,9 @@ public class SpoutBackpack implements CommandExecutor {
 						String firstArgument = args[0];
 						String playerName = args[1];
 						if (firstArgument.equalsIgnoreCase("info")) {
-							if (G333Permissions.hasPerm(player,
+							if (BITPermissions.hasPerm(player,
 									"backpack.info.other",
-									G333Permissions.NOT_QUIET)) {
+									BITPermissions.NOT_QUIET)) {
 								if (BIT.inventories.containsKey(playerName)) {
 									Player playerCmd = Bukkit.getServer()
 											.getPlayer(playerName);
@@ -243,15 +243,15 @@ public class SpoutBackpack implements CommandExecutor {
 						} else if (firstArgument.equalsIgnoreCase("upgrade")) {
 							if (playerName.equalsIgnoreCase("workbench")) {
 								if (!hasWorkbench(player)
-										&& G333Config.SBP_workbenchBuyable) {
+										&& BITConfig.SBP_workbenchBuyable) {
 									setWorkbench(player, true);
 								} else
 									player.sendMessage(ChatColor.RED
 											+ BIT.li.getMessage("youalreadyhaveaccesstotheworkbench"));
 							} else {
-								if (G333Permissions.hasPerm(player,
+								if (BITPermissions.hasPerm(player,
 										"backpack.upgrade.other",
-										G333Permissions.NOT_QUIET)) {
+										BITPermissions.NOT_QUIET)) {
 									if (BIT.inventories.containsKey(playerName)) {
 										Player playerCmd = Bukkit.getServer()
 												.getPlayer(playerName);
@@ -291,9 +291,9 @@ public class SpoutBackpack implements CommandExecutor {
 							return true;
 
 						} else if (firstArgument.equalsIgnoreCase("clear")) {
-							if (G333Permissions.hasPerm(player,
+							if (BITPermissions.hasPerm(player,
 									"backpack.clear.other",
-									G333Permissions.NOT_QUIET)) {
+									BITPermissions.NOT_QUIET)) {
 								if (BIT.inventories.containsKey(playerName)) {
 									BIT.inventories.remove(playerName);
 									player.sendMessage(BIT.li
@@ -312,16 +312,16 @@ public class SpoutBackpack implements CommandExecutor {
 							return true;
 
 						} else if (firstArgument.equalsIgnoreCase("open")) {
-							if (G333Permissions.hasPerm(player,
+							if (BITPermissions.hasPerm(player,
 									"backpack.open.other",
-									G333Permissions.NOT_QUIET)) {
+									BITPermissions.NOT_QUIET)) {
 								if (BIT.inventories.containsKey(playerName)) {
 									if (!BIT.openedInventories
 											.containsKey(playerName)) {
 										Inventory inv = SpoutManager
 												.getInventoryBuilder()
 												.construct(
-														SpoutBackpack
+														BITBackpack
 																.allowedSize(
 																		player.getWorld(),
 																		player,
@@ -406,10 +406,10 @@ public class SpoutBackpack implements CommandExecutor {
 				return;
 			}
 		}
-		SBInventorySaveTask.saveInventory(player, player.getWorld());
+		BITBackpackInventorySaveTask.saveInventory(player, player.getWorld());
 		BIT.inventories.remove(player.getName());
 		File saveFile;
-		if (G333Config.SBP_InventoriesShare) {
+		if (BITConfig.SBP_InventoriesShare) {
 			saveFile = new File(BIT.plugin.getDataFolder() + File.separator
 					+ "inventories", player.getName() + ".yml");
 		} else {
@@ -443,8 +443,8 @@ public class SpoutBackpack implements CommandExecutor {
 	}
 
 	public void showHelp(Player player) {
-		if (G333Permissions.hasPerm(player, "backpack.reload",
-				G333Permissions.QUIET)) {
+		if (BITPermissions.hasPerm(player, "backpack.reload",
+				BITPermissions.QUIET)) {
 			player.sendMessage(BIT.li.getMessage("reloadcommand"));
 		}
 		player.sendMessage(BIT.li.getMessage("infocommand") + ChatColor.RED
@@ -457,37 +457,37 @@ public class SpoutBackpack implements CommandExecutor {
 	}
 
 	public static double calculateCostToUpgrade(int size) {
-		double cost = G333Config.SBP_price9;
+		double cost = BITConfig.SBP_price9;
 		if (size == 9) {
-			cost = G333Config.SBP_price18;
+			cost = BITConfig.SBP_price18;
 		} else if (size == 18) {
-			cost = G333Config.SBP_price27;
+			cost = BITConfig.SBP_price27;
 		} else if (size == 27) {
-			cost = G333Config.SBP_price36;
+			cost = BITConfig.SBP_price36;
 		} else if (size == 36) {
-			cost = G333Config.SBP_price45;
+			cost = BITConfig.SBP_price45;
 		} else if (size == 45) {
-			cost = G333Config.SBP_price54;
+			cost = BITConfig.SBP_price54;
 		}
 		return cost;
 	}
 
 	private int upgradeAllowedSize(World world, Player player) {
 		int size = 9;
-		if (G333Permissions.hasPerm(player, "backpack.upgrade54",
-				G333Permissions.QUIET)) {
+		if (BITPermissions.hasPerm(player, "backpack.upgrade54",
+				BITPermissions.QUIET)) {
 			size = 54;
-		} else if (G333Permissions.hasPerm(player, "backpack.upgrade45",
-				G333Permissions.QUIET)) {
+		} else if (BITPermissions.hasPerm(player, "backpack.upgrade45",
+				BITPermissions.QUIET)) {
 			size = 45;
-		} else if (G333Permissions.hasPerm(player, "backpack.upgrade36",
-				G333Permissions.QUIET)) {
+		} else if (BITPermissions.hasPerm(player, "backpack.upgrade36",
+				BITPermissions.QUIET)) {
 			size = 36;
-		} else if (G333Permissions.hasPerm(player, "backpack.upgrade27",
-				G333Permissions.QUIET)) {
+		} else if (BITPermissions.hasPerm(player, "backpack.upgrade27",
+				BITPermissions.QUIET)) {
 			size = 27;
-		} else if (G333Permissions.hasPerm(player, "backpack.upgrade18",
-				G333Permissions.QUIET)) {
+		} else if (BITPermissions.hasPerm(player, "backpack.upgrade18",
+				BITPermissions.QUIET)) {
 			size = 18;
 		}
 		return size;
@@ -495,7 +495,7 @@ public class SpoutBackpack implements CommandExecutor {
 
 	public static int SizeInConfig(World world, Player player) {
 		File saveFile;
-		if (G333Config.SBP_InventoriesShare) {
+		if (BITConfig.SBP_InventoriesShare) {
 			saveFile = new File(BIT.plugin.getDataFolder() + File.separator
 					+ "inventories", player.getName() + ".yml");
 		} else {
@@ -520,23 +520,23 @@ public class SpoutBackpack implements CommandExecutor {
 			boolean configurationCheck) {
 		// Finding permitted size
 		int size = 9;
-		if (G333Permissions.hasPerm(player, "backpack.size54",
-				G333Permissions.QUIET)) {
+		if (BITPermissions.hasPerm(player, "backpack.size54",
+				BITPermissions.QUIET)) {
 			size = 54;
-		} else if (G333Permissions.hasPerm(player, "backpack.size45",
-				G333Permissions.QUIET)) {
+		} else if (BITPermissions.hasPerm(player, "backpack.size45",
+				BITPermissions.QUIET)) {
 			size = 45;
-		} else if (G333Permissions.hasPerm(player, "backpack.size36",
-				G333Permissions.QUIET)) {
+		} else if (BITPermissions.hasPerm(player, "backpack.size36",
+				BITPermissions.QUIET)) {
 			size = 36;
-		} else if (G333Permissions.hasPerm(player, "backpack.size27",
-				G333Permissions.QUIET)) {
+		} else if (BITPermissions.hasPerm(player, "backpack.size27",
+				BITPermissions.QUIET)) {
 			size = 27;
-		} else if (G333Permissions.hasPerm(player, "backpack.size18",
-				G333Permissions.QUIET)) {
+		} else if (BITPermissions.hasPerm(player, "backpack.size18",
+				BITPermissions.QUIET)) {
 			size = 18;
-		} else if (G333Permissions.hasPerm(player, "backpack.size9",
-				G333Permissions.QUIET)) {
+		} else if (BITPermissions.hasPerm(player, "backpack.size9",
+				BITPermissions.QUIET)) {
 			size = 9;
 		}
 		// Finding actual size
@@ -558,7 +558,7 @@ public class SpoutBackpack implements CommandExecutor {
 
 	public static Inventory getClosedBackpack(Player player) {
 		Inventory inventory = SpoutManager.getInventoryBuilder().construct(
-				SpoutBackpack.allowedSize(player.getWorld(), player, true),
+				BITBackpack.allowedSize(player.getWorld(), player, true),
 				BIT.inventoryName);
 		if (BIT.inventories.containsKey(player.getName())) {
 			inventory.setContents(BIT.inventories.get(player.getName()));
@@ -585,18 +585,18 @@ public class SpoutBackpack implements CommandExecutor {
 
 	public static boolean canOpenBackpack(World world, Player player) {
 		boolean canOpenBackpack = false;
-		if (G333Permissions.hasPerm(player, "backpack.size54",
-				G333Permissions.QUIET)
-				|| G333Permissions.hasPerm(player, "backpack.size45",
-						G333Permissions.QUIET)
-				|| G333Permissions.hasPerm(player, "backpack.size36",
-						G333Permissions.QUIET)
-				|| G333Permissions.hasPerm(player, "backpack.size27",
-						G333Permissions.QUIET)
-				|| G333Permissions.hasPerm(player, "backpack.size18",
-						G333Permissions.QUIET)
-				|| G333Permissions.hasPerm(player, "backpack.size9",
-						G333Permissions.QUIET)) {
+		if (BITPermissions.hasPerm(player, "backpack.size54",
+				BITPermissions.QUIET)
+				|| BITPermissions.hasPerm(player, "backpack.size45",
+						BITPermissions.QUIET)
+				|| BITPermissions.hasPerm(player, "backpack.size36",
+						BITPermissions.QUIET)
+				|| BITPermissions.hasPerm(player, "backpack.size27",
+						BITPermissions.QUIET)
+				|| BITPermissions.hasPerm(player, "backpack.size18",
+						BITPermissions.QUIET)
+				|| BITPermissions.hasPerm(player, "backpack.size9",
+						BITPermissions.QUIET)) {
 			canOpenBackpack = true;
 		} else {
 			canOpenBackpack = false;
@@ -616,7 +616,7 @@ public class SpoutBackpack implements CommandExecutor {
 					inRegions.add(key_);
 				}
 			}
-			for (String region : G333Config.SBP_noBackpackRegions) {
+			for (String region : BITConfig.SBP_noBackpackRegions) {
 				if (inRegions.contains(region)) {
 					canOpenBackpack = false;
 				}
@@ -636,11 +636,11 @@ public class SpoutBackpack implements CommandExecutor {
 	}
 
 	public static boolean hasWorkbench(Player player) {
-		if (G333Permissions.hasPerm(player, "backpack.workbench",
-				G333Permissions.NOT_QUIET))
+		if (BITPermissions.hasPerm(player, "backpack.workbench",
+				BITPermissions.NOT_QUIET))
 			return true;
 		File saveFile;
-		if (G333Config.SBP_InventoriesShare) {
+		if (BITConfig.SBP_InventoriesShare) {
 			saveFile = new File(BIT.plugin.getDataFolder() + File.separator
 					+ "inventories", player.getName() + ".yml");
 		} else {
@@ -674,7 +674,7 @@ public class SpoutBackpack implements CommandExecutor {
 
 	public static void setWorkbench(Player player, boolean enabled) {
 		File saveFile;
-		if (G333Config.SBP_InventoriesShare) {
+		if (BITConfig.SBP_InventoriesShare) {
 			saveFile = new File(BIT.plugin.getDataFolder() + File.separator
 					+ "inventories", player.getName() + ".yml");
 		} else {
@@ -705,7 +705,7 @@ public class SpoutBackpack implements CommandExecutor {
 			return;
 		}
 		File saveFile;
-		if (G333Config.SBP_InventoriesShare) {
+		if (BITConfig.SBP_InventoriesShare) {
 			saveFile = new File(BIT.plugin.getDataFolder() + File.separator
 					+ "inventories", player.getName() + ".yml");
 		} else {
@@ -727,7 +727,7 @@ public class SpoutBackpack implements CommandExecutor {
 		} catch (InvalidConfigurationException e) {
 			e.printStackTrace();
 		}
-		int size = config.getInt("Size",SpoutBackpack.allowedSize(world, player, true));
+		int size = config.getInt("Size",BITBackpack.allowedSize(world, player, true));
 		Inventory inv = SpoutManager.getInventoryBuilder().construct(size,
 				BIT.inventoryName);
 		if (saveFile.exists()) {
@@ -746,12 +746,12 @@ public class SpoutBackpack implements CommandExecutor {
 	}
 
 	public static Language loadLanguage() {
-		if (G333Config.SBP_language.equalsIgnoreCase("EN")) {
+		if (BITConfig.SBP_language.equalsIgnoreCase("EN")) {
 			return Language.ENGLISH;
-		} else if (G333Config.SBP_language.equalsIgnoreCase("FR")) {
+		} else if (BITConfig.SBP_language.equalsIgnoreCase("FR")) {
 			return Language.FRENCH;
 		} else {
-			G333Messages
+			BITMessages
 					.showInfo("SpoutBackpack: language set to ENGLISH by default.");
 			return Language.ENGLISH;
 		}

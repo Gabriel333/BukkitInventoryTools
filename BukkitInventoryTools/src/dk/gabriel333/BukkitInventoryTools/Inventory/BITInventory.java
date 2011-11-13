@@ -28,8 +28,8 @@ import org.getspout.spoutapi.player.SpoutPlayer;
 import dk.gabriel333.BukkitInventoryTools.BIT;
 import dk.gabriel333.BukkitInventoryTools.Book.BITBook;
 import dk.gabriel333.BukkitInventoryTools.DigiLock.BITDigiLock;
-import dk.gabriel333.Library.G333Config;
-import dk.gabriel333.Library.G333Messages;
+import dk.gabriel333.Library.BITConfig;
+import dk.gabriel333.Library.BITMessages;
 
 public class BITInventory {
 
@@ -131,7 +131,7 @@ public class BITInventory {
 			int useCost) {
 		String query;
 		boolean createBookshelf = true;
-		int cost = G333Config.BOOKSHELF_COST;
+		int cost = BITConfig.BOOKSHELF_COST;
 		if (isBitInventoryCreated(block)) {
 			for (int i = 0; i < inventory.getSize(); i++) {
 				query = "UPDATE " + BIT.bitInventoryTable + " SET owner='"
@@ -146,10 +146,10 @@ public class BITInventory {
 						+ " AND z = " + block.getZ() + " AND world='"
 						+ block.getWorld().getName() + "' AND slotno=" + i
 						+ ";";
-				if (G333Config.DEBUG_SQL)
+				if (BITConfig.DEBUG_SQL)
 					sPlayer.sendMessage(ChatColor.YELLOW + "Updating Bookshelf: "
 							+ query);
-				if (G333Config.STORAGE_TYPE.equals("MYSQL")) {
+				if (BITConfig.STORAGE_TYPE.equals("MYSQL")) {
 					try {
 						BIT.manageMySQL.insertQuery(query);
 					} catch (MalformedURLException e) {
@@ -163,7 +163,7 @@ public class BITInventory {
 					BIT.manageSQLite.insertQuery(query);
 				}
 			}
-			G333Messages.sendNotification(sPlayer, "Bookshelf updated.");
+			BITMessages.sendNotification(sPlayer, "Bookshelf updated.");
 		} else {
 			// NEW BOOKSHELF
 			if (BIT.useEconomy) {
@@ -200,10 +200,10 @@ public class BITInventory {
 							+ inventory.getItem(i).getAmount() + ","
 							+ inventory.getItem(i).getDurability() + " );";
 					// sPlayer.sendMessage("Insert:" + query);
-					if (G333Config.DEBUG_SQL)
+					if (BITConfig.DEBUG_SQL)
 						sPlayer.sendMessage(ChatColor.YELLOW
 								+ "Insert to bookshelf: " + query);
-					if (G333Config.STORAGE_TYPE.equals("MYSQL")) {
+					if (BITConfig.STORAGE_TYPE.equals("MYSQL")) {
 						try {
 							BIT.manageMySQL.insertQuery(query);
 						} catch (MalformedURLException e) {
@@ -217,7 +217,7 @@ public class BITInventory {
 						BIT.manageSQLite.insertQuery(query);
 					}
 				}
-				G333Messages.sendNotification(sPlayer, "Bookshelf created.");
+				BITMessages.sendNotification(sPlayer, "Bookshelf created.");
 			} else {
 				sPlayer.sendMessage("You dont have enough money. Cost is:"
 						+ cost);
@@ -231,7 +231,7 @@ public class BITInventory {
 				+ " AND z = " + block.getZ() + " AND world='"
 				+ block.getWorld().getName() + "');";
 		ResultSet result = null;
-		if (G333Config.STORAGE_TYPE.equals("MYSQL")) {
+		if (BITConfig.STORAGE_TYPE.equals("MYSQL")) {
 			try {
 				result = BIT.manageMySQL.sqlQuery(query);
 			} catch (MalformedURLException e) {
@@ -271,7 +271,7 @@ public class BITInventory {
 				+ sBlock.getWorld().getName() + "');";
 		// sPlayer.sendMessage("select:" + query);
 		ResultSet result = null;
-		if (G333Config.STORAGE_TYPE.equals("MYSQL")) {
+		if (BITConfig.STORAGE_TYPE.equals("MYSQL")) {
 			try {
 				result = BIT.manageMySQL.sqlQuery(query);
 			} catch (MalformedURLException e) {
@@ -343,7 +343,7 @@ public class BITInventory {
 				+ " AND z = " + block.getZ() + " AND world='"
 				+ block.getWorld().getName() + "');";
 		ResultSet result = null;
-		if (G333Config.STORAGE_TYPE.equals("MYSQL")) {
+		if (BITConfig.STORAGE_TYPE.equals("MYSQL")) {
 			try {
 				result = BIT.manageMySQL.sqlQuery(query);
 			} catch (MalformedURLException e) {
@@ -374,7 +374,7 @@ public class BITInventory {
 				+ " AND z = " + block.getZ() + " AND world='"
 				+ block.getWorld().getName() + "');";
 		ResultSet result = null;
-		if (G333Config.STORAGE_TYPE.equals("MYSQL")) {
+		if (BITConfig.STORAGE_TYPE.equals("MYSQL")) {
 			try {
 				result = BIT.manageMySQL.sqlQuery(query);
 			} catch (MalformedURLException e) {
@@ -424,10 +424,10 @@ public class BITInventory {
 				+ sBlock.getZ() + " AND world='" + sBlock.getWorld().getName()
 				+ "');";
 		if (deleteInventory) {
-			if (G333Config.DEBUG_SQL)
+			if (BITConfig.DEBUG_SQL)
 				sPlayer.sendMessage(ChatColor.YELLOW + "Removing Bookshelf: "
 						+ query);
-			if (G333Config.STORAGE_TYPE.equals("MYSQL")) {
+			if (BITConfig.STORAGE_TYPE.equals("MYSQL")) {
 				try {
 					BIT.manageMySQL.deleteQuery(query);
 				} catch (MalformedURLException e) {
@@ -440,9 +440,9 @@ public class BITInventory {
 			} else { // SQLLITE
 				BIT.manageSQLite.deleteQuery(query);
 			}
-			G333Messages.sendNotification(sPlayer, "Bookshelf removed.");
+			BITMessages.sendNotification(sPlayer, "Bookshelf removed.");
 		} else {
-			G333Messages.sendNotification(sPlayer, "You need more money ("
+			BITMessages.sendNotification(sPlayer, "You need more money ("
 					+ destroycost + ")");
 		}
 
@@ -500,9 +500,9 @@ public class BITInventory {
 				}
 			}
 			bitInventory.RemoveBitInventory(sPlayer,
-					G333Config.BOOKSHELF_DESTROYCOST);
+					BITConfig.BOOKSHELF_DESTROYCOST);
 		}
-		if (G333Config.BOOKSHELF_RECOVER_ON_BREAK){
+		if (BITConfig.BOOKSHELF_RECOVER_ON_BREAK){
 			ItemStack item = new ItemStack(Material.BOOKSHELF,1);
 			world.dropItemNaturally(location, item);
 		}
@@ -555,7 +555,7 @@ public class BITInventory {
 
 		// costToCreateLabel
 		GenericLabel costToCreate = new GenericLabel("CostToCreate: "
-				+ String.valueOf(G333Config.BOOKSHELF_COST));
+				+ String.valueOf(BITConfig.BOOKSHELF_COST));
 		costToCreate.setAuto(true).setX(175).setY(y).setHeight(10)
 				.setWidth(140);
 		costToCreate.setTooltip("The cost to create a new Bookshelf");

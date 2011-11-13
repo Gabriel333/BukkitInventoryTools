@@ -14,8 +14,8 @@ import org.getspout.spoutapi.player.SpoutPlayer;
 import dk.gabriel333.BukkitInventoryTools.BIT;
 import dk.gabriel333.BukkitInventoryTools.DigiLock.BITDigiLock;
 import dk.gabriel333.BukkitInventoryTools.Inventory.BITInventory;
-import dk.gabriel333.Library.G333Messages;
-import dk.gabriel333.Library.G333Permissions;
+import dk.gabriel333.Library.BITMessages;
+import dk.gabriel333.Library.BITPermissions;
 
 public class BITCommandDigiLock implements CommandExecutor {
 
@@ -37,19 +37,19 @@ public class BITCommandDigiLock implements CommandExecutor {
 			Integer closetimer = 0; // never closes automatically
 			int usecost = 0;
 			if (!BIT.isPlayer(sPlayer)) {
-				G333Messages
+				BITMessages
 						.showError("You cant use this command in the console.");
 				return false;
-			} else if (G333Permissions.hasPerm(sPlayer, "digilock.create",
-					G333Permissions.NOT_QUIET)
-					|| G333Permissions.hasPerm(sPlayer, "digilock.use",
-							G333Permissions.NOT_QUIET)
-					|| G333Permissions.hasPerm(sPlayer, "digilock.admin",
-							G333Permissions.NOT_QUIET)
-					|| G333Permissions.hasPerm(sPlayer, "digilock.*",
-							G333Permissions.NOT_QUIET)
-					|| G333Permissions.hasPerm(sPlayer, "*",
-							G333Permissions.NOT_QUIET)) {
+			} else if (BITPermissions.hasPerm(sPlayer, "digilock.create",
+					BITPermissions.NOT_QUIET)
+					|| BITPermissions.hasPerm(sPlayer, "digilock.use",
+							BITPermissions.NOT_QUIET)
+					|| BITPermissions.hasPerm(sPlayer, "digilock.admin",
+							BITPermissions.NOT_QUIET)
+					|| BITPermissions.hasPerm(sPlayer, "digilock.*",
+							BITPermissions.NOT_QUIET)
+					|| BITPermissions.hasPerm(sPlayer, "*",
+							BITPermissions.NOT_QUIET)) {
 				if (!BITDigiLock.isLocked(block)) {
 					if (args.length == 0) {
 						return false;
@@ -94,8 +94,8 @@ public class BITCommandDigiLock implements CommandExecutor {
 								return false;
 							}
 						}
-						if (G333Permissions.hasPerm(sPlayer, "digilock.create",
-								G333Permissions.NOT_QUIET)
+						if (BITPermissions.hasPerm(sPlayer, "digilock.create",
+								BITPermissions.NOT_QUIET)
 								&& args[0].equalsIgnoreCase("lock")) {
 							BITDigiLock.SaveDigiLock(sPlayer, block, pincode,
 									owner, closetimer, coowners, users,
@@ -158,17 +158,17 @@ public class BITCommandDigiLock implements CommandExecutor {
 						// REMOVE ***************************************
 					} else if (action.equalsIgnoreCase("remove")
 							&& (digilock.getOwner().equalsIgnoreCase(
-									sPlayer.getName()) || G333Permissions
+									sPlayer.getName()) || BITPermissions
 									.hasPerm(sPlayer, "digilock.admin",
-											G333Permissions.NOT_QUIET))
+											BITPermissions.NOT_QUIET))
 							&& args.length == 1) {
 						digilock.RemoveDigiLock(sPlayer);
 						// closetimer ***************************************
 					} else if (action.equalsIgnoreCase("closetimer")
 							&& (digilock.getOwner().equalsIgnoreCase(
-									sPlayer.getName()) || G333Permissions
+									sPlayer.getName()) || BITPermissions
 									.hasPerm(sPlayer, "digilock.admin",
-											G333Permissions.NOT_QUIET))
+											BITPermissions.NOT_QUIET))
 							&& args.length == 2) {
 						digilock.setClosetimer(Integer.getInteger(args[1],0));
 						BITDigiLock.SaveDigiLock(sPlayer, digilock.getBlock(),
@@ -181,9 +181,9 @@ public class BITCommandDigiLock implements CommandExecutor {
 						// addcoowner ***************************************
 					} else if (action.equalsIgnoreCase("addcoowner")
 							&& (digilock.getOwner().equalsIgnoreCase(
-									sPlayer.getName()) || G333Permissions
+									sPlayer.getName()) || BITPermissions
 									.hasPerm(sPlayer, "digilock.admin",
-											G333Permissions.NOT_QUIET))
+											BITPermissions.NOT_QUIET))
 							&& args.length == 2) {
 						digilock.addCoowner(args[1]);
 						BITDigiLock.SaveDigiLock(sPlayer, digilock.getBlock(),
@@ -196,9 +196,9 @@ public class BITCommandDigiLock implements CommandExecutor {
 						// remcoowner ***************************************
 					} else if (action.equalsIgnoreCase("remcoowner")
 							&& (digilock.getOwner().equalsIgnoreCase(
-									sPlayer.getName()) || G333Permissions
+									sPlayer.getName()) || BITPermissions
 									.hasPerm(sPlayer, "digilock.admin",
-											G333Permissions.NOT_QUIET))
+											BITPermissions.NOT_QUIET))
 							&& args.length == 2) {
 						digilock.removeCoowner(args[1]);
 						BITDigiLock.SaveDigiLock(sPlayer, digilock.getBlock(),
@@ -211,9 +211,9 @@ public class BITCommandDigiLock implements CommandExecutor {
 						// adduser ***************************************
 					} else if (action.equalsIgnoreCase("adduser")
 							&& (digilock.getOwner().equalsIgnoreCase(
-									sPlayer.getName()) || G333Permissions
+									sPlayer.getName()) || BITPermissions
 									.hasPerm(sPlayer, "digilock.admin",
-											G333Permissions.NOT_QUIET))
+											BITPermissions.NOT_QUIET))
 							&& args.length == 2) {
 						digilock.addUser(args[1]);
 						BITDigiLock.SaveDigiLock(sPlayer, digilock.getBlock(),
@@ -226,9 +226,9 @@ public class BITCommandDigiLock implements CommandExecutor {
 						// remusers ***************************************
 					} else if (action.equalsIgnoreCase("remuser")
 							&& (digilock.getOwner().equalsIgnoreCase(
-									sPlayer.getName()) || G333Permissions
+									sPlayer.getName()) || BITPermissions
 									.hasPerm(sPlayer, "digilock.admin",
-											G333Permissions.NOT_QUIET))
+											BITPermissions.NOT_QUIET))
 							&& args.length == 2) {
 						digilock.removeUser(args[1]);
 						BITDigiLock.SaveDigiLock(sPlayer, digilock.getBlock(),
@@ -241,9 +241,9 @@ public class BITCommandDigiLock implements CommandExecutor {
 						// usecost ***************************************
 					} else if (action.equalsIgnoreCase("usecost")
 							&& (digilock.getOwner().equalsIgnoreCase(
-									sPlayer.getName()) || G333Permissions
+									sPlayer.getName()) || BITPermissions
 									.hasPerm(sPlayer, "digilock.admin",
-											G333Permissions.NOT_QUIET))
+											BITPermissions.NOT_QUIET))
 							&& args.length == 2) {
 						digilock.setUseCost(Integer.getInteger(args[1],0));
 						BITDigiLock.SaveDigiLock(sPlayer, digilock.getBlock(),
@@ -256,9 +256,9 @@ public class BITCommandDigiLock implements CommandExecutor {
 						// connectedto ***************************************
 					} else if (action.equalsIgnoreCase("connectedto")
 							&& (digilock.getOwner().equalsIgnoreCase(
-									sPlayer.getName()) || G333Permissions
+									sPlayer.getName()) || BITPermissions
 									.hasPerm(sPlayer, "digilock.admin",
-											G333Permissions.NOT_QUIET))
+											BITPermissions.NOT_QUIET))
 							&& args.length == 2) {
 						digilock.setConnectedTo(args[1]);
 						BITDigiLock.SaveDigiLock(sPlayer, digilock.getBlock(),
@@ -325,7 +325,7 @@ public class BITCommandDigiLock implements CommandExecutor {
 			return false;
 		} else {
 			//Not lockable
-			G333Messages.sendNotification(sPlayer,
+			BITMessages.sendNotification(sPlayer,
 					"You can't lock a " + block.getType());
 			return false;
 		}

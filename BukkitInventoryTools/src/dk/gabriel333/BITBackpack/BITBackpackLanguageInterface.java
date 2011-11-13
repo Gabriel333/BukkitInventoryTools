@@ -1,16 +1,17 @@
-package dk.gabriel333.spoutbackpack;
+package dk.gabriel333.BITBackpack;
 
-public class SBLanguageInterface {
+
+public class BITBackpackLanguageInterface {
 	public Language					language	= Language.ENGLISH;
 
-	private SBLanguageInterface_EN	languageEN	= new SBLanguageInterface_EN();
-	private SBLanguageInterface_FR	languageFR	= new SBLanguageInterface_FR();
+	private BITLanguageInterface_EN	languageEN	= new BITLanguageInterface_EN();
+	private BITLanguageInterface_FR	languageFR	= new BITLanguageInterface_FR();
 
 	public Language getLanguage() {
 		return language;
 	}
 
-	public SBLanguageInterface(Language language2) {
+	public BITBackpackLanguageInterface(Language language2) {
 		language = language2;
 	}
 

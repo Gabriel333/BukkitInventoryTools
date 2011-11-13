@@ -12,8 +12,8 @@ import org.getspout.spoutapi.player.SpoutPlayer;
 
 import dk.gabriel333.BukkitInventoryTools.BIT;
 import dk.gabriel333.BukkitInventoryTools.Book.BITBook;
-import dk.gabriel333.Library.G333Config;
-import dk.gabriel333.Library.G333Messages;
+import dk.gabriel333.Library.BITConfig;
+import dk.gabriel333.Library.BITMessages;
 
 public class BITInventoryListener extends InventoryListener {
 
@@ -26,9 +26,9 @@ public class BITInventoryListener extends InventoryListener {
 	public void onInventoryOpen(InventoryOpenEvent event) {
 		SpoutPlayer sPlayer = (SpoutPlayer) event.getPlayer();
 		if (sPlayer.isSpoutCraftEnabled()) {
-			if (G333Config.SORT_DISPLAYSORTARCHIEVEMENT) {
-				G333Messages.sendNotification(sPlayer, "Sort:"
-						+ G333Config.LIBRARY_SORTKEY);
+			if (BITConfig.SORT_DISPLAYSORTARCHIEVEMENT) {
+				BITMessages.sendNotification(sPlayer, "Sort:"
+						+ BITConfig.LIBRARY_SORTKEY);
 			}
 		}
 		Inventory inv = event.getInventory();

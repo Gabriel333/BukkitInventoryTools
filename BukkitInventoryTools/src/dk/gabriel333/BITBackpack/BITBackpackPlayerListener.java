@@ -1,4 +1,4 @@
-package dk.gabriel333.spoutbackpack;
+package dk.gabriel333.BITBackpack;
 
 import org.bukkit.entity.Player;
 import org.bukkit.event.player.PlayerJoinEvent;
@@ -9,12 +9,12 @@ import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.event.player.PlayerTeleportEvent;
 
 import dk.gabriel333.BukkitInventoryTools.BIT;
-import dk.gabriel333.Library.G333Config;
+import dk.gabriel333.Library.BITConfig;
 
-public class SBPlayerListener extends PlayerListener {
+public class BITBackpackPlayerListener extends PlayerListener {
 	private BIT plugin;
 
-	public SBPlayerListener(BIT plugin) {
+	public BITBackpackPlayerListener(BIT plugin) {
 		this.plugin = plugin;
 	}
 
@@ -22,7 +22,7 @@ public class SBPlayerListener extends PlayerListener {
 	public void onPlayerJoin(PlayerJoinEvent event) {
 		try {
 			Player player = event.getPlayer();
-			SpoutBackpack.loadInventory(player, player.getWorld());
+			BITBackpack.loadInventory(player, player.getWorld());
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -32,7 +32,7 @@ public class SBPlayerListener extends PlayerListener {
 	public void onPlayerTeleport(PlayerTeleportEvent event) {
 		if (((event.getFrom().getWorld().getName() != event.getTo().getWorld()
 				.getName()) || plugin.portals.contains(event.getPlayer())
-				&& G333Config.SBP_InventoriesShare)) { 
+				&& BITConfig.SBP_InventoriesShare)) { 
 				
 				//plugin.config.getBoolean("Backpack."
 				//		+ event.getTo().getWorld().getName()
@@ -40,10 +40,10 @@ public class SBPlayerListener extends PlayerListener {
 			
 			try {
 				Player player = event.getPlayer();
-				SBInventorySaveTask.saveInventory(player, event.getFrom()
+				BITBackpackInventorySaveTask.saveInventory(player, event.getFrom()
 						.getWorld());
 				BIT.inventories.remove(player.getName());
-				SpoutBackpack.loadInventory(player, event.getTo().getWorld());
+				BITBackpack.loadInventory(player, event.getTo().getWorld());
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
@@ -60,7 +60,7 @@ public class SBPlayerListener extends PlayerListener {
 	public void onPlayerKick(PlayerKickEvent event) {
 		try {
 			Player player = event.getPlayer();
-			SBInventorySaveTask.saveInventory(player, player.getWorld());
+			BITBackpackInventorySaveTask.saveInventory(player, player.getWorld());
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -70,7 +70,7 @@ public class SBPlayerListener extends PlayerListener {
 	public void onPlayerQuit(PlayerQuitEvent event) {
 		try {
 			Player player = event.getPlayer();
-			SBInventorySaveTask.saveInventory(player, player.getWorld());
+			BITBackpackInventorySaveTask.saveInventory(player, player.getWorld());
 			if (BIT.inventories.containsKey(player)) {
 				BIT.inventories.remove(player);
 			}

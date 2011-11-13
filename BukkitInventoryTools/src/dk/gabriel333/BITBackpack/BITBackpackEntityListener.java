@@ -1,4 +1,4 @@
-package dk.gabriel333.spoutbackpack;
+package dk.gabriel333.BITBackpack;
 
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Entity;
@@ -10,12 +10,12 @@ import org.bukkit.inventory.ItemStack;
 import org.getspout.spoutapi.SpoutManager;
 
 import dk.gabriel333.BukkitInventoryTools.BIT;
-import dk.gabriel333.Library.G333Permissions;
+import dk.gabriel333.Library.BITPermissions;
 
-public class SBEntityListener extends EntityListener {
+public class BITBackpackEntityListener extends EntityListener {
 	private BIT plugin;
 
-	public SBEntityListener(BIT plugin) {
+	public BITBackpackEntityListener(BIT plugin) {
 		this.plugin = plugin;
 	}
 
@@ -24,11 +24,11 @@ public class SBEntityListener extends EntityListener {
 		Entity entity = event.getEntity();
 		if (entity instanceof Player) {
 			Player player = (Player) entity;
-			if (!G333Permissions.hasPerm(player, "backpack.nodrop",
-					G333Permissions.QUIET)) {
-				if (SpoutBackpack.canOpenBackpack(player.getWorld(), player)) {
+			if (!BITPermissions.hasPerm(player, "backpack.nodrop",
+					BITPermissions.QUIET)) {
+				if (BITBackpack.canOpenBackpack(player.getWorld(), player)) {
 					// if (!((SpoutPlayer) player).isSpoutCraftEnabled()) {
-					SpoutBackpack.loadInventory(player, player.getWorld());
+					BITBackpack.loadInventory(player, player.getWorld());
 					// }
 					if (BIT.inventories.containsKey(player.getName())) {
 						ItemStack[] items = BIT.inventories.get(player
@@ -42,18 +42,18 @@ public class SBEntityListener extends EntityListener {
 						Inventory inventory = SpoutManager
 								.getInventoryBuilder()
 								.construct(
-										SpoutBackpack
+										BITBackpack
 												.allowedSize(player.getWorld(),
 														player, true),
 										BIT.inventoryName);
-						for (Integer i = 0; i < SpoutBackpack.allowedSize(
+						for (Integer i = 0; i < BITBackpack.allowedSize(
 								player.getWorld(), player, true); i++) {
 							ItemStack item = new ItemStack(0, 0);
 							inventory.setItem(i, item);
 						}
 						BIT.inventories.put(player.getName(),
 								inventory.getContents());
-						SBInventorySaveTask.saveInventory(player,
+						BITBackpackInventorySaveTask.saveInventory(player,
 								player.getWorld());
 						player.sendMessage(plugin.logTag + BIT.li.getMessage("your")
 								+ ChatColor.RED + BIT.inventoryName + ChatColor.WHITE

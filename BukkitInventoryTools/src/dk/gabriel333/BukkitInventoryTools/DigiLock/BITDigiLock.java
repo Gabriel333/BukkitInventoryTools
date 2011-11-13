@@ -30,8 +30,8 @@ import org.getspout.spoutapi.gui.PopupScreen;
 import org.getspout.spoutapi.player.SpoutPlayer;
 
 import dk.gabriel333.BukkitInventoryTools.BIT;
-import dk.gabriel333.Library.G333Config;
-import dk.gabriel333.Library.G333Messages;
+import dk.gabriel333.Library.BITConfig;
+import dk.gabriel333.Library.BITMessages;
 
 public class BITDigiLock {
 
@@ -109,7 +109,7 @@ public class BITDigiLock {
 		String query;
 		boolean createlock = true;
 		boolean newLock = true;
-		int cost = G333Config.DIGILOCK_COST;
+		int cost = BITConfig.DIGILOCK_COST;
 		block = getDigiLockBlock(block);
 		if (isLocked(block)) {
 			newLock = false;
@@ -156,10 +156,10 @@ public class BITDigiLock {
 			}
 		}
 		if (createlock) {
-			if (G333Config.DEBUG_SQL)
+			if (BITConfig.DEBUG_SQL)
 				sPlayer.sendMessage(ChatColor.YELLOW + "Updating lock: "
 						+ query);
-			if (G333Config.STORAGE_TYPE.equals("MYSQL")) {
+			if (BITConfig.STORAGE_TYPE.equals("MYSQL")) {
 				try {
 					BIT.manageMySQL.insertQuery(query);
 				} catch (MalformedURLException e) {
@@ -173,9 +173,9 @@ public class BITDigiLock {
 				BIT.manageSQLite.insertQuery(query);
 			}
 			if (newLock) {
-				G333Messages.sendNotification(sPlayer, "DigiLock created.");
+				BITMessages.sendNotification(sPlayer, "DigiLock created.");
 			} else {
-				G333Messages.sendNotification(sPlayer, "DigiLock updated.");
+				BITMessages.sendNotification(sPlayer, "DigiLock updated.");
 			}
 		} else {
 			sPlayer.sendMessage("You dont have enough money. Cost is:" + cost);
@@ -193,7 +193,7 @@ public class BITDigiLock {
 						+ block.getY() + " AND z = " + block.getZ()
 						+ " AND world='" + block.getWorld().getName() + "');";
 				ResultSet result = null;
-				if (G333Config.STORAGE_TYPE.equals("MYSQL")) {
+				if (BITConfig.STORAGE_TYPE.equals("MYSQL")) {
 					try {
 						result = BIT.manageMySQL.sqlQuery(query);
 					} catch (MalformedURLException e) {
@@ -451,7 +451,7 @@ public class BITDigiLock {
 				+ block.getZ() + " AND world='" + block.getWorld().getName()
 				+ "');";
 		ResultSet result = null;
-		if (G333Config.STORAGE_TYPE.equals("MYSQL")) {
+		if (BITConfig.STORAGE_TYPE.equals("MYSQL")) {
 			try {
 				result = BIT.manageMySQL.sqlQuery(query);
 			} catch (MalformedURLException e) {
@@ -493,16 +493,16 @@ public class BITDigiLock {
 		if (BIT.useEconomy) {
 			if (BIT.plugin.Method.hasAccount(sPlayer.getName())) {
 				if (BIT.plugin.Method.getAccount(sPlayer.getName()).hasEnough(
-						G333Config.DIGILOCK_DESTROYCOST)
-						|| G333Config.DIGILOCK_DESTROYCOST < 0) {
+						BITConfig.DIGILOCK_DESTROYCOST)
+						|| BITConfig.DIGILOCK_DESTROYCOST < 0) {
 					BIT.plugin.Method.getAccount(sPlayer.getName()).subtract(
-							G333Config.DIGILOCK_DESTROYCOST);
+							BITConfig.DIGILOCK_DESTROYCOST);
 					sPlayer.sendMessage("Your account ("
 							+ BIT.plugin.Method.getAccount(sPlayer.getName())
 									.balance()
 							+ ") has been deducted "
 							+ BIT.plugin.Method
-									.format(G333Config.DIGILOCK_DESTROYCOST)
+									.format(BITConfig.DIGILOCK_DESTROYCOST)
 							+ ".");
 				} else {
 					sPlayer.sendMessage("You dont have enough money ("
@@ -510,7 +510,7 @@ public class BITDigiLock {
 									.balance()
 							+ "). Cost is:"
 							+ BIT.plugin.Method
-									.format(G333Config.DIGILOCK_DESTROYCOST));
+									.format(BITConfig.DIGILOCK_DESTROYCOST));
 					deletelock = false;
 				}
 			}
@@ -520,10 +520,10 @@ public class BITDigiLock {
 				+ sBlock.getZ() + " AND world='" + sBlock.getWorld().getName()
 				+ "');";
 		if (deletelock) {
-			if (G333Config.DEBUG_SQL)
+			if (BITConfig.DEBUG_SQL)
 				sPlayer.sendMessage(ChatColor.YELLOW + "Removeing lock: "
 						+ query);
-			if (G333Config.STORAGE_TYPE.equals("MYSQL")) {
+			if (BITConfig.STORAGE_TYPE.equals("MYSQL")) {
 				try {
 					BIT.manageMySQL.deleteQuery(query);
 				} catch (MalformedURLException e) {
@@ -536,10 +536,10 @@ public class BITDigiLock {
 			} else { // SQLLITE
 				BIT.manageSQLite.deleteQuery(query);
 			}
-			G333Messages.sendNotification(sPlayer, "DigiLock removed.");
+			BITMessages.sendNotification(sPlayer, "DigiLock removed.");
 		} else {
-			G333Messages.sendNotification(sPlayer, "You need more money ("
-					+ G333Config.DIGILOCK_DESTROYCOST + ")");
+			BITMessages.sendNotification(sPlayer, "You need more money ("
+					+ BITConfig.DIGILOCK_DESTROYCOST + ")");
 		}
 
 	}
@@ -909,7 +909,7 @@ public class BITDigiLock {
 					public void run() {
 						SpoutBlock sb = sBlock;
 						SpoutPlayer sp = sPlayer;
-						if (G333Config.DEBUG_DOOR)
+						if (BITConfig.DEBUG_DOOR)
 							sp.sendMessage("Turning lever off in " + closetimer
 									+ " seconds");
 						if (BITDigiLock.isLeverOn(sBlock))
@@ -1091,7 +1091,7 @@ public class BITDigiLock {
 						SpoutBlock sb = sBlock;
 						SpoutPlayer sp = sPlayer;
 						int c = cost;
-						if (G333Config.DEBUG_DOOR)
+						if (BITConfig.DEBUG_DOOR)
 							sp.sendMessage("Autoclosing the door in "
 									+ closetimer + " seconds");
 						if (isDoor(sb) && !isDoubleDoor(sb)) {
@@ -1185,7 +1185,7 @@ public class BITDigiLock {
 					public void run() {
 						SpoutBlock sb = sBlock;
 						SpoutPlayer sp = sPlayer;
-						if (G333Config.DEBUG_DOOR)
+						if (BITConfig.DEBUG_DOOR)
 							sp.sendMessage("Autoclosing the trapdoor in "
 									+ closetimer + " seconds");
 						if (sBlock.getType() == Material.TRAP_DOOR) {
@@ -1279,7 +1279,7 @@ public class BITDigiLock {
 					public void run() {
 						SpoutBlock sb = sBlock;
 						SpoutPlayer sp = sPlayer;
-						if (G333Config.DEBUG_DOOR)
+						if (BITConfig.DEBUG_DOOR)
 							sp.sendMessage("Autoclosing the fencegate in "
 									+ closetimer + " seconds");
 						if (sBlock.getType() == Material.FENCE_GATE) {
@@ -1461,7 +1461,7 @@ public class BITDigiLock {
 						SpoutBlock sb = sBlock;
 						SpoutPlayer sp = sPlayer;
 						int c = cost;
-						if (G333Config.DEBUG_DOOR)
+						if (BITConfig.DEBUG_DOOR)
 							sp.sendMessage("Autoclosing the DoubleDoor in "
 									+ closetimer + " seconds");
 						if (isDoubleDoor(sBlock)) {
@@ -1656,7 +1656,7 @@ public class BITDigiLock {
 		y = y + 3 * height;
 
 		GenericLabel costToCreate = new GenericLabel("CostToCreate: "
-				+ String.valueOf(G333Config.DIGILOCK_COST));
+				+ String.valueOf(BITConfig.DIGILOCK_COST));
 		costToCreate.setAuto(true).setX(175).setY(y - 10).setHeight(10)
 				.setWidth(140);
 		costToCreate.setTooltip("The cost to create a new DigiLock");

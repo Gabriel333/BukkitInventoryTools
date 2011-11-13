@@ -17,9 +17,9 @@ import org.getspout.spoutapi.gui.Button;
 import org.getspout.spoutapi.player.SpoutPlayer;
 
 import dk.gabriel333.BukkitInventoryTools.Inventory.BITInventory;
-import dk.gabriel333.Library.G333Config;
-import dk.gabriel333.Library.G333Messages;
-import dk.gabriel333.Library.G333Permissions;
+import dk.gabriel333.Library.BITConfig;
+import dk.gabriel333.Library.BITMessages;
+import dk.gabriel333.Library.BITPermissions;
 
 public class BITDigiLockSpoutListener extends SpoutListener {
 
@@ -44,11 +44,11 @@ public class BITDigiLockSpoutListener extends SpoutListener {
 					BITDigiLock.popupScreen.get(id).close();
 					BITDigiLock.cleanupPopupScreen(sPlayer);
 					if ((digilock.getPincode().equals(
-							BITDigiLock.pincodeGUI.get(id).getText()) && G333Permissions
+							BITDigiLock.pincodeGUI.get(id).getText()) && BITPermissions
 							.hasPerm(sPlayer, "digilock.use",
-									G333Permissions.QUIET))
-							|| G333Permissions.hasPerm(sPlayer,
-									"digilock.admin", G333Permissions.QUIET)) {
+									BITPermissions.QUIET))
+							|| BITPermissions.hasPerm(sPlayer,
+									"digilock.admin", BITPermissions.QUIET)) {
 						if (BITDigiLock.isChest(digilock.getBlock())) {
 							SpoutChest sChest = (SpoutChest) sBlock.getState();
 							Inventory inv = sChest.getLargestInventory();
@@ -106,7 +106,7 @@ public class BITDigiLockSpoutListener extends SpoutListener {
 									.openBitInventory(sPlayer, bitInventory);
 
 						} else if (BITDigiLock.isSign(sBlock)) {
-							if (sPlayer.isSpoutCraftEnabled()&& G333Config.LIBRARY_USESIGNEDITGUI) {
+							if (sPlayer.isSpoutCraftEnabled()&& BITConfig.LIBRARY_USESIGNEDITGUI) {
 								Sign sign = (Sign) sBlock.getState();
 								sPlayer.openSignEditGUI(sign);
 							} else {
@@ -115,7 +115,7 @@ public class BITDigiLockSpoutListener extends SpoutListener {
 
 						}
 					} else {
-						G333Messages
+						BITMessages
 								.sendNotification(sPlayer, "Wrong pincode!");
 						if (BITDigiLock.isDoubleDoor(digilock.getBlock())) {
 							BITDigiLock.closeDoubleDoor(sPlayer, digilock.getBlock(),
@@ -149,8 +149,8 @@ public class BITDigiLockSpoutListener extends SpoutListener {
 				// Buttons in sPlayer.setPincode
 				// ************************************
 				else if (BITDigiLock.BITDigiLockButtons.get(uuid) == "setPincodeLock"
-						&& G333Permissions.hasPerm(sPlayer, "digilock.create",
-								G333Permissions.QUIET)) {
+						&& BITPermissions.hasPerm(sPlayer, "digilock.create",
+								BITPermissions.QUIET)) {
 					if (validateSetPincodeFields(sPlayer)) {
 						sPlayer.closeActiveWindow();
 						BITDigiLock.SaveDigiLock(sPlayer, sBlock,
@@ -207,7 +207,7 @@ public class BITDigiLockSpoutListener extends SpoutListener {
 				// This only happens if I have forgot to handle a button
 				// ************************************
 				else {
-					if (G333Config.DEBUG_GUI)
+					if (BITConfig.DEBUG_GUI)
 						sPlayer.sendMessage("BITDigiLockListener: Unknow button:"
 								+ BITDigiLock.BITDigiLockButtons.get(uuid));
 				}
@@ -229,24 +229,24 @@ public class BITDigiLockSpoutListener extends SpoutListener {
 				.getText());
 		int useCost = Integer.valueOf(BITDigiLock.useCostGUI.get(id).getText());
 		if (closetimer < 0) {
-			G333Messages.sendNotification(sPlayer, "Closetimer must be > 0");
+			BITMessages.sendNotification(sPlayer, "Closetimer must be > 0");
 			BITDigiLock.closetimerGUI.get(id).setText("0");
 			BITDigiLock.popupScreen.get(id).setDirty(true);
 			return false;
 		} else if (closetimer > 3600) {
-			G333Messages.sendNotification(sPlayer, "Closetim. must be<3600");
+			BITMessages.sendNotification(sPlayer, "Closetim. must be<3600");
 			BITDigiLock.closetimerGUI.get(id).setText("3600");
 			BITDigiLock.popupScreen.get(id).setDirty(true);
 			return false;
-		} else if (useCost > G333Config.DIGILOCK_USEMAXCOST) {
-			G333Messages.sendNotification(sPlayer, "Cost must be less "
-					+ G333Config.DIGILOCK_USEMAXCOST);
+		} else if (useCost > BITConfig.DIGILOCK_USEMAXCOST) {
+			BITMessages.sendNotification(sPlayer, "Cost must be less "
+					+ BITConfig.DIGILOCK_USEMAXCOST);
 			BITDigiLock.useCostGUI.get(id).setText(
-					String.valueOf(G333Config.DIGILOCK_USEMAXCOST));
+					String.valueOf(BITConfig.DIGILOCK_USEMAXCOST));
 			BITDigiLock.popupScreen.get(id).setDirty(true);
 			return false;
 		} else if (useCost < 0) {
-			G333Messages.sendNotification(sPlayer, "Cost must be >= 0");
+			BITMessages.sendNotification(sPlayer, "Cost must be >= 0");
 			BITDigiLock.useCostGUI.get(id).setText("0");
 			BITDigiLock.popupScreen.get(id).setDirty(true);
 			return false;

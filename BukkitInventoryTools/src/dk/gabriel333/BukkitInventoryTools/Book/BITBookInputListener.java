@@ -16,17 +16,17 @@ public class BITBookInputListener extends InputListener {
 		SpoutPlayer sPlayer = event.getPlayer();
 		ScreenType screentype = event.getScreenType();
 		String keypressed = event.getKey().name();
-		if (G333Config.DEBUG_EVENTS) {
+		if (BITConfig.DEBUG_EVENTS) {
 			sPlayer.sendMessage("BITBookInputListn.key:" + keypressed
 					+ " Screentype:" + screentype);
 		}
-		if (!(keypressed.equals(G333Config.LIBRARY_READKEY) || keypressed
+		if (!(keypressed.equals(BITConfig.LIBRARY_READKEY) || keypressed
 				.equals("KEY_ESCAPE")))
 			return;
 		ItemStack itemInHand = sPlayer.getInventory().getItemInHand();
 		int id = sPlayer.getEntityId();
 		if (BITBook.isWriteable(itemInHand.getType())) {
-			if (keypressed.equals(G333Config.LIBRARY_READKEY)
+			if (keypressed.equals(BITConfig.LIBRARY_READKEY)
 					&& screentype != ScreenType.CHAT_SCREEN) {
 				if (!BITBook.hasPlayerOpenedBook(sPlayer)) {
 
@@ -52,10 +52,10 @@ public class BITBookInputListener extends InputListener {
 			BITBook bitBook = new BITBook();
 			int id = sPlayer.getEntityId();
 			if (bookId > 1000) {
-				if (G333Permissions.hasPerm(sPlayer, "book.use",
-						G333Permissions.NOT_QUIET)
-						|| G333Permissions.hasPerm(sPlayer, "book.admin",
-								G333Permissions.NOT_QUIET)) {
+				if (BITPermissions.hasPerm(sPlayer, "book.use",
+						BITPermissions.NOT_QUIET)
+						|| BITPermissions.hasPerm(sPlayer, "book.admin",
+								BITPermissions.NOT_QUIET)) {
 					bitBook = BITBook.loadBook(sPlayer, bookId);
 					if (bitBook != null) {
 						BITBook.hasOpenedBook.put(id, true);
@@ -66,8 +66,8 @@ public class BITBookInputListener extends InputListener {
 				}
 			} else if (bookId == 0) {
 				// new book
-				if (G333Permissions.hasPerm(sPlayer, "book.create",
-						G333Permissions.NOT_QUIET)) {
+				if (BITPermissions.hasPerm(sPlayer, "book.create",
+						BITPermissions.NOT_QUIET)) {
 					bookId = BITBook.getNextBookId();
 					// sPlayer.sendMessage("Creating new book with id:" +
 					// bookId);
@@ -99,7 +99,7 @@ public class BITBookInputListener extends InputListener {
 				}
 			} else {
 				// TODO: edit/open/import bookworm book.
-				G333Messages.sendNotification(sPlayer,
+				BITMessages.sendNotification(sPlayer,
 						"This is a bookworm book!");
 			}
 		} else {

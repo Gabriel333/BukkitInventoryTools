@@ -1,6 +1,6 @@
-package dk.gabriel333.spoutbackpack;
+package dk.gabriel333.BITBackpack;
 
-public class SBLanguageInterface_EN {
+public class BITLanguageInterface_EN {
 
 	public String getString(String string) {
 		return parseString(string);

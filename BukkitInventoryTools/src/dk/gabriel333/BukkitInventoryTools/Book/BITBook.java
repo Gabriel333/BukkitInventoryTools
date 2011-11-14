@@ -704,8 +704,11 @@ public class BITBook {
 		masterCopyButtonGUI.get(id).setText("Master:" + masterCopyGUI.get(id));
 		masterCopyButtonGUI.get(id).setAuto(false).setX(x).setY(y)
 				.setHeight(buttonHeight).setWidth(buttonWidth);
+		//masterCopyButtonGUI.get(id).setTooltip(
+		//		"The masterCopy keeps all copies updated aumatically.");
 		masterCopyButtonGUI.get(id).setTooltip(
-				"The masterCopy keeps all copies updated aumatically.");
+				"NOT IMPLEMENTET YET!");
+		
 		popupScreen.get(id).attachWidget(BIT.plugin,
 				masterCopyButtonGUI.get(id));
 		BITButtons.put(masterCopyButtonGUI.get(id).getId(), "masterCopyButton");
@@ -716,8 +719,11 @@ public class BITBook {
 				"Force:" + forceBookToPlayerInventoryGUI.get(id));
 		forceBookToPlayerInventoryButtonGUI.get(id).setAuto(false).setX(x)
 				.setY(y).setHeight(buttonHeight).setWidth(buttonWidth);
-		forceBookToPlayerInventoryButtonGUI.get(id).setTooltip(
-				"Force this book in to all players inventory.");
+		//forceBookToPlayerInventoryButtonGUI.get(id).setTooltip(
+		//		"Force this book in to all players inventory.");
+				forceBookToPlayerInventoryButtonGUI.get(id).setTooltip(
+						"NOT IMPLEMENTET YET!");
+				
 		popupScreen.get(id).attachWidget(BIT.plugin,
 				forceBookToPlayerInventoryButtonGUI.get(id));
 		BITButtons.put(forceBookToPlayerInventoryButtonGUI.get(id).getId(),

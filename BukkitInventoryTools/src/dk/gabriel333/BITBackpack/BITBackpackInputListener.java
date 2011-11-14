@@ -41,10 +41,10 @@ public class BITBackpackInputListener extends InputListener {
 			return;
 		}
 		if (keypressed.equalsIgnoreCase(BITConfig.LIBRARY_BACKPACK)) {
-			if (BITBackpack.SizeInConfig(event.getPlayer().getWorld(),
-					event.getPlayer()) > 0) {
-				if (BITPermissions.hasPerm(event.getPlayer(), "backpack.use",
-						BITPermissions.NOT_QUIET)) {
+			if (BITPermissions.hasPerm(event.getPlayer(), "backpack.use",
+					BITPermissions.NOT_QUIET)) {
+				if (BITBackpack.sizeInConfig(event.getPlayer().getWorld(),
+						event.getPlayer()) > 0) {
 					if (!BITBackpack.canOpenBackpack(event.getPlayer()
 							.getWorld(), event.getPlayer())) {
 						return;
@@ -140,15 +140,15 @@ public class BITBackpackInputListener extends InputListener {
 										+ ChatColor.WHITE
 										+ BIT.li.getMessage("!"));
 					}
+				} else {
+					event.getPlayer().sendMessage(
+							"You need to buy a backpack. Use /backpack buy");
 				}
-			} else {
-				event.getPlayer().sendMessage(
-						"You need to buy a backpack. Use /backpack buy");
 			}
 		} else if (keypressed.equalsIgnoreCase(BITConfig.LIBRARY_WORKBENCH)) {
-			if (BITConfig.SBP_workbenchEnabled) {
-				if (BITPermissions.hasPerm(event.getPlayer(),
-						"backpack.workbench", BITPermissions.NOT_QUIET)) {
+			if (BITPermissions.hasPerm(event.getPlayer(), "backpack.workbench",
+					BITPermissions.NOT_QUIET)) {
+				if (BITConfig.SBP_workbenchEnabled) {
 					if (!BIT.openedInventoriesOthers.containsKey(event
 							.getPlayer().getName())) {
 						// if (!BIT.openedInventories.containsKey(event
@@ -189,16 +189,18 @@ public class BITBackpackInputListener extends InputListener {
 									entityPlayer, windowNumber);
 						}
 						// }
+
 					}
-				}
-			} else {
-				if (BITConfig.DEBUG_PERMISSIONS) {
-					event.getPlayer().sendMessage(
-							"SBP_workbenchEnabled is false in config.yml");
+				} else {
+					if (BITConfig.DEBUG_PERMISSIONS) {
+						event.getPlayer().sendMessage(
+								"SBP_workbenchEnabled is false in config.yml");
+					}
 				}
 			}
 		} else if (keypressed.equalsIgnoreCase(BITConfig.LIBRARY_SORTKEY)) {
 
+			// The player pressed KEY_E
 		} else if (keypressed.equalsIgnoreCase(sPlayer.getInventoryKey()
 				.toString())) {
 			if (screentype == ScreenType.GAME_SCREEN
@@ -209,6 +211,9 @@ public class BITBackpackInputListener extends InputListener {
 				if (BIT.openedInventories.containsKey(sPlayer.getName())) {
 					BIT.openedInventories.remove(sPlayer.getName());
 				}
+				if (screentype != ScreenType.GAME_SCREEN)
+					sPlayer.closeActiveWindow();
+				sPlayer.openScreen(ScreenType.PLAYER_INVENTORY);
 				// sPlayer.getInventory().
 				// sPlayer.openInventoryWindow(null);
 			}

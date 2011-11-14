@@ -63,8 +63,8 @@ public class BITBackpack implements CommandExecutor {
 									BIT.openedInventories.put(playerName, inv);
 									// TODO: I dont know if these two lines
 									// should be here.
-									BIT.openedInventoriesOthers.put(
-											player.getName(), playerName);
+									// BIT.openedInventoriesOthers.put(
+									// player.getName(), playerName);
 									inv.setContents(BIT.inventories
 											.get(playerName));
 									((org.getspout.spoutapi.player.SpoutPlayer) player)
@@ -113,6 +113,14 @@ public class BITBackpack implements CommandExecutor {
 										+ BIT.inventoryName
 										+ ChatColor.WHITE
 										+ BIT.li.getMessage("!"));
+							} else if (size == sizeInConfig(player.getWorld(),
+									player)) {
+								player.sendMessage(BIT.li
+										.getMessage("youvegotthebiggest")
+										+ ChatColor.RED
+										+ BIT.inventoryName
+										+ ChatColor.WHITE
+										+ BIT.li.getMessage("foryourpermissions"));
 							} else {
 								player.sendMessage(BIT.li.getMessage("your")
 										+ ChatColor.RED + BIT.inventoryName
@@ -135,10 +143,10 @@ public class BITBackpack implements CommandExecutor {
 							return true;
 						} else if (argument.equalsIgnoreCase("upgrade")
 								|| argument.equalsIgnoreCase("buy")) {
-							if (allowedSize(player.getWorld(), player, false) > SizeInConfig(
+							if (allowedSize(player.getWorld(), player, false) > sizeInConfig(
 									player.getWorld(), player)
 									&& upgradeAllowedSize(player.getWorld(),
-											player) > SizeInConfig(
+											player) > sizeInConfig(
 											player.getWorld(), player)) {
 								if (BIT.useEconomy) {
 									startUpgradeProcedure(
@@ -409,7 +417,7 @@ public class BITBackpack implements CommandExecutor {
 		BITBackpackInventorySaveTask.saveInventory(player, player.getWorld());
 		BIT.inventories.remove(player.getName());
 		File saveFile;
-		if (BITConfig.getBooleanParm("SBP.InvventoriesShare."
+		if (BITConfig.getBooleanParm("SBP.InventoriesShare."
 				+ player.getWorld().getName(), true)) {
 			saveFile = new File(BIT.plugin.getDataFolder() + File.separator
 					+ "inventories", player.getName() + ".yml");
@@ -494,7 +502,7 @@ public class BITBackpack implements CommandExecutor {
 		return size;
 	}
 
-	public static int SizeInConfig(World world, Player player) {
+	public static int sizeInConfig(World world, Player player) {
 		File saveFile;
 		if (BITConfig.getBooleanParm("SBP.InventoriesShare."
 				+ player.getWorld().getName(), true)) {
@@ -543,8 +551,8 @@ public class BITBackpack implements CommandExecutor {
 		}
 		// Finding actual size
 		if (configurationCheck) {
-			if (SizeInConfig(world, player) < size) {
-				size = SizeInConfig(world, player);
+			if (sizeInConfig(world, player) < size) {
+				size = sizeInConfig(world, player);
 			}
 		}
 

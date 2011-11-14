@@ -1,8 +1,8 @@
 name: BukkitInventoryTools
 main: dk.gabriel333.BukkitInventoryTools.BIT
-version: 2.9.9
-author: Gabriel333
-authors: [Rocoloco]
+version: 3.0.0
+author: Rocologo
+authors: [Gabriel333]
 website: http://dev.bukkit.org/server-mods/bukkitinventorytools/
 dev-url: https://github.com/BukkitInventoryTools
 description: Shop, Digital lock, sort and stack inventories

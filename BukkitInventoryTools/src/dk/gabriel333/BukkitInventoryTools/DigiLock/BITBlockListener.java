@@ -26,38 +26,35 @@ public class BITBlockListener extends BlockListener {
 
 	public void onBlockRedstoneChange(BlockRedstoneEvent event) {
 		// TODO: THERE IS AN MEMORY LEAK HERE!!!
-	/*	SpoutBlock sBlock = (SpoutBlock) event.getBlock();
-		if (!BITDigiLock.isLockable(sBlock))
-			return;
-		if (BITDigiLock.isLocked(sBlock)) {
-			if (G333Config.DEBUG_EVENTS)
-				G333Messages.showInfo("BlockRedstoneEvt:"
-						+ event.getBlock().getType() + " getOC:"
-						+ event.getOldCurrent() + " getNC:"
-						+ event.getNewCurrent());
-			if (BITDigiLock.isDoubleDoor(sBlock)) {
-
-			} else if (BITDigiLock.isDoor(sBlock)) {
-				Door door = (Door) sBlock.getState().getData();
-				if (!door.isOpen()) {
-					event.setNewCurrent(event.getOldCurrent());
-				}
-			}
-		}*/
+		/*
+		 * SpoutBlock sBlock = (SpoutBlock) event.getBlock(); if
+		 * (!BITDigiLock.isLockable(sBlock)) return; if
+		 * (BITDigiLock.isLocked(sBlock)) { if (G333Config.DEBUG_EVENTS)
+		 * G333Messages.showInfo("BlockRedstoneEvt:" +
+		 * event.getBlock().getType() + " getOC:" + event.getOldCurrent() +
+		 * " getNC:" + event.getNewCurrent()); if
+		 * (BITDigiLock.isDoubleDoor(sBlock)) {
+		 * 
+		 * } else if (BITDigiLock.isDoor(sBlock)) { Door door = (Door)
+		 * sBlock.getState().getData(); if (!door.isOpen()) {
+		 * event.setNewCurrent(event.getOldCurrent()); } } }
+		 */
 	}
 
 	public void onBlockPhysics(BlockPhysicsEvent event) {
 		if (event.isCancelled())
 			return;
 		SpoutBlock sBlock = (SpoutBlock) event.getBlock();
-		if (!BITDigiLock.isLockable(sBlock))
-			return;
-		if (BITDigiLock.isLocked(sBlock)) {
-			event.setCancelled(true);
-			if (BITConfig.DEBUG_EVENTS) {
-				BITMessages.showInfo("BlockPhysicsEvt:"
-						+ event.getBlock().getType() + " getCT:"
-						+ event.getChangedType());
+		if (sBlock != null) {
+			if (!BITDigiLock.isLockable(sBlock))
+				return;
+			if (BITDigiLock.isLocked(sBlock)) {
+				event.setCancelled(true);
+				if (BITConfig.DEBUG_EVENTS) {
+					BITMessages.showInfo("BlockPhysicsEvt:"
+							+ event.getBlock().getType() + " getCT:"
+							+ event.getChangedType());
+				}
 			}
 		}
 	}
@@ -71,7 +68,7 @@ public class BITBlockListener extends BlockListener {
 		if (!BITDigiLock.isLockable(sBlock))
 			return;
 		if (BITDigiLock.isLocked(sBlock)) {
-			if (BITDigiLock.isDoubleDoor(sBlock)){
+			if (BITDigiLock.isDoubleDoor(sBlock)) {
 				BITMessages.showInfo("Tried to break doubledoor");
 			}
 			event.setCancelled(true);
@@ -87,8 +84,8 @@ public class BITBlockListener extends BlockListener {
 		if (event.isCancelled())
 			return;
 		SpoutBlock sBlock = (SpoutBlock) event.getBlock();
-		//if (!BITDigiLock.isLockable(sBlock))
-		//	return;
+		// if (!BITDigiLock.isLockable(sBlock))
+		// return;
 		SpoutPlayer sPlayer = (SpoutPlayer) event.getPlayer();
 		SpoutBlock blockOnTop = sBlock.getRelative(BlockFace.UP);
 		if (BITDigiLock.isLocked(sBlock) || BITDigiLock.isLocked(blockOnTop)) {

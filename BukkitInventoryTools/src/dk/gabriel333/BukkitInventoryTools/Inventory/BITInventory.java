@@ -111,7 +111,7 @@ public class BITInventory {
 		sPlayer.openInventoryWindow(bitInventory.getInventory());
 	}
 
-	public static void closeBitInventory(SpoutPlayer sPlayer) {
+	public void closeBitInventory(SpoutPlayer sPlayer) {
 		int id = sPlayer.getEntityId();
 		BITInventory bitInventory = openedInventories.get(id);
 		saveBitInventory(sPlayer, bitInventory);

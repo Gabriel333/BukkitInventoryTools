@@ -122,9 +122,9 @@ public class BITBackpackInputListener extends InputListener {
 									.loadInventory(player, player.getWorld());
 							Inventory inv = SpoutManager.getInventoryBuilder()
 									.construct(
-											BITBackpack.allowedSize(
-													player.getWorld(), player,
-													true), BIT.inventoryName);
+											BIT.inventories.get(player
+													.getName()).length,
+											BIT.inventoryName);
 							if (BIT.inventories.containsKey(player.getName())) {
 								inv.setContents(BIT.inventories.get(player
 										.getName()));

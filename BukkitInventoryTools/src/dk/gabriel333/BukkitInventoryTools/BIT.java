@@ -39,13 +39,14 @@ import dk.gabriel333.BITBackpack.BITBackpackInputListener;
 import dk.gabriel333.BITBackpack.BITBackpackInventoryListener;
 import dk.gabriel333.BITBackpack.BITBackpackInventorySaveTask;
 import dk.gabriel333.BITBackpack.BITBackpackLanguageInterface;
-import dk.gabriel333.BITBackpack.BITBackpackPlayerListener;
 import dk.gabriel333.BITBackpack.BITBackpack;
+import dk.gabriel333.BITBackpack.BITBackpackPlayerListener;
 import dk.gabriel333.BukkitInventoryTools.Sort.BITCommandSort;
 import dk.gabriel333.BukkitInventoryTools.Sort.BITSortInputListener;
-import dk.gabriel333.BukkitInventoryTools.Inventory.*;
 import dk.gabriel333.BukkitInventoryTools.Book.*;
 import dk.gabriel333.BukkitInventoryTools.DigiLock.*;
+import dk.gabriel333.BukkitInventoryTools.Inventory.BITInventoryListener;
+import dk.gabriel333.BukkitInventoryTools.Inventory.BITInventorySpoutListener;
 import dk.gabriel333.Library.BITConfig;
 import dk.gabriel333.Library.BITMessages;
 import dk.gabriel333.Library.BITPlugin;
@@ -206,7 +207,7 @@ public class BIT extends JavaPlugin {
 		pm.registerEvent(Event.Type.CUSTOM_EVENT, new BITBookSpoutListener(),
 				Event.Priority.Normal, this);
 
-		// SpoutBackpack Listeners
+		// BITBackpack Listeners
 		pm.registerEvent(Type.CUSTOM_EVENT, new BITBackpackInputListener(),
 				Priority.Normal, this);
 		pm.registerEvent(Type.CUSTOM_EVENT, new BITBackpackInventoryListener(),

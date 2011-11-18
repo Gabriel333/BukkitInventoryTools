@@ -83,22 +83,18 @@ public class BITBlockListener extends BlockListener {
 	public void onBlockBreak(BlockBreakEvent event) {
 		if (event.isCancelled())
 			return;
-		SpoutBlock sBlock = (SpoutBlock) event.getBlock();
-		// if (!BITDigiLock.isLockable(sBlock))
-		// return;
 		SpoutPlayer sPlayer = (SpoutPlayer) event.getPlayer();
+		SpoutBlock sBlock = (SpoutBlock) event.getBlock();
 		SpoutBlock blockOnTop = sBlock.getRelative(BlockFace.UP);
+		if (BITDigiLock.isBookshelf(sBlock)&&!BITDigiLock.isLocked(sBlock)) {
+			if (BITInventory.isBitInventoryCreated(sBlock)) {
+				BITInventory.removeBookshelfAndDropItems(sPlayer, sBlock);
+			}
+		} else
 		if (BITDigiLock.isLocked(sBlock) || BITDigiLock.isLocked(blockOnTop)) {
 			sPlayer.damage(5);
 			event.setCancelled(true);
-		} else {
-			if (BITDigiLock.isBookshelf(sBlock)) {
-				if (BITInventory.isBitInventoryCreated(sBlock)) {
-					BITInventory.removeBookshelfAndDropItems(sPlayer, sBlock);
-				}
-			}
 		}
-
 	}
 
 	public void onBlockDamage(BlockDamageEvent event) {

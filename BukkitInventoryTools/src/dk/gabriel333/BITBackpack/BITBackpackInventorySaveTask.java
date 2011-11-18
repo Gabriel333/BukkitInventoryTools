@@ -3,8 +3,6 @@ package dk.gabriel333.BITBackpack;
 import java.io.File;
 import java.io.IOException;
 import java.util.HashMap;
-import java.util.logging.Logger;
-
 import org.bukkit.Bukkit;
 import org.bukkit.World;
 import org.bukkit.configuration.file.YamlConfiguration;
@@ -12,8 +10,6 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.getspout.spoutapi.SpoutManager;
-//import org.getspout.spout.inventory.CustomInventory;
-
 import dk.gabriel333.BukkitInventoryTools.BIT;
 import dk.gabriel333.Library.BITConfig;
 
@@ -24,9 +20,6 @@ public class BITBackpackInventorySaveTask implements Runnable {
 	// public SBInventorySaveTask(BIT plugin) {
 	// SBInventorySaveTask.plugin = plugin;
 	// }
-
-	public static Logger logger = Logger.getLogger("minecraft");
-	public static String logTag = "[BITSpoutBackpack]";
 
 	public static void saveAll() {
 		Player[] players = Bukkit.getServer().getOnlinePlayers();
@@ -41,6 +34,16 @@ public class BITBackpackInventorySaveTask implements Runnable {
 	}
 
 	public static void saveInventory(Player player, World world) {
+		
+		//TODO: Insert SAVE_TO_SQL. BITInventory.saveBitInventory(SpoutPlayer sPlayer, SpoutBlock block,
+		//String owner, String name, String coowners, Inventory inventory,
+		//int useCost);
+		
+		//BITInventory.saveBitInventory(player, null,
+		        //String owner, String name, String coowners, Inventory inventory,
+				//int useCost);
+		
+		
 		File saveFile;
 		if (BITConfig.getBooleanParm("SBP.InventoriesShare."
 				+ player.getWorld().getName(), true)) {

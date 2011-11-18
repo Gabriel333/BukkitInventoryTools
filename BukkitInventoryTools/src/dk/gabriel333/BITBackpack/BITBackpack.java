@@ -744,6 +744,11 @@ public class BITBackpack implements CommandExecutor {
 		}
 		int size = config.getInt("Size",
 				BITBackpack.allowedSize(world, player, true));
+		int allowedSize = BITBackpack.allowedSize(world, player, false);
+		if (allowedSize < size) {
+			player.sendMessage("Your backpack is too big, downgrading to your permissions size.");
+			size = allowedSize;
+		}
 		Inventory inv = SpoutManager.getInventoryBuilder().construct(size,
 				BIT.inventoryName);
 		if (saveFile.exists()) {

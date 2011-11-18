@@ -30,8 +30,13 @@ import dk.gabriel333.Library.BITPermissions;
 public class BITPlayerListener extends PlayerListener {
 
 	public void onPlayerInteract(PlayerInteractEvent event) {
+
 		if (event.isCancelled())
 			return;
+		if (BITConfig.DEBUG_ONENABLE) {
+			event.getPlayer().sendMessage("BITPlayerListener - return(1)");
+			return;
+		}
 		// DOORS, DOUBLEDOORS, TRAPDOORS LEVERS, BUTTON can be handled with both
 		// mousebuttons, the rest is only with RIGHT_CLICK
 		if (!(event.getAction().equals(Action.RIGHT_CLICK_BLOCK) || event
@@ -46,16 +51,17 @@ public class BITPlayerListener extends PlayerListener {
 		SpoutPlayer sPlayer = (SpoutPlayer) event.getPlayer();
 		ItemStack itemInHand = sPlayer.getInventory().getItemInHand();
 		// sPlayer.sendMessage("BITPlayerListener:"+itemInHand.getTypeId());
-		if (sBlock.getType()==Material.BOOKSHELF
-				//&& sBlock.getType()==itemInHand.getType()
+		if (sBlock.getType() == Material.BOOKSHELF
+		// && sBlock.getType()==itemInHand.getType()
 				&& !BIT.holdingKey.equals("L-CONTROL"))
-				//&& (BITDigiLock.isLocked(sBlock)
-				//||BITInventory.isBitInventoryCreated(sBlock)))
-			{
-			 // This allows the user to place a new Bookshelf on a Bookshelf
-			 // where the Inventory is created.
+		// && (BITDigiLock.isLocked(sBlock)
+		// ||BITInventory.isBitInventoryCreated(sBlock)))
+		{
+			// This allows the user to place a new Bookshelf on a Bookshelf
+			// where the Inventory is created.
+
 			event.setCancelled(true);
-			//return;
+			// return;
 		}
 		int id = sPlayer.getEntityId();
 
@@ -593,15 +599,10 @@ public class BITPlayerListener extends PlayerListener {
 							|| digilock.isUser(sPlayer)) {
 						BITMessages.sendNotification(sPlayer,
 								"Used with fingerprint");
-						// if (sPlayer.isSpoutCraftEnabled()) {
 						BITInventory bitInventory = BITInventory
 								.loadBitInventory(sPlayer, sBlock);
 						bitInventory.openBitInventory(sPlayer, bitInventory);
-						// } else {
-
-						// }
 					} else {
-						event.setCancelled(true);
 						sPlayer.sendMessage("Your fingerprint does not match the DigiLock");
 					}
 				} else {
@@ -614,12 +615,11 @@ public class BITPlayerListener extends PlayerListener {
 						if (digilock.getPincode().equals(
 								BITDigiLock.pincodeGUI.get(id).getText())) {
 							// okay - go on
-						} else {
-							event.setCancelled(true);
 						}
 					} else {
 						sPlayer.sendMessage("Digilock'ed by "
 								+ sPlayer.getName());
+						//TODO: is this going to be canceled.
 						event.setCancelled(true);
 					}
 				}
@@ -636,6 +636,7 @@ public class BITPlayerListener extends PlayerListener {
 
 			// ELSE - IT WAS NOT A LOCKED BLOCK
 		} else {
+
 			if (BITConfig.DEBUG_GUI) {
 				sPlayer.sendMessage("There is no digilock on this block");
 
@@ -700,6 +701,7 @@ public class BITPlayerListener extends PlayerListener {
 			else if (BITDigiLock.isBookshelf(sBlock)
 					&& event.getAction().equals(Action.RIGHT_CLICK_BLOCK)
 					&& !BIT.holdingKey.equals("L-CONTROL")) {
+
 				if (BITInventory.isBitInventoryCreated(sBlock)
 						&& BITPermissions.hasPerm(sPlayer, "bookshelf.use",
 								BITPermissions.NOT_QUIET)) {

@@ -18,6 +18,7 @@ import org.bukkit.event.block.SignChangeEvent;
 import org.getspout.spoutapi.block.SpoutBlock;
 import org.getspout.spoutapi.player.SpoutPlayer;
 
+import dk.gabriel333.BukkitInventoryTools.BIT;
 import dk.gabriel333.BukkitInventoryTools.Inventory.BITInventory;
 import dk.gabriel333.Library.BITConfig;
 import dk.gabriel333.Library.BITMessages;
@@ -88,7 +89,25 @@ public class BITBlockListener extends BlockListener {
 		SpoutBlock blockOnTop = sBlock.getRelative(BlockFace.UP);
 		if (BITDigiLock.isBookshelf(sBlock)&&!BITDigiLock.isLocked(sBlock)) {
 			if (BITInventory.isBitInventoryCreated(sBlock)) {
-				BITInventory.removeBookshelfAndDropItems(sPlayer, sBlock);
+				
+				if (BIT.plugin.Method.hasAccount(sPlayer.getName())) {
+					if (BIT.plugin.Method.getAccount(sPlayer.getName()).hasEnough(
+							BITConfig.BOOKSHELF_DESTROYCOST)
+							|| BITConfig.BOOKSHELF_DESTROYCOST < 0) {
+						BITInventory.removeBookshelfAndDropItems(sPlayer, sBlock);
+
+
+					} else {
+						sPlayer.sendMessage("You dont have enough money ("
+								+ BIT.plugin.Method.getAccount(sPlayer.getName())
+										.balance()
+								+ "). Cost is:"
+								+ BIT.plugin.Method
+										.format(BITConfig.BOOKSHELF_DESTROYCOST));
+						event.setCancelled(true);
+					}
+				}
+
 			}
 		} else
 		if (BITDigiLock.isLocked(sBlock) || BITDigiLock.isLocked(blockOnTop)) {

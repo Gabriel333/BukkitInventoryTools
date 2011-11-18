@@ -52,16 +52,21 @@ public class BITPlayerListener extends PlayerListener {
 		ItemStack itemInHand = sPlayer.getInventory().getItemInHand();
 		// sPlayer.sendMessage("BITPlayerListener:"+itemInHand.getTypeId());
 		if (sBlock.getType() == Material.BOOKSHELF
-		// && sBlock.getType()==itemInHand.getType()
-				&& !BIT.holdingKey.equals("L-CONTROL"))
-		// && (BITDigiLock.isLocked(sBlock)
-		// ||BITInventory.isBitInventoryCreated(sBlock)))
-		{
+				&& sBlock.getType() == itemInHand.getType()
+				// && !BIT.holdingKey.equals("L-CONTROL"))
+				&& !(BITDigiLock.isLocked(sBlock) || BITInventory
+						.isBitInventoryCreated(sBlock))) {
 			// This allows the user to place a new Bookshelf on a Bookshelf
 			// where the Inventory is created.
 
+			return;
+		}
+		if (sBlock.getType() == Material.BOOKSHELF
+				&& sBlock.getType() == itemInHand.getType() 
+				&& event.getAction().equals(Action.RIGHT_CLICK_BLOCK)
+				&&(BITDigiLock.isLocked(sBlock) || BITInventory
+						.isBitInventoryCreated(sBlock))){
 			event.setCancelled(true);
-			// return;
 		}
 		int id = sPlayer.getEntityId();
 
@@ -619,7 +624,7 @@ public class BITPlayerListener extends PlayerListener {
 					} else {
 						sPlayer.sendMessage("Digilock'ed by "
 								+ sPlayer.getName());
-						//TODO: is this going to be canceled.
+						// TODO: is this going to be canceled.
 						event.setCancelled(true);
 					}
 				}

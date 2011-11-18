@@ -498,7 +498,8 @@ public class BITInventory {
 				sBlock);
 		if (bitInventory != null) {
 			for (int i = 0; i < bitInventory.getSize(); i++) {
-				ItemStack itemstack = bitInventory.getInventory().getItem(i);
+				ItemStack itemstack = bitInventory.getInventory()
+						.getItem(i);
 				if (itemstack.getAmount() != 0) {
 					world.dropItemNaturally(location, itemstack);
 				}
@@ -506,6 +507,7 @@ public class BITInventory {
 			bitInventory.RemoveBitInventory(sPlayer,
 					BITConfig.BOOKSHELF_DESTROYCOST);
 		}
+		
 		if (BITConfig.BOOKSHELF_RECOVER_ON_BREAK) {
 			ItemStack item = new ItemStack(Material.BOOKSHELF, 1);
 			world.dropItemNaturally(location, item);

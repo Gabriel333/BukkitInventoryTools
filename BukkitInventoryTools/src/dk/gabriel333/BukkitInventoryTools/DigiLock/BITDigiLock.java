@@ -573,7 +573,7 @@ public class BITDigiLock {
 				.getSoundManager()
 				.playGlobalCustomSoundEffect(
 						BIT.plugin,
-						"http://dl.dropbox.com/u/36067670/BukkitInventoryTools/Sounds/Digilock.wav",
+						BITConfig.DIGILOCK_SOUND,
 						true, sBlock.getLocation(), 5);
 	}
 

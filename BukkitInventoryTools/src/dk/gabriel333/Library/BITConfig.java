@@ -48,6 +48,7 @@ public class BITConfig {
 	public static int DIGILOCK_COST;
 	public static int DIGILOCK_USEMAXCOST;
 	public static int DIGILOCK_DESTROYCOST;
+	public static String DIGILOCK_SOUND;
 	
 	public static int BOOKSHELF_COST;
 	public static int BOOKSHELF_USEMAXCOST;
@@ -156,6 +157,8 @@ public class BITConfig {
 		DIGILOCK_COST = getIntParm("DigiLock.Cost", 50);
 		DIGILOCK_USEMAXCOST = getIntParm("DigiLock.UseMaxCost", 100);
 		DIGILOCK_DESTROYCOST = getIntParm("DigiLock.DestroyCost", -10);
+		DIGILOCK_SOUND = getStringParm("DigiLock.Sound","http://dl.dropbox.com/u/36067670/BukkitInventoryTools/Sounds/Digilock.wav");
+		
 		
 		//Bookshelf
 		BOOKSHELF_COST = getIntParm("Bookshelf.Cost", 50);

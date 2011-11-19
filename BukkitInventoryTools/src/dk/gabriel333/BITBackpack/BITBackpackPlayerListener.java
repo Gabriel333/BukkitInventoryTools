@@ -30,27 +30,30 @@ public class BITBackpackPlayerListener extends PlayerListener {
 
 	@Override
 	public void onPlayerTeleport(PlayerTeleportEvent event) {
-		if (((event.getFrom().getWorld().getName() != event.getTo().getWorld()
-				.getName()) || plugin.portals.contains(event.getPlayer())
-				&& !BITConfig.getBooleanParm("SBP.InventoriesShare."
-						+ event.getTo().getWorld().getName(), true))) {
 
-			// plugin.config.getBoolean("Backpack."
-			// + event.getTo().getWorld().getName()
-			// + ".InventoriesShare?", true) == false)) {
-			// TODO: check for null = no backpack
-			try {
-				Player player = event.getPlayer();
-				if (BIT.inventories.containsKey(player.getName())) {
-					BITBackpackInventorySaveTask.saveInventory(player, event
-							.getFrom().getWorld());
-					BIT.inventories.remove(player.getName());
-				}
-				BITBackpack.loadInventory(player, event.getTo().getWorld());
-			} catch (Exception e) {
-				e.printStackTrace();
+		if (((event.getFrom().getWorld().getName() != event.getTo().getWorld()
+				.getName()) || plugin.portals.contains(event.getPlayer()))) {
+			String path = "SBP.InventoriesShare."
+					+ event.getTo().getWorld().getName();
+			if (!BITConfig.config.contains(path)) {
+				BITConfig.addBooleanParmToConfig(path, true);
 			}
-			plugin.portals.remove(event.getPlayer());
+			// TODO: check for null = no backpack
+			if (!BITConfig.getBooleanParm(path, 
+					BITConfig.getBooleanParm("SBP.InventoriesShareDefault",false))) {
+				try {
+					Player player = event.getPlayer();
+					if (BIT.inventories.containsKey(player.getName())) {
+						BITBackpackInventorySaveTask.saveInventory(player,
+								event.getFrom().getWorld());
+						BIT.inventories.remove(player.getName());
+					}
+					BITBackpack.loadInventory(player, event.getTo().getWorld());
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+				plugin.portals.remove(event.getPlayer());
+			}
 		}
 	}
 

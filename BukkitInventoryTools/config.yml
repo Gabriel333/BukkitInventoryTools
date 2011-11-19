@@ -162,6 +162,7 @@ Book:
 #           is saved to disk.
 SBP:
     Language: EN
+    InventoriesShareDefault: false
     InventoriesShare:
         world: true
         world_nether: true

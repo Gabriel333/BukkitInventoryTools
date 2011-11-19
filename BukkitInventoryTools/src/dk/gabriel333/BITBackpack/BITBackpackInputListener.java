@@ -2,7 +2,7 @@ package dk.gabriel333.BITBackpack;
 
 import net.minecraft.server.EntityPlayer;
 import net.minecraft.server.Packet100OpenWindow;
-import net.minecraft.server.Packet101CloseWindow;
+//import net.minecraft.server.Packet101CloseWindow;
 
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
@@ -151,8 +151,6 @@ public class BITBackpackInputListener extends InputListener {
 				if (BITConfig.SBP_workbenchEnabled) {
 					if (!BIT.openedInventoriesOthers.containsKey(event
 							.getPlayer().getName())) {
-						// if (!BIT.openedInventories.containsKey(event
-						// .getPlayer().getName())) {
 						if (!BITBackpack.hasWorkbench(event.getPlayer())) {
 							return;
 						}
@@ -164,11 +162,15 @@ public class BITBackpackInputListener extends InputListener {
 						final int windowNumber = 1;
 						if (screentype == ScreenType.WORKBENCH_INVENTORY) {
 							SpoutPlayer player = event.getPlayer();
-							final EntityPlayer entityPlayer = ((CraftPlayer) player)
-									.getHandle();
-							entityPlayer.netServerHandler
-									.sendPacket(new Packet101CloseWindow(
-											windowNumber));
+							//final EntityPlayer entityPlayer = ((CraftPlayer) player)
+							//		.getHandle();
+							//TODO: save state of items when leaving window
+
+								player.closeActiveWindow();
+					
+							//entityPlayer.netServerHandler
+							//		.sendPacket(new Packet101CloseWindow(
+							//				windowNumber));
 						} else if (screentype == ScreenType.GAME_SCREEN
 								|| screentype == ScreenType.PLAYER_INVENTORY
 								|| screentype == ScreenType.DISPENSER_INVENTORY
@@ -188,8 +190,6 @@ public class BITBackpackInputListener extends InputListener {
 							entityPlayer.activeContainer = new BITWorkbench(
 									entityPlayer, windowNumber);
 						}
-						// }
-
 					}
 				} else {
 					if (BITConfig.DEBUG_PERMISSIONS) {

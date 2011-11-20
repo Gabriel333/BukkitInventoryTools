@@ -549,15 +549,13 @@ public class BITBackpack implements CommandExecutor {
 				BITPermissions.QUIET)) {
 			size = 9;
 		}
-		player.sendMessage("allowedsize -(1):"+size);
 		// Finding actual size
 		if (configurationCheck) {
 			if (sizeInConfig(world, player) < size) {
 				size = sizeInConfig(world, player);
 			}
 		}
-		player.sendMessage("allowedsize -(2):"+size);
-
+	
 		// Automatic upgrading BP if its free
 		double upgradePrice = 0;
 		while (upgradePrice == 0) {
@@ -565,7 +563,6 @@ public class BITBackpack implements CommandExecutor {
 			if (upgradePrice == 0)
 				size = size + 9;
 		}
-		player.sendMessage("allowedsize -(3):"+size);
 		return size;
 	}
 
@@ -749,8 +746,6 @@ public class BITBackpack implements CommandExecutor {
 		int size = config.getInt("Size",
 				BITBackpack.allowedSize(world, player, true));
 		int allowedSize = BITBackpack.allowedSize(world, player, false);
-		int sizecfg=sizeInConfig(world,player);
-		player.sendMessage("Size :"+size+" "+allowedSize+" "+sizecfg);
 		if (allowedSize < size) {
 			player.sendMessage("Your backpack is too big, downgrading to your permissions size.");
 			size = allowedSize;

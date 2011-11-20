@@ -89,14 +89,11 @@ public class BITBlockListener extends BlockListener {
 		SpoutBlock blockOnTop = sBlock.getRelative(BlockFace.UP);
 		if (BITDigiLock.isBookshelf(sBlock)&&!BITDigiLock.isLocked(sBlock)) {
 			if (BITInventory.isBitInventoryCreated(sBlock)) {
-				
 				if (BIT.plugin.Method.hasAccount(sPlayer.getName())) {
 					if (BIT.plugin.Method.getAccount(sPlayer.getName()).hasEnough(
 							BITConfig.BOOKSHELF_DESTROYCOST)
 							|| BITConfig.BOOKSHELF_DESTROYCOST < 0) {
 						BITInventory.removeBookshelfAndDropItems(sPlayer, sBlock);
-
-
 					} else {
 						sPlayer.sendMessage("You dont have enough money ("
 								+ BIT.plugin.Method.getAccount(sPlayer.getName())
@@ -106,8 +103,9 @@ public class BITBlockListener extends BlockListener {
 										.format(BITConfig.BOOKSHELF_DESTROYCOST));
 						event.setCancelled(true);
 					}
+				} else {
+					BITInventory.removeBookshelfAndDropItems(sPlayer, sBlock);
 				}
-
 			}
 		} else
 		if (BITDigiLock.isLocked(sBlock) || BITDigiLock.isLocked(blockOnTop)) {

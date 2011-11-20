@@ -25,5 +25,6 @@
 	<classpathentry kind="lib" path="C:/Private/Dropbox/Libraries/Register/lib/iCo5.jar"/>
 	<classpathentry kind="lib" path="C:/Private/Dropbox/Libraries/Register/lib/iCo6.jar"/>
 	<classpathentry kind="lib" path="C:/Private/Dropbox/Libraries/Register/lib/MultiCurrency.jar"/>
+	<classpathentry kind="lib" path="C:/Private/Dropbox/Libraries/Newest/War.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

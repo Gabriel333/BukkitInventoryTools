@@ -23,6 +23,8 @@ import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.getspout.spoutapi.gui.GenericLabel;
 
+import bukkit.tommytony.war.War;
+
 import com.alta189.sqlLibrary.MySQL.mysqlCore;
 import com.alta189.sqlLibrary.SQLite.sqlCore;
 import com.garbagemule.MobArena.MobArenaHandler;
@@ -81,7 +83,12 @@ public class BIT extends JavaPlugin {
 	// Hook into MyWolf
 	public static Boolean mywolf = false;
 	public static MyWolfPlugin myWolfPlugin;
-
+	
+	// Hook into WAR 1.6
+	public static Boolean warIsEnabled;
+	public static War war;
+	
+	
 	@Override
 	public void onEnable() {
 		plugin = this;
@@ -100,6 +107,7 @@ public class BIT extends JavaPlugin {
 			setupBook();
 			setupMobArena();
 			setupJail();
+			setupWar();
 			li = new BITBackpackLanguageInterface(BITBackpack.loadLanguage());
 			// Load SpoutBackpack
 			for (Player player : Bukkit.getServer().getOnlinePlayers()) {
@@ -113,6 +121,20 @@ public class BIT extends JavaPlugin {
 		}
 	}
 	
+	private void setupWar() {
+		// TODO Auto-generated method stub
+		Plugin warPlugin = this.getServer().getPluginManager()
+				.getPlugin("War");
+		if (warPlugin != null) {
+			war = new War();
+			BITMessages.showInfo("War v."+warPlugin.getDescription().getVersion()+" detected.");
+			warIsEnabled=true;
+			return;
+		} else {
+			return;
+		}
+	}
+
 	@Override
 	public void onDisable() {
 		Bukkit.getServer().getScheduler().cancelTask(saveTaskId);

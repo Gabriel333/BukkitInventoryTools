@@ -53,8 +53,6 @@ import dk.gabriel333.Library.BITConfig;
 import dk.gabriel333.Library.BITMessages;
 import dk.gabriel333.Library.BITPlugin;
 
-import me.neatmonster.spoutbackpack.SBHandler;
-
 public class BIT extends JavaPlugin {
 
 	public static BIT plugin;
@@ -66,9 +64,9 @@ public class BIT extends JavaPlugin {
 	public Methods Methods;
 	public Method Method;
 
-	// Hook into SpoutBackpack
-	public static SBHandler spoutBackpackHandler;
-	public static Boolean spoutbackpack = false;
+	// BITBackpack
+	//public static SBHandler spoutBackpackHandler;
+	//public static Boolean spoutbackpack = false;
 	public static Map<String, ItemStack[]> inventories = new HashMap<String, ItemStack[]>();
 	public static Map<String, Inventory> openedInventories = new HashMap<String, Inventory>();
 	public static Map<String, String> openedInventoriesOthers = new HashMap<String, String>();
@@ -100,7 +98,7 @@ public class BIT extends JavaPlugin {
 			setupSpout();
 			setupSQL();
 			setupRegister();
-			setupSpoutBackpack();
+			//setupSpoutBackpack();
 			setupMyWolf();
 			registerEvents();
 			addCommands();
@@ -293,7 +291,7 @@ public class BIT extends JavaPlugin {
 		return false;
 	}
 
-	private void setupSpoutBackpack() {
+	/*private void setupSpoutBackpack() {
 		if (spoutBackpackHandler == null) {
 			Plugin spoutBackpackPlugin = this.getServer().getPluginManager()
 					.getPlugin("SpoutBackpack");
@@ -309,7 +307,7 @@ public class BIT extends JavaPlugin {
 				}
 			}
 		}
-	}
+	}*/
 
 	private void setupMyWolf() {
 		if (myWolfPlugin == null) {

@@ -97,8 +97,9 @@ public class BITInventoryListener extends InventoryListener {
 					BITBook bitBook = BITBook.loadBook(sPlayer, bookId);
 					BITBook.setBookName(bookId, bitBook.getTitle(),
 							bitBook.getAuthor());
-					if (!(bitBook.getCanBeMovedFromInventory() && sPlayer
-							.getName().equalsIgnoreCase(bitBook.getAuthor()))) {
+					if (!(bitBook.getCanBeMovedFromInventory() && (sPlayer
+							.getName().equalsIgnoreCase(bitBook.getAuthor()))||
+							bitBook.getCoAuthors().contains(sPlayer.getName()))) {
 						event.setCancelled(true);
 					}
 					if (bitBook.getCopyTheBookWhenMoved()) {

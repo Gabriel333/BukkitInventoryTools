@@ -26,7 +26,7 @@ public class BITBackpackInventoryListener extends InventoryListener {
 		if (!BIT.openedInventoriesOthers.containsKey(player.getName())) {
 			if (BIT.openedInventories.containsKey(player.getName())) {
 				if (BIT.widgets.containsKey(player.getName())
-						&& BITConfig.SBP_useWidget == true) {
+						&& BITConfig.SBP_useWidget) {
 					BIT.widgets.get(player.getName()).setVisible(false)
 							.setDirty(true);
 				}

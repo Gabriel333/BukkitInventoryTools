@@ -9,7 +9,7 @@ import dk.gabriel333.BukkitInventoryTools.BIT;
 
 public class BITBackpackAPI {
 	BIT	plugin;
-	public static boolean spoutBackpackEnabled = true;
+	public static boolean bitBackpackEnabled = true;
 
 	/**
 	 * Primary constructor. If 'spoutBackpackEnabled' equal true and 'plugin' is initialized, the server is running
@@ -18,7 +18,7 @@ public class BITBackpackAPI {
 	public BITBackpackAPI() {
 		Plugin SpoutBackpackPlugin = (Plugin) Bukkit.getServer().getPluginManager().getPlugin("BukkitInventoryTools");
 		if (SpoutBackpackPlugin == null) { return; }
-		spoutBackpackEnabled = true;
+		bitBackpackEnabled = true;
 		plugin = (BIT) SpoutBackpackPlugin;
 	}
 
@@ -74,6 +74,6 @@ public class BITBackpackAPI {
 	 * @return true if SpoutBackpack is running on the server.
 	 */
 	public boolean hasSpoutBackpack() {
-		return spoutBackpackEnabled;
+		return bitBackpackEnabled;
 	}
 }

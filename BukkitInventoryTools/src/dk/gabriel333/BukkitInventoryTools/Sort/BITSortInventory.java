@@ -58,12 +58,13 @@ public class BITSortInventory {
 		BITSortInventory.sortPlayerInventoryItems(sPlayer);
 
 		// sort the SpoutBackpack if it exists and if it is opened.
-		if (BIT.spoutbackpack
-				&& BIT.spoutBackpackHandler.isOpenSpoutBackpack(sPlayer)) {
+		//if (BIT.spoutbackpack
+		//		&& BIT.spoutBackpackHandler.isOpenSpoutBackpack(sPlayer)) {
+		//	BITSortInventory.sortInventoryItems(sPlayer,
+		//			BIT.spoutBackpackHandler.getOpenedSpoutBackpack(sPlayer));
+		//} else 
 
-			BITSortInventory.sortInventoryItems(sPlayer,
-					BIT.spoutBackpackHandler.getOpenedSpoutBackpack(sPlayer));
-		} else if (BITBackpackAPI.spoutBackpackEnabled) {
+		if (BITBackpackAPI.bitBackpackEnabled) {
 			Inventory inv = SpoutManager.getInventoryBuilder()
 					.construct(
 							BITBackpack.allowedSize(sPlayer.getWorld(),

@@ -1,6 +1,6 @@
 name: BukkitInventoryTools
 main: dk.gabriel333.BukkitInventoryTools.BIT
-version: 3.0.4
+version: 3.0.5
 author: Rocologo
 authors: [Gabriel333]
 website: http://dev.bukkit.org/server-mods/bukkitinventorytools/
@@ -8,7 +8,6 @@ dev-url: https://github.com/BukkitInventoryTools
 description: Shop, Digital lock, sort and stack inventories
 depend: [Spout]
 softdepend: [PermissionsBukkit, bPermissions, PermissionsEx, Permissions, GroupManager, iConomy, BOSEconomy, Essentials, MultiCurrency, WorldGuard, MobArena, Jail, War]
-
 commands:
     sort:
         description: Rebuild all item stack in your inventory.

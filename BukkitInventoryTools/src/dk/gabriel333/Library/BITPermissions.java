@@ -88,11 +88,11 @@ public class BITPermissions {
 					.isPluginEnabled("GroupManager")) {
 				groupManagerPlugin = Bukkit.getServer().getPluginManager()
 						.getPlugin("GroupManager");
-				if (groupManagerPlugin != null) {
+				//if (groupManagerPlugin != null) {
 					groupManager = (GroupManager) groupManagerPlugin;
 					BITMessages.showInfo("GroupManager is detected.");
 					essentialsGroupManager = true;
-				}
+				//}
 
 			} else
 			// Permission3

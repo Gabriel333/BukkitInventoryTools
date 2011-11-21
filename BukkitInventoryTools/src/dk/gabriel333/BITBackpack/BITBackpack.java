@@ -715,7 +715,6 @@ public class BITBackpack implements CommandExecutor {
 	public static void loadInventory(Player player, World world) {
 		if (BIT.inventories.containsKey(player.getName())) {
 			if (BIT.inventories.get(player.getName()).length > 0) {
-				player.sendMessage("loadInventory-return");
 				return;
 			}
 		}

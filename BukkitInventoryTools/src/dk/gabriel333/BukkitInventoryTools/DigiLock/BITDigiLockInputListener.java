@@ -32,7 +32,7 @@ public class BITDigiLockInputListener extends InputListener {
 				|| keypressed.equals("KEY_ESCAPE") || keypressed
 					.equals("KEY_RETURN")))
 			return;
-		SpoutBlock targetblock = (SpoutBlock) sPlayer.getTargetBlock(null, 5);
+		SpoutBlock targetblock = (SpoutBlock) sPlayer.getTargetBlock(null, 4);
 		// External SpoutBackpack
 		
 		// Remove broken DigiLocks

@@ -34,7 +34,7 @@ public class BITSortInputListener extends InputListener {
 			return;
 		SpoutPlayer sPlayer = event.getPlayer();
 		ScreenType screentype = event.getScreenType();
-		SpoutBlock targetblock = (SpoutBlock) sPlayer.getTargetBlock(null, 5);
+		SpoutBlock targetblock = (SpoutBlock) sPlayer.getTargetBlock(null, 4);
 
 		// External SpoutBackpack
 		// if (keypressed.equals(G333Config.LIBRARY_SORTKEY)

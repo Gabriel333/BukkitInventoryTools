@@ -85,10 +85,8 @@ public class BITInventoryListener extends InventoryListener {
 	public void onInventoryClick(InventoryClickEvent event) {
 
 		SpoutPlayer sPlayer = (SpoutPlayer) event.getPlayer();
-		// int id = sPlayer.getEntityId();
 		ItemStack itemClicked = event.getItem();
-		ItemStack itemHolding = event.getCursor();
-		// short bookId = sPlayer.getItemInHand().getDurability();
+		ItemStack itemPlaced = event.getCursor();
 		if (itemClicked != null) {
 			if (itemClicked.getType().equals(Material.BOOK)
 					&& itemClicked.getDurability() > 1000) {
@@ -97,41 +95,54 @@ public class BITInventoryListener extends InventoryListener {
 					BITBook bitBook = BITBook.loadBook(sPlayer, bookId);
 					BITBook.setBookName(bookId, bitBook.getTitle(),
 							bitBook.getAuthor());
-					if (!(bitBook.getCanBeMovedFromInventory() && (sPlayer
-							.getName().equalsIgnoreCase(bitBook.getAuthor()))||
-							bitBook.getCoAuthors().contains(sPlayer.getName()))) {
-						event.setCancelled(true);
-					}
-					if (bitBook.getCopyTheBookWhenMoved()) {
-						int slotNo = event.getSlot();
+					int slotNo = event.getSlot();
+					if (bitBook.getMasterCopy()
+							&& bitBook.getMasterCopyId() == 0) {
+						// ItemStack copyOfMaster = itemClicked;
+						ItemStack masterBook = itemClicked.clone();
+						event.getInventory().setItem(slotNo, masterBook);
+						short nextBookId = BITBook.getNextBookId();
+						sPlayer.sendMessage("nextBookId:" + nextBookId);
+						BITBook newBook = BITBook.loadBook(sPlayer, bookId);
+						newBook.setBookId(nextBookId);
+						newBook.setTitle(bitBook.getTitle()
+								+ " (Syncronized copy)");
+						newBook.setBookId(nextBookId);
+						newBook.setMasterCopyId(bitBook.getBookId());
+						BITBook.bitBooks.put(nextBookId, newBook);
+						BITBook.saveBook(sPlayer, nextBookId);
+						itemClicked.setDurability(nextBookId);
+						sPlayer.sendMessage("BIT:This Book is a copy of a master, and will be updated autotmatically.");
+					} else if (bitBook.getCopyTheBookWhenMoved()) {
 						ItemStack book = itemClicked;
 						event.getInventory().setItem(slotNo, book);
 						short nextBookId = BITBook.getNextBookId();
 						BITBook newBook = bitBook;
 						newBook.setBookId(nextBookId);
 						itemClicked.setDurability(nextBookId);
-						BITBook.bitBooks.put((short) nextBookId, bitBook);
+						BITBook.bitBooks.put(nextBookId, bitBook);
 						BITBook.saveBook(sPlayer, nextBookId);
 						sPlayer.sendMessage("BIT:This Book is being copied when moved");
+					} else if (!(bitBook.getCanBeMovedFromInventory()
+							&& (sPlayer.getName().equalsIgnoreCase(bitBook
+									.getAuthor())) || bitBook.getCoAuthors()
+							.contains(sPlayer.getName()))) {
+						event.setCancelled(true);
 					}
-
+				} else {
+					sPlayer.sendMessage("The book is invalid (bookId:" + bookId
+							+ ")");
 				}
 			}
-		} else if (itemHolding != null) {
-			if (itemHolding.getType().equals(Material.BOOK)
-					&& itemHolding.getDurability() > 1000) {
-				short bookId = itemHolding.getDurability();
+		} else if (itemPlaced != null) {
+			if (itemPlaced.getType().equals(Material.BOOK)
+					&& itemPlaced.getDurability() > 1000) {
+				short bookId = itemPlaced.getDurability();
 				if (BITBook.isWritten(sPlayer, bookId)) {
 
 				}
 			}
 		}
-		// if (itemHolding != null && BIT.holdingKey.equals("KEY_R")) {
-		// sPlayer.sendMessage("ItemClicked:" + itemHolding.getType()
-		// + " bookId:" + bookId);
-		// event.setCancelled(true);
-		// }
-
 	}
 
 	public void onInventoryCraft(InventoryCraftEvent event) {

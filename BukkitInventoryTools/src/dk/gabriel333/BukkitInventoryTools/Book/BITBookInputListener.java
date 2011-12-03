@@ -59,7 +59,14 @@ public class BITBookInputListener extends InputListener {
 					bitBook = BITBook.loadBook(sPlayer, bookId);
 					if (bitBook != null) {
 						BITBook.hasOpenedBook.put(id, true);
-						bitBook.openBook(sPlayer, bookId);
+						if ((bitBook.getAuthor().equals(sPlayer.getName()) || bitBook
+								.getCoAuthors().contains(sPlayer.getName()))
+								&& bitBook.getMasterCopyId() == 0) {
+							bitBook.openBook(sPlayer, bookId, BITBook.WRITEABLE);
+						} else {
+							bitBook.openBook(sPlayer,
+									bitBook.getMasterCopyId(), BITBook.READONLY);
+						}
 					} else {
 						handleItemInHand(sPlayer);
 					}
@@ -93,8 +100,12 @@ public class BITBookInputListener extends InputListener {
 							useCost);
 					BITBook.bitBooks.put(bookId, bitBook);
 					BITBook.hasOpenedBook.put(id, true);
-					bitBook.openBook(sPlayer, bookId);
-					
+					if (bitBook.getMasterCopyId() == 0) {
+						bitBook.openBook(sPlayer, bookId, BITBook.WRITEABLE);
+					} else {
+						bitBook.openBook(sPlayer, bitBook.getMasterCopyId(),
+								BITBook.READONLY);
+					}
 
 				}
 			} else {

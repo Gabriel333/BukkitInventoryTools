@@ -47,11 +47,14 @@ public class BITBook {
 	protected int numberOfPages;
 	protected String[] bodytext;
 	protected Boolean masterCopy;
-	protected int masterCopyId;
+	protected short masterCopyId;
 	protected Boolean forceBookToPlayerInventory;
 	protected Boolean canBeMovedFromInventory;
 	protected Boolean copyTheBookWhenMoved;
 	protected int useCost;
+	
+	final public static Boolean WRITEABLE=true;
+	final public static Boolean READONLY=false;
 
 	/**
 	 * Contructs a new BITBook
@@ -162,9 +165,13 @@ public class BITBook {
 	public void setTitle(String title) {
 		this.title = title;
 	}
-	
-	public void setBookId(short bookId){
+
+	public void setBookId(short bookId) {
 		this.bookId = bookId;
+	}
+
+	public void setMasterCopyId(short masterCopyId) {
+		this.masterCopyId = masterCopyId;
 	}
 
 	public int getUseCost() {
@@ -183,7 +190,7 @@ public class BITBook {
 		return forceBookToPlayerInventory;
 	}
 
-	public int getMasterCopyId() {
+	public short getMasterCopyId() {
 		return masterCopyId;
 	}
 
@@ -470,7 +477,7 @@ public class BITBook {
 						+ cost);
 			}
 		}
-		//BITBook.currentBookId.put(id, (short) 1000);
+		// BITBook.currentBookId.put(id, (short) 1000);
 	}
 
 	private static int convertBooleanToInt(Boolean b) {
@@ -542,10 +549,10 @@ public class BITBook {
 			if (bookId >= 1000) {
 				ItemStack itemStack = sPlayer.getItemInHand();
 				BITMessages.showWarning("BITBook:Bookdata missing in DB (ID:"
-						+ bookId+")");
+						+ bookId + ")");
 				itemStack.setDurability((short) 0);
 				BITBook.currentBookId.put(id, (short) 1000);
-				setBookName(bookId, "Book","");
+				setBookName(bookId, "Book", "");
 				return null;
 			}
 		}
@@ -601,7 +608,7 @@ public class BITBook {
 		}
 	}
 
-	public void openBook(SpoutPlayer sPlayer, int bookId) {
+	public void openBook(SpoutPlayer sPlayer, int bookId, Boolean writeable) {
 		int y = 20, itemHeight = 20;
 		int x = 100;
 		int textFieldHeight = 100, textFieldWidth = 320;
@@ -620,6 +627,10 @@ public class BITBook {
 			bodytextGUI.get(id).setText(bodytextGUI2.get(id)[i]);
 		}
 		useCostGUI.get(id).setText(String.valueOf(useCost));
+		masterCopyGUI.put(id,masterCopy);
+		forceBookToPlayerInventoryGUI.put(id, forceBookToPlayerInventory);
+		canBeMovedFromInventoryGUI.put(id, canBeMovedFromInventory);
+		copyTheBookWhenMovedGUI.put(id, copyTheBookWhenMoved);	
 
 		// ItemWidget
 		GenericItemWidget itemwidget = new GenericItemWidget(new ItemStack(340));
@@ -682,20 +693,31 @@ public class BITBook {
 		y = y + textFieldHeight + 10;
 
 		// SaveButton
-		GenericButton saveButton = new GenericButton("Save");
-		saveButton.setAuto(false)
-				.setX(x + textFieldWidth - 2 * (buttonWidth - 20) - 5).setY(y)
-				.setHeight(buttonHeight).setWidth(buttonWidth - 20);
-		BITButtons.put(saveButton.getId(), "saveBookButton");
-		popupScreen.get(id).attachWidget(BIT.plugin, saveButton);
+		if (writeable) { //READ_WRITE
+			GenericButton saveButton = new GenericButton("Save");
+			saveButton.setAuto(false)
+					.setX(x + textFieldWidth - 2 * (buttonWidth - 20) - 5)
+					.setY(y).setHeight(buttonHeight).setWidth(buttonWidth - 20);
+			BITButtons.put(saveButton.getId(), "saveBookButton");
+			popupScreen.get(id).attachWidget(BIT.plugin, saveButton);
 
-		// cancelButton
-		GenericButton cancelBookButton = new GenericButton("Cancel");
-		cancelBookButton.setAuto(false)
-				.setX(x + textFieldWidth - buttonWidth + 20).setY(y)
-				.setHeight(buttonHeight).setWidth(buttonWidth - 20);
-		popupScreen.get(id).attachWidget(BIT.plugin, cancelBookButton);
-		BITButtons.put(cancelBookButton.getId(), "cancelBookButton");
+			// cancelButton
+			GenericButton cancelBookButton = new GenericButton("Cancel");
+			cancelBookButton.setAuto(false)
+					.setX(x + textFieldWidth - buttonWidth + 20).setY(y)
+					.setHeight(buttonHeight).setWidth(buttonWidth - 20);
+			popupScreen.get(id).attachWidget(BIT.plugin, cancelBookButton);
+			BITButtons.put(cancelBookButton.getId(), "cancelBookButton");
+		} else { //READONLY
+			GenericButton returnBookButton = new GenericButton("Return");
+			returnBookButton.setAuto(false)
+					.setX(x + textFieldWidth - buttonWidth + 20).setY(y)
+					.setHeight(buttonHeight).setWidth(buttonWidth - 20);
+			popupScreen.get(id).attachWidget(BIT.plugin, returnBookButton);
+			BITButtons.put(returnBookButton.getId(), "returnBookButton");
+		}
+
+		if (writeable) { //READ_WRITE
 
 		x = 10;
 		y = 67;
@@ -704,11 +726,10 @@ public class BITBook {
 		masterCopyButtonGUI.get(id).setText("Master:" + masterCopyGUI.get(id));
 		masterCopyButtonGUI.get(id).setAuto(false).setX(x).setY(y)
 				.setHeight(buttonHeight).setWidth(buttonWidth);
-		//masterCopyButtonGUI.get(id).setTooltip(
-		//		"The masterCopy keeps all copies updated aumatically.");
-		masterCopyButtonGUI.get(id).setTooltip(
-				"NOT IMPLEMENTET YET!");
-		
+		// masterCopyButtonGUI.get(id).setTooltip(
+		// "The masterCopy keeps all copies updated aumatically.");
+		masterCopyButtonGUI.get(id).setTooltip("NOT IMPLEMENTET YET!");
+
 		popupScreen.get(id).attachWidget(BIT.plugin,
 				masterCopyButtonGUI.get(id));
 		BITButtons.put(masterCopyButtonGUI.get(id).getId(), "masterCopyButton");
@@ -719,11 +740,11 @@ public class BITBook {
 				"Force:" + forceBookToPlayerInventoryGUI.get(id));
 		forceBookToPlayerInventoryButtonGUI.get(id).setAuto(false).setX(x)
 				.setY(y).setHeight(buttonHeight).setWidth(buttonWidth);
-		//forceBookToPlayerInventoryButtonGUI.get(id).setTooltip(
-		//		"Force this book in to all players inventory.");
-				forceBookToPlayerInventoryButtonGUI.get(id).setTooltip(
-						"NOT IMPLEMENTET YET!");
-				
+		// forceBookToPlayerInventoryButtonGUI.get(id).setTooltip(
+		// "Force this book in to all players inventory.");
+		forceBookToPlayerInventoryButtonGUI.get(id).setTooltip(
+				"NOT IMPLEMENTET YET!");
+
 		popupScreen.get(id).attachWidget(BIT.plugin,
 				forceBookToPlayerInventoryButtonGUI.get(id));
 		BITButtons.put(forceBookToPlayerInventoryButtonGUI.get(id).getId(),
@@ -757,6 +778,8 @@ public class BITBook {
 		BITButtons.put(copyTheBookWhenMovedButtonGUI.get(id).getId(),
 				"copyTheBookWhenMovedButton");
 		y = y + buttonHeight + 1;
+		
+		}
 
 		// useCost
 		useCostGUI.get(id).getText();
@@ -801,7 +824,6 @@ public class BITBook {
 		}
 	}
 
-	// TODO: remove Method or use it.
 	public static void removeUserDataxx(int id) {
 		if (userno.containsKey(id)) {
 			// BITBook
@@ -824,7 +846,7 @@ public class BITBook {
 			copyTheBookWhenMovedButtonGUI.remove(id);
 			useCostGUI.remove(id);
 			// currentBookId.remove(id);
-			//currentBookId.put(id, (short) 1000);
+			// currentBookId.put(id, (short) 1000);
 			pageNoLabelGUI.remove(id);
 		}
 	}
@@ -853,7 +875,7 @@ public class BITBook {
 			pageNoLabelGUI.put(id, new GenericLabel());
 			// currentBookId is set when the book is created.
 			// currentBookId.put(id, 0);
-			//currentBookId.put(id, (short) 1000);
+			// currentBookId.put(id, (short) 1000);
 		}
 	}
 
@@ -893,15 +915,15 @@ public class BITBook {
 
 	public static void setBookName(short bookId, String title, String author) {
 		// TODO: use getMaterialManager
-		// String str = "Book:"+title;
-		// SpoutManager.getMaterialManager().setItemName(Material.BOOK, str);
+		 //String str = "Book:"+title;
+		 //SpoutManager.getMaterialManager().setItemName(Material.BOOK, str);
 		// SpoutManager.getItemManager().setItemName(Material.BOOK,
 		// bookId,"Book:" + title);
 		for (Player p : Bukkit.getServer().getOnlinePlayers()) {
 			SpoutPlayer sp = (SpoutPlayer) p;
 			if (sp.isSpoutCraftEnabled()) {
 				sp.sendPacket(new PacketItemName(Material.BOOK.getId(), bookId,
-						title + " written by "+author));
+						title + " written by " + author));
 				sp.sendPacket(new PacketItemName(Material.BOOK.getId(),
 						(short) 0, "Book")); // don't know why this is needed
 			}

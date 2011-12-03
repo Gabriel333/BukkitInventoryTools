@@ -34,12 +34,11 @@ public class BITBookSpoutListener extends SpoutListener {
 				sPlayer.closeActiveWindow();
 				BITBook.hasOpenedBook.put(id, false);
 
-			} else if (BITBook.BITButtons.get(uuid) == "cancelBookButton") {
+			} else if (BITBook.BITButtons.get(uuid) == "cancelBookButton"
+					|| BITBook.BITButtons.get(uuid) == "returnBookButton") {
 				BITBook.popupScreen.get(id).close();
 				BITBook.cleanupPopupScreen(sPlayer);
 				BITBook.BITButtons.remove(uuid);
-				// sPlayer.sendMessage("You clicked cancel - dropping current book id:"
-				// + BITBook.currentBookId.get(id));
 				BITBook.bitBooks.remove(BITBook.currentBookId.get(id));
 				BITBook.currentBookId.put(id, (short) 1000);
 				sPlayer.closeActiveWindow();

@@ -35,6 +35,7 @@ import dk.gabriel333.register.payment.Method.MethodAccount;
 public class BITBackpack implements CommandExecutor {
 
 	public BITBackpack(BIT instance) {
+		plugin=instance;
 	}
 
 	public static Logger logger = Logger.getLogger("minecraft");
@@ -136,7 +137,7 @@ public class BITBackpack implements CommandExecutor {
 									player.sendMessage(BIT.li
 											.getMessage("nextupgradecost")
 											+ ChatColor.RED
-											+ BIT.plugin.Method.format(cost)
+											+ plugin.Method.format(cost)
 											+ ChatColor.WHITE + ".");
 								}
 							}
@@ -236,7 +237,7 @@ public class BITBackpack implements CommandExecutor {
 											player.sendMessage(BIT.li
 													.getMessage("nextupgradecost")
 													+ ChatColor.RED
-													+ BIT.plugin.Method
+													+ plugin.Method
 															.format(cost)
 													+ ChatColor.WHITE + ".");
 										}
@@ -374,23 +375,23 @@ public class BITBackpack implements CommandExecutor {
 			Player notificationsAndMoneyPlayer) {
 		int sizeAfter = sizeBefore + 9;
 		double cost = calculateCostToUpgrade(sizeBefore);
-		if (BIT.plugin.Method.hasAccount(notificationsAndMoneyPlayer.getName())) {
-			MethodAccount account = BIT.plugin.Method
+		if (plugin.Method.hasAccount(notificationsAndMoneyPlayer.getName())) {
+			MethodAccount account = plugin.Method
 					.getAccount(notificationsAndMoneyPlayer.getName());
-			if (BIT.plugin.Method.hasAccount(notificationsAndMoneyPlayer
+			if (plugin.Method.hasAccount(notificationsAndMoneyPlayer
 					.getName())) {
 				if (account.hasEnough(cost)) {
 					account.subtract(cost);
 					notificationsAndMoneyPlayer.sendMessage("Your account ("
-							+ BIT.plugin.Method.getAccount(
+							+ plugin.Method.getAccount(
 									notificationsAndMoneyPlayer.getName())
 									.balance() + ") has been deducted "
-							+ BIT.plugin.Method.format(cost) + ".");
+							+ plugin.Method.format(cost) + ".");
 					if (!player.getName().equals(
 							notificationsAndMoneyPlayer.getName())) {
 						player.sendMessage(player.getName()
 								+ "'s account has been deducted "
-								+ BIT.plugin.Method.format(cost) + ".");
+								+ plugin.Method.format(cost) + ".");
 					}
 				} else {
 					if (player.equals(notificationsAndMoneyPlayer)) {
@@ -419,10 +420,10 @@ public class BITBackpack implements CommandExecutor {
 		File saveFile;
 		if (BITConfig.getBooleanParm("SBP.InventoriesShare."
 				+ player.getWorld().getName(), true)) {
-			saveFile = new File(BIT.plugin.getDataFolder() + File.separator
+			saveFile = new File(plugin.getDataFolder() + File.separator
 					+ "inventories", player.getName() + ".yml");
 		} else {
-			saveFile = new File(BIT.plugin.getDataFolder() + File.separator
+			saveFile = new File(plugin.getDataFolder() + File.separator
 					+ "inventories", player.getName() + "_"
 					+ player.getWorld().getName() + ".yml");
 		}

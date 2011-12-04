@@ -14,7 +14,7 @@ public class BITCommand implements CommandExecutor {
 		plugin=instance;
 	}
 	
-	public static BIT plugin;
+	public BIT plugin;
 
 	@Override
 	public boolean onCommand(CommandSender sender, Command command,

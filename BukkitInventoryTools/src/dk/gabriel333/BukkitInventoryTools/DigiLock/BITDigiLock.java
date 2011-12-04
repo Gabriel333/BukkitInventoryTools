@@ -17,7 +17,6 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.material.Button;
 import org.bukkit.material.Door;
 import org.bukkit.material.Lever;
-import org.bukkit.plugin.Plugin;
 import org.getspout.spoutapi.SpoutManager;
 import org.getspout.spoutapi.block.SpoutBlock;
 import org.getspout.spoutapi.block.SpoutChest;
@@ -35,10 +34,11 @@ import dk.gabriel333.Library.BITMessages;
 
 public class BITDigiLock {
 
+	@SuppressWarnings("unused")
 	private BIT plugin;
 
-	public BITDigiLock(Plugin plugin) {
-		plugin = this.plugin;
+	public BITDigiLock(BIT plugin) {
+		this.plugin = plugin;
 	}
 
 	protected SpoutBlock sBlock;

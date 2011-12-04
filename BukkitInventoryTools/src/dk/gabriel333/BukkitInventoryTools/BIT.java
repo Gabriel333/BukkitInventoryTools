@@ -226,7 +226,7 @@ public class BIT extends JavaPlugin {
 				Event.Priority.Normal, this);
 
 		// BITBackpack Listeners
-		pm.registerEvent(Type.CUSTOM_EVENT, new BITBackpackInputListener(),
+		pm.registerEvent(Type.CUSTOM_EVENT, new BITBackpackInputListener(this),
 				Priority.Normal, this);
 		pm.registerEvent(Type.CUSTOM_EVENT, new BITBackpackInventoryListener(),
 				Priority.Normal, this);

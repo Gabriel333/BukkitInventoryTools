@@ -5,9 +5,11 @@ import java.util.UUID;
 import org.bukkit.Material;
 import org.bukkit.block.Dispenser;
 import org.bukkit.block.Furnace;
+import org.bukkit.block.Jukebox;
 import org.bukkit.block.Sign;
 import org.bukkit.event.Event;
 import org.bukkit.inventory.Inventory;
+import org.bukkit.inventory.ItemStack;
 
 import org.getspout.spoutapi.block.SpoutBlock;
 import org.getspout.spoutapi.block.SpoutChest;
@@ -105,25 +107,35 @@ public class BITDigiLockSpoutListener extends SpoutListener {
 									.openBitInventory(sPlayer, bitInventory);
 
 						} else if (BITDigiLock.isSign(sBlock)) {
-							if (sPlayer.isSpoutCraftEnabled()&& BITConfig.LIBRARY_USESIGNEDITGUI) {
+							if (sPlayer.isSpoutCraftEnabled()
+									&& BITConfig.LIBRARY_USESIGNEDITGUI) {
 								Sign sign = (Sign) sBlock.getState();
 								sPlayer.openSignEditGUI(sign);
 							} else {
 
 							}
 
+						} else if (BITDigiLock.isJukebox(sBlock)) {
+							ItemStack is = sPlayer.getItemInHand();
+							Jukebox jukebox = (Jukebox) sBlock.getState();
+							if (jukebox.isPlaying()) {
+								jukebox.eject();
+							} else {
+								jukebox.setPlaying(is.getType());
+								sPlayer.setItemInHand(null);
+							}
 						}
 					} else {
-						BITMessages
-								.sendNotification(sPlayer, "Wrong pincode!");
+						BITMessages.sendNotification(sPlayer, "Wrong pincode!");
 						if (BITDigiLock.isDoubleDoor(digilock.getBlock())) {
-							BITDigiLock.closeDoubleDoor(sPlayer, digilock.getBlock(),
-									0);
+							BITDigiLock.closeDoubleDoor(sPlayer,
+									digilock.getBlock(), 0);
 						} else if (BITDigiLock.isDoor(digilock.getBlock())) {
 							BITDigiLock.closeDoor(sPlayer, digilock.getBlock(),
 									0);
 						} else if (BITDigiLock.isTrapdoor(digilock.getBlock())) {
-							BITDigiLock.closeTrapdoor(sPlayer, digilock.getBlock());
+							BITDigiLock.closeTrapdoor(sPlayer,
+									digilock.getBlock());
 						} else if (BITDigiLock.isChest(sBlock)
 								|| BITDigiLock.isDispenser(sBlock)
 								|| sBlock.getType() == Material.FURNACE) {
@@ -158,8 +170,8 @@ public class BITDigiLockSpoutListener extends SpoutListener {
 										.valueOf(BITDigiLock.closetimerGUI.get(
 												id).getText()),
 								BITDigiLock.coOwnersGUI.get(id).getText(),
-								BITDigiLock.usersGUI.get(id).getText(),
-								sBlock.getTypeId(), "", Integer
+								BITDigiLock.usersGUI.get(id).getText(), sBlock
+										.getTypeId(), "", Integer
 										.valueOf(BITDigiLock.useCostGUI.get(id)
 												.getText()));
 						BITDigiLock.cleanupPopupScreen(sPlayer);

@@ -3,6 +3,7 @@ package dk.gabriel333.BukkitInventoryTools.DigiLock;
 import org.bukkit.Material;
 import org.bukkit.block.Dispenser;
 import org.bukkit.block.Furnace;
+import org.bukkit.block.Jukebox;
 import org.bukkit.block.Sign;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.player.PlayerInteractEvent;
@@ -62,10 +63,10 @@ public class BITPlayerListener extends PlayerListener {
 			return;
 		}
 		if (sBlock.getType() == Material.BOOKSHELF
-				&& sBlock.getType() == itemInHand.getType() 
+				&& sBlock.getType() == itemInHand.getType()
 				&& event.getAction().equals(Action.RIGHT_CLICK_BLOCK)
-				&&(BITDigiLock.isLocked(sBlock) || BITInventory
-						.isBitInventoryCreated(sBlock))){
+				&& (BITDigiLock.isLocked(sBlock) || BITInventory
+						.isBitInventoryCreated(sBlock))) {
 			event.setCancelled(true);
 		}
 		int id = sPlayer.getEntityId();
@@ -626,6 +627,46 @@ public class BITPlayerListener extends PlayerListener {
 								+ sPlayer.getName());
 						// TODO: is this going to be canceled.
 						event.setCancelled(true);
+					}
+				}
+				// JUKEBOX
+			} else if ((BITDigiLock.isJukebox(sBlock))) {
+				if ((digilock.getPincode().equals("") || digilock.getPincode()
+						.equalsIgnoreCase("fingerprint"))
+						&& event.getAction().equals(Action.RIGHT_CLICK_BLOCK)
+						&& BITPermissions.hasPerm(sPlayer, "digilock.use",
+								BITPermissions.NOT_QUIET)) {
+					// USE SIGN BY FINGERPRINT (playername)
+					if (digilock.isOwner(sPlayer)
+							|| digilock.isCoowner(sPlayer)
+							|| digilock.isUser(sPlayer)) {
+						BITMessages.sendNotification(sPlayer,
+								"Used with fingerprint");
+						// BITInventory bitInventory = BITInventory
+						// .loadBitInventory(sPlayer, sBlock);
+						// bitInventory.openBitInventory(sPlayer, bitInventory);
+					} else {
+						sPlayer.sendMessage("Your fingerprint does not match the DigiLock");
+					}
+				} else {
+					event.setCancelled(true);
+					Jukebox jukebox = (Jukebox) sBlock.getState();
+					if (sPlayer.isSpoutCraftEnabled()
+							&& event.getAction().equals(
+									Action.RIGHT_CLICK_BLOCK)
+							&& BITPermissions.hasPerm(sPlayer, "digilock.use",
+									BITPermissions.NOT_QUIET)
+							&& ((itemInHand.getTypeId() >= 2256 && itemInHand
+									.getTypeId() <= 2266) || jukebox
+									.isPlaying())) {
+						BITDigiLock.getPincode(sPlayer, sBlock);
+						if (digilock.getPincode().equals(
+								BITDigiLock.pincodeGUI.get(id).getText())) {
+							// okay - go on
+						}
+					} else {
+						sPlayer.sendMessage("Digilock'ed by "
+								+ sPlayer.getName());
 					}
 				}
 			} else {

@@ -1,4 +1,4 @@
-# Permission example for SortInventory
+# Permission example for BukkitInventoryTools
 users:
     Gabriel333:
         permissions:
@@ -51,6 +51,7 @@ groups:
     admin:
         permissions:
             permissions.*: true
+               bukkitinventorytools.admin: true
         inheritance:
         - moderator
 messages:

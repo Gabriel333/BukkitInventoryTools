@@ -91,14 +91,12 @@ public class BIT extends JavaPlugin {
 	public void onEnable() {
 		plugin = this;
 		PluginDescriptionFile pdfFile = this.getDescription();
-
 		if (!isSortInventoryInstalled()) {
 			BITPlugin.setupPlugin(this);
 			BITConfig.bitSetupConfig();
 			setupSpout();
 			setupSQL();
 			setupRegister();
-			//setupSpoutBackpack();
 			setupMyWolf();
 			registerEvents();
 			addCommands();
@@ -107,7 +105,7 @@ public class BIT extends JavaPlugin {
 			setupJail();
 			setupWar();
 			li = new BITBackpackLanguageInterface(BITBackpack.loadLanguage());
-			// Load SpoutBackpack
+			// Load BITBackpack
 			for (Player player : Bukkit.getServer().getOnlinePlayers()) {
 				BITBackpack.loadInventory(player, player.getWorld());
 			}
@@ -248,6 +246,7 @@ public class BIT extends JavaPlugin {
 
 	public void addCommands() {
 		// Register commands
+		getCommand("Bit").setExecutor(new BITCommand(this));
 		getCommand("Sort").setExecutor(new BITCommandSort(this));
 		getCommand("Digilock").setExecutor(new BITCommandDigiLock(this));
 		getCommand("Bookshelf").setExecutor(new BITCommandBookshelf(this));
@@ -290,24 +289,6 @@ public class BIT extends JavaPlugin {
 			return true;
 		return false;
 	}
-
-	/*private void setupSpoutBackpack() {
-		if (spoutBackpackHandler == null) {
-			Plugin spoutBackpackPlugin = this.getServer().getPluginManager()
-					.getPlugin("SpoutBackpack");
-			if (spoutBackpackPlugin != null) {
-				if (spout == true) {
-					spoutBackpackHandler = new SBHandler();
-					spoutbackpack = true;
-					BITMessages.showInfo("SpoutBackpack is detected.");
-				} else {
-					BITMessages
-							.showWarning("SpoutBackpack is detected, but spout is not detected.");
-					spoutbackpack = false;
-				}
-			}
-		}
-	}*/
 
 	private void setupMyWolf() {
 		if (myWolfPlugin == null) {
@@ -674,7 +655,5 @@ public class BIT extends JavaPlugin {
 			return;
 		}
 	}
-
-
 
 }

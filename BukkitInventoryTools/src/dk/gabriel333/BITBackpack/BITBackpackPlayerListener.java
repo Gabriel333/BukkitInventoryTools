@@ -43,10 +43,10 @@ public class BITBackpackPlayerListener extends PlayerListener {
 					BITConfig.getBooleanParm("SBP.InventoriesShareDefault",false))) {
 				try {
 					Player player = event.getPlayer();
-					if (BIT.inventories.containsKey(player.getName())) {
+					if (BITBackpack.inventories.containsKey(player.getName())) {
 						BITBackpackInventorySaveTask.saveInventory(player,
 								event.getFrom().getWorld());
-						BIT.inventories.remove(player.getName());
+						BITBackpack.inventories.remove(player.getName());
 					}
 					BITBackpack.loadInventory(player, event.getTo().getWorld());
 				} catch (Exception e) {
@@ -79,8 +79,8 @@ public class BITBackpackPlayerListener extends PlayerListener {
 			Player player = event.getPlayer();
 			BITBackpackInventorySaveTask.saveInventory(player,
 					player.getWorld());
-			if (BIT.inventories.containsKey(player)) {
-				BIT.inventories.remove(player);
+			if (BITBackpack.inventories.containsKey(player)) {
+				BITBackpack.inventories.remove(player);
 			}
 		} catch (Exception e) {
 			e.printStackTrace();

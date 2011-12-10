@@ -15,16 +15,17 @@ import dk.gabriel333.Library.BITConfig;
 
 public class BITBackpackInventorySaveTask implements Runnable {
 
-	// private static BIT plugin;
+	@SuppressWarnings("unused")
+	private BIT plugin;
 
-	// public SBInventorySaveTask(BIT plugin) {
-	// SBInventorySaveTask.plugin = plugin;
-	// }
+	public void SBInventorySaveTask(BIT plugin) {
+	 this.plugin = plugin;
+	}
 
 	public static void saveAll() {
 		Player[] players = Bukkit.getServer().getOnlinePlayers();
 		HashMap<String, ItemStack[]> invs = new HashMap<String, ItemStack[]>(
-				BIT.inventories);
+				BITBackpack.inventories);
 		for (Player player : players) {
 			saveInventory(player, player.getWorld());
 			if (invs.containsKey(player.getName())) {
@@ -55,13 +56,12 @@ public class BITBackpackInventorySaveTask implements Runnable {
 					+ ".yml");
 		}
 		YamlConfiguration config = new YamlConfiguration();
-		if (BIT.inventories.containsKey(player.getName())) {
-			//int size = BITBackpack.allowedSize(player.getWorld(), player, true);
+		if (BITBackpack.inventories.containsKey(player.getName())) {
 			int sizeInConfig = BITBackpack.sizeInConfig(player.getWorld(), player);
 			if (sizeInConfig > 0) {
 				Inventory inv = SpoutManager.getInventoryBuilder().construct(
-						sizeInConfig, BIT.inventoryName);
-				inv.setContents(BIT.inventories.get(player.getName()));
+						sizeInConfig, BITBackpack.inventoryName);
+				inv.setContents(BITBackpack.inventories.get(player.getName()));
 				Integer i = 0;
 				for (i = 0; i < sizeInConfig; i++) {
 					ItemStack item = inv.getItem(i);
@@ -80,7 +80,7 @@ public class BITBackpackInventorySaveTask implements Runnable {
 				}
 			}
 		} else {
-			BIT.inventories.remove(player.getName());
+			BITBackpack.inventories.remove(player.getName());
 		}
 	}
 

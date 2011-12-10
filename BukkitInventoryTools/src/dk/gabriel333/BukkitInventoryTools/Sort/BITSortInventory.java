@@ -57,21 +57,14 @@ public class BITSortInventory {
 		// sort the ordinary player inventory
 		BITSortInventory.sortPlayerInventoryItems(sPlayer);
 
-		// sort the SpoutBackpack if it exists and if it is opened.
-		//if (BIT.spoutbackpack
-		//		&& BIT.spoutBackpackHandler.isOpenSpoutBackpack(sPlayer)) {
-		//	BITSortInventory.sortInventoryItems(sPlayer,
-		//			BIT.spoutBackpackHandler.getOpenedSpoutBackpack(sPlayer));
-		//} else 
-
 		if (BITBackpackAPI.bitBackpackEnabled) {
 			Inventory inv = SpoutManager.getInventoryBuilder()
 					.construct(
 							BITBackpack.allowedSize(sPlayer.getWorld(),
-									sPlayer, true), BIT.inventoryName);
+									sPlayer, true), BITBackpack.inventoryName);
 			inv = BITBackpack.getClosedBackpack(sPlayer);
 			BITSortInventory.sortInventoryItems(sPlayer, inv);
-			BIT.inventories.put(sPlayer.getName(), inv.getContents());
+			BITBackpack.inventories.put(sPlayer.getName(), inv.getContents());
 		}
 
 		// sort the players MyWolfInventory if exists and if is open.

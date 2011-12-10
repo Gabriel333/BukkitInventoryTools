@@ -13,7 +13,6 @@ import org.bukkit.Material;
 import org.bukkit.World;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.plugin.Plugin;
 import org.getspout.spoutapi.SpoutManager;
 import org.getspout.spoutapi.block.SpoutBlock;
 import org.getspout.spoutapi.gui.GenericButton;
@@ -23,6 +22,7 @@ import org.getspout.spoutapi.gui.GenericPopup;
 import org.getspout.spoutapi.gui.GenericTextField;
 import org.getspout.spoutapi.gui.GenericTexture;
 import org.getspout.spoutapi.gui.PopupScreen;
+import org.getspout.spoutapi.material.Item;
 import org.getspout.spoutapi.player.SpoutPlayer;
 
 import dk.gabriel333.BukkitInventoryTools.BIT;
@@ -33,10 +33,11 @@ import dk.gabriel333.Library.BITMessages;
 
 public class BITInventory {
 
+	@SuppressWarnings("unused")
 	private BIT plugin;
 
-	public BITInventory(Plugin plugin) {
-		plugin = this.plugin;
+	public BITInventory(BIT plugin) {
+		this.plugin = plugin;
 	}
 
 	protected SpoutBlock sBlock;
@@ -71,8 +72,6 @@ public class BITInventory {
 	}
 
 	public static Map<Integer, BITInventory> openedInventories = new HashMap<Integer, BITInventory>();
-	// public static Map<Integer, Boolean> isBookshelfCreated = new
-	// HashMap<Integer, Boolean>();
 
 	// USERDATA FOR THE PINCODEPOPUP
 	public static Map<Integer, Integer> userno = new HashMap<Integer, Integer>();
@@ -326,8 +325,10 @@ public class BITInventory {
 					bookId = inventory.getItem(j).getDurability();
 					if (bookId > 1000) {
 						bitBook = BITBook.loadBook(sPlayer, bookId);
-						BITBook.setBookName(bookId, bitBook.getTitle(),
-								bitBook.getAuthor());
+						Item item = (Item) inventory.getItem(j);
+						item.setName(bitBook.getTitle()+" written by "+bitBook.getAuthor());
+						//BITBook.setBookName(bookId, bitBook.getTitle(),
+						//		bitBook.getAuthor());
 					}
 				}
 			}

@@ -15,14 +15,10 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.Event;
 import org.bukkit.event.Event.Priority;
 import org.bukkit.event.Event.Type;
-import org.bukkit.inventory.Inventory;
-import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.PluginDescriptionFile;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
-import org.getspout.spoutapi.gui.GenericLabel;
-
 import bukkit.tommytony.war.War;
 
 import com.alta189.sqlLibrary.MySQL.mysqlCore;
@@ -65,13 +61,6 @@ public class BIT extends JavaPlugin {
 	public Method Method;
 
 	// BITBackpack
-	//public static SBHandler spoutBackpackHandler;
-	//public static Boolean spoutbackpack = false;
-	public static Map<String, ItemStack[]> inventories = new HashMap<String, ItemStack[]>();
-	public static Map<String, Inventory> openedInventories = new HashMap<String, Inventory>();
-	public static Map<String, String> openedInventoriesOthers = new HashMap<String, String>();
-	public static Map<String, GenericLabel> widgets = new HashMap<String, GenericLabel>();
-	public static String inventoryName = "Backpack";
 	public static BITBackpackLanguageInterface li;
 	public static MobArenaHandler mobArenaHandler;
 	public List<Player> portals = new ArrayList<Player>();
@@ -136,9 +125,9 @@ public class BIT extends JavaPlugin {
 		Bukkit.getServer().getScheduler().cancelTask(saveTaskId);
 		BITBackpackInventorySaveTask.saveAll();
 		
-		inventories.clear();
-		openedInventories.clear();
-		openedInventoriesOthers.clear();
+		BITBackpack.inventories.clear();
+		BITBackpack.openedInventories.clear();
+		BITBackpack.openedInventoriesOthers.clear();
 		//widgets.clear();
 
 		PluginDescriptionFile pdfFile = this.getDescription();
@@ -597,8 +586,10 @@ public class BIT extends JavaPlugin {
 			try {
 				// attempt to make books with different data values stack
 				// separately
+				//Field field1 = net.minecraft.server.Item.class
+				//		.getDeclaredField("bs");
 				Field field1 = net.minecraft.server.Item.class
-						.getDeclaredField("bs");
+								.getDeclaredField("bQ");
 				if (field1.getType() == boolean.class) {
 					field1.setAccessible(true);
 					field1.setBoolean(net.minecraft.server.Item.BOOK, true);

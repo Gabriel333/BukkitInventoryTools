@@ -31,8 +31,8 @@ public class BITBackpackEntityListener extends EntityListener {
 					// if (!((SpoutPlayer) player).isSpoutCraftEnabled()) {
 					BITBackpack.loadInventory(player, player.getWorld());
 					// }
-					if (BIT.inventories.containsKey(player.getName())) {
-						ItemStack[] items = BIT.inventories.get(player
+					if (BITBackpack.inventories.containsKey(player.getName())) {
+						ItemStack[] items = BITBackpack.inventories.get(player
 								.getName());
 						for (ItemStack item : items) {
 							if (item != null && item.getAmount() > 0) {
@@ -46,18 +46,18 @@ public class BITBackpackEntityListener extends EntityListener {
 										BITBackpack
 												.allowedSize(player.getWorld(),
 														player, true),
-										BIT.inventoryName);
+										BITBackpack.inventoryName);
 						for (Integer i = 0; i < BITBackpack.allowedSize(
 								player.getWorld(), player, true); i++) {
 							ItemStack item = new ItemStack(0, 0);
 							inventory.setItem(i, item);
 						}
-						BIT.inventories.put(player.getName(),
+						BITBackpack.inventories.put(player.getName(),
 								inventory.getContents());
 						BITBackpackInventorySaveTask.saveInventory(player,
 								player.getWorld());
 						player.sendMessage(BIT.li.getMessage("your")
-								+ ChatColor.RED + BIT.inventoryName + ChatColor.WHITE
+								+ ChatColor.RED + BITBackpack.inventoryName + ChatColor.WHITE
 								+ BIT.li.getMessage("hasbroken"));
 					}
 				}

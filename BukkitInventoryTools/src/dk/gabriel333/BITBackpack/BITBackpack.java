@@ -4,6 +4,7 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.logging.Logger;
@@ -21,9 +22,9 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.getspout.spoutapi.SpoutManager;
+import org.getspout.spoutapi.gui.GenericLabel;
 
 import com.sk89q.worldguard.protection.regions.ProtectedRegion;
-//import org.getspout.spout.inventory.CustomInventory;
 import dk.gabriel333.BITBackpack.BITBackpackLanguageInterface.Language;
 import dk.gabriel333.BukkitInventoryTools.BIT;
 import dk.gabriel333.Library.BITConfig;
@@ -42,6 +43,12 @@ public class BITBackpack implements CommandExecutor {
 
 	public BIT plugin;
 
+	public static String inventoryName = "Backpack";
+	public static Map<String, ItemStack[]> inventories = new HashMap<String, ItemStack[]>();
+	public static Map<String, Inventory> openedInventories = new HashMap<String, Inventory>();
+	public static Map<String, String> openedInventoriesOthers = new HashMap<String, String>();
+	public static Map<String, GenericLabel> widgets = new HashMap<String, GenericLabel>();
+
 	public boolean onCommand(CommandSender sender, Command cmd,
 			String commandLabel, String[] args) {
 		if (sender instanceof Player) {
@@ -52,21 +59,21 @@ public class BITBackpack implements CommandExecutor {
 					if (args.length == 0) {
 						if (allowedSize(player.getWorld(), player, true) > 0) {
 							String playerName = sender.getName();
-							if (BIT.inventories.containsKey(playerName)) {
-								if (!BIT.openedInventories
+							if (inventories.containsKey(playerName)) {
+								if (!openedInventories
 										.containsKey(playerName)) {
 									Inventory inv = SpoutManager
 											.getInventoryBuilder().construct(
 													BITBackpack.allowedSize(
 															player.getWorld(),
 															player, true),
-													BIT.inventoryName);
-									BIT.openedInventories.put(playerName, inv);
+													inventoryName);
+									openedInventories.put(playerName, inv);
 									// TODO: I dont know if these two lines
 									// should be here.
-									// BIT.openedInventoriesOthers.put(
+									// openedInventoriesOthers.put(
 									// player.getName(), playerName);
-									inv.setContents(BIT.inventories
+									inv.setContents(inventories
 											.get(playerName));
 									((org.getspout.spoutapi.player.SpoutPlayer) player)
 											.openInventoryWindow((Inventory) inv);
@@ -74,7 +81,7 @@ public class BITBackpack implements CommandExecutor {
 									player.sendMessage(BIT.li
 											.getMessage("playerhasalreadyhis")
 											+ ChatColor.RED
-											+ BIT.inventoryName
+											+ inventoryName
 											+ ChatColor.WHITE
 											+ BIT.li.getMessage("opened"));
 								}
@@ -111,7 +118,7 @@ public class BITBackpack implements CommandExecutor {
 								player.sendMessage(BIT.li
 										.getMessage("youvegotthebiggest")
 										+ ChatColor.RED
-										+ BIT.inventoryName
+										+ inventoryName
 										+ ChatColor.WHITE
 										+ BIT.li.getMessage("!"));
 							} else if (size == sizeInConfig(player.getWorld(),
@@ -119,12 +126,12 @@ public class BITBackpack implements CommandExecutor {
 								player.sendMessage(BIT.li
 										.getMessage("youvegotthebiggest")
 										+ ChatColor.RED
-										+ BIT.inventoryName
+										+ inventoryName
 										+ ChatColor.WHITE
 										+ BIT.li.getMessage("foryourpermissions"));
 							} else {
 								player.sendMessage(BIT.li.getMessage("your")
-										+ ChatColor.RED + BIT.inventoryName
+										+ ChatColor.RED + inventoryName
 										+ ChatColor.WHITE
 										+ BIT.li.getMessage("has")
 										+ ChatColor.RED + size
@@ -160,14 +167,14 @@ public class BITBackpack implements CommandExecutor {
 								player.sendMessage(BIT.li
 										.getMessage("youvegotthebiggest")
 										+ ChatColor.RED
-										+ BIT.inventoryName
+										+ inventoryName
 										+ ChatColor.WHITE
 										+ BIT.li.getMessage("!"));
 							} else {
 								player.sendMessage(BIT.li
 										.getMessage("youvegotthebiggest")
 										+ ChatColor.RED
-										+ BIT.inventoryName
+										+ inventoryName
 										+ ChatColor.WHITE
 										+ BIT.li.getMessage("foryourpermissions"));
 							}
@@ -176,20 +183,20 @@ public class BITBackpack implements CommandExecutor {
 						} else if (argument.equalsIgnoreCase("clear")) {
 							if (BITPermissions.hasPerm(player,
 									"backpack.clear", BITPermissions.NOT_QUIET)) {
-								if (BIT.inventories.containsKey(player
+								if (inventories.containsKey(player
 										.getName())) {
-									BIT.inventories.remove(player.getName());
+									inventories.remove(player.getName());
 									player.sendMessage(BIT.li
 											.getMessage("your")
 											+ ChatColor.RED
-											+ BIT.inventoryName
+											+ inventoryName
 											+ ChatColor.WHITE
 											+ BIT.li.getMessage("hasbeencleared"));
 								} else {
 									player.sendMessage(BIT.li
 											.getMessage("youdonthavearegistred")
 											+ ChatColor.RED
-											+ BIT.inventoryName
+											+ inventoryName
 											+ ChatColor.WHITE
 											+ BIT.li.getMessage("!"));
 								}
@@ -208,7 +215,7 @@ public class BITBackpack implements CommandExecutor {
 							if (BITPermissions.hasPerm(player,
 									"backpack.info.other",
 									BITPermissions.NOT_QUIET)) {
-								if (BIT.inventories.containsKey(playerName)) {
+								if (inventories.containsKey(playerName)) {
 									Player playerCmd = Bukkit.getServer()
 											.getPlayer(playerName);
 									int size = allowedSize(
@@ -218,14 +225,14 @@ public class BITBackpack implements CommandExecutor {
 										player.sendMessage(BIT.li
 												.getMessage("playerhasgotthebiggest")
 												+ ChatColor.RED
-												+ BIT.inventoryName
+												+ inventoryName
 												+ ChatColor.WHITE
 												+ BIT.li.getMessage("!"));
 									} else {
 										player.sendMessage(BIT.li
 												.getMessage("players")
 												+ ChatColor.RED
-												+ BIT.inventoryName
+												+ inventoryName
 												+ ChatColor.WHITE
 												+ BIT.li.getMessage("hasbis")
 												+ size
@@ -261,7 +268,7 @@ public class BITBackpack implements CommandExecutor {
 								if (BITPermissions.hasPerm(player,
 										"backpack.upgrade.other",
 										BITPermissions.NOT_QUIET)) {
-									if (BIT.inventories.containsKey(playerName)) {
+									if (inventories.containsKey(playerName)) {
 										Player playerCmd = Bukkit.getServer()
 												.getPlayer(playerName);
 										if (allowedSize(playerCmd.getWorld(),
@@ -280,14 +287,14 @@ public class BITBackpack implements CommandExecutor {
 											player.sendMessage(BIT.li
 													.getMessage("playerhasgotthebiggest")
 													+ ChatColor.RED
-													+ BIT.inventoryName
+													+ inventoryName
 													+ ChatColor.WHITE
 													+ BIT.li.getMessage("!"));
 										} else {
 											player.sendMessage(BIT.li
 													.getMessage("playerhasgotthebiggest")
 													+ ChatColor.RED
-													+ BIT.inventoryName
+													+ inventoryName
 													+ ChatColor.WHITE
 													+ BIT.li.getMessage("forhispermissions"));
 										}
@@ -303,14 +310,14 @@ public class BITBackpack implements CommandExecutor {
 							if (BITPermissions.hasPerm(player,
 									"backpack.clear.other",
 									BITPermissions.NOT_QUIET)) {
-								if (BIT.inventories.containsKey(playerName)) {
-									BIT.inventories.remove(playerName);
+								if (inventories.containsKey(playerName)) {
+									inventories.remove(playerName);
 									player.sendMessage(BIT.li
 											.getMessage("frenchonly")
 											+ playerName
 											+ BIT.li.getMessage("'s")
 											+ ChatColor.RED
-											+ BIT.inventoryName
+											+ inventoryName
 											+ ChatColor.WHITE
 											+ BIT.li.getMessage("hasbeencleared"));
 								} else {
@@ -324,8 +331,8 @@ public class BITBackpack implements CommandExecutor {
 							if (BITPermissions.hasPerm(player,
 									"backpack.open.other",
 									BITPermissions.NOT_QUIET)) {
-								if (BIT.inventories.containsKey(playerName)) {
-									if (!BIT.openedInventories
+								if (inventories.containsKey(playerName)) {
+									if (!openedInventories
 											.containsKey(playerName)) {
 										Inventory inv = SpoutManager
 												.getInventoryBuilder()
@@ -335,12 +342,12 @@ public class BITBackpack implements CommandExecutor {
 																		player.getWorld(),
 																		player,
 																		true),
-														BIT.inventoryName);
-										BIT.openedInventories.put(playerName,
+														inventoryName);
+										openedInventories.put(playerName,
 												inv);
-										BIT.openedInventoriesOthers.put(
+										openedInventoriesOthers.put(
 												player.getName(), playerName);
-										inv.setContents(BIT.inventories
+										inv.setContents(inventories
 												.get(playerName));
 										((org.getspout.spoutapi.player.SpoutPlayer) player)
 												.openInventoryWindow((Inventory) inv);
@@ -348,7 +355,7 @@ public class BITBackpack implements CommandExecutor {
 										player.sendMessage(BIT.li
 												.getMessage("playerhasalreadyhis")
 												+ ChatColor.RED
-												+ BIT.inventoryName
+												+ inventoryName
 												+ ChatColor.WHITE
 												+ BIT.li.getMessage("opened"));
 									}
@@ -365,7 +372,7 @@ public class BITBackpack implements CommandExecutor {
 				}
 			}
 		} else {
-			// the user has not permission to use the SputBackpack.
+			// the user has not permission to use the BITBackpack.
 			return true;
 		}
 		return false;
@@ -398,13 +405,13 @@ public class BITBackpack implements CommandExecutor {
 						notificationsAndMoneyPlayer.sendMessage(BIT.li
 								.getMessage("notenoughmoneyyour")
 								+ ChatColor.RED
-								+ BIT.inventoryName
+								+ inventoryName
 								+ ChatColor.WHITE + ".");
 					} else {
 						notificationsAndMoneyPlayer.sendMessage(BIT.li
 								.getMessage("notenoughmoneyplayer")
 								+ ChatColor.RED
-								+ BIT.inventoryName
+								+ inventoryName
 								+ ChatColor.WHITE + ".");
 					}
 					return;
@@ -416,7 +423,7 @@ public class BITBackpack implements CommandExecutor {
 			}
 		}
 		BITBackpackInventorySaveTask.saveInventory(player, player.getWorld());
-		BIT.inventories.remove(player.getName());
+		inventories.remove(player.getName());
 		File saveFile;
 		if (BITConfig.getBooleanParm("SBP.InventoriesShare."
 				+ player.getWorld().getName(), true)) {
@@ -445,7 +452,7 @@ public class BITBackpack implements CommandExecutor {
 		}
 		loadInventory(player, player.getWorld());
 		notificationsAndMoneyPlayer.sendMessage(BIT.li.getMessage("your")
-				+ ChatColor.RED + BIT.inventoryName + ChatColor.WHITE
+				+ ChatColor.RED + inventoryName + ChatColor.WHITE
 				+ BIT.li.getMessage("hasbeenupgraded"));
 		notificationsAndMoneyPlayer.sendMessage(BIT.li.getMessage("ithasnow")
 				+ ChatColor.RED + sizeAfter + ChatColor.WHITE
@@ -458,11 +465,11 @@ public class BITBackpack implements CommandExecutor {
 			player.sendMessage(BIT.li.getMessage("reloadcommand"));
 		}
 		player.sendMessage(BIT.li.getMessage("infocommand") + ChatColor.RED
-				+ BIT.inventoryName + ChatColor.WHITE + ".");
+				+ inventoryName + ChatColor.WHITE + ".");
 		if (allowedSize(player.getWorld(), player, true) < upgradeAllowedSize(
 				player.getWorld(), player) && BIT.useEconomy) {
 			player.sendMessage(BIT.li.getMessage("upgradecommand")
-					+ ChatColor.RED + BIT.inventoryName + ChatColor.WHITE + ".");
+					+ ChatColor.RED + inventoryName + ChatColor.WHITE + ".");
 		}
 	}
 
@@ -570,28 +577,28 @@ public class BITBackpack implements CommandExecutor {
 	public static Inventory getClosedBackpack(Player player) {
 		Inventory inventory = SpoutManager.getInventoryBuilder().construct(
 				BITBackpack.allowedSize(player.getWorld(), player, true),
-				BIT.inventoryName);
-		if (BIT.inventories.containsKey(player.getName())) {
-			inventory.setContents(BIT.inventories.get(player.getName()));
+				inventoryName);
+		if (inventories.containsKey(player.getName())) {
+			inventory.setContents(inventories.get(player.getName()));
 		}
 		return inventory;
 	}
 
 	public static void setClosedBackpack(Player player, Inventory inventory) {
-		BIT.inventories.put(player.getName(), inventory.getContents());
+		inventories.put(player.getName(), inventory.getContents());
 		return;
 	}
 
 	public static boolean isOpenBackpack(Player player) {
-		return BIT.openedInventories.containsKey(player.getName());
+		return openedInventories.containsKey(player.getName());
 	}
 
 	public static Inventory getOpenedBackpack(Player player) {
-		return BIT.openedInventories.get(player.getName());
+		return openedInventories.get(player.getName());
 	}
 
 	public static void updateInventory(Player player, ItemStack[] is) {
-		BIT.inventories.put(player.getName(), is);
+		inventories.put(player.getName(), is);
 	}
 
 	public static boolean canOpenBackpack(World world, Player player) {
@@ -714,8 +721,8 @@ public class BITBackpack implements CommandExecutor {
 	}
 
 	public static void loadInventory(Player player, World world) {
-		if (BIT.inventories.containsKey(player.getName())) {
-			if (BIT.inventories.get(player.getName()).length > 0) {
+		if (inventories.containsKey(player.getName())) {
+			if (inventories.get(player.getName()).length > 0) {
 				return;
 			}
 		}
@@ -751,7 +758,7 @@ public class BITBackpack implements CommandExecutor {
 			size = allowedSize;
 		}
 		Inventory inv = SpoutManager.getInventoryBuilder().construct(size,
-				BIT.inventoryName);
+				inventoryName);
 		if (saveFile.exists()) {
 			Integer i = 0;
 			for (i = 0; i < size; i++) {
@@ -764,7 +771,7 @@ public class BITBackpack implements CommandExecutor {
 				inv.setItem(i, item);
 			}
 		}
-		BIT.inventories.put(player.getName(), inv.getContents());
+		inventories.put(player.getName(), inv.getContents());
 	}
 
 	public static Language loadLanguage() {

@@ -36,25 +36,6 @@ public class BITSortInputListener extends InputListener {
 		ScreenType screentype = event.getScreenType();
 		SpoutBlock targetblock = (SpoutBlock) sPlayer.getTargetBlock(null, 4);
 
-		// External SpoutBackpack
-		// if (keypressed.equals(G333Config.LIBRARY_SORTKEY)
-		// && G333Permissions.hasPerm(sPlayer, "SortInventory.use",
-		// G333Permissions.QUIET) && (BIT.spoutbackpack
-		// && BIT.spoutBackpackHandler.isOpenSpoutBackpack(sPlayer)
-		// ) && screentype == ScreenType.CHEST_INVENTORY) {
-		// if (BIT.spoutBackpackHandler.isOpenSpoutBackpack(sPlayer)) {
-		// Inventory inventory = BIT.spoutBackpackHandler
-		// .getOpenedSpoutBackpack(sPlayer);
-		// if (inventory != null) {
-		// BITSortInventory.sortInventoryItems(sPlayer, inventory);
-		// }
-		// BITSortInventory.sortPlayerInventoryItems(sPlayer);
-		// if (G333Config.SORT_DISPLAYSORTARCHIEVEMENT) {
-		// G333Messages.sendNotification(sPlayer, "Items sorted.");
-		// }
-		// }
-		// } else
-
 		// Internal SpoutBacpack
 		if (keypressed.equals(BITConfig.LIBRARY_SORTKEY)
 				&& BITPermissions.hasPerm(sPlayer, "SortInventory.use",

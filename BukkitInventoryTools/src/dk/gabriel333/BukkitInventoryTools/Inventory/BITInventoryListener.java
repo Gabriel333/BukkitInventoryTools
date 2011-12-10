@@ -9,6 +9,7 @@ import org.getspout.spoutapi.event.inventory.InventoryCloseEvent;
 import org.getspout.spoutapi.event.inventory.InventoryCraftEvent;
 import org.getspout.spoutapi.event.inventory.InventoryListener;
 import org.getspout.spoutapi.event.inventory.InventoryOpenEvent;
+//import org.getspout.spoutapi.material.Item;
 import org.getspout.spoutapi.player.SpoutPlayer;
 
 import dk.gabriel333.BukkitInventoryTools.BIT;
@@ -55,6 +56,9 @@ public class BITInventoryListener extends InventoryListener {
 					if (bookId > 1000) {
 						if (BITBook.isWritten(sPlayer, bookId)) {
 							bitBook = BITBook.loadBook(sPlayer, bookId);
+							//Item item = (Item) inv.getItem(i);
+							//item.setName(bitBook.getTitle()+" written by "+bitBook.getAuthor());
+							
 							BITBook.setBookName(bookId, bitBook.getTitle(),
 									bitBook.getAuthor());
 						} else {
@@ -93,16 +97,21 @@ public class BITInventoryListener extends InventoryListener {
 				short bookId = itemClicked.getDurability();
 				if (BITBook.isWritten(sPlayer, bookId)) {
 					BITBook bitBook = BITBook.loadBook(sPlayer, bookId);
-					BITBook.setBookName(bookId, bitBook.getTitle(),
-							bitBook.getAuthor());
-				/*	int slotNo = event.getSlot();
+					//Item item = (Item) itemClicked;
+					//item.setName(bitBook.getTitle() + " written by "
+					//		+ bitBook.getAuthor());
+					 BITBook.setBookName(bookId, bitBook.getTitle(),
+					 bitBook.getAuthor());
+					int slotNo = event.getSlot();
 					if (bitBook.getMasterCopy()
 							&& bitBook.getMasterCopyId() == 0) {
 						// ItemStack copyOfMaster = itemClicked;
 						ItemStack masterBook = itemClicked.clone();
-						event.getInventory().setItem(slotNo, masterBook);
+						Inventory inventory = event.getInventory();
+						inventory.setItem(slotNo, masterBook);
+
 						short nextBookId = BITBook.getNextBookId();
-						//sPlayer.sendMessage("nextBookId:" + nextBookId);
+						// sPlayer.sendMessage("nextBookId:" + nextBookId);
 						BITBook newBook = BITBook.loadBook(sPlayer, bookId);
 						newBook.setBookId(nextBookId);
 						newBook.setTitle(bitBook.getTitle()
@@ -123,8 +132,7 @@ public class BITInventoryListener extends InventoryListener {
 						BITBook.bitBooks.put(nextBookId, bitBook);
 						BITBook.saveBook(sPlayer, nextBookId);
 						sPlayer.sendMessage("BIT:This Book is being copied when moved");
-					} else */
-					if (!(bitBook.getCanBeMovedFromInventory()
+					} else if (!(bitBook.getCanBeMovedFromInventory()
 							&& (sPlayer.getName().equalsIgnoreCase(bitBook
 									.getAuthor())) || bitBook.getCoAuthors()
 							.contains(sPlayer.getName()))) {

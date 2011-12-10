@@ -21,6 +21,7 @@ import org.getspout.spoutapi.gui.GenericLabel;
 import org.getspout.spoutapi.gui.GenericPopup;
 import org.getspout.spoutapi.gui.GenericTextField;
 import org.getspout.spoutapi.gui.PopupScreen;
+import org.getspout.spoutapi.material.Item;
 import org.getspout.spoutapi.packet.PacketItemName;
 import org.getspout.spoutapi.player.SpoutPlayer;
 
@@ -916,12 +917,13 @@ public class BITBook {
 	public static void setBookName(short bookId, String title, String author) {
 		// TODO: use getMaterialManager
 		 //String str = "Book:"+title;
-		 //SpoutManager.getMaterialManager().setItemName(Material.BOOK, str);
-		// SpoutManager.getItemManager().setItemName(Material.BOOK,
-		// bookId,"Book:" + title);
+		 //SpoutManager.getMaterialManager().setItemName(org.getspout.spoutapi.material.Material, "BBoook");
+		 //SpoutManager.getItemManager().setItemName(Material.BOOK,
+		 //bookId,"Book:" + title);
 		for (Player p : Bukkit.getServer().getOnlinePlayers()) {
 			SpoutPlayer sp = (SpoutPlayer) p;
 			if (sp.isSpoutCraftEnabled()) {
+				
 				sp.sendPacket(new PacketItemName(Material.BOOK.getId(), bookId,
 						title + " written by " + author));
 				sp.sendPacket(new PacketItemName(Material.BOOK.getId(),
@@ -935,7 +937,9 @@ public class BITBook {
 		for (int i = 0; i < inventory.getSize(); i++) {
 			itemStack = inventory.getItem(i);
 			if (itemStack.getType() == Material.BOOK) {
-
+				Item item = (Item) itemStack;
+				item.setName("BBBBoook");
+				
 			}
 		}
 	}

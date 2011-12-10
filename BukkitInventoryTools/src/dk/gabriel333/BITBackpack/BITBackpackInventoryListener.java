@@ -14,51 +14,53 @@ import dk.gabriel333.BukkitInventoryTools.BIT;
 import dk.gabriel333.Library.BITConfig;
 
 public class BITBackpackInventoryListener extends InventoryListener {
-	// private BIT plugin;
+	
+	@SuppressWarnings("unused")
+	private BIT plugin;
 
-	// public SBInventoryListener(BIT plugin) {
-	// this.plugin = plugin;
-	// }
+	public void SBInventoryListener(BIT plugin) {
+	  this.plugin = plugin;
+	}
 
 	@Override
 	public void onInventoryClose(InventoryCloseEvent event) {
 		Player player = event.getPlayer();
-		if (!BIT.openedInventoriesOthers.containsKey(player.getName())) {
-			if (BIT.openedInventories.containsKey(player.getName())) {
-				if (BIT.widgets.containsKey(player.getName())
+		if (!BITBackpack.openedInventoriesOthers.containsKey(player.getName())) {
+			if (BITBackpack.openedInventories.containsKey(player.getName())) {
+				if (BITBackpack.widgets.containsKey(player.getName())
 						&& BITConfig.SBP_useWidget) {
-					BIT.widgets.get(player.getName()).setVisible(false)
+					BITBackpack.widgets.get(player.getName()).setVisible(false)
 							.setDirty(true);
 				}
-				BIT.openedInventories.remove(player.getName());
+				BITBackpack.openedInventories.remove(player.getName());
 			}
 			Inventory inv = event.getInventory();
-			if (inv.getName().equals(BIT.inventoryName)
+			if (inv.getName().equals(BITBackpack.inventoryName)
 					&& inv.getSize() == BITBackpack.allowedSize(
 							player.getWorld(), player, true)) {
-				BIT.inventories.put(player.getName(), inv.getContents());
+				BITBackpack.inventories.put(player.getName(), inv.getContents());
 			}
 		} else {
-			if (BIT.openedInventories.containsKey(BIT.openedInventoriesOthers
+			if (BITBackpack.openedInventories.containsKey(BITBackpack.openedInventoriesOthers
 					.get(player.getName()))) {
-				BIT.openedInventories.remove(BIT.openedInventoriesOthers
+				BITBackpack.openedInventories.remove(BITBackpack.openedInventoriesOthers
 						.get(player.getName()));
 			}
 			Inventory inv = event.getInventory();
-			if (inv.getName().equals(BIT.inventoryName)
+			if (inv.getName().equals(BITBackpack.inventoryName)
 					&& inv.getSize() == BITBackpack.allowedSize(
 							Bukkit.getServer()
 									.getPlayer(
-											BIT.openedInventoriesOthers
+											BITBackpack.openedInventoriesOthers
 													.get(player.getName()))
 									.getWorld(),
 							Bukkit.getServer().getPlayer(
-									BIT.openedInventoriesOthers.get(player
+									BITBackpack.openedInventoriesOthers.get(player
 											.getName())), true)) {
-				BIT.inventories.put(
-						BIT.openedInventoriesOthers.get(player.getName()),
+				BITBackpack.inventories.put(
+						BITBackpack.openedInventoriesOthers.get(player.getName()),
 						inv.getContents());
-				BIT.openedInventoriesOthers.remove(player.getName());
+				BITBackpack.openedInventoriesOthers.remove(player.getName());
 			}
 		}
 	}
@@ -66,10 +68,10 @@ public class BITBackpackInventoryListener extends InventoryListener {
 	@Override
 	public void onInventoryClick(InventoryClickEvent event) {
 		Player player = event.getPlayer();
-		if (BIT.openedInventoriesOthers
+		if (BITBackpack.openedInventoriesOthers
 				.containsKey(event.getPlayer().getName())) {
 			player = Bukkit.getServer().getPlayer(
-					BIT.openedInventoriesOthers.get(event.getPlayer()));
+					BITBackpack.openedInventoriesOthers.get(event.getPlayer()));
 		}
 		InventorySlotType clickedSlotType = event.getSlotType();
 		Inventory inv = event.getInventory();
@@ -80,7 +82,7 @@ public class BITBackpackInventoryListener extends InventoryListener {
 		// try {
 		if (invName.equals("Backpack")
 				&& clickedSlotType == InventorySlotType.CONTAINER
-				&& (BIT.openedInventories.containsKey(player.getName()) || BIT.openedInventoriesOthers
+				&& (BITBackpack.openedInventories.containsKey(player.getName()) || BITBackpack.openedInventoriesOthers
 						.containsKey(player.getName()))) {
 			// 1=blacklist
 			if (BITConfig.SBP_blackOrWhiteList == 1) {
@@ -90,7 +92,7 @@ public class BITBackpackInventoryListener extends InventoryListener {
 						event.setCancelled(true);
 						player.sendMessage(ChatColor.RED
 								+ BIT.li.getMessage("yourenotallowedtomovethis")
-								+ BIT.inventoryName + "!");
+								+ BITBackpack.inventoryName + "!");
 						return;
 					}
 				}
@@ -102,14 +104,14 @@ public class BITBackpackInventoryListener extends InventoryListener {
 						event.setCancelled(true);
 						player.sendMessage(ChatColor.RED
 								+ BIT.li.getMessage("yourenotallowedtomovethis")
-								+ BIT.inventoryName + "!");
+								+ BITBackpack.inventoryName + "!");
 						return;
 					}
 				}
 			}
 		}
 		// if (clickedSlotType == InventorySlotType.CONTAINER
-		// && invName.equals(BIT.inventoryName) && placedItem != null) {
+		// && invName.equals(BITBackpack.inventoryName) && placedItem != null) {
 		// ItemStack is = inv.getItem(slot);
 		// is.setAmount(is.getAmount() - clickedItem.getAmount());
 		// SpoutBackpack.updateInventory(player, inv.getContents());

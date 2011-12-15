@@ -16,15 +16,15 @@
 	<classpathentry kind="lib" path="C:/Private/Dropbox/Libraries/Newest/WorldGuard.jar"/>
 	<classpathentry kind="lib" path="C:/Private/Dropbox/Libraries/Newest/EssentialsGroupManager.jar"/>
 	<classpathentry kind="lib" path="C:/Private/Dropbox/Libraries/Register/lib/BOSEconomy7.jar"/>
-	<classpathentry kind="lib" path="C:/Private/Dropbox/Libraries/Register/lib/Essentials.jar"/>
 	<classpathentry kind="lib" path="C:/Private/Dropbox/Libraries/Register/lib/iCo4.jar"/>
 	<classpathentry kind="lib" path="C:/Private/Dropbox/Libraries/Register/lib/iCo5.jar"/>
 	<classpathentry kind="lib" path="C:/Private/Dropbox/Libraries/Register/lib/iCo6.jar"/>
 	<classpathentry kind="lib" path="C:/Private/Dropbox/Libraries/Register/lib/MultiCurrency.jar"/>
 	<classpathentry kind="lib" path="C:/Private/Dropbox/Libraries/Newest/War.jar"/>
-	<classpathentry kind="lib" path="C:/Private/Dropbox/Libraries/Newest/bukkit-1.0.0-R1-SNAPSHOT.jar"/>
-	<classpathentry kind="lib" path="C:/Private/Dropbox/Libraries/Newest/spoutapi.jar"/>
+	<classpathentry kind="lib" path="C:/Private/Dropbox/Libraries/Newest/bukkit-1.0.1-R1.jar"/>
+	<classpathentry kind="lib" path="C:/Private/Dropbox/Libraries/Newest/craftbukkit-1.0.1-R1.jar"/>
 	<classpathentry kind="lib" path="C:/Private/Dropbox/Libraries/Newest/spout.jar"/>
-	<classpathentry kind="lib" path="C:/Private/Dropbox/Libraries/Newest/craftbukkit-1.0.0-SNAPSHOT.jar"/>
+	<classpathentry kind="lib" path="C:/Private/Dropbox/Libraries/Newest/spoutapi.jar"/>
+	<classpathentry kind="lib" path="C:/Private/Dropbox/Libraries/Newest/Essentials.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

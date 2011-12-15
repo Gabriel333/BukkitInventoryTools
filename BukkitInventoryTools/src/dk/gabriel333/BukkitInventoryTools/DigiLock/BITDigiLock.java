@@ -545,12 +545,8 @@ public class BITDigiLock {
 	}
 
 	public static void playDigiLockSound(SpoutBlock sBlock) {
-		SpoutManager
-				.getSoundManager()
-				.playGlobalCustomSoundEffect(
-						BIT.plugin,
-						BITConfig.DIGILOCK_SOUND,
-						true, sBlock.getLocation(), 5);
+		SpoutManager.getSoundManager().playGlobalCustomSoundEffect(BIT.plugin,
+				BITConfig.DIGILOCK_SOUND, true, sBlock.getLocation(), 5);
 	}
 
 	public static boolean isNeighbourLocked(SpoutBlock block) {
@@ -619,7 +615,7 @@ public class BITDigiLock {
 		}
 		return null;
 	}
-	
+
 	// *******************************************************
 	//
 	// GUI for the DigiLock
@@ -974,7 +970,7 @@ public class BITDigiLock {
 
 		}
 	}
-	
+
 	// *******************************************************
 	//
 	// CHEST
@@ -1675,6 +1671,8 @@ public class BITDigiLock {
 						|| isDoor(sBlock.getFace(BlockFace.NORTH))
 						|| isDoor(sBlock.getFace(BlockFace.SOUTH))
 						|| isDoor(sBlock.getFace(BlockFace.WEST))) {
+				//if (isLeftDoubleDoor(sBlock) || isRightDoubleDoor(sBlock))
+					// TODO: check that the two hinge corners is placed right
 					return true;
 				}
 			}
@@ -1728,28 +1726,36 @@ public class BITDigiLock {
 			if (door.getFacing() == BlockFace.NORTH
 					&& door.getHingeCorner() == BlockFace.NORTH_EAST) {
 				if (isDoor(sBlock.getRelative(BlockFace.WEST))) {
-					return true;
+					Door door2 = (Door) sBlock.getRelative(BlockFace.WEST);
+					if (door2.getHingeCorner() == BlockFace.NORTH_WEST)
+						return true;
 				} else {
 					return false;
 				}
 			} else if (door.getFacing() == BlockFace.WEST
 					&& door.getHingeCorner() == BlockFace.NORTH_WEST) {
 				if (isDoor(sBlock.getRelative(BlockFace.SOUTH))) {
-					return true;
+					Door door2 = (Door) sBlock.getRelative(BlockFace.SOUTH);
+					if (door2.getHingeCorner() == BlockFace.SOUTH_WEST)
+						return true;
 				} else {
 					return false;
 				}
 			} else if (door.getFacing() == BlockFace.EAST
 					&& door.getHingeCorner() == BlockFace.SOUTH_EAST) {
 				if (isDoor(sBlock.getRelative(BlockFace.NORTH))) {
-					return true;
+					Door door2 = (Door) sBlock.getRelative(BlockFace.NORTH);
+					if (door2.getHingeCorner() == BlockFace.NORTH_EAST)
+						return true;
 				} else {
 					return false;
 				}
 			} else if (door.getFacing() == BlockFace.SOUTH
 					&& door.getHingeCorner() == BlockFace.SOUTH_WEST) {
 				if (isDoor(sBlock.getRelative(BlockFace.EAST))) {
-					return true;
+					Door door2 = (Door) sBlock.getRelative(BlockFace.EAST);
+					if (door2.getHingeCorner() == BlockFace.SOUTH_EAST)
+						return true;
 				} else {
 					return false;
 				}
@@ -1862,6 +1868,5 @@ public class BITDigiLock {
 				return true;
 		return false;
 	}
-
 
 }

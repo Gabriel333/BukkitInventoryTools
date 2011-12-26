@@ -182,9 +182,15 @@ public class BITDigiLock {
 		}
 	}
 
+	/**
+	 * Checks if the block is locked
+	 * 
+	 * @param block
+	 * @return true if it is locked, false if not
+	 */
 	public static Boolean isLocked(SpoutBlock block) {
 		// TODO: Implement a HASHMAP for testing if the block is locked.
-		// G333Messages.showInfo("isLocked was called");
+		// BITMessages.showInfo("isLocked was called");
 		if (block != null)
 			if (isLockable(block)) {
 				block = getDigiLockBlock(block);
@@ -1664,21 +1670,80 @@ public class BITDigiLock {
 	// DOUBLEDOORS
 	//
 	// *******************************************************
+	/**
+	 * Checks if the block is a part of a double door
+	 * 
+	 * @param sBlock
+	 * @return
+	 */
 	public static boolean isDoubleDoor(SpoutBlock sBlock) {
+		// left door:NORTH,NORTH_EAST Right door:WEST,NORTH_WEST
+		// left door:WEST,NORTH_WEST Right door:SOUTH,SOUTH_WEST
+		// left door:SOUTH,SOUTH_WEST Right door:EAST,SOUTH_EAST
+		// left door:EAST,SOUTH_EAST Right door:NORTH,NORTH_EAST
 		if (sBlock != null)
 			if (isDoor(sBlock)) {
-				if (isDoor(sBlock.getFace(BlockFace.EAST))
-						|| isDoor(sBlock.getFace(BlockFace.NORTH))
-						|| isDoor(sBlock.getFace(BlockFace.SOUTH))
-						|| isDoor(sBlock.getFace(BlockFace.WEST))) {
-				//if (isLeftDoubleDoor(sBlock) || isRightDoubleDoor(sBlock))
-					// TODO: check that the two hinge corners is placed right
-					return true;
+				Door door = (Door) sBlock.getState().getData();
+				if (door.getFacing() == BlockFace.EAST
+						&& door.getHingeCorner() == BlockFace.SOUTH_EAST) {
+					if (isDoor(sBlock.getRelative(BlockFace.NORTH))) {
+						Door door2 = (Door) sBlock.getRelative(BlockFace.NORTH);
+						if (door2.getHingeCorner() == BlockFace.NORTH_EAST) {
+							BITMessages.showInfo("Doubledoor EAST true");
+							return true;
+						}
+					} else {
+						BITMessages.showInfo("Doubledoor EAST false");
+						return false;
+					}
+				} else if (door.getFacing() == BlockFace.NORTH
+						&& door.getHingeCorner() == BlockFace.NORTH_EAST) {
+					if (isDoor(sBlock.getRelative(BlockFace.WEST))) {
+						Door door2 = (Door) sBlock.getRelative(BlockFace.WEST);
+						if (door2.getHingeCorner() == BlockFace.NORTH_WEST) {
+							BITMessages.showInfo("Doubledoor NORTH true");
+							return true;
+						}
+					} else {
+						BITMessages.showInfo("Doubledoor NORTH false");
+						return false;
+					}
+				} else if (door.getFacing() == BlockFace.SOUTH
+						&& door.getHingeCorner() == BlockFace.SOUTH_WEST) {
+					if (isDoor(sBlock.getRelative(BlockFace.EAST))) {
+						Door door2 = (Door) sBlock.getRelative(BlockFace.EAST);
+						if (door2.getHingeCorner() == BlockFace.SOUTH_EAST) {
+							BITMessages.showInfo("Doubledoor SOUTH true");
+							return true;
+						}
+					} else {
+						BITMessages.showInfo("Doubledoor SOUTH false");
+						return false;
+					}
+				} else if (door.getFacing() == BlockFace.WEST
+						&& door.getHingeCorner() == BlockFace.NORTH_WEST) {
+					if (isDoor(sBlock.getRelative(BlockFace.SOUTH))) {
+						Door door2 = (Door) sBlock.getRelative(BlockFace.SOUTH);
+						if (door2.getHingeCorner() == BlockFace.SOUTH_WEST) {
+							BITMessages.showInfo("Doubledoor WEST true");
+							return true;
+						}
+					} else {
+						BITMessages.showInfo("Doubledoor WEST false");
+						return false;
+					}
 				}
 			}
+		BITMessages.showInfo("It is not a doubledoor");
 		return false;
 	}
 
+	/**
+	 * checks if the double door is open
+	 * 
+	 * @param sBlock
+	 * @return true if the double door is open, false if not
+	 */
 	public static boolean isDoubleDoorOpen(SpoutBlock sBlock) {
 		return (isDoorOpen(getLeftDoubleDoor(sBlock)) || !isDoorOpen(getRightDoubleDoor(sBlock)));
 	}

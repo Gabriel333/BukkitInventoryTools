@@ -671,7 +671,7 @@ public class BITBackpack implements CommandExecutor {
 		try {
 			config.load(saveFile);
 		} catch (FileNotFoundException e) {
-			// G333Messages
+			// BITMessages
 			// .showInfo("The workbench file did not exist for player:"
 			// + player.getName());
 			// e.printStackTrace();
@@ -741,7 +741,7 @@ public class BITBackpack implements CommandExecutor {
 		try {
 			config.load(saveFile);
 		} catch (FileNotFoundException e) {
-			// G333Messages
+			// BITMessages
 			// .showWarning("The Inventoryfile was not found for user:"
 			// + player.getName());
 			// e.printStackTrace();

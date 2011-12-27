@@ -236,11 +236,8 @@ public class BITDigiLock {
 	public static SpoutBlock getDigiLockBlock(SpoutBlock sBlock) {
 		if (isDoor(sBlock)) {
 			if (isDoubleDoor(sBlock)) {
-				BITMessages.showInfo("GetDigiLockBlock: this is a doubledoor");
 				sBlock = getLeftDoubleDoor(sBlock);
-			} else {
-				BITMessages.showInfo("GetDigiLockBlock: this is a single");
-			}
+			} 
 			Door door = (Door) sBlock.getState().getData();
 			if (door.isTopHalf()) {
 				sBlock = sBlock.getRelative(BlockFace.DOWN);

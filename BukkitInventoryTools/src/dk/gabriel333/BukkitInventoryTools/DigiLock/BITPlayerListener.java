@@ -90,7 +90,7 @@ public class BITPlayerListener extends PlayerListener {
 
 			// Call openEditSignGUI
 		} else
-
+			
 		// HANDLING THAT PLAYER CLICK ON A BLOCK WITH A DIGILOCK
 		if (BITDigiLock.isLocked(sBlock)) {
 			BITDigiLock digilock = BITDigiLock.loadDigiLock(sBlock);
@@ -625,7 +625,7 @@ public class BITPlayerListener extends PlayerListener {
 					} else {
 						sPlayer.sendMessage("Digilock'ed by "
 								+ sPlayer.getName());
-						// TODO: is this going to be canceled.
+
 						event.setCancelled(true);
 					}
 				}
@@ -688,7 +688,7 @@ public class BITPlayerListener extends PlayerListener {
 
 			}
 			// HANDLING THE DOUBLEDOOR
-			else if (BITDigiLock.isDoubleDoor(sBlock)) {
+			if (BITDigiLock.isDoubleDoor(sBlock)) {
 				// if LEFT_CLICK_BLOCK is canceled the double door cant be
 				// broken.
 				if (event.getAction().equals(Action.RIGHT_CLICK_BLOCK)) {
@@ -703,6 +703,7 @@ public class BITPlayerListener extends PlayerListener {
 			}
 			// HANDLING THE DOOR
 			else if (BITDigiLock.isDoor(sBlock)) {
+				
 
 			}
 			// HANDLING TRAP_DOOR

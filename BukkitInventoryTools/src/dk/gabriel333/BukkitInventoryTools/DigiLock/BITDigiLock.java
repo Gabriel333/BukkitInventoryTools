@@ -236,7 +236,10 @@ public class BITDigiLock {
 	public static SpoutBlock getDigiLockBlock(SpoutBlock sBlock) {
 		if (isDoor(sBlock)) {
 			if (isDoubleDoor(sBlock)) {
+				BITMessages.showInfo("GetDigiLockBlock: this is a doubledoor");
 				sBlock = getLeftDoubleDoor(sBlock);
+			} else {
+				BITMessages.showInfo("GetDigiLockBlock: this is a single");
 			}
 			Door door = (Door) sBlock.getState().getData();
 			if (door.isTopHalf()) {
@@ -1683,58 +1686,83 @@ public class BITDigiLock {
 		// left door:EAST,SOUTH_EAST Right door:NORTH,NORTH_EAST
 		if (sBlock != null)
 			if (isDoor(sBlock)) {
-				Door door = (Door) sBlock.getState().getData();
-				if (door.getFacing() == BlockFace.EAST
-						&& door.getHingeCorner() == BlockFace.SOUTH_EAST) {
-					if (isDoor(sBlock.getRelative(BlockFace.NORTH))) {
-						Door door2 = (Door) sBlock.getRelative(BlockFace.NORTH);
-						if (door2.getHingeCorner() == BlockFace.NORTH_EAST) {
-							BITMessages.showInfo("Doubledoor EAST true");
-							return true;
+				if (isDoor(sBlock.getRelative(BlockFace.EAST))
+						|| isDoor(sBlock.getRelative(BlockFace.NORTH))
+						|| isDoor(sBlock.getRelative(BlockFace.SOUTH))
+						|| isDoor(sBlock.getRelative(BlockFace.WEST))) {
+					Door door = (Door) sBlock.getState().getData();
+					if (door.getFacing() == BlockFace.EAST
+							&& door.getHingeCorner() == BlockFace.SOUTH_EAST) {
+						if (isDoor(sBlock.getRelative(BlockFace.NORTH))) {
+							Door door2 = (Door) sBlock
+									.getRelative(BlockFace.NORTH).getState()
+									.getData();
+							if (door2.getHingeCorner() == BlockFace.NORTH_EAST) {
+								return true;
+							}
+						} else if (isDoor(sBlock.getRelative(BlockFace.WEST))) {
+							Door door2 = (Door) sBlock
+									.getRelative(BlockFace.WEST).getState()
+									.getData();
+							if (door2.getHingeCorner() == BlockFace.SOUTH_WEST) {
+								return true;
+							}
+						} else
+							BITMessages.showInfo("Doubledoor EAST5 false");
+					} else if (door.getFacing() == BlockFace.NORTH
+							&& door.getHingeCorner() == BlockFace.NORTH_EAST) {
+						if (isDoor(sBlock.getRelative(BlockFace.WEST))) {
+							Door door2 = (Door) sBlock
+									.getRelative(BlockFace.WEST).getState()
+									.getData();
+							if (door2.getHingeCorner() == BlockFace.NORTH_WEST) {
+								return true;
+							}
+						} else if (isDoor(sBlock.getRelative(BlockFace.SOUTH))) {
+							Door door2 = (Door) sBlock
+									.getRelative(BlockFace.SOUTH).getState()
+									.getData();
+							if (door2.getHingeCorner() == BlockFace.SOUTH_EAST) {
+								return true;
+							}
 						}
-					} else {
-						BITMessages.showInfo("Doubledoor EAST false");
-						return false;
-					}
-				} else if (door.getFacing() == BlockFace.NORTH
-						&& door.getHingeCorner() == BlockFace.NORTH_EAST) {
-					if (isDoor(sBlock.getRelative(BlockFace.WEST))) {
-						Door door2 = (Door) sBlock.getRelative(BlockFace.WEST);
-						if (door2.getHingeCorner() == BlockFace.NORTH_WEST) {
-							BITMessages.showInfo("Doubledoor NORTH true");
-							return true;
+					} else if (door.getFacing() == BlockFace.SOUTH
+							&& door.getHingeCorner() == BlockFace.SOUTH_WEST) {
+						if (isDoor(sBlock.getRelative(BlockFace.EAST))) {
+							Door door2 = (Door) sBlock
+									.getRelative(BlockFace.EAST).getState()
+									.getData();
+							if (door2.getHingeCorner() == BlockFace.SOUTH_EAST) {
+								return true;
+							}
+						} else if (isDoor(sBlock.getRelative(BlockFace.NORTH))) {
+							Door door2 = (Door) sBlock
+									.getRelative(BlockFace.NORTH).getState()
+									.getData();
+							if (door2.getHingeCorner() == BlockFace.NORTH_WEST) {
+								return true;
+							}
 						}
-					} else {
-						BITMessages.showInfo("Doubledoor NORTH false");
-						return false;
-					}
-				} else if (door.getFacing() == BlockFace.SOUTH
-						&& door.getHingeCorner() == BlockFace.SOUTH_WEST) {
-					if (isDoor(sBlock.getRelative(BlockFace.EAST))) {
-						Door door2 = (Door) sBlock.getRelative(BlockFace.EAST);
-						if (door2.getHingeCorner() == BlockFace.SOUTH_EAST) {
-							BITMessages.showInfo("Doubledoor SOUTH true");
-							return true;
+					} else if (door.getFacing() == BlockFace.WEST
+							&& door.getHingeCorner() == BlockFace.NORTH_WEST) {
+						if (isDoor(sBlock.getRelative(BlockFace.SOUTH))) {
+							Door door2 = (Door) sBlock
+									.getRelative(BlockFace.SOUTH).getState()
+									.getData();
+							if (door2.getHingeCorner() == BlockFace.SOUTH_WEST) {
+								return true;
+							}
+						} else if (isDoor(sBlock.getRelative(BlockFace.EAST))) {
+							Door door2 = (Door) sBlock
+									.getRelative(BlockFace.EAST).getState()
+									.getData();
+							if (door2.getHingeCorner() == BlockFace.NORTH_EAST) {
+								return true;
+							}
 						}
-					} else {
-						BITMessages.showInfo("Doubledoor SOUTH false");
-						return false;
-					}
-				} else if (door.getFacing() == BlockFace.WEST
-						&& door.getHingeCorner() == BlockFace.NORTH_WEST) {
-					if (isDoor(sBlock.getRelative(BlockFace.SOUTH))) {
-						Door door2 = (Door) sBlock.getRelative(BlockFace.SOUTH);
-						if (door2.getHingeCorner() == BlockFace.SOUTH_WEST) {
-							BITMessages.showInfo("Doubledoor WEST true");
-							return true;
-						}
-					} else {
-						BITMessages.showInfo("Doubledoor WEST false");
-						return false;
 					}
 				}
 			}
-		BITMessages.showInfo("It is not a doubledoor");
 		return false;
 	}
 
@@ -1791,7 +1819,8 @@ public class BITDigiLock {
 			if (door.getFacing() == BlockFace.NORTH
 					&& door.getHingeCorner() == BlockFace.NORTH_EAST) {
 				if (isDoor(sBlock.getRelative(BlockFace.WEST))) {
-					Door door2 = (Door) sBlock.getRelative(BlockFace.WEST);
+					Door door2 = (Door) sBlock.getRelative(BlockFace.WEST)
+							.getState().getData();
 					if (door2.getHingeCorner() == BlockFace.NORTH_WEST)
 						return true;
 				} else {
@@ -1800,7 +1829,8 @@ public class BITDigiLock {
 			} else if (door.getFacing() == BlockFace.WEST
 					&& door.getHingeCorner() == BlockFace.NORTH_WEST) {
 				if (isDoor(sBlock.getRelative(BlockFace.SOUTH))) {
-					Door door2 = (Door) sBlock.getRelative(BlockFace.SOUTH);
+					Door door2 = (Door) sBlock.getRelative(BlockFace.SOUTH)
+							.getState().getData();
 					if (door2.getHingeCorner() == BlockFace.SOUTH_WEST)
 						return true;
 				} else {
@@ -1809,7 +1839,8 @@ public class BITDigiLock {
 			} else if (door.getFacing() == BlockFace.EAST
 					&& door.getHingeCorner() == BlockFace.SOUTH_EAST) {
 				if (isDoor(sBlock.getRelative(BlockFace.NORTH))) {
-					Door door2 = (Door) sBlock.getRelative(BlockFace.NORTH);
+					Door door2 = (Door) sBlock.getRelative(BlockFace.NORTH)
+							.getState().getData();
 					if (door2.getHingeCorner() == BlockFace.NORTH_EAST)
 						return true;
 				} else {
@@ -1818,7 +1849,8 @@ public class BITDigiLock {
 			} else if (door.getFacing() == BlockFace.SOUTH
 					&& door.getHingeCorner() == BlockFace.SOUTH_WEST) {
 				if (isDoor(sBlock.getRelative(BlockFace.EAST))) {
-					Door door2 = (Door) sBlock.getRelative(BlockFace.EAST);
+					Door door2 = (Door) sBlock.getRelative(BlockFace.EAST)
+							.getState().getData();
 					if (door2.getHingeCorner() == BlockFace.SOUTH_EAST)
 						return true;
 				} else {

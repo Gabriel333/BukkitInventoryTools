@@ -89,8 +89,10 @@ public class BITPlayerListener extends PlayerListener {
 			event.setCancelled(true);
 			if (BITDigiLock.isLocked(sBlock)) {
 				BITDigiLock digilock = BITDigiLock.loadDigiLock(sBlock);
-				if (digilock.isOwner(sPlayer) || digilock.isCoowner(sPlayer) ||  BITPermissions.hasPerm(
-						sPlayer, "digilock.admin", BITPermissions.NOT_QUIET)) {
+				if (digilock.isOwner(sPlayer)
+						|| digilock.isCoowner(sPlayer)
+						|| BITPermissions.hasPerm(sPlayer, "digilock.admin",
+								BITPermissions.NOT_QUIET)) {
 					BITDigiLock.setPincode(sPlayer, sBlock);
 				} else {
 					sPlayer.sendMessage("You are not the owner or coowner");
@@ -98,7 +100,7 @@ public class BITPlayerListener extends PlayerListener {
 			} else {
 				BITDigiLock.setPincode(sPlayer, sBlock);
 			}
-				
+
 			// Call openEditSignGUI
 		} else
 

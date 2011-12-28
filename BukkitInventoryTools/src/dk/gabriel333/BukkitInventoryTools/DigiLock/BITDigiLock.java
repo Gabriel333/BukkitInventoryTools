@@ -721,6 +721,7 @@ public class BITDigiLock {
 		int y = 50, height = 20, width = 100;
 		int x = 170;
 		int id = sPlayer.getEntityId();
+		BITDigiLock.cleanupPopupScreen(sPlayer);
 		addUserData(id);
 		clickedBlock.put(id, sBlock);
 
@@ -771,6 +772,7 @@ public class BITDigiLock {
 		int id = sPlayer.getEntityId();
 		int height = 20;
 		int x, y, w1, w2, w3, w4;
+		BITDigiLock.cleanupPopupScreen(sPlayer);
 		addUserData(id);
 		clickedBlock.put(id, sBlock);
 		if (BITDigiLock.isLocked(sBlock)) {

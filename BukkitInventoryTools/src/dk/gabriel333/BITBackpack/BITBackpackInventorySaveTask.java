@@ -6,6 +6,7 @@ import java.util.HashMap;
 import org.bukkit.Bukkit;
 import org.bukkit.World;
 import org.bukkit.configuration.file.YamlConfiguration;
+import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
@@ -71,6 +72,12 @@ public class BITBackpackInventorySaveTask implements Runnable {
 					Short durab = item.getDurability();
 					config.set(i.toString() + ".durability", durab.intValue());
 					config.set(i.toString() + ".type", item.getTypeId());
+					 int pos = 0;
+	                    for(Enchantment enchantment : item.getEnchantments().keySet()){
+	                        config.set(i.toString() + ".enchant" + pos, enchantment.getName());
+	                        config.set(i.toString() + ".level" + pos, item.getEnchantmentLevel(enchantment));
+	                        pos ++;
+	                    }
 					config.set("Size",
 							size);
 					try {

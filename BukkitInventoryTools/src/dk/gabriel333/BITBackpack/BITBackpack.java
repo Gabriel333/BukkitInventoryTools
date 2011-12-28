@@ -18,6 +18,7 @@ import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.InvalidConfigurationException;
 import org.bukkit.configuration.file.YamlConfiguration;
+import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
@@ -767,6 +768,14 @@ public class BITBackpack implements CommandExecutor {
 				Integer durability = config.getInt(
 						i.toString() + ".durability", 0);
 				item.setDurability(Short.parseShort(durability.toString()));
+                String enchant = null;
+                if((enchant = config.getString(i.toString() + ".enchant0")) != null){
+                    item.addEnchantment(Enchantment.getByName(enchant), config.getInt(i.toString() + ".level0", 0));
+                }
+                enchant = null;
+                if((enchant = config.getString(i.toString() + ".enchant1")) != null){
+                    item.addEnchantment(Enchantment.getByName(enchant), config.getInt(i.toString() + ".level1", 0));
+                }
 				inv.setItem(i, item);
 			}
 		}

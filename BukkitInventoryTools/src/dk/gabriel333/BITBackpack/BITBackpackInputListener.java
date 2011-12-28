@@ -17,12 +17,13 @@ import org.getspout.spoutapi.gui.ScreenType;
 import org.getspout.spoutapi.player.SpoutPlayer;
 
 import dk.gabriel333.BukkitInventoryTools.BIT;
+import dk.gabriel333.BITBackpack.BITBackpack;
 import dk.gabriel333.Library.BITConfig;
 import dk.gabriel333.Library.BITPermissions;
 
 public class BITBackpackInputListener extends InputListener {
 
-	private BIT plugin;
+	public BIT plugin;
 
 	public BITBackpackInputListener(BIT plugin) {
 		this.plugin = plugin;
@@ -37,81 +38,53 @@ public class BITBackpackInputListener extends InputListener {
 				|| screentype == ScreenType.CHEST_INVENTORY
 				|| screentype == ScreenType.PLAYER_INVENTORY
 				|| screentype == ScreenType.DISPENSER_INVENTORY
-				|| screentype == ScreenType.FURNACE_INVENTORY 
-				|| screentype == ScreenType.WORKBENCH_INVENTORY)) {
+				|| screentype == ScreenType.FURNACE_INVENTORY || screentype == ScreenType.WORKBENCH_INVENTORY)) {
 			return;
 		}
 		if (keypressed.equalsIgnoreCase(BITConfig.LIBRARY_BACKPACK)) {
 			if (BITPermissions.hasPerm(sPlayer, "backpack.use",
 					BITPermissions.NOT_QUIET)) {
-				if (BITBackpack.sizeInConfig(sPlayer.getWorld(),
-						event.getPlayer()) > 0) {
+				if (BITBackpack.sizeInConfig(sPlayer.getWorld(), sPlayer) > 0 || !BIT.useEconomy) {
 					if (!BITBackpack.canOpenBackpack(sPlayer.getWorld(),
 							sPlayer)) {
+						sPlayer.sendMessage("You are not allowed to open the backpack here.");
 						return;
-					}
-					if (screentype == ScreenType.CHEST_INVENTORY) {
-						if (!BITBackpack.openedInventoriesOthers.containsKey(sPlayer
-								.getName())) {
-							if (BITBackpack.openedInventories.containsKey(sPlayer
-									.getName())) {
-								Inventory inv = BITBackpack.openedInventories
-										.get(sPlayer.getName());
-								BITBackpack.inventories.put(sPlayer.getName(),
-										inv.getContents());
-								sPlayer.closeActiveWindow();
-								removeBalanceWidget(sPlayer);
-							}
-						} else {
-							if (BITBackpack.openedInventories
-									.containsKey(BITBackpack.openedInventoriesOthers
-											.get(sPlayer.getName()))) {
-								Inventory inv = BITBackpack.openedInventories
-										.get(BITBackpack.openedInventoriesOthers
-												.get(sPlayer.getName()));
-								BITBackpack.inventories.put(BITBackpack.openedInventoriesOthers
-										.get(sPlayer.getName()), inv
-										.getContents());
-								BITBackpack.openedInventoriesOthers.remove(sPlayer
-										.getName());
-								sPlayer.closeActiveWindow();
-								removeBalanceWidget(sPlayer);
-							}
-						}
-					}
-					if (!BITBackpack.openedInventoriesOthers.containsValue(sPlayer
-							.getName())) {
-						if (screentype == ScreenType.GAME_SCREEN
-								|| screentype == ScreenType.PLAYER_INVENTORY
-								|| screentype == ScreenType.DISPENSER_INVENTORY
-								|| screentype == ScreenType.FURNACE_INVENTORY
-								|| screentype == ScreenType.WORKBENCH_INVENTORY) {
-							addBalanceWidget(sPlayer);
-							BITBackpack.loadInventory(sPlayer,
-									sPlayer.getWorld());
-							Inventory inv = SpoutManager.getInventoryBuilder()
-									.construct(
-											BITBackpack.inventories.get(sPlayer
-													.getName()).length,
-											BITBackpack.inventoryName);
-							if (BITBackpack.inventories.containsKey(sPlayer.getName())) {
-								inv.setContents(BITBackpack.inventories.get(sPlayer
-										.getName()));
-								BITBackpack.openedInventories.put(sPlayer.getName(),
-										inv);
-							}
-							sPlayer.openInventoryWindow(inv);
-						}
 					} else {
-						event.getPlayer().sendMessage(
-								BIT.li.getMessage("someoneisusingyour")
-										+ ChatColor.RED + BITBackpack.inventoryName
-										+ ChatColor.WHITE
-										+ BIT.li.getMessage("!"));
+						if (screentype == ScreenType.CHEST_INVENTORY) {
+							if (!BITBackpack.openedInventoriesOthers
+									.containsKey(sPlayer.getName())) {
+								if (BITBackpack.openedInventories
+										.containsKey(sPlayer.getName())) {
+									Inventory inv = BITBackpack.openedInventories
+											.get(sPlayer.getName());
+									BITBackpack.inventories.put(
+											sPlayer.getName(),
+											inv.getContents());
+									sPlayer.closeActiveWindow();
+									removeBalanceWidget(sPlayer);
+								}
+							} else {
+								if (BITBackpack.openedInventories
+										.containsKey(BITBackpack.openedInventoriesOthers
+												.get(sPlayer.getName()))) {
+									Inventory inv = BITBackpack.openedInventories
+											.get(BITBackpack.openedInventoriesOthers
+													.get(sPlayer.getName()));
+									BITBackpack.inventories.put(
+											BITBackpack.openedInventoriesOthers
+													.get(sPlayer.getName()),
+											inv.getContents());
+									BITBackpack.openedInventoriesOthers
+											.remove(sPlayer.getName());
+									sPlayer.closeActiveWindow();
+									removeBalanceWidget(sPlayer);
+								}
+							}
+						}
+						openBackpack(sPlayer, screentype);
 					}
 				} else {
-					event.getPlayer().sendMessage(
-							"You need to buy a backpack. Use /backpack buy");
+						sPlayer.sendMessage("You need to buy a backpack. Use /backpack buy");
 				}
 			}
 		} else if (keypressed.equalsIgnoreCase(BITConfig.LIBRARY_WORKBENCH)) {
@@ -148,9 +121,10 @@ public class BITBackpackInputListener extends InputListener {
 								|| screentype == ScreenType.FURNACE_INVENTORY
 								|| screentype == ScreenType.CHEST_INVENTORY) {
 							// SpoutPlayer player = event.getPlayer();
-							if (BITBackpack.openedInventories.containsKey(sPlayer
-									.getName())) {
-								BITBackpack.openedInventories.remove(sPlayer.getName());
+							if (BITBackpack.openedInventories
+									.containsKey(sPlayer.getName())) {
+								BITBackpack.openedInventories.remove(sPlayer
+										.getName());
 								sPlayer.closeActiveWindow();
 								removeBalanceWidget(sPlayer);
 							}
@@ -182,7 +156,8 @@ public class BITBackpackInputListener extends InputListener {
 					|| screentype == ScreenType.FURNACE_INVENTORY
 					|| screentype == ScreenType.WORKBENCH_INVENTORY
 					|| screentype == ScreenType.CHEST_INVENTORY) {
-				if (BITBackpack.openedInventories.containsKey(sPlayer.getName())) {
+				if (BITBackpack.openedInventories
+						.containsKey(sPlayer.getName())) {
 					BITBackpack.openedInventories.remove(sPlayer.getName());
 				}
 				if (screentype != ScreenType.GAME_SCREEN) {
@@ -199,7 +174,8 @@ public class BITBackpackInputListener extends InputListener {
 	public void removeBalanceWidget(SpoutPlayer sPlayer) {
 		if (BITBackpack.widgets.containsKey(sPlayer.getName())
 				&& BITConfig.SBP_useWidget) {
-			BITBackpack.widgets.get(sPlayer.getName()).setVisible(false).setDirty(true);
+			BITBackpack.widgets.get(sPlayer.getName()).setVisible(false)
+					.setDirty(true);
 			BITBackpack.widgets.remove(sPlayer.getName());
 		}
 	}
@@ -227,6 +203,35 @@ public class BITBackpackInputListener extends InputListener {
 				sPlayer.getMainScreen().attachWidget(plugin, widget);
 				BITBackpack.widgets.put(sPlayer.getName(), widget);
 			}
+		}
+	}
+
+	public void openBackpack(SpoutPlayer sPlayer, ScreenType screentype) {
+		if (!BITBackpack.openedInventoriesOthers.containsValue(sPlayer
+				.getName())) {
+			if (screentype == ScreenType.GAME_SCREEN
+					|| screentype == ScreenType.PLAYER_INVENTORY
+					|| screentype == ScreenType.DISPENSER_INVENTORY
+					|| screentype == ScreenType.FURNACE_INVENTORY
+					|| screentype == ScreenType.WORKBENCH_INVENTORY) {
+				if (BIT.useEconomy) {
+					addBalanceWidget(sPlayer);
+				}
+				BITBackpack.loadInventory(sPlayer, sPlayer.getWorld());
+				Inventory inv = SpoutManager.getInventoryBuilder().construct(
+						BITBackpack.inventories.get(sPlayer.getName()).length,
+						BITBackpack.inventoryName);
+				if (BITBackpack.inventories.containsKey(sPlayer.getName())) {
+					inv.setContents(BITBackpack.inventories.get(sPlayer
+							.getName()));
+					BITBackpack.openedInventories.put(sPlayer.getName(), inv);
+				}
+				sPlayer.openInventoryWindow(inv);
+			}
+		} else {
+			sPlayer.sendMessage(BIT.li.getMessage("someoneisusingyour")
+					+ ChatColor.RED + BITBackpack.inventoryName
+					+ ChatColor.WHITE + BIT.li.getMessage("!"));
 		}
 	}
 

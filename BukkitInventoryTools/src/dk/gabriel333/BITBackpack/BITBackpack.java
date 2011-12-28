@@ -23,7 +23,6 @@ import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.getspout.spoutapi.SpoutManager;
 import org.getspout.spoutapi.gui.GenericLabel;
-
 import com.sk89q.worldguard.protection.regions.ProtectedRegion;
 import dk.gabriel333.BITBackpack.BITBackpackLanguageInterface.Language;
 import dk.gabriel333.BukkitInventoryTools.BIT;
@@ -36,7 +35,7 @@ import dk.gabriel333.register.payment.Method.MethodAccount;
 public class BITBackpack implements CommandExecutor {
 
 	public BITBackpack(BIT instance) {
-		plugin=instance;
+		plugin = instance;
 	}
 
 	public static Logger logger = Logger.getLogger("minecraft");
@@ -60,8 +59,7 @@ public class BITBackpack implements CommandExecutor {
 						if (allowedSize(player.getWorld(), player, true) > 0) {
 							String playerName = sender.getName();
 							if (inventories.containsKey(playerName)) {
-								if (!openedInventories
-										.containsKey(playerName)) {
+								if (!openedInventories.containsKey(playerName)) {
 									Inventory inv = SpoutManager
 											.getInventoryBuilder().construct(
 													BITBackpack.allowedSize(
@@ -73,8 +71,7 @@ public class BITBackpack implements CommandExecutor {
 									// should be here.
 									// openedInventoriesOthers.put(
 									// player.getName(), playerName);
-									inv.setContents(inventories
-											.get(playerName));
+									inv.setContents(inventories.get(playerName));
 									((org.getspout.spoutapi.player.SpoutPlayer) player)
 											.openInventoryWindow((Inventory) inv);
 								} else {
@@ -183,8 +180,7 @@ public class BITBackpack implements CommandExecutor {
 						} else if (argument.equalsIgnoreCase("clear")) {
 							if (BITPermissions.hasPerm(player,
 									"backpack.clear", BITPermissions.NOT_QUIET)) {
-								if (inventories.containsKey(player
-										.getName())) {
+								if (inventories.containsKey(player.getName())) {
 									inventories.remove(player.getName());
 									player.sendMessage(BIT.li
 											.getMessage("your")
@@ -343,8 +339,7 @@ public class BITBackpack implements CommandExecutor {
 																		player,
 																		true),
 														inventoryName);
-										openedInventories.put(playerName,
-												inv);
+										openedInventories.put(playerName, inv);
 										openedInventoriesOthers.put(
 												player.getName(), playerName);
 										inv.setContents(inventories
@@ -378,15 +373,14 @@ public class BITBackpack implements CommandExecutor {
 		return false;
 	}
 
-	private void startUpgradeProcedure(int sizeBefore, Player player,
+	public void startUpgradeProcedure(int sizeBefore, Player player,
 			Player notificationsAndMoneyPlayer) {
 		int sizeAfter = sizeBefore + 9;
 		double cost = calculateCostToUpgrade(sizeBefore);
 		if (plugin.Method.hasAccount(notificationsAndMoneyPlayer.getName())) {
 			MethodAccount account = plugin.Method
 					.getAccount(notificationsAndMoneyPlayer.getName());
-			if (plugin.Method.hasAccount(notificationsAndMoneyPlayer
-					.getName())) {
+			if (plugin.Method.hasAccount(notificationsAndMoneyPlayer.getName())) {
 				if (account.hasEnough(cost)) {
 					account.subtract(cost);
 					notificationsAndMoneyPlayer.sendMessage("Your account ("
@@ -563,13 +557,15 @@ public class BITBackpack implements CommandExecutor {
 				size = sizeInConfig(world, player);
 			}
 		}
-	
+
 		// Automatic upgrading BP if its free
-		double upgradePrice = 0;
-		while (upgradePrice == 0) {
-			upgradePrice = calculateCostToUpgrade(size);
-			if (upgradePrice == 0)
-				size = size + 9;
+		if (BIT.useEconomy) {
+			double upgradePrice = 0;
+			while (upgradePrice == 0) {
+				upgradePrice = calculateCostToUpgrade(size);
+				if (upgradePrice == 0)
+					size = size + 9;
+			}
 		}
 		return size;
 	}
@@ -750,11 +746,14 @@ public class BITBackpack implements CommandExecutor {
 		} catch (InvalidConfigurationException e) {
 			e.printStackTrace();
 		}
-		int size = config.getInt("Size",
-				BITBackpack.allowedSize(world, player, true));
+		int size = BITBackpack.sizeInConfig(world, player);
 		int allowedSize = BITBackpack.allowedSize(world, player, false);
-		if (allowedSize < size) {
-			player.sendMessage("Your backpack is too big, downgrading to your permissions size.");
+		if (BIT.useEconomy) {
+			if (allowedSize < size) {
+				player.sendMessage("Your backpack is too big, downgrading to your permissions size.");
+				size = allowedSize;
+			}
+		} else {
 			size = allowedSize;
 		}
 		Inventory inv = SpoutManager.getInventoryBuilder().construct(size,

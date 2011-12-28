@@ -57,20 +57,22 @@ public class BITBackpackInventorySaveTask implements Runnable {
 		}
 		YamlConfiguration config = new YamlConfiguration();
 		if (BITBackpack.inventories.containsKey(player.getName())) {
-			int sizeInConfig = BITBackpack.sizeInConfig(player.getWorld(), player);
-			if (sizeInConfig > 0) {
+			int size=BITBackpack.inventories.get(player.getName()).length;
+			if (size>0){
+			//int sizeInConfig = BITBackpack.sizeInConfig(player.getWorld(), player);
+			//if (sizeInConfig > 0) {
 				Inventory inv = SpoutManager.getInventoryBuilder().construct(
-						sizeInConfig, BITBackpack.inventoryName);
+						size, BITBackpack.inventoryName);
 				inv.setContents(BITBackpack.inventories.get(player.getName()));
 				Integer i = 0;
-				for (i = 0; i < sizeInConfig; i++) {
+				for (i = 0; i < size; i++) {
 					ItemStack item = inv.getItem(i);
 					config.set(i.toString() + ".amount", item.getAmount());
 					Short durab = item.getDurability();
 					config.set(i.toString() + ".durability", durab.intValue());
 					config.set(i.toString() + ".type", item.getTypeId());
 					config.set("Size",
-							sizeInConfig);
+							size);
 					try {
 						config.save(saveFile);
 					} catch (IOException e) {

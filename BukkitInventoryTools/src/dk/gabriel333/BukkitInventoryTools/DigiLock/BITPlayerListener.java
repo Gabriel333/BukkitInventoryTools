@@ -85,12 +85,23 @@ public class BITPlayerListener extends PlayerListener {
 				&& (BITPermissions.hasPerm(sPlayer, "digilock.create",
 						BITPermissions.NOT_QUIET) || BITPermissions.hasPerm(
 						sPlayer, "digilock.admin", BITPermissions.NOT_QUIET))) {
-			event.setCancelled(true);
-			BITDigiLock.setPincode(sPlayer, sBlock);
 
+			event.setCancelled(true);
+			if (BITDigiLock.isLocked(sBlock)) {
+				BITDigiLock digilock = BITDigiLock.loadDigiLock(sBlock);
+				if (digilock.isOwner(sPlayer) || digilock.isCoowner(sPlayer) ||  BITPermissions.hasPerm(
+						sPlayer, "digilock.admin", BITPermissions.NOT_QUIET)) {
+					BITDigiLock.setPincode(sPlayer, sBlock);
+				} else {
+					sPlayer.sendMessage("You are not the owner or coowner");
+				}
+			} else {
+				BITDigiLock.setPincode(sPlayer, sBlock);
+			}
+				
 			// Call openEditSignGUI
 		} else
-			
+
 		// HANDLING THAT PLAYER CLICK ON A BLOCK WITH A DIGILOCK
 		if (BITDigiLock.isLocked(sBlock)) {
 			BITDigiLock digilock = BITDigiLock.loadDigiLock(sBlock);
@@ -703,7 +714,6 @@ public class BITPlayerListener extends PlayerListener {
 			}
 			// HANDLING THE DOOR
 			else if (BITDigiLock.isDoor(sBlock)) {
-				
 
 			}
 			// HANDLING TRAP_DOOR

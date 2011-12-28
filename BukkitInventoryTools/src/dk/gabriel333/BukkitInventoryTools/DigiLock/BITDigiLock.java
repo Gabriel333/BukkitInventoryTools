@@ -78,8 +78,6 @@ public class BITDigiLock {
 		this.useCost = useCost;
 	}
 
-	// public static Map<Integer, Boolean> isLocked = new HashMap<Integer,
-	// Boolean>();
 
 	/**
 	 * Saves the DigiLock to the database.
@@ -343,7 +341,8 @@ public class BITDigiLock {
 			Material.FURNACE, Material.DISPENSER, Material.LEVER,
 			Material.STONE_BUTTON, Material.BOOKSHELF, Material.TRAP_DOOR,
 			Material.SIGN, Material.SIGN_POST, Material.WALL_SIGN,
-			Material.FENCE_GATE, Material.JUKEBOX };
+			Material.FENCE_GATE, Material.JUKEBOX,
+			Material.BREWING_STAND};
 
 	// check if material is a lockable block
 	/**

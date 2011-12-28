@@ -2,6 +2,7 @@ package dk.gabriel333.BukkitInventoryTools.DigiLock;
 
 import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.block.BlockListener;
+import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 import org.bukkit.event.block.BlockBurnEvent;
 import org.bukkit.event.block.BlockDamageEvent;
@@ -45,10 +46,12 @@ public class BITBlockListener extends BlockListener {
 	public void onBlockPhysics(BlockPhysicsEvent event) {
 		if (event.isCancelled())
 			return;
-		SpoutBlock sBlock = (SpoutBlock) event.getBlock();
-		if (sBlock != null) {
-			if (!BITDigiLock.isLockable(sBlock))
+		Block b = event.getBlock();
+		if (b != null) {
+			
+			if (!BITDigiLock.isLockable(b))
 				return;
+			SpoutBlock sBlock = (SpoutBlock) b;
 			if (BITDigiLock.isLocked(sBlock)) {
 				event.setCancelled(true);
 				if (BITConfig.DEBUG_EVENTS) {

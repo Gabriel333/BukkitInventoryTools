@@ -124,7 +124,14 @@ public class BITDigiLockSpoutListener extends SpoutListener {
 								jukebox.setPlaying(is.getType());
 								sPlayer.setItemInHand(null);
 							}
+							
+						} else if (digilock.getBlock().getType() == Material.BREWING_STAND) {
+							BITDigiLock.playDigiLockSound(digilock.getBlock());
+							//BlockBrewingStand bs = (BlockBrewingStand) digilock.getBlock();
+							sPlayer.sendMessage("Locking brewing stand with pincode is not suported yet!");
+							//TODO: open brewing stand / inventory.
 						}
+						
 					} else {
 						BITMessages.sendNotification(sPlayer, "Wrong pincode!");
 						if (BITDigiLock.isDoubleDoor(digilock.getBlock())) {

@@ -138,7 +138,7 @@ public class BITPlayerListener extends PlayerListener {
 									BITPermissions.NOT_QUIET)) {
 						BITDigiLock.getPincode(sPlayer, sBlock);
 					} else {
-						sPlayer.sendMessage("Locked with Digilock.");
+						sPlayer.sendMessage("Locked with Digilock by "+digilock.owner);
 					}
 				}
 			}
@@ -181,7 +181,7 @@ public class BITPlayerListener extends PlayerListener {
 									BITDigiLock.getLeftDoubleDoor(sBlock));
 						} else {
 							sPlayer.sendMessage("Digilock'ed by "
-									+ sPlayer.getName());
+									+ digilock.owner);
 						}
 					} else {
 						BITDigiLock.closeDoubleDoor(sPlayer, sBlock, 0);
@@ -228,7 +228,7 @@ public class BITPlayerListener extends PlayerListener {
 							BITDigiLock.getPincode(sPlayer, sBlock);
 						} else {
 							sPlayer.sendMessage("Digilock'ed by "
-									+ sPlayer.getName());
+									+ digilock.owner);
 						}
 					} else {
 						BITDigiLock.closeDoor(sPlayer, sBlock, 0);
@@ -275,7 +275,7 @@ public class BITPlayerListener extends PlayerListener {
 							BITDigiLock.getPincode(sPlayer, sBlock);
 						} else {
 							sPlayer.sendMessage("Digilock'ed by "
-									+ sPlayer.getName());
+									+ digilock.owner);
 						}
 					} else {
 						BITDigiLock.closeTrapdoor(sPlayer, sBlock);
@@ -322,7 +322,7 @@ public class BITPlayerListener extends PlayerListener {
 							BITDigiLock.getPincode(sPlayer, sBlock);
 						} else {
 							sPlayer.sendMessage("Digilock'ed by "
-									+ sPlayer.getName());
+									+ digilock.owner);
 						}
 					} else {
 						BITDigiLock.closeFenceGate(sPlayer, sBlock);
@@ -362,7 +362,7 @@ public class BITPlayerListener extends PlayerListener {
 						BITDigiLock.getPincode(sPlayer, sBlock);
 					} else {
 						sPlayer.sendMessage("Digilock'ed by "
-								+ sPlayer.getName());
+								+ digilock.owner);
 					}
 				}
 			}
@@ -398,7 +398,7 @@ public class BITPlayerListener extends PlayerListener {
 						BITDigiLock.getPincode(sPlayer, sBlock);
 					} else {
 						sPlayer.sendMessage("Digilock'ed by "
-								+ sPlayer.getName());
+								+ digilock.owner);
 					}
 				}
 			}
@@ -468,7 +468,7 @@ public class BITPlayerListener extends PlayerListener {
 									BITDigiLock.getPincode(sPlayer, sBlock);
 								} else {
 									sPlayer.sendMessage("Digilock'ed by "
-											+ sPlayer.getName());
+											+ digilock.owner);
 									event.setCancelled(true);
 								}
 							} else {
@@ -549,7 +549,7 @@ public class BITPlayerListener extends PlayerListener {
 						}
 					} else {
 						sPlayer.sendMessage("Digilock'ed by "
-								+ sPlayer.getName());
+								+ digilock.owner);
 						// event.setCancelled(true);
 					}
 				}
@@ -597,7 +597,7 @@ public class BITPlayerListener extends PlayerListener {
 						}
 					} else {
 						sPlayer.sendMessage("Digilock'ed by "
-								+ sPlayer.getName());
+								+ digilock.owner);
 						event.setCancelled(true);
 					}
 				}
@@ -637,7 +637,7 @@ public class BITPlayerListener extends PlayerListener {
 						}
 					} else {
 						sPlayer.sendMessage("Digilock'ed by "
-								+ sPlayer.getName());
+								+ digilock.owner);
 
 						event.setCancelled(true);
 					}
@@ -679,10 +679,48 @@ public class BITPlayerListener extends PlayerListener {
 						}
 					} else {
 						sPlayer.sendMessage("Digilock'ed by "
-								+ sPlayer.getName());
+								+ digilock.owner);
 					}
 				}
-			} else {
+			}
+
+			// BREWING_STAND
+			else if (sBlock.getType().equals(Material.BREWING_STAND)) {
+				if ((digilock.getPincode().equals("") || digilock.getPincode()
+						.equalsIgnoreCase("fingerprint")
+						&& BITPermissions.hasPerm(sPlayer, "digilock.use",
+								BITPermissions.NOT_QUIET))
+						&& event.getAction().equals(Action.RIGHT_CLICK_BLOCK)) {
+					// USE BREWING STAND BY FINGERPRINT (playername)
+					if (digilock.isOwner(sPlayer)
+							|| digilock.isCoowner(sPlayer)
+							|| digilock.isUser(sPlayer)) {
+						BITMessages.sendNotification(sPlayer,
+								"Used with fingerprint");
+						BITDigiLock.playDigiLockSound(digilock.getBlock());
+					} else {
+						event.setCancelled(true);
+						sPlayer.sendMessage("Your fingerprint does not match the DigiLock");
+					}
+				} else {
+					event.setCancelled(true);
+					if (sPlayer.isSpoutCraftEnabled()
+							&& event.getAction().equals(
+									Action.RIGHT_CLICK_BLOCK)
+							&& BITPermissions.hasPerm(sPlayer, "digilock.use",
+									BITPermissions.NOT_QUIET)) {
+						BITDigiLock.getPincode(sPlayer, sBlock);
+						sPlayer.sendMessage("Locking brewing stand with pincode is not suported yet!");
+						//BlockBrewingStand bs = (BlockBrewingStand) digilock.getBlock();
+						//TODO: open brewing stand / inventory.
+					} else {
+						sPlayer.sendMessage("Digilock'ed by "
+								+ digilock.owner);
+					}
+				}
+			}
+
+			else {
 				sPlayer.sendMessage("ERROR: BITPlayerListener. Cant handle block:"
 						+ sBlock.getType());
 			}
@@ -772,6 +810,10 @@ public class BITPlayerListener extends PlayerListener {
 								BITPermissions.NOT_QUIET)) {
 					BITInventory.setBookshelfInventory(sPlayer, sBlock);
 				}
+
+			}
+			// BREWING STAND
+			else if (sBlock.getType().equals(Material.BREWING_STAND)) {
 
 			}
 		}

@@ -167,8 +167,9 @@ public class BITPermissions {
 			hasPermission = permissionsexManager.has(sPlayer,
 					(PERMISSION_NODE + label).toLowerCase());
 		} else if (bPermissions) {
-			hasPermission = wpm.getPermissionSet(sPlayer.getWorld()).has(
-					sPlayer, (PERMISSION_NODE + label).toLowerCase());
+			//TODO: fix bPermissions.
+			//hasPermission = wpm.getPermissionSet(sPlayer.getWorld()).has(
+			//		sPlayer, (PERMISSION_NODE + label).toLowerCase());
 		} else if (essentialsGroupManager) {
 			// Essentials GroupManager
 			hasPermission = groupManager.getWorldsHolder()

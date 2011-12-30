@@ -88,11 +88,11 @@ public class BITPermissions {
 					.isPluginEnabled("GroupManager")) {
 				groupManagerPlugin = Bukkit.getServer().getPluginManager()
 						.getPlugin("GroupManager");
-				//if (groupManagerPlugin != null) {
-					groupManager = (GroupManager) groupManagerPlugin;
-					BITMessages.showInfo("GroupManager is detected.");
-					essentialsGroupManager = true;
-				//}
+				// if (groupManagerPlugin != null) {
+				groupManager = (GroupManager) groupManagerPlugin;
+				BITMessages.showInfo("GroupManager is detected.");
+				essentialsGroupManager = true;
+				// }
 
 			} else
 			// Permission3
@@ -111,7 +111,8 @@ public class BITPermissions {
 			}
 
 			// No permission systems found
-			if (!(permissions3 || permissionsBukkit || permissionsex || bPermissions)) {
+			if (!(permissions3 || permissionsBukkit || permissionsex
+					|| bPermissions || essentialsGroupManager)) {
 				BITMessages.showInfo("Defaulting to build-in permissions.");
 				return;
 			}
@@ -159,17 +160,13 @@ public class BITPermissions {
 		Boolean hasPermission = false;
 
 		// PermissionsBukkit system (with fallback builtin Permission system)
-		if (permissionsBukkit) {
+		if (permissionsBukkit || bPermissions) {
 			hasPermission = (sPlayer.hasPermission((PERMISSION_NODE + label)
 					.toLowerCase()) || sPlayer
 					.hasPermission((PERMISSION_NODE + "*").toLowerCase()));
 		} else if (permissionsex) {
 			hasPermission = permissionsexManager.has(sPlayer,
 					(PERMISSION_NODE + label).toLowerCase());
-		} else if (bPermissions) {
-			//TODO: fix bPermissions.
-			//hasPermission = wpm.getPermissionSet(sPlayer.getWorld()).has(
-			//		sPlayer, (PERMISSION_NODE + label).toLowerCase());
 		} else if (essentialsGroupManager) {
 			// Essentials GroupManager
 			hasPermission = groupManager.getWorldsHolder()

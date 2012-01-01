@@ -55,10 +55,6 @@ public class BITInventoryListener extends InventoryListener {
 					if (bookId > 1000) {
 						if (BITBook.isWritten(sPlayer, bookId)) {
 							bitBook = BITBook.loadBook(sPlayer, bookId);
-							//Item item = (Item) inv.getItem(i);
-							//item.setName(bitBook.getTitle() + " written by "
-							//		+ bitBook.getAuthor());
-
 							BITBook.setBookName(bookId, bitBook.getTitle(),
 							 bitBook.getAuthor());
 						} else {
@@ -97,9 +93,6 @@ public class BITInventoryListener extends InventoryListener {
 				short bookId = itemClicked.getDurability();
 				if (BITBook.isWritten(sPlayer, bookId)) {
 					BITBook bitBook = BITBook.loadBook(sPlayer, bookId);
-					// Item item = (Item) itemClicked;
-					// item.setName(bitBook.getTitle() + " written by "
-					// + bitBook.getAuthor());
 					BITBook.setBookName(bookId, bitBook.getTitle(),
 							bitBook.getAuthor());
 					int slotNo = event.getSlot();

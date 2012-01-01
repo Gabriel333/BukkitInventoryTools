@@ -9,7 +9,6 @@ import org.getspout.spoutapi.event.inventory.InventoryCloseEvent;
 import org.getspout.spoutapi.event.inventory.InventoryCraftEvent;
 import org.getspout.spoutapi.event.inventory.InventoryListener;
 import org.getspout.spoutapi.event.inventory.InventoryOpenEvent;
-//import org.getspout.spoutapi.material.Item;
 import org.getspout.spoutapi.player.SpoutPlayer;
 
 import dk.gabriel333.BukkitInventoryTools.BIT;
@@ -57,10 +56,11 @@ public class BITInventoryListener extends InventoryListener {
 						if (BITBook.isWritten(sPlayer, bookId)) {
 							bitBook = BITBook.loadBook(sPlayer, bookId);
 							//Item item = (Item) inv.getItem(i);
-							//item.setName(bitBook.getTitle()+" written by "+bitBook.getAuthor());
-							
+							//item.setName(bitBook.getTitle() + " written by "
+							//		+ bitBook.getAuthor());
+
 							BITBook.setBookName(bookId, bitBook.getTitle(),
-									bitBook.getAuthor());
+							 bitBook.getAuthor());
 						} else {
 							BITMessages
 									.showInfo("Wiping unknown BITBook in slot "
@@ -97,11 +97,11 @@ public class BITInventoryListener extends InventoryListener {
 				short bookId = itemClicked.getDurability();
 				if (BITBook.isWritten(sPlayer, bookId)) {
 					BITBook bitBook = BITBook.loadBook(sPlayer, bookId);
-					//Item item = (Item) itemClicked;
-					//item.setName(bitBook.getTitle() + " written by "
-					//		+ bitBook.getAuthor());
-					 BITBook.setBookName(bookId, bitBook.getTitle(),
-					 bitBook.getAuthor());
+					// Item item = (Item) itemClicked;
+					// item.setName(bitBook.getTitle() + " written by "
+					// + bitBook.getAuthor());
+					BITBook.setBookName(bookId, bitBook.getTitle(),
+							bitBook.getAuthor());
 					int slotNo = event.getSlot();
 					if (bitBook.getMasterCopy()
 							&& bitBook.getMasterCopyId() == 0) {

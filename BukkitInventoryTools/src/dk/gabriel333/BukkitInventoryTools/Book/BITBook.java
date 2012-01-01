@@ -7,22 +7,19 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
 
-import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
-import org.bukkit.entity.Player;
-import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.Plugin;
+import org.getspout.spoutapi.SpoutManager;
 import org.getspout.spoutapi.gui.GenericButton;
 import org.getspout.spoutapi.gui.GenericItemWidget;
 import org.getspout.spoutapi.gui.GenericLabel;
 import org.getspout.spoutapi.gui.GenericPopup;
 import org.getspout.spoutapi.gui.GenericTextField;
 import org.getspout.spoutapi.gui.PopupScreen;
-import org.getspout.spoutapi.material.Item;
-import org.getspout.spoutapi.packet.PacketItemName;
+import org.getspout.spoutapi.material.MaterialData;
 import org.getspout.spoutapi.player.SpoutPlayer;
 
 import dk.gabriel333.BukkitInventoryTools.BIT;
@@ -894,7 +891,6 @@ public class BITBook {
 		pageNoLabelGUI.get(id).setText("Page:" + (i + 1));
 		bodytextGUI.get(id).setFocus(true);
 		popupScreen.get(id).setDirty(true);
-
 	}
 
 	public static void showPreviousPage(SpoutPlayer sPlayer) {
@@ -911,37 +907,11 @@ public class BITBook {
 		pageNoLabelGUI.get(id).setText("Page:" + (i + 1));
 		bodytextGUI.get(id).setFocus(true);
 		popupScreen.get(id).setDirty(true);
-
 	}
 
 	public static void setBookName(short bookId, String title, String author) {
-		// TODO: use getMaterialManager
-		 //String str = "Book:"+title;
-		 //SpoutManager.getMaterialManager().setItemName(org.getspout.spoutapi.material.Material, "BBoook");
-		 //SpoutManager.getItemManager().setItemName(Material.BOOK,
-		 //bookId,"Book:" + title);
-		for (Player p : Bukkit.getServer().getOnlinePlayers()) {
-			SpoutPlayer sp = (SpoutPlayer) p;
-			if (sp.isSpoutCraftEnabled()) {
-				
-				sp.sendPacket(new PacketItemName(Material.BOOK.getId(), bookId,
-						title + " written by " + author));
-				sp.sendPacket(new PacketItemName(Material.BOOK.getId(),
-						(short) 0, "Book")); // don't know why this is needed
-			}
-		}
-	}
-
-	public void updateAllBooknames(SpoutPlayer sPlayer, Inventory inventory) {
-		ItemStack itemStack;
-		for (int i = 0; i < inventory.getSize(); i++) {
-			itemStack = inventory.getItem(i);
-			if (itemStack.getType() == Material.BOOK) {
-				Item item = (Item) itemStack;
-				item.setName("BBBBoook");
-				
-			}
-		}
+		 String str = title+" written by "+author;
+		 SpoutManager.getMaterialManager().setItemName(MaterialData.book, str);
 	}
 
 }
